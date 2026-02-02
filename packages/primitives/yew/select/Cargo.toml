@@ -1,0 +1,32 @@
+[package]
+name = "radix-yew-select"
+description = "Yew port of Radix Select."
+homepage = "https://radix.rustforweb.org/primitives/components/select.html"
+
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+version.workspace = true
+
+[dependencies]
+radix-number.workspace = true
+radix-yew-collection.workspace = true
+radix-yew-direction.workspace = true
+radix-yew-focus-guards.workspace = true
+radix-yew-focus-scope.workspace = true
+radix-yew-id.workspace = true
+radix-yew-popper.workspace = true
+radix-yew-portal.workspace = true
+radix-yew-primitive.workspace = true
+radix-yew-use-controllable-state.workspace = true
+radix-yew-visually-hidden.workspace = true
+web-sys = { workspace = true, features = [
+    "FocusOptions",
+    "HtmlSelectElement",
+    "ScrollIntoViewOptions",
+    "ScrollLogicalPosition",
+] }
+yew.workspace = true
+yew-struct-component.workspace = true
+yew-style.workspace = true

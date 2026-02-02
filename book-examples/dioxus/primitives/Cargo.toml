@@ -1,0 +1,19 @@
+[package]
+name = "radix-dioxus-book-primitives"
+description = "Book examples for Radix Primitives Dioxus."
+publish = false
+
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+version.workspace = true
+
+[features]
+default = []
+
+[dependencies]
+console_error_panic_hook.workspace = true
+console_log.workspace = true
+dioxus = { workspace = true, features = ["web"] }
+log.workspace = true

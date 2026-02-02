@@ -1,0 +1,20 @@
+[package]
+name = "radix-yew-popper"
+description = "Yew port of Radix Popper."
+
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+version.workspace = true
+
+[dependencies]
+floating-ui-yew = "0.6.0"
+radix-yew-arrow.workspace = true
+radix-yew-use-size.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+web-sys.workspace = true
+yew.workspace = true
+yew-struct-component.workspace = true
+yew-style.workspace = true

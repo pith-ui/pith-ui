@@ -1,0 +1,26 @@
+[package]
+name = "radix-yew-checkbox"
+description = "Yew port of Radix Checkbox."
+homepage = "https://radix.rustforweb.org/primitives/components/checkbox.html"
+
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+version.workspace = true
+
+[dependencies]
+radix-yew-presence.workspace = true
+radix-yew-primitive.workspace = true
+radix-yew-use-controllable-state.workspace = true
+radix-yew-use-previous.workspace = true
+radix-yew-use-size.workspace = true
+web-sys = { workspace = true, features = [
+    "Event",
+    "EventInit",
+    "HtmlButtonElement",
+    "HtmlFormElement",
+] }
+yew.workspace = true
+yew-struct-component.workspace = true
+yew-style.workspace = true

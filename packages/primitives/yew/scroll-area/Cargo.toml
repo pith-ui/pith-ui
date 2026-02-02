@@ -1,0 +1,17 @@
+[package]
+name = "radix-yew-scroll-area"
+description = "Yew port of Radix Scroll Area."
+homepage = "https://radix.rustforweb.org/primitives/components/scroll-area.html"
+
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+version.workspace = true
+
+[dependencies]
+radix-yew-direction.workspace = true
+web-sys.workspace = true
+yew.workspace = true
+yew-struct-component.workspace = true
+yew-style.workspace = true

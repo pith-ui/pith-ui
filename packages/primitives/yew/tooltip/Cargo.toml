@@ -1,0 +1,23 @@
+[package]
+name = "radix-yew-tooltip"
+description = "Yew port of Radix Tooltip."
+homepage = "https://radix.rustforweb.org/primitives/components/tooltip.html"
+
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+version.workspace = true
+
+[dependencies]
+radix-yew-id.workspace = true
+radix-yew-popper.workspace = true
+radix-yew-portal.workspace = true
+radix-yew-presence.workspace = true
+radix-yew-primitive.workspace = true
+radix-yew-use-controllable-state.workspace = true
+radix-yew-visually-hidden.workspace = true
+web-sys = { workspace = true, features = ["CustomEvent"] }
+yew.workspace = true
+yew-struct-component.workspace = true
+yew-style.workspace = true

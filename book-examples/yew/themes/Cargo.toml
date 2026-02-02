@@ -1,0 +1,92 @@
+[package]
+name = "radix-yew-book-themes"
+description = "Book examples for Radix Themes Yew."
+publish = false
+
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+version.workspace = true
+
+[features]
+default = [
+    "aspect-ratio",
+    "avatar",
+    "badge",
+    "blockquote",
+    "box",
+    "button",
+    "callout",
+    "card",
+    "checkbox",
+    "code",
+    "container",
+    "data-list",
+    "em",
+    "flex",
+    "grid",
+    "heading",
+    "icon-button",
+    "inset",
+    "kbd",
+    "link",
+    "quote",
+    "radio",
+    "section",
+    "select",
+    "separator",
+    "skeleton",
+    "spinner",
+    "strong",
+    "switch",
+    "table",
+    "text",
+    "text-area",
+    "text-field",
+    "tooltip",
+]
+aspect-ratio = []
+avatar = []
+badge = []
+blockquote = []
+box = []
+button = []
+callout = []
+card = []
+code = []
+container = []
+checkbox = []
+data-list = []
+em = []
+flex = []
+grid = []
+heading = []
+icon-button = []
+inset = []
+kbd = []
+link = []
+quote = []
+radio = []
+section = []
+select = []
+separator = []
+skeleton = []
+spinner = []
+strong = []
+switch = []
+table = []
+text = []
+text-area = []
+text-field = []
+tooltip = []
+
+[dependencies]
+console_error_panic_hook.workspace = true
+console_log.workspace = true
+log.workspace = true
+radix-yew-icons.workspace = true
+radix-yew-themes.workspace = true
+yew = { workspace = true, features = ["csr"] }
+yew-router.workspace = true
+yew-style.workspace = true

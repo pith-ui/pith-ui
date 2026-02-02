@@ -1,0 +1,13 @@
+[package]
+name = "radix-yew-icons"
+description = "Yew port of Radix Icons."
+homepage = "https://radix.rustforweb.org/icons/index.html"
+
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+version.workspace = true
+
+[dependencies]
+yew.workspace = true

@@ -1,0 +1,12 @@
+[package]
+name = "radix-primitive"
+description = "Rust port of Radix Core Primitive."
+
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+version.workspace = true
+
+[dependencies]
+web-sys = { workspace = true, features = ["Event"] }

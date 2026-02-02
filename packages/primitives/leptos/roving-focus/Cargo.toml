@@ -1,0 +1,18 @@
+[package]
+name = "radix-leptos-roving-focus"
+description = "Leptos port of Radix Roving Focus."
+
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+version.workspace = true
+
+[dependencies]
+leptos.workspace = true
+radix-leptos-collection.workspace = true
+radix-leptos-compose-refs.workspace = true
+radix-leptos-direction.workspace = true
+radix-leptos-id.workspace = true
+radix-leptos-use-controllable-state.workspace = true
+web-sys = { workspace = true, features = ["CustomEvent", "CustomEventInit"] }

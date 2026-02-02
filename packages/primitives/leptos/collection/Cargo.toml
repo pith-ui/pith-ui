@@ -1,0 +1,15 @@
+[package]
+name = "radix-leptos-collection"
+description = "Leptos port of Radix Collection."
+
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+version.workspace = true
+
+[dependencies]
+leptos.workspace = true
+nanoid = "0.4.0"
+radix-leptos-compose-refs.workspace = true
+web-sys.workspace = true
