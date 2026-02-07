@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "notes/core-rect.md",
+                "file": "notes/leptos-announce.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -28,7 +28,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "core-rect"
+              "title": "leptos-announce"
             }
           }
         ]
@@ -192,17 +192,19 @@
   },
   "active": "79d59c987f0c5bf4",
   "lastOpenFiles": [
-    "target/release/deps/radix_rect-6613b2712bd14ed3",
-    "target/release/deps/radix_rect-6613b2712bd14ed3.radix_rect.ba47860361e841b1-cgu.0.rcgu.o",
-    "target/release/deps/radix_rect-6613b2712bd14ed3.69mj8qhncfj4byw6j69t5e0jw.rcgu.o",
-    "target/release/deps/radix_rect-6613b2712bd14ed3.d",
-    "target/release/deps/libradix_rect-cfe5e52f0acb5085.rlib",
-    "target/release/deps/libweb_sys-09ef9a474abaa098.rlib",
-    "target/release/deps/radix_rect-cfe5e52f0acb5085.radix_rect.f1f1e808dfe75480-cgu.0.rcgu.o",
-    "target/release/deps/libradix_rect-cfe5e52f0acb5085.rmeta",
-    "target/release/deps/radix_rect-cfe5e52f0acb5085.d",
-    "target/release/deps/libweb_sys-09ef9a474abaa098.rmeta",
-    "target/release/deps/rmeta4ZJFc0/full.rmeta",
+    "target/debug/incremental/radix_leptos_announce-3b99pvgqedvch/s-hfl8uwiugx-0a7cr4o-ds9bw9mvuehg1do58v7cebd90/work-products.bin",
+    "target/debug/incremental/radix_leptos_announce-3b99pvgqedvch/s-hfl8uwiugx-0a7cr4o-ds9bw9mvuehg1do58v7cebd90/metadata.rmeta",
+    "target/debug/incremental/radix_leptos_announce-3b99pvgqedvch/s-hfl8uwiugx-0a7cr4o-ds9bw9mvuehg1do58v7cebd90/query-cache.bin",
+    "target/debug/incremental/radix_leptos_announce-3b99pvgqedvch/s-hfl8uwiugx-0a7cr4o-ds9bw9mvuehg1do58v7cebd90/dep-graph.bin",
+    "target/debug/incremental/radix_leptos_announce-3b99pvgqedvch/s-hfl8uwiugx-0a7cr4o-ds9bw9mvuehg1do58v7cebd90",
+    "target/debug/incremental/radix_leptos_announce-1euvol3ylx9qz/s-hfl8uwiuge-046d5qc-2bfu5ltuzw7aokl12bbtd8vb0/work-products.bin",
+    "target/debug/incremental/radix_leptos_announce-1euvol3ylx9qz/s-hfl8uwiuge-046d5qc-2bfu5ltuzw7aokl12bbtd8vb0/query-cache.bin",
+    "target/debug/incremental/radix_leptos_announce-1euvol3ylx9qz/s-hfl8uwiuge-046d5qc-2bfu5ltuzw7aokl12bbtd8vb0/dep-graph.bin",
+    "target/debug/incremental/radix_leptos_announce-1euvol3ylx9qz/s-hfl8uwiuge-046d5qc-2bfu5ltuzw7aokl12bbtd8vb0",
+    "target/debug/deps/libradix_leptos_announce-9269bac423b50b8c.rmeta",
+    "target/debug/deps/libradix_leptos_announce-9702152d01f68f0c.rmeta",
+    "notes/leptos-slot.md",
+    "notes/leptos-context.md",
     "notes/core-rect.md",
     "notes/core-primitive.md",
     "notes/leptos-roving-focus.md",
@@ -212,8 +214,6 @@
     "notes/leptos-use-callback-ref.md",
     "notes/leptos-use-rect.md",
     "notes/leptos-announce.md",
-    "notes/leptos-context.md",
-    "notes/leptos-slot.md",
     "notes/leptos-password-toggle-field.md",
     "notes/leptos-one-time-password-field.md",
     "notes/leptos-form.md",

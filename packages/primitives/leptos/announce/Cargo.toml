@@ -1,0 +1,17 @@
+[package]
+name = "radix-leptos-announce"
+description = "Leptos port of Radix Announce."
+
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+version.workspace = true
+
+[dependencies]
+leptos.workspace = true
+leptos-node-ref.workspace = true
+leptos_dom.workspace = true
+radix-leptos-primitive.workspace = true
+send_wrapper.workspace = true
+web-sys = { workspace = true, features = ["Document", "Element", "EventTarget", "HtmlElement"] }

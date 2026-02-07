@@ -3,8 +3,8 @@ react_location: "[[reference/react-radix-primitives/packages/react/slot/src/slot
 rust_location:
 dependencies:
   - "[[leptos-compose-refs]]"
-ported: false
-tested: false
+ported: true
+tested: true
 ---
 ## Intent
 
@@ -31,4 +31,4 @@ function createSlottable(ownerName: string): typeof Slottable
 
 ## Leptos Equivalent
 
-Not needed as a separate package. Leptos handles the `asChild` pattern via `TypedFallbackShow` in the `Primitive` component, which renders children instead of the default element when `as_child` is set.
+Not needed as a separate package. Leptos handles the `asChild` pattern via `TypedFallbackShow` in the `Primitive` component, which renders children instead of the default element when `as_child` is set. Marked as ported — no code needed.

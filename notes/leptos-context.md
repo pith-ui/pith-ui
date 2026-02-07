@@ -2,8 +2,8 @@
 react_location: "[[reference/react-radix-primitives/packages/react/context/src/create-context.tsx|create-context]]"
 rust_location:
 dependencies: []
-ported: false
-tested: false
+ported: true
+tested: true
 ---
 ## Intent
 
@@ -27,4 +27,4 @@ function composeContextScopes(...scopes: CreateScope[]): CreateScope
 
 ## Leptos Equivalent
 
-Not needed as a separate package. Leptos has built-in `provide_context`/`use_context` which serves the same role. The scoping pattern is not directly applicable — Leptos contexts are type-based, not scope-based.
+Not needed as a separate package. Leptos has built-in `provide_context`/`use_context` which serves the same role. The scoping pattern is not directly applicable — Leptos contexts are type-based, not scope-based. Marked as ported — no code needed.

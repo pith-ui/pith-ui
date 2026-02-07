@@ -3965,6 +3965,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "radix-leptos-announce"
+version = "0.0.2"
+dependencies = [
+ "leptos",
+ "leptos-node-ref",
+ "leptos_dom",
+ "radix-leptos-primitive",
+ "send_wrapper",
+ "web-sys",
+]
+
+[[package]]
 name = "radix-leptos-arrow"
 version = "0.0.2"
 dependencies = [
