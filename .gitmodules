@@ -1,0 +1,3 @@
+[submodule "reference/react-radix-primitives"]
+	path = reference/react-radix-primitives
+	url = https://github.com/radix-ui/primitives.git
