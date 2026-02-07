@@ -1,0 +1,11 @@
+{
+  "alwaysUpdateLinks": true,
+  "showUnsupportedFiles": true,
+  "userIgnoreFilters": [
+    "target/",
+    "node_modules/",
+    "book/",
+    "book-examples/",
+    "(?!.*\\.(rs|tsx?|md)$)"
+  ]
+}
