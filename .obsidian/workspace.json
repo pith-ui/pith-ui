@@ -11,24 +11,10 @@
             "id": "79d59c987f0c5bf4",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "notes/core-number.md",
-                "mode": "source",
-                "source": false,
-                "backlinks": true,
-                "backlinkOpts": {
-                  "collapseAll": false,
-                  "extraContext": false,
-                  "sortOrder": "alphabetical",
-                  "showSearch": false,
-                  "searchQuery": "",
-                  "backlinkCollapsed": false,
-                  "unlinkedCollapsed": true
-                }
-              },
-              "icon": "lucide-file",
-              "title": "core-number"
+              "type": "graph",
+              "state": {},
+              "icon": "lucide-git-fork",
+              "title": "Graph view"
             }
           }
         ]
@@ -192,10 +178,32 @@
   },
   "active": "79d59c987f0c5bf4",
   "lastOpenFiles": [
-    "CLAUDE.md",
-    "notes/core-number.md",
-    "notes/filters.md",
-    "Untitled.canvas",
-    "node_modules/merge2/README.md"
+    "scripts/topo_sort.py",
+    "notes/leptos-roving-focus.md",
+    "notes/leptos-use-layout-effect.md",
+    "notes/leptos-use-is-hydrated.md",
+    "notes/leptos-use-effect-event.md",
+    "notes/leptos-use-callback-ref.md",
+    "notes/leptos-use-rect.md",
+    "notes/leptos-announce.md",
+    "notes/leptos-context.md",
+    "notes/leptos-slot.md",
+    "notes/leptos-password-toggle-field.md",
+    "notes/leptos-one-time-password-field.md",
+    "notes/leptos-form.md",
+    "notes/leptos-navigation-menu.md",
+    "notes/leptos-scroll-area.md",
+    "notes/leptos-select.md",
+    "notes/leptos-slider.md",
+    "notes/leptos-tabs.md",
+    "notes/leptos-toast.md",
+    "notes/leptos-tooltip.md",
+    "notes/leptos-hover-card.md",
+    "notes/leptos-popover.md",
+    "notes/leptos-menubar.md",
+    "notes/leptos-context-menu.md",
+    "notes/leptos-dropdown-menu.md",
+    "notes/leptos-toolbar.md",
+    "Untitled.canvas"
   ]
 }
