@@ -14,6 +14,7 @@ members = [
     "packages/colors",
     "packages/icons/*",
     "packages/primitives/core/primitive",
+    "packages/primitives/core/rect",
     "packages/primitives/leptos/accessible-icon",
     "packages/primitives/leptos/arrow",
     "packages/primitives/leptos/aspect-ratio",
@@ -82,6 +83,7 @@ radix-leptos-use-size = { path = "./packages/primitives/leptos/use-size", versio
 radix-leptos-visually-hidden = { path = "./packages/primitives/leptos/visually-hidden", version = "0.0.2" }
 radix-number = { path = "./packages/primitives/core/number", version = "0.0.2" }
 radix-primitive = { path = "./packages/primitives/core/primitive", version = "0.0.2" }
+radix-rect = { path = "./packages/primitives/core/rect", version = "0.0.2" }
 radix-yew-arrow = { path = "./packages/primitives/yew/arrow", version = "0.0.2" }
 radix-yew-aspect-ratio = { path = "./packages/primitives/yew/aspect-ratio", version = "0.0.2" }
 radix-yew-avatar = { path = "./packages/primitives/yew/avatar", version = "0.0.2" }

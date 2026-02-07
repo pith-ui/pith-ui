@@ -11,10 +11,24 @@
             "id": "79d59c987f0c5bf4",
             "type": "leaf",
             "state": {
-              "type": "graph",
-              "state": {},
-              "icon": "lucide-git-fork",
-              "title": "Graph view"
+              "type": "markdown",
+              "state": {
+                "file": "notes/core-rect.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
+              },
+              "icon": "lucide-file",
+              "title": "core-rect"
             }
           }
         ]
@@ -178,7 +192,19 @@
   },
   "active": "79d59c987f0c5bf4",
   "lastOpenFiles": [
-    "scripts/topo_sort.py",
+    "target/release/deps/radix_rect-6613b2712bd14ed3",
+    "target/release/deps/radix_rect-6613b2712bd14ed3.radix_rect.ba47860361e841b1-cgu.0.rcgu.o",
+    "target/release/deps/radix_rect-6613b2712bd14ed3.69mj8qhncfj4byw6j69t5e0jw.rcgu.o",
+    "target/release/deps/radix_rect-6613b2712bd14ed3.d",
+    "target/release/deps/libradix_rect-cfe5e52f0acb5085.rlib",
+    "target/release/deps/libweb_sys-09ef9a474abaa098.rlib",
+    "target/release/deps/radix_rect-cfe5e52f0acb5085.radix_rect.f1f1e808dfe75480-cgu.0.rcgu.o",
+    "target/release/deps/libradix_rect-cfe5e52f0acb5085.rmeta",
+    "target/release/deps/radix_rect-cfe5e52f0acb5085.d",
+    "target/release/deps/libweb_sys-09ef9a474abaa098.rmeta",
+    "target/release/deps/rmeta4ZJFc0/full.rmeta",
+    "notes/core-rect.md",
+    "notes/core-primitive.md",
     "notes/leptos-roving-focus.md",
     "notes/leptos-use-layout-effect.md",
     "notes/leptos-use-is-hydrated.md",
@@ -202,8 +228,6 @@
     "notes/leptos-popover.md",
     "notes/leptos-menubar.md",
     "notes/leptos-context-menu.md",
-    "notes/leptos-dropdown-menu.md",
-    "notes/leptos-toolbar.md",
     "Untitled.canvas"
   ]
 }

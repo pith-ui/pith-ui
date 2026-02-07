@@ -4180,6 +4180,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "radix-rect"
+version = "0.0.2"
+dependencies = [
+ "wasm-bindgen",
+ "web-sys",
+]
+
+[[package]]
 name = "radix-yew-arrow"
 version = "0.0.2"
 dependencies = [
