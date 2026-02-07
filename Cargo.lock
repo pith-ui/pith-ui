@@ -4173,6 +4173,13 @@ name = "radix-number"
 version = "0.0.2"
 
 [[package]]
+name = "radix-primitive"
+version = "0.0.2"
+dependencies = [
+ "web-sys",
+]
+
+[[package]]
 name = "radix-yew-arrow"
 version = "0.0.2"
 dependencies = [

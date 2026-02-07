@@ -9,4 +9,12 @@ repository.workspace = true
 version.workspace = true
 
 [dependencies]
-web-sys = { workspace = true, features = ["Event"] }
+web-sys = { workspace = true, features = [
+    "Document",
+    "Element",
+    "Event",
+    "HtmlElement",
+    "HtmlIFrameElement",
+    "Node",
+    "Window",
+] }

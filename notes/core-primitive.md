@@ -2,7 +2,7 @@
 react_location: "[[reference/react-radix-primitives/packages/core/primitive/src/primitive.tsx|primitive]]"
 rust_location: "[[packages/primitives/core/primitive/src/primitive.rs|primitive]]"
 dependencies: []
-ported: false
+ported: true
 tested: false
 ---
 ## Intent
@@ -27,14 +27,17 @@ Also exports timer type aliases: `Timeout`, `Interval`, `Immediate` (from `types
 ## Rust API
 
 ```rust
+pub fn can_use_dom() -> bool
 pub fn compose_event_handlers<E: Clone + Into<Event>>(
     original_event_handler: Option<fn(E)>,
     our_event_handler: Option<fn(E)>,
     check_for_default_prevented: Option<bool>,
 ) -> impl Fn(E)
+pub fn get_owner_window(element: Option<&Node>) -> Result<Window, &'static str>
+pub fn get_owner_document(element: Option<&Node>) -> Result<Document, &'static str>
+pub fn get_active_element(node: Option<&Node>, active_descendant: bool) -> Option<HtmlElement>
+pub fn is_frame(element: &Element) -> bool
 ```
-
-Only `compose_event_handlers` is ported. Uses `web_sys::Event` for `default_prevented()` check.
 
 ## React Implementation Notes
 
@@ -45,11 +48,16 @@ Only `compose_event_handlers` is ported. Uses `web_sys::Event` for `default_prev
 
 ## Rust Implementation Notes
 
-Only `compose_event_handlers` is implemented. The event parameter requires `Clone + Into<Event>` — it clones the event to call the original handler, then checks `default_prevented()` via conversion to `web_sys::Event`.
+**`can_use_dom`** is a function rather than a constant because `web_sys::window()` is a runtime call.
 
-**Not yet ported:**
-- `canUseDOM` — less relevant in WASM (always in a browser), but may be needed for SSR scenarios
-- `getOwnerWindow`, `getOwnerDocument`, `getActiveElement`, `isFrame` — DOM traversal helpers
-- `Timeout`, `Interval`, `Immediate` type aliases — not directly applicable in Rust
+**`compose_event_handlers`** requires `E: Clone + Into<Event>` — it clones the event to call the original handler, then checks `default_prevented()` via conversion to `web_sys::Event`.
 
-Dependency: `web-sys` with `Event` feature.
+**`get_owner_window` / `get_owner_document`** return `Result<_, &'static str>` instead of panicking (idiomatic Rust). React throws an `Error`; Rust callers can propagate with `?` or `.ok()`.
+
+**`get_active_element`** takes `active_descendant: bool` (not `Option<bool>`) since React defaults it to `false` — a plain `bool` is simpler and equivalent. Returns `Option<HtmlElement>` rather than `HTMLElement | null`. When `dyn_into::<HtmlElement>()` fails (e.g., active element is an SVG element), `None` is returned. This is slightly safer than React's unchecked `as HTMLElement | null` cast.
+
+**`is_frame`** compares `element.tag_name()` against `"IFRAME"`. `tag_name()` returns uppercase for HTML elements, matching the React behavior.
+
+### Omissions
+
+- **`Timeout`, `Interval`, `Immediate` type aliases** — These are `ReturnType<typeof setTimeout>` etc. in TypeScript, which map to `i32` in WASM. They provide no value as Rust type aliases.
