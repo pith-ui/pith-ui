@@ -1,6 +1,8 @@
 ---
 react_location: "[[reference/react-radix-primitives/packages/react/tooltip/src/tooltip.tsx|tooltip]]"
 rust_location:
+react_story: "[[reference/react-radix-primitives/apps/storybook/stories/tooltip.stories.tsx|tooltip]]"
+rust_story: ""
 dependencies:
   - "[[core-primitive]]"
   - "[[leptos-compose-refs]]"

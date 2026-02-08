@@ -1,6 +1,8 @@
 ---
 react_location: "[[reference/react-radix-primitives/packages/react/dropdown-menu/src/dropdown-menu.tsx|dropdown-menu]]"
 rust_location:
+react_story: "[[reference/react-radix-primitives/apps/storybook/stories/dropdown-menu.stories.tsx|dropdown-menu]]"
+rust_story: ""
 dependencies:
   - "[[core-primitive]]"
   - "[[leptos-menu]]"

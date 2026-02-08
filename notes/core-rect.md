@@ -1,6 +1,8 @@
 ---
 react_location: "[[reference/react-radix-primitives/packages/core/rect/src/observe-element-rect.ts|observe-element-rect]]"
 rust_location: "[[packages/primitives/core/rect/src/observe_element_rect.rs|observe_element_rect]]"
+react_story: ""
+rust_story: ""
 dependencies: []
 ported: true
 tested: false

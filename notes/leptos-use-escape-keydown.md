@@ -1,6 +1,8 @@
 ---
 react_location: "[[reference/react-radix-primitives/packages/react/use-escape-keydown/src/use-escape-keydown.tsx|use-escape-keydown]]"
 rust_location: "[[packages/primitives/leptos/use-escape-keydown/src/use_escape_keydown.rs|use_escape_keydown]]"
+react_story: ""
+rust_story: ""
 dependencies:
   - "[[leptos-use-callback-ref]]"
 ported: true

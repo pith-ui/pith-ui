@@ -1,6 +1,8 @@
 ---
 react_location: "[[reference/react-radix-primitives/packages/react/visually-hidden/src/visually-hidden.tsx|visually-hidden]]"
 rust_location: "[[stories/leptos/src/primitives/visually_hidden.rs|visually_hidden]]"
+react_story: "[[reference/react-radix-primitives/apps/storybook/stories/visually-hidden.stories.tsx|visually-hidden]]"
+rust_story: "[[stories/leptos/src/primitives/visually_hidden.rs|visually_hidden]]"
 dependencies:
   - "[[leptos-primitive]]"
 ported: true

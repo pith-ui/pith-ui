@@ -1,6 +1,8 @@
 ---
 react_location: "[[reference/react-radix-primitives/packages/react/accessible-icon/src/accessible-icon.tsx|accessible-icon]]"
 rust_location: "[[packages/primitives/leptos/accessible-icon/src/accessible_icon.rs|accessible_icon]]"
+react_story: "[[reference/react-radix-primitives/apps/storybook/stories/accessible-icon.stories.tsx|accessible-icon]]"
+rust_story: "[[stories/leptos/src/primitives/accessible_icon.rs|accessible_icon]]"
 dependencies:
   - "[[leptos-visually-hidden]]"
 ported: true

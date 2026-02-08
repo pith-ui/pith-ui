@@ -1,6 +1,8 @@
 ---
 react_location: "[[reference/react-radix-primitives/packages/react/portal/src/portal.tsx|portal]]"
 rust_location: "[[packages/primitives/leptos/portal/src/portal.rs|portal]]"
+react_story: "[[reference/react-radix-primitives/apps/storybook/stories/portal.stories.tsx|portal]]"
+rust_story: "[[stories/leptos/src/primitives/portal.rs|portal]]"
 dependencies:
   - "[[leptos-primitive]]"
 ported: true

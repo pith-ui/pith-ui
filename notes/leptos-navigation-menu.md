@@ -1,6 +1,8 @@
 ---
 react_location: "[[reference/react-radix-primitives/packages/react/navigation-menu/src/navigation-menu.tsx|navigation-menu]]"
 rust_location:
+react_story: "[[reference/react-radix-primitives/apps/storybook/stories/navigation-menu.stories.tsx|navigation-menu]]"
+rust_story: ""
 dependencies:
   - "[[core-primitive]]"
   - "[[leptos-collection]]"

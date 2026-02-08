@@ -1,6 +1,8 @@
 ---
 react_location: "[[reference/react-radix-primitives/packages/react/context-menu/src/context-menu.tsx|context-menu]]"
 rust_location:
+react_story: "[[reference/react-radix-primitives/apps/storybook/stories/context-menu.stories.tsx|context-menu]]"
+rust_story: ""
 dependencies:
   - "[[core-primitive]]"
   - "[[leptos-menu]]"

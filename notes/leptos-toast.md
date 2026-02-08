@@ -1,6 +1,8 @@
 ---
 react_location: "[[reference/react-radix-primitives/packages/react/toast/src/toast.tsx|toast]]"
 rust_location:
+react_story: "[[reference/react-radix-primitives/apps/storybook/stories/toast.stories.tsx|toast]]"
+rust_story: ""
 dependencies:
   - "[[core-primitive]]"
   - "[[leptos-collection]]"

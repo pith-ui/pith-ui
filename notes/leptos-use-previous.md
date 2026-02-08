@@ -1,6 +1,8 @@
 ---
 react_location: "[[reference/react-radix-primitives/packages/react/use-previous/src/use-previous.tsx|use-previous]]"
 rust_location: "[[packages/primitives/leptos/use-previous/src/use_previous.rs|use_previous]]"
+react_story: ""
+rust_story: ""
 dependencies: []
 ported: true
 tested: false

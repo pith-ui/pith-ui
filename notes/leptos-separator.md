@@ -1,6 +1,8 @@
 ---
 react_location: "[[reference/react-radix-primitives/packages/react/separator/src/separator.tsx|separator]]"
 rust_location: "[[packages/primitives/leptos/separator/src/separator.rs|separator]]"
+react_story: "[[reference/react-radix-primitives/apps/storybook/stories/separator.stories.tsx|separator]]"
+rust_story: "[[stories/leptos/src/primitives/separator.rs|separator]]"
 dependencies:
   - "[[leptos-primitive]]"
 ported: true

@@ -1,6 +1,8 @@
 ---
 react_location: "[[reference/react-radix-primitives/packages/react/select/src/select.tsx|select]]"
 rust_location:
+react_story: "[[reference/react-radix-primitives/apps/storybook/stories/select.stories.tsx|select]]"
+rust_story: ""
 dependencies:
   - "[[core-number]]"
   - "[[core-primitive]]"

@@ -1,6 +1,8 @@
 ---
 react_location: "[[reference/react-radix-primitives/packages/react/one-time-password-field/src/one-time-password-field.tsx|one-time-password-field]]"
 rust_location:
+react_story: "[[reference/react-radix-primitives/apps/storybook/stories/one-time-password-field.stories.tsx|one-time-password-field]]"
+rust_story: ""
 dependencies:
   - "[[core-number]]"
   - "[[core-primitive]]"

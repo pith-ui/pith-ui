@@ -1,6 +1,8 @@
 ---
 react_location: "[[reference/react-radix-primitives/packages/react/primitive/src/primitive.tsx|primitive]]"
 rust_location: "[[packages/primitives/leptos/primitive/src/primitive.rs|primitive]]"
+react_story: ""
+rust_story: ""
 dependencies:
   - "[[leptos-slot]]"
 ported: true

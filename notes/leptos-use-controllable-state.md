@@ -1,6 +1,8 @@
 ---
 react_location: "[[reference/react-radix-primitives/packages/react/use-controllable-state/src/use-controllable-state.tsx|use-controllable-state]]"
 rust_location: "[[packages/primitives/leptos/use-controllable-state/src/use_controllable_state.rs|use_controllable_state]]"
+react_story: ""
+rust_story: ""
 dependencies: []
 ported: true
 tested: false

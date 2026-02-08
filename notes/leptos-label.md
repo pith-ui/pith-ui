@@ -1,6 +1,8 @@
 ---
 react_location: "[[reference/react-radix-primitives/packages/react/label/src/label.tsx|label]]"
 rust_location: "[[packages/primitives/leptos/label/src/label.rs|label]]"
+react_story: "[[reference/react-radix-primitives/apps/storybook/stories/label.stories.tsx|label]]"
+rust_story: "[[stories/leptos/src/primitives/label.rs|label]]"
 dependencies:
   - "[[leptos-primitive]]"
 ported: true

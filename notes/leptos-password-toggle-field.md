@@ -1,6 +1,8 @@
 ---
 react_location: "[[reference/react-radix-primitives/packages/react/password-toggle-field/src/password-toggle-field.tsx|password-toggle-field]]"
 rust_location:
+react_story: "[[reference/react-radix-primitives/apps/storybook/stories/password-toggle-field.stories.tsx|password-toggle-field]]"
+rust_story: ""
 dependencies:
   - "[[core-primitive]]"
   - "[[leptos-compose-refs]]"

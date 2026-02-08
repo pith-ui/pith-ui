@@ -1,6 +1,8 @@
 ---
 react_location: "[[reference/react-radix-primitives/packages/react/accordion/src/accordion.tsx|accordion]]"
 rust_location:
+react_story: "[[reference/react-radix-primitives/apps/storybook/stories/accordion.stories.tsx|accordion]]"
+rust_story: ""
 dependencies:
   - "[[core-primitive]]"
   - "[[leptos-collapsible]]"

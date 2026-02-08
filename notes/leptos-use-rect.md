@@ -1,6 +1,8 @@
 ---
 react_location: "[[reference/react-radix-primitives/packages/react/use-rect/src/use-rect.tsx|use-rect]]"
 rust_location:
+react_story: ""
+rust_story: ""
 dependencies:
   - "[[core-rect]]"
 ported: false

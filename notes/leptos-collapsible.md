@@ -1,6 +1,8 @@
 ---
 react_location: "[[reference/react-radix-primitives/packages/react/collapsible/src/collapsible.tsx|collapsible]]"
 rust_location:
+react_story: "[[reference/react-radix-primitives/apps/storybook/stories/collapsible.stories.tsx|collapsible]]"
+rust_story: ""
 dependencies:
   - "[[core-primitive]]"
   - "[[leptos-primitive]]"

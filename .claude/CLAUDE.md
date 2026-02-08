@@ -80,6 +80,8 @@ Before porting a component, create a research note at `notes/<package-name>.md` 
 ---
 react_location: "[[reference/react-radix-primitives/packages/.../src/source-file.ts|display-name]]"
 rust_location: "[[packages/primitives/.../src/source_file.rs|display_name]]"
+react_story: "[[reference/react-radix-primitives/apps/storybook/stories/component.stories.tsx|component]]"
+rust_story: "[[stories/leptos/src/primitives/component.rs|component]]"
 dependencies: []
 ported: false
 tested: false
@@ -110,6 +112,7 @@ Use "Leptos Implementation Notes", "Yew Implementation Notes", etc. for framewor
 
 **Metadata fields:**
 - `react_location` / `rust_location` — Obsidian wikilinks using full repo-relative paths with a display alias (e.g., `"[[reference/react-radix-primitives/packages/core/number/src/number.ts|number]]"`)
+- `react_story` / `rust_story` — Obsidian wikilinks to the React storybook file and Leptos story file, respectively. Use `""` (empty string) if no story exists for this component.
 - `dependencies` — list of internal radix packages this component depends on; `[]` if none
 - `ported` — `true` if the Rust implementation exists and matches the React source
 - `tested` — `true` if tests exist with reasonable coverage

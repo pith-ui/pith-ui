@@ -1,6 +1,8 @@
 ---
 react_location: "[[reference/react-radix-primitives/packages/core/number/src/number.ts|number]]"
 rust_location: "[[packages/primitives/core/number/src/number.rs|number]]"
+react_story: ""
+rust_story: ""
 dependencies: []
 ported: true
 tested: false

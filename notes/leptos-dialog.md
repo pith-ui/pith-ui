@@ -1,6 +1,8 @@
 ---
 react_location: "[[reference/react-radix-primitives/packages/react/dialog/src/dialog.tsx|dialog]]"
 rust_location:
+react_story: "[[reference/react-radix-primitives/apps/storybook/stories/dialog.stories.tsx|dialog]]"
+rust_story: ""
 dependencies:
   - "[[core-primitive]]"
   - "[[leptos-compose-refs]]"

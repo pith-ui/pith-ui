@@ -1,6 +1,8 @@
 ---
 react_location: "[[reference/react-radix-primitives/packages/core/primitive/src/primitive.tsx|primitive]]"
 rust_location: "[[packages/primitives/core/primitive/src/primitive.rs|primitive]]"
+react_story: ""
+rust_story: ""
 dependencies: []
 ported: true
 tested: false

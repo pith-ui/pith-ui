@@ -1,6 +1,8 @@
 ---
 react_location: "[[reference/react-radix-primitives/packages/react/use-callback-ref/src/use-callback-ref.tsx|use-callback-ref]]"
 rust_location:
+react_story: ""
+rust_story: ""
 dependencies: []
 ported: true
 tested: true

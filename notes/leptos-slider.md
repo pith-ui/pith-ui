@@ -1,6 +1,8 @@
 ---
 react_location: "[[reference/react-radix-primitives/packages/react/slider/src/slider.tsx|slider]]"
 rust_location:
+react_story: "[[reference/react-radix-primitives/apps/storybook/stories/slider.stories.tsx|slider]]"
+rust_story: ""
 dependencies:
   - "[[core-number]]"
   - "[[core-primitive]]"

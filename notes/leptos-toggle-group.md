@@ -1,6 +1,8 @@
 ---
 react_location: "[[reference/react-radix-primitives/packages/react/toggle-group/src/toggle-group.tsx|toggle-group]]"
 rust_location:
+react_story: "[[reference/react-radix-primitives/apps/storybook/stories/toggle-group.stories.tsx|toggle-group]]"
+rust_story: ""
 dependencies:
   - "[[core-primitive]]"
   - "[[leptos-direction]]"

@@ -1,6 +1,8 @@
 ---
 react_location: "[[reference/react-radix-primitives/packages/react/checkbox/src/checkbox.tsx|checkbox]]"
 rust_location: "[[packages/primitives/leptos/checkbox/src/checkbox.rs|checkbox]]"
+react_story: "[[reference/react-radix-primitives/apps/storybook/stories/checkbox.stories.tsx|checkbox]]"
+rust_story: "[[stories/leptos/src/primitives/checkbox.rs|checkbox]]"
 dependencies:
   - "[[core-primitive]]"
   - "[[leptos-primitive]]"

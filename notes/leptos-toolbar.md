@@ -1,6 +1,8 @@
 ---
 react_location: "[[reference/react-radix-primitives/packages/react/toolbar/src/toolbar.tsx|toolbar]]"
 rust_location:
+react_story: "[[reference/react-radix-primitives/apps/storybook/stories/toolbar.stories.tsx|toolbar]]"
+rust_story: ""
 dependencies:
   - "[[core-primitive]]"
   - "[[leptos-direction]]"

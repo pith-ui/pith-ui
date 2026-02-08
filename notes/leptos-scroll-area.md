@@ -1,6 +1,8 @@
 ---
 react_location: "[[reference/react-radix-primitives/packages/react/scroll-area/src/scroll-area.tsx|scroll-area]]"
 rust_location: "[[packages/primitives/leptos/scroll-area/src/scroll_area.rs|scroll-area]]"
+react_story: "[[reference/react-radix-primitives/apps/storybook/stories/scroll-area.stories.tsx|scroll-area]]"
+rust_story: "[[stories/leptos/src/primitives/scroll_area.rs|scroll_area]]"
 dependencies:
   - "[[core-number]]"
   - "[[core-primitive]]"

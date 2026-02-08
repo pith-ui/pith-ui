@@ -1,6 +1,8 @@
 ---
 react_location: "[[reference/react-radix-primitives/packages/react/collection/src/collection-legacy.tsx|collection]]"
 rust_location: "[[packages/primitives/leptos/collection/src/collection.rs|collection]]"
+react_story: "[[reference/react-radix-primitives/apps/storybook/stories/collection.stories.tsx|collection]]"
+rust_story: "[[stories/leptos/src/primitives/collection.rs|collection]]"
 dependencies:
   - "[[leptos-compose-refs]]"
   - "[[leptos-slot]]"

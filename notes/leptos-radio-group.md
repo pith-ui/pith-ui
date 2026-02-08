@@ -1,6 +1,8 @@
 ---
 react_location: "[[reference/react-radix-primitives/packages/react/radio-group/src/radio-group.tsx|radio-group]]"
 rust_location:
+react_story: "[[reference/react-radix-primitives/apps/storybook/stories/radio-group.stories.tsx|radio-group]]"
+rust_story: ""
 dependencies:
   - "[[core-primitive]]"
   - "[[leptos-compose-refs]]"

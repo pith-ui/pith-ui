@@ -1,6 +1,8 @@
 ---
 react_location: "[[reference/react-radix-primitives/packages/react/progress/src/progress.tsx|progress]]"
 rust_location: "[[packages/primitives/leptos/progress/src/progress.rs|progress]]"
+react_story: "[[reference/react-radix-primitives/apps/storybook/stories/progress.stories.tsx|progress]]"
+rust_story: "[[stories/leptos/src/primitives/progress.rs|progress]]"
 dependencies:
   - "[[leptos-primitive]]"
 ported: true

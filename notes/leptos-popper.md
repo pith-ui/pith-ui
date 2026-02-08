@@ -1,6 +1,8 @@
 ---
 react_location: "[[reference/react-radix-primitives/packages/react/popper/src/popper.tsx|popper]]"
 rust_location: "[[packages/primitives/leptos/popper/src/popper.rs|popper]]"
+react_story: "[[reference/react-radix-primitives/apps/storybook/stories/popper.stories.tsx|popper]]"
+rust_story: "[[stories/leptos/src/primitives/popper.rs|popper]]"
 dependencies:
   - "[[core-rect]]"
   - "[[leptos-arrow]]"

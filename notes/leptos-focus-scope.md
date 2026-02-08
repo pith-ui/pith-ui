@@ -1,6 +1,8 @@
 ---
 react_location: "[[reference/react-radix-primitives/packages/react/focus-scope/src/focus-scope.tsx|focus-scope]]"
 rust_location: "[[packages/primitives/leptos/focus-scope/src/focus_scope.rs|focus_scope]]"
+react_story: "[[reference/react-radix-primitives/apps/storybook/stories/focus-scope.stories.tsx|focus-scope]]"
+rust_story: "[[stories/leptos/src/primitives/focus_scope.rs|focus_scope]]"
 dependencies:
   - "[[leptos-compose-refs]]"
   - "[[leptos-primitive]]"
