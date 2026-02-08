@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "notes/leptos-announce.md",
+                "file": "notes/leptos-form.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -28,7 +28,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "leptos-announce"
+              "title": "leptos-form"
             }
           }
         ]
@@ -192,17 +192,18 @@
   },
   "active": "79d59c987f0c5bf4",
   "lastOpenFiles": [
-    "target/debug/incremental/radix_leptos_announce-3b99pvgqedvch/s-hfl8uwiugx-0a7cr4o-ds9bw9mvuehg1do58v7cebd90/work-products.bin",
-    "target/debug/incremental/radix_leptos_announce-3b99pvgqedvch/s-hfl8uwiugx-0a7cr4o-ds9bw9mvuehg1do58v7cebd90/metadata.rmeta",
-    "target/debug/incremental/radix_leptos_announce-3b99pvgqedvch/s-hfl8uwiugx-0a7cr4o-ds9bw9mvuehg1do58v7cebd90/query-cache.bin",
-    "target/debug/incremental/radix_leptos_announce-3b99pvgqedvch/s-hfl8uwiugx-0a7cr4o-ds9bw9mvuehg1do58v7cebd90/dep-graph.bin",
-    "target/debug/incremental/radix_leptos_announce-3b99pvgqedvch/s-hfl8uwiugx-0a7cr4o-ds9bw9mvuehg1do58v7cebd90",
-    "target/debug/incremental/radix_leptos_announce-1euvol3ylx9qz/s-hfl8uwiuge-046d5qc-2bfu5ltuzw7aokl12bbtd8vb0/work-products.bin",
-    "target/debug/incremental/radix_leptos_announce-1euvol3ylx9qz/s-hfl8uwiuge-046d5qc-2bfu5ltuzw7aokl12bbtd8vb0/query-cache.bin",
-    "target/debug/incremental/radix_leptos_announce-1euvol3ylx9qz/s-hfl8uwiuge-046d5qc-2bfu5ltuzw7aokl12bbtd8vb0/dep-graph.bin",
-    "target/debug/incremental/radix_leptos_announce-1euvol3ylx9qz/s-hfl8uwiuge-046d5qc-2bfu5ltuzw7aokl12bbtd8vb0",
-    "target/debug/deps/libradix_leptos_announce-9269bac423b50b8c.rmeta",
-    "target/debug/deps/libradix_leptos_announce-9702152d01f68f0c.rmeta",
+    "stories/leptos/dist/radix-leptos-stories-5ee766163905fca_bg.wasm",
+    "stories/leptos/dist/favicon-e197903841a5b23b.ico",
+    "stories/leptos/dist/tailwind.output-246008182d1b1bb5.css",
+    "stories/leptos/dist/radix-leptos-stories-5ee766163905fca.js",
+    "stories/leptos/dist/form-93fdf092b059a91f.css",
+    "stories/leptos/dist/index.html",
+    "target/wasm32-unknown-unknown/debug/deps/radix_leptos_stories-7d0aa77d7ace889d.wasm",
+    "target/wasm32-unknown-unknown/debug/deps/radix_leptos_stories-7d0aa77d7ace889d.wasm.tmp39103cb",
+    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-0bajyxaidsz1y/s-hflg79mkt5-1tylg2x-6ebykmju754aq6v6vhienetsq/f3mwy87hhjpf29aycx94cdica.o",
+    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-0bajyxaidsz1y/s-hflg79mkt5-1tylg2x-6ebykmju754aq6v6vhienetsq/f1nf1i3xpefgeykltz9jk5wmb.o",
+    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-0bajyxaidsz1y/s-hflg79mkt5-1tylg2x-6ebykmju754aq6v6vhienetsq/work-products.bin",
+    "notes/leptos-announce.md",
     "notes/leptos-slot.md",
     "notes/leptos-context.md",
     "notes/core-rect.md",
@@ -213,7 +214,6 @@
     "notes/leptos-use-effect-event.md",
     "notes/leptos-use-callback-ref.md",
     "notes/leptos-use-rect.md",
-    "notes/leptos-announce.md",
     "notes/leptos-password-toggle-field.md",
     "notes/leptos-one-time-password-field.md",
     "notes/leptos-form.md",

@@ -5,7 +5,7 @@ use leptos_router::{
 };
 
 use crate::primitives::{
-    accessible_icon, arrow, aspect_ratio, label, popper, portal, separator, visually_hidden,
+    accessible_icon, arrow, aspect_ratio, form, label, popper, portal, separator, visually_hidden,
 };
 
 #[component]
@@ -104,6 +104,14 @@ pub fn App() -> impl IntoView {
                     //         <li><NavLink href="/focus-scope/multiple">Multiple</NavLink></li>
                     //     </ul>
                     // </li>
+                    <li>
+                        Form
+
+                        <ul class="list-none m-0 ms-4 p-0">
+                            <li><NavLink href="/form/basic">Basic</NavLink></li>
+                            <li><NavLink href="/form/cypress">Cypress</NavLink></li>
+                        </ul>
+                    </li>
                     <li>
                         Label
 
@@ -240,6 +248,9 @@ pub fn App() -> impl IntoView {
 
                     // <Route path="/focus-scope/basic" view=focus_scope::Basic />
                     // <Route path="/focus-scope/multiple" view=focus_scope::Multiple />
+
+                    <Route path=path!("/form/basic") view=form::Basic />
+                    <Route path=path!("/form/cypress") view=form::Cypress />
 
                     <Route path=path!("/label/styled") view=label::Styled />
                     <Route path=path!("/label/with-control") view=label::WithControl />

@@ -22,6 +22,7 @@ members = [
     "packages/primitives/leptos/compose-refs",
     "packages/primitives/leptos/direction",
     "packages/primitives/leptos/focus-guards",
+    "packages/primitives/leptos/form",
     "packages/primitives/leptos/id",
     "packages/primitives/leptos/label",
     "packages/primitives/leptos/popper",
@@ -69,6 +70,7 @@ radix-leptos-compose-refs = { path = "./packages/primitives/leptos/compose-refs"
 # radix-leptos-dismissable-layer = { path = "./packages/primitives/leptos/dismissable-layer", version = "0.0.2" }
 radix-leptos-direction = { path = "./packages/primitives/leptos/direction", version = "0.0.2" }
 radix-leptos-focus-guards = { path = "./packages/primitives/leptos/focus-guards", version = "0.0.2" }
+radix-leptos-form = { path = "./packages/primitives/leptos/form", version = "0.0.2" }
 # radix-leptos-focus-scope = { path = "./packages/primitives/leptos/focus-scope", version = "0.0.2" }
 radix-leptos-icons = { path = "./packages/icons/leptos", version = "0.0.2" }
 radix-leptos-id = { path = "./packages/primitives/leptos/id", version = "0.0.2" }

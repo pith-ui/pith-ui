@@ -23,6 +23,7 @@ radix-leptos-aspect-ratio.workspace = true
 # radix-leptos-checkbox.workspace = true
 # radix-leptos-collection.workspace = true
 # radix-leptos-focus-scope.workspace = true
+radix-leptos-form.workspace = true
 radix-leptos-label.workspace = true
 # radix-leptos-menu.workspace = true
 radix-leptos-popper.workspace = true

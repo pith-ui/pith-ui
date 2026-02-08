@@ -4043,6 +4043,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "radix-leptos-form"
+version = "0.0.2"
+dependencies = [
+ "leptos",
+ "leptos-node-ref",
+ "leptos_dom",
+ "radix-leptos-compose-refs",
+ "radix-leptos-id",
+ "radix-leptos-label",
+ "radix-leptos-primitive",
+ "send_wrapper",
+ "web-sys",
+]
+
+[[package]]
 name = "radix-leptos-icons"
 version = "0.0.2"
 dependencies = [
@@ -4128,6 +4143,7 @@ dependencies = [
  "radix-leptos-accessible-icon",
  "radix-leptos-arrow",
  "radix-leptos-aspect-ratio",
+ "radix-leptos-form",
  "radix-leptos-label",
  "radix-leptos-popper",
  "radix-leptos-portal",
