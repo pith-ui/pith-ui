@@ -5,8 +5,9 @@ use leptos_router::{
 };
 
 use crate::primitives::{
-    accessible_icon, arrow, aspect_ratio, form, label, popper, portal, presence, scroll_area,
-    separator, visually_hidden,
+    accessible_icon, arrow, aspect_ratio, form, label, popper, portal, presence,
+    progress,
+    scroll_area, separator, visually_hidden,
 };
 
 #[component]
@@ -163,14 +164,14 @@ pub fn App() -> impl IntoView {
                             <li><NavLink href="/presence/with-deferred-mount-animation">With Deferred Mount Animation</NavLink></li>
                         </ul>
                     </li>
-                    // <li>
-                    //     Progress
+                    <li>
+                        Progress
 
-                    //     <ul class="list-none m-0 ms-4 p-0">
-                    //         <li><NavLink href="/progress/styled">Styled</NavLink></li>
-                    //         <li><NavLink href="/progress/chromatic">Chromatic</NavLink></li>
-                    //     </ul>
-                    // </li>
+                        <ul class="list-none m-0 ms-4 p-0">
+                            <li><NavLink href="/progress/styled">Styled</NavLink></li>
+                            <li><NavLink href="/progress/chromatic">Chromatic</NavLink></li>
+                        </ul>
+                    </li>
                     <li>
                         Scroll Area
 
@@ -289,8 +290,8 @@ pub fn App() -> impl IntoView {
                     <Route path=path!("/presence/with-multiple-open-and-close-animations") view=presence::WithMultipleOpenAndCloseAnimations />
                     <Route path=path!("/presence/with-deferred-mount-animation") view=presence::WithDeferredMountAnimation />
 
-                    // <Route path="/progress/styled" view=progress::Styled />
-                    // <Route path="/progress/chromatic" view=progress::Chromatic />
+                    <Route path=path!("/progress/styled") view=progress::Styled />
+                    <Route path=path!("/progress/chromatic") view=progress::Chromatic />
 
                     <Route path=path!("/scroll-area/basic") view=scroll_area::Basic />
                     <Route path=path!("/scroll-area/resizable") view=scroll_area::Resizable />

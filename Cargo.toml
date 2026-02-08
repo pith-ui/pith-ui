@@ -29,6 +29,7 @@ members = [
     "packages/primitives/leptos/portal",
     "packages/primitives/leptos/presence",
     "packages/primitives/leptos/primitive",
+    "packages/primitives/leptos/progress",
     "packages/primitives/leptos/scroll-area",
     "packages/primitives/leptos/separator",
     "packages/primitives/leptos/use-controllable-state",
@@ -81,6 +82,7 @@ radix-leptos-popper = { path = "./packages/primitives/leptos/popper", version = 
 radix-leptos-portal = { path = "./packages/primitives/leptos/portal", version = "0.0.2" }
 radix-leptos-presence = { path = "./packages/primitives/leptos/presence", version = "0.0.2" }
 radix-leptos-primitive = { path = "./packages/primitives/leptos/primitive", version = "0.0.2" }
+radix-leptos-progress = { path = "./packages/primitives/leptos/progress", version = "0.0.2" }
 radix-leptos-scroll-area = { path = "./packages/primitives/leptos/scroll-area", version = "0.0.2" }
 # radix-leptos-roving-focus = { path = "./packages/primitives/leptos/roving-focus", version = "0.0.2" }
 radix-leptos-separator = { path = "./packages/primitives/leptos/separator", version = "0.0.2" }

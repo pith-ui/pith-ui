@@ -4133,6 +4133,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "radix-leptos-progress"
+version = "0.0.2"
+dependencies = [
+ "leptos",
+ "leptos-node-ref",
+ "radix-leptos-primitive",
+]
+
+[[package]]
 name = "radix-leptos-scroll-area"
 version = "0.0.2"
 dependencies = [
@@ -4175,6 +4184,7 @@ dependencies = [
  "radix-leptos-popper",
  "radix-leptos-portal",
  "radix-leptos-presence",
+ "radix-leptos-progress",
  "radix-leptos-scroll-area",
  "radix-leptos-separator",
  "radix-leptos-visually-hidden",
