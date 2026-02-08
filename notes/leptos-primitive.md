@@ -35,15 +35,15 @@ When `asChild` is `true`, renders a `Slot` (from `@radix-ui/react-slot`) that me
 
 ```rust
 #[component]
-fn Primitive<E, C>(
+fn Primitive<E>(
     element: fn() -> HtmlElement<E, (), ()>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
-    children: TypedChildrenFn<C>,
+    children: ChildrenFn,
 ) -> impl IntoView
 
 #[component]
-fn VoidPrimitive<E, C>(/* same props */) -> impl IntoView
+fn VoidPrimitive<E>(/* same props */) -> impl IntoView
 
 fn compose_callbacks<E>(
     original_handler: Option<Callback<E>>,
@@ -52,7 +52,7 @@ fn compose_callbacks<E>(
 ) -> impl Fn(E)
 ```
 
-- `Primitive` — takes an `element` factory (e.g., `|| html::div()`) instead of a string tag name. Uses `TypedFallbackShow` to switch between rendering the element with children or passing children through directly when `as_child` is true. Ref forwarding via `AnyNodeRef` + `any_node_ref`.
+- `Primitive` — takes an `element` factory (e.g., `|| html::div()`) instead of a string tag name. Uses `Either`-based branching to switch between rendering the element with children or passing children through directly when `as_child` is true. Children are type-erased via `ChildrenFn` to avoid per-call-site monomorphization. Ref forwarding via `AnyNodeRef` + `any_node_ref`.
 - `VoidPrimitive` — same as `Primitive` but for void elements (e.g., `<input>`) that cannot have children. When `as_child` is false, renders the element without children.
 - `compose_callbacks` — Leptos-specific version of `composeEventHandlers` from core. Uses `Callback<E>` instead of `fn(E)`.
 
@@ -66,10 +66,10 @@ fn compose_callbacks<E>(
 ## Leptos Implementation Notes
 
 - Instead of a fixed set of element variants, the Leptos port is generic over `E: ElementType`. The caller passes an element constructor function.
-- `TypedFallbackShow` replaces the `Slot` pattern: when `as_child` is true, children are rendered directly with `node_ref` attached; otherwise the element wraps the children.
+- `Either`-based branching replaces the `Slot` pattern: when `as_child` is true, children are rendered directly with `node_ref` attached; otherwise the element wraps the children.
 - `compose_callbacks` lives here (not in `core/primitive`) and uses `Callback<E>` with `.run()` instead of bare function pointers. Combines the `let` guard with `if` for the default-prevented check.
 - No equivalent of `dispatchDiscreteCustomEvent` — Leptos doesn't have React's batching semantics, so the flush workaround is unnecessary.
-- Dependencies: `leptos`, `leptos-node-ref`, `leptos-typed-fallback-show`.
+- Dependencies: `leptos`, `leptos-node-ref`.
 
 ### Monomorphization and wasm linker pressure
 
@@ -79,9 +79,8 @@ This creates cumulative pressure on the wasm linker (`rust-lld`). In isolation e
 
 **Practical impact:** The progress Chromatic story originally instantiated 7 `<Progress>` / `<ProgressIndicator>` pairs (mirroring the React reference). This, combined with all other story components, pushed `rust-lld` past its limit. The workaround was to replace the Chromatic story with a placeholder and cover all states interactively in the Styled story instead.
 
-**Potential fixes (not yet implemented):**
-1. **Type-erase children** — Change `Primitive` to accept `ChildrenFn` (or `Box<dyn Fn() -> AnyView>`) instead of `TypedChildrenFn<C>`. This collapses all call sites into a single monomorphization per element type. Tradeoff: loses compile-time children type information and may require boxing.
-2. **Reduce element type generics** — Use a single element type (e.g., always `html::div`) and set the tag name dynamically. Tradeoff: loses static element type guarantees.
-3. **Split story binaries** — Build each primitive's stories as a separate wasm binary instead of one monolithic binary. Tradeoff: more complex build setup.
+**Fix #1 (implemented):** Children were type-erased by changing `Primitive` and `VoidPrimitive` to accept `ChildrenFn` instead of `TypedChildrenFn<C>`. This collapses all call sites into a single monomorphization per element type. The `TypedFallbackShow`-based branching was replaced with `Either`-based branching, and the `leptos-typed-fallback-show` dependency was removed from the primitive package. Callers that previously passed children as a prop (`children=children`) were updated to pass children inline.
 
-Until one of these is adopted, stories that instantiate many `Primitive`-based components should minimize the number of distinct `view!` call sites in a single binary.
+**Other potential fixes (not implemented):**
+1. **Reduce element type generics** — Use a single element type (e.g., always `html::div`) and set the tag name dynamically. Tradeoff: loses static element type guarantees.
+2. **Split story binaries** — Build each primitive's stories as a separate wasm binary instead of one monolithic binary. Tradeoff: more complex build setup.

@@ -10,12 +10,13 @@ pub fn Label(
     #[prop(into, optional)] node_ref: AnyNodeRef,
     children: TypedChildrenFn<impl IntoView + 'static>,
 ) -> impl IntoView {
+    let children = StoredValue::new(children.into_inner());
+
     view! {
         <Primitive
             element=html::label
             as_child=as_child
             node_ref=node_ref
-            children=children
             on:mousedown=move |event: MouseEvent| {
                 // Only prevent text selection if clicking inside the label itself.
                 let target = event_target::<web_sys::Element>(&event);
@@ -34,6 +35,8 @@ pub fn Label(
                     event.prevent_default();
                 }
             }
-        />
+        >
+            {children.with_value(|children| children())}
+        </Primitive>
     }
 }

@@ -4144,7 +4144,6 @@ version = "0.0.2"
 dependencies = [
  "leptos",
  "leptos-node-ref",
- "leptos-typed-fallback-show",
 ]
 
 [[package]]

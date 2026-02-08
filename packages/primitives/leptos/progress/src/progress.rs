@@ -42,6 +42,8 @@ pub fn Progress(
     #[prop(into, optional)] node_ref: AnyNodeRef,
     children: TypedChildrenFn<impl IntoView + 'static>,
 ) -> impl IntoView {
+    let children = StoredValue::new(children.into_inner());
+
     let max = Signal::derive(move || {
         max.get()
             .and_then(|max| match max == 0.0 {
@@ -67,7 +69,6 @@ pub fn Progress(
             element=html::div
             as_child=as_child
             node_ref=node_ref
-            children=children
             attr:aria-valuemax=move || max.get().to_string()
             attr:aria-valuemin="0"
             attr:aria-valuenow=move || value.get().map(|v| v.to_string())
@@ -76,7 +77,9 @@ pub fn Progress(
             attr:data-state=move || get_progress_state(value.get(), max.get()).to_string()
             attr:data-value=move || value.get().map(|v| v.to_string())
             attr:data-max=move || max.get().to_string()
-        />
+        >
+            {children.with_value(|children| children())}
+        </Primitive>
     }
 }
 
