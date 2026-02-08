@@ -1,17 +1,16 @@
-use std::ops::Deref;
-
-use html::AnyElement;
-use leptos::*;
-use radix_leptos_presence::*;
+use leptos::prelude::*;
+use leptos_node_ref::AnyNodeRef;
+use radix_leptos_presence::Presence;
+use send_wrapper::SendWrapper;
 use tailwind_fuse::*;
 use web_sys::wasm_bindgen::{closure::Closure, JsCast};
 
 #[component]
 pub fn Basic() -> impl IntoView {
-    let (open, set_open) = create_signal(false);
+    let (open, set_open) = signal(true);
 
     view! {
-        <button on:click=move |_| set_open.update(move |open| *open = !*open)>Toggle</button>
+        <button on:click=move |_| set_open.update(|open| *open = !*open)>toggle</button>
 
         <Presence present=open>
             <div>Content</div>
@@ -21,83 +20,87 @@ pub fn Basic() -> impl IntoView {
 
 #[component]
 pub fn WithMountAnimation() -> impl IntoView {
-    let mount_animation_class = Memo::new(move |_| MountAnimationClass::default().to_class());
+    let class = MountAnimationClass::default().to_class();
 
     view! {
-        <Animation attr:class=mount_animation_class />
+        <Animation class=class />
     }
 }
 
 #[component]
 pub fn WithUnmountAnimation() -> impl IntoView {
-    let unmount_animation_class = Memo::new(move |_| UnmountAnimationClass::default().to_class());
+    let class = UnmountAnimationClass::default().to_class();
 
     view! {
-        <Animation attr:class=unmount_animation_class />
+        <Animation class=class />
     }
 }
 
 #[component]
 pub fn WithMultipleMountAnimations() -> impl IntoView {
-    let multiple_mount_animations_class =
-        Memo::new(move |_| MultipleMountAnimationsClass::default().to_class());
+    let class = MultipleMountAnimationsClass::default().to_class();
 
     view! {
-        <Animation attr:class=multiple_mount_animations_class />
+        <Animation class=class />
     }
 }
 
 #[component]
 pub fn WithOpenAndCloseAnimation() -> impl IntoView {
-    let open_and_close_animation_class =
-        Memo::new(move |_| OpenAndCloseAnimationClass::default().to_class());
+    let class = OpenAndCloseAnimationClass::default().to_class();
 
     view! {
-        <Animation attr:class=open_and_close_animation_class />
+        <Animation class=class />
     }
 }
 
 #[component]
 pub fn WithMultipleOpenAndCloseAnimations() -> impl IntoView {
-    let multiple_open_and_close_animations_class =
-        Memo::new(move |_| MultipleOpenAndCloseAnimationsClass::default().to_class());
+    let class = MultipleOpenAndCloseAnimationsClass::default().to_class();
 
     view! {
-        <Animation attr:class=multiple_open_and_close_animations_class />
+        <Animation class=class />
     }
 }
 
 #[component]
 pub fn WithDeferredMountAnimation() -> impl IntoView {
-    let mount_animation_class = Memo::new(move |_| MountAnimationClass::default().to_class());
+    let mount_animation_class = StoredValue::new(MountAnimationClass::default().to_class());
 
-    let node_ref = NodeRef::new();
+    let node_ref = AnyNodeRef::new();
     let timer = RwSignal::new(0);
-    let (open, set_open) = create_signal(false);
-    let (animate, set_animate) = create_signal(false);
+    let (open, set_open) = signal(false);
+    let (animate, set_animate) = signal(false);
 
-    let handler: Closure<dyn Fn()> = Closure::new(move || {
-        set_animate.set(true);
-    });
+    let handler: SendWrapper<Closure<dyn Fn()>> =
+        SendWrapper::new(Closure::new(move || {
+            set_animate.set(true);
+        }));
+    let handler = StoredValue::new(handler);
 
     Effect::new(move |_| {
+        let window = web_sys::window().expect("Window should exist.");
         if open.get() {
-            timer.set(
-                window()
-                    .set_timeout_with_callback_and_timeout_and_arguments_0(
-                        handler.as_ref().unchecked_ref(),
-                        150,
-                    )
-                    .expect("Timeout should be set."),
-            )
+            handler.with_value(|handler| {
+                timer.set(
+                    window
+                        .set_timeout_with_callback_and_timeout_and_arguments_0(
+                            handler.as_ref().unchecked_ref(),
+                            150,
+                        )
+                        .expect("Timeout should be set."),
+                );
+            });
         } else {
             set_animate.set(false);
-            window().clear_timeout_with_handle(timer.get());
+            window.clear_timeout_with_handle(timer.get());
         }
     });
 
-    on_cleanup(move || {
-        window().clear_timeout_with_handle(timer.get());
+    Owner::on_cleanup(move || {
+        web_sys::window()
+            .expect("Window should exist.")
+            .clear_timeout_with_handle(timer.get());
     });
 
     view! {
@@ -107,11 +110,14 @@ pub fn WithDeferredMountAnimation() -> impl IntoView {
         </p>
         <Toggles
             open=open
-            on_open_change=move |open| set_open.set(open)
+            on_open_change=Callback::new(move |value| set_open.set(value))
             node_ref=node_ref
         />
         <Presence present=open node_ref=node_ref>
-            <div attr:class=move || animate.get().then_some(mount_animation_class.get())>
+            <div
+                node_ref=node_ref
+                class=move || animate.get().then(|| mount_animation_class.get_value())
+            >
                 Content
             </div>
         </Presence>
@@ -119,23 +125,26 @@ pub fn WithDeferredMountAnimation() -> impl IntoView {
 }
 
 #[component]
-fn Animation(#[prop(attrs)] attrs: Vec<(&'static str, Attribute)>) -> impl IntoView {
-    let attrs = StoredValue::new(attrs);
-
-    let node_ref = NodeRef::new();
-    let (open, set_open) = create_signal(false);
+fn Animation(#[prop(into, optional)] class: String) -> impl IntoView {
+    let class = StoredValue::new(class);
+    let node_ref = AnyNodeRef::new();
+    let (open, set_open) = signal(false);
 
     view! {
         <Toggles
             open=open
-            on_open_change=move |open| set_open.set(open)
+            on_open_change=Callback::new(move |value| set_open.set(value))
             node_ref=node_ref
         />
         <Presence present=open node_ref=node_ref>
-            <div {..attrs.get_value()} data-state=move || match open.get() {
-                true => "open",
-                false => "closed"
-            }>
+            <div
+                node_ref=node_ref
+                class=move || class.get_value()
+                data-state=move || match open.get() {
+                    true => "open",
+                    false => "closed",
+                }
+            >
                 Content
             </div>
         </Presence>
@@ -145,12 +154,13 @@ fn Animation(#[prop(attrs)] attrs: Vec<(&'static str, Attribute)>) -> impl IntoV
 #[component]
 fn Toggles(
     #[prop(into)] open: Signal<bool>,
-    #[prop(into)] on_open_change: Callback<bool>,
-    #[prop(into)] node_ref: NodeRef<AnyElement>,
+    on_open_change: Callback<bool>,
+    node_ref: AnyNodeRef,
 ) -> impl IntoView {
-    let handle_toggle_visilbity = move |_| {
-        if let Some(node) = node_ref.get_untracked() {
-            let style = node.deref().style();
+    let handle_toggle_visibility = move |_| {
+        if let Some(node) = node_ref.get() {
+            let node: &web_sys::HtmlElement = node.unchecked_ref();
+            let style = node.style();
             if style.get_property_value("display").ok() == Some("none".into()) {
                 style
                     .set_property("display", "block")
@@ -167,13 +177,13 @@ fn Toggles(
         <form style:display="flex" style:margin-bottom="30px">
             <fieldset>
                 <legend>Mount</legend>
-                <button type="button" on:click=move |_| on_open_change.call(!open.get())>
+                <button type="button" on:click=move |_| on_open_change.run(!open.get())>
                     toggle
                 </button>
             </fieldset>
             <fieldset>
                 <legend>Visibility (triggers cancel event)</legend>
-                <button type="button" on:click=handle_toggle_visilbity>
+                <button type="button" on:click=handle_toggle_visibility>
                     toggle
                 </button>
             </fieldset>
@@ -186,7 +196,7 @@ fn Toggles(
 struct MountAnimationClass {}
 
 #[derive(TwClass, Default, Clone, Copy)]
-#[tw(class = "data-[state=closed]:animate-[presenceFadeOut_3s_ease-out]")]
+#[tw(class = "data-[state=closed]:animate-[presenceFadeOut_3s_ease-in]")]
 struct UnmountAnimationClass {}
 
 #[derive(TwClass, Default, Clone, Copy)]
@@ -197,12 +207,12 @@ struct MultipleMountAnimationsClass {}
 
 #[derive(TwClass, Default, Clone, Copy)]
 #[tw(
-    class = "data-[state=open]:animate-[presenceFadeIn_3s_ease-out] data-[state=closed]:animate-[presenceFadeOut_3s_ease-out]"
+    class = "data-[state=open]:animate-[presenceFadeIn_3s_ease-out] data-[state=closed]:animate-[presenceFadeOut_3s_ease-in]"
 )]
 struct OpenAndCloseAnimationClass {}
 
 #[derive(TwClass, Default, Clone, Copy)]
 #[tw(
-    class = "data-[state=open]:animate-[presenceFadeIn_6s_cubic-bezier(0.22,1,0.36,1),presenceSlideUp_6s_cubic-bezier(0.22,1,0.36,1)] data-[state=closed]:animate-[presenceFadeOut_6s_cubic-bezier(0.22,1,0.36,1),presenceSlideDown_6s_cubic-bezier(0.22,1,0.36,1)]"
+    class = "data-[state=open]:animate-[presenceFadeIn_3s_cubic-bezier(0.22,1,0.36,1),presenceSlideUp_1s_cubic-bezier(0.22,1,0.36,1)] data-[state=closed]:animate-[presenceFadeOut_3s_cubic-bezier(0.22,1,0.36,1),presenceSlideDown_1s_cubic-bezier(0.22,1,0.36,1)]"
 )]
 struct MultipleOpenAndCloseAnimationsClass {}

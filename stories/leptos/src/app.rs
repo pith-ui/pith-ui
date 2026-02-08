@@ -5,8 +5,8 @@ use leptos_router::{
 };
 
 use crate::primitives::{
-    accessible_icon, arrow, aspect_ratio, form, label, popper, portal, scroll_area, separator,
-    visually_hidden,
+    accessible_icon, arrow, aspect_ratio, form, label, popper, portal, presence, scroll_area,
+    separator, visually_hidden,
 };
 
 #[component]
@@ -150,19 +150,19 @@ pub fn App() -> impl IntoView {
                             <li><NavLink href="/portal/chromatic">Chromatic</NavLink></li>
                         </ul>
                     </li>
-                    // <li>
-                    //     Presence
+                    <li>
+                        Presence
 
-                    //     <ul class="list-none m-0 ms-4 p-0">
-                    //         <li><NavLink href="/presence/basic">Basic</NavLink></li>
-                    //         <li><NavLink href="/presence/with-mount-animation">With Mount Animation</NavLink></li>
-                    //         <li><NavLink href="/presence/with-unmount-animation">With Unmount Animation</NavLink></li>
-                    //         <li><NavLink href="/presence/with-multiple-mount-animations">With Multiple Mount Animations</NavLink></li>
-                    //         <li><NavLink href="/presence/with-open-and-close-animation">With Open and Close Animation</NavLink></li>
-                    //         <li><NavLink href="/presence/with-multiple-open-and-close-animations">With Multiple Open and Close Animations</NavLink></li>
-                    //         <li><NavLink href="/presence/with-deferred-mount-animation">With Deferred Mount Animation</NavLink></li>
-                    //     </ul>
-                    // </li>
+                        <ul class="list-none m-0 ms-4 p-0">
+                            <li><NavLink href="/presence/basic">Basic</NavLink></li>
+                            <li><NavLink href="/presence/with-mount-animation">With Mount Animation</NavLink></li>
+                            <li><NavLink href="/presence/with-unmount-animation">With Unmount Animation</NavLink></li>
+                            <li><NavLink href="/presence/with-multiple-mount-animations">With Multiple Mount Animations</NavLink></li>
+                            <li><NavLink href="/presence/with-open-and-close-animation">With Open and Close Animation</NavLink></li>
+                            <li><NavLink href="/presence/with-multiple-open-and-close-animations">With Multiple Open and Close Animations</NavLink></li>
+                            <li><NavLink href="/presence/with-deferred-mount-animation">With Deferred Mount Animation</NavLink></li>
+                        </ul>
+                    </li>
                     // <li>
                     //     Progress
 
@@ -281,13 +281,13 @@ pub fn App() -> impl IntoView {
                     <Route path=path!("/portal/custom-container") view=portal::CustomContainer />
                     <Route path=path!("/portal/chromatic") view=portal::Chromatic />
 
-                    // <Route path="/presence/basic" view=presence::Basic />
-                    // <Route path="/presence/with-mount-animation" view=presence::WithMountAnimation />
-                    // <Route path="/presence/with-unmount-animation" view=presence::WithUnmountAnimation />
-                    // <Route path="/presence/with-multiple-mount-animations" view=presence::WithMultipleMountAnimations />
-                    // <Route path="/presence/with-open-and-close-animation" view=presence::WithOpenAndCloseAnimation />
-                    // <Route path="/presence/with-multiple-open-and-close-animations" view=presence::WithMultipleOpenAndCloseAnimations />
-                    // <Route path="/presence/with-deferred-mount-animation" view=presence::WithDeferredMountAnimation />
+                    <Route path=path!("/presence/basic") view=presence::Basic />
+                    <Route path=path!("/presence/with-mount-animation") view=presence::WithMountAnimation />
+                    <Route path=path!("/presence/with-unmount-animation") view=presence::WithUnmountAnimation />
+                    <Route path=path!("/presence/with-multiple-mount-animations") view=presence::WithMultipleMountAnimations />
+                    <Route path=path!("/presence/with-open-and-close-animation") view=presence::WithOpenAndCloseAnimation />
+                    <Route path=path!("/presence/with-multiple-open-and-close-animations") view=presence::WithMultipleOpenAndCloseAnimations />
+                    <Route path=path!("/presence/with-deferred-mount-animation") view=presence::WithDeferredMountAnimation />
 
                     // <Route path="/progress/styled" view=progress::Styled />
                     // <Route path="/progress/chromatic" view=progress::Chromatic />
