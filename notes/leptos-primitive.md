@@ -70,3 +70,18 @@ fn compose_callbacks<E>(
 - `compose_callbacks` lives here (not in `core/primitive`) and uses `Callback<E>` with `.run()` instead of bare function pointers. Combines the `let` guard with `if` for the default-prevented check.
 - No equivalent of `dispatchDiscreteCustomEvent` — Leptos doesn't have React's batching semantics, so the flush workaround is unnecessary.
 - Dependencies: `leptos`, `leptos-node-ref`, `leptos-typed-fallback-show`.
+
+### Monomorphization and wasm linker pressure
+
+Because `Primitive` is generic over `C` (the children type), every call site with a distinct `view!` fragment produces a unique monomorphization of `Primitive<E, C>`. Each `view!` macro invocation returns an anonymous type, so two calls that look identical at the source level still generate different concrete types.
+
+This creates cumulative pressure on the wasm linker (`rust-lld`). In isolation each monomorphization is small, but across a full stories binary with many component demos the total can exceed `rust-lld`'s memory/resource limits, resulting in a **SIGBUS crash** during linking of the debug wasm target. Release builds with LTO may fare better because duplicate code is merged, but debug builds (the default for `trunk serve`) are the primary development workflow.
+
+**Practical impact:** The progress Chromatic story originally instantiated 7 `<Progress>` / `<ProgressIndicator>` pairs (mirroring the React reference). This, combined with all other story components, pushed `rust-lld` past its limit. The workaround was to replace the Chromatic story with a placeholder and cover all states interactively in the Styled story instead.
+
+**Potential fixes (not yet implemented):**
+1. **Type-erase children** — Change `Primitive` to accept `ChildrenFn` (or `Box<dyn Fn() -> AnyView>`) instead of `TypedChildrenFn<C>`. This collapses all call sites into a single monomorphization per element type. Tradeoff: loses compile-time children type information and may require boxing.
+2. **Reduce element type generics** — Use a single element type (e.g., always `html::div`) and set the tag name dynamically. Tradeoff: loses static element type guarantees.
+3. **Split story binaries** — Build each primitive's stories as a separate wasm binary instead of one monolithic binary. Tradeoff: more complex build setup.
+
+Until one of these is adopted, stories that instantiate many `Primitive`-based components should minimize the number of distinct `view!` call sites in a single binary.

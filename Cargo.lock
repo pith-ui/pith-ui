@@ -4020,6 +4020,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "radix-leptos-collapsible"
+version = "0.0.2"
+dependencies = [
+ "leptos",
+ "leptos-node-ref",
+ "radix-leptos-compose-refs",
+ "radix-leptos-id",
+ "radix-leptos-presence",
+ "radix-leptos-primitive",
+ "radix-leptos-use-controllable-state",
+ "send_wrapper",
+ "web-sys",
+]
+
+[[package]]
 name = "radix-leptos-compose-refs"
 version = "0.0.2"
 dependencies = [
@@ -4178,6 +4193,7 @@ dependencies = [
  "radix-leptos-accessible-icon",
  "radix-leptos-arrow",
  "radix-leptos-aspect-ratio",
+ "radix-leptos-collapsible",
  "radix-leptos-direction",
  "radix-leptos-form",
  "radix-leptos-label",

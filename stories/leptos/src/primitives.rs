@@ -3,6 +3,7 @@ pub mod arrow;
 pub mod aspect_ratio;
 // pub mod avatar;
 // pub mod checkbox;
+pub mod collapsible;
 // pub mod collection;
 // pub mod focus_scope;
 pub mod form;

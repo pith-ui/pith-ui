@@ -1,0 +1,42 @@
+:root {
+    --color-black: #000;
+    --color-white: #fff;
+    --color-red: crimson;
+    --color-gray300: #ccc;
+}
+
+@keyframes collapsible-slideDown {
+    from {
+        height: 0;
+    }
+    to {
+        height: var(--radix-collapsible-content-height);
+    }
+}
+
+@keyframes collapsible-slideUp {
+    from {
+        height: var(--radix-collapsible-content-height);
+    }
+    to {
+        height: 0;
+    }
+}
+
+@keyframes collapsible-openRight {
+    from {
+        width: 0;
+    }
+    to {
+        width: var(--radix-collapsible-content-width);
+    }
+}
+
+@keyframes collapsible-closeRight {
+    from {
+        width: var(--radix-collapsible-content-width);
+    }
+    to {
+        width: 0;
+    }
+}

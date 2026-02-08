@@ -5,9 +5,8 @@ use leptos_router::{
 };
 
 use crate::primitives::{
-    accessible_icon, arrow, aspect_ratio, form, label, popper, portal, presence,
-    progress,
-    scroll_area, separator, visually_hidden,
+    accessible_icon, arrow, aspect_ratio, collapsible, form, label, popper, portal, presence,
+    progress, scroll_area, separator, visually_hidden,
 };
 
 #[component]
@@ -63,6 +62,17 @@ pub fn App() -> impl IntoView {
                             <li><NavLink href="/aspect-ratio/styled">Styled</NavLink></li>
                             <li><NavLink href="/aspect-ratio/custom-ratios">Custom Ratios</NavLink></li>
                             <li><NavLink href="/aspect-ratio/chromatic">Chromatic</NavLink></li>
+                        </ul>
+                    </li>
+                    <li>
+                        Collapsible
+
+                        <ul class="list-none m-0 ms-4 p-0">
+                            <li><NavLink href="/collapsible/styled">Styled</NavLink></li>
+                            <li><NavLink href="/collapsible/controlled">Controlled</NavLink></li>
+                            <li><NavLink href="/collapsible/animated">Animated</NavLink></li>
+                            <li><NavLink href="/collapsible/animated-horizontal">Animated Horizontal</NavLink></li>
+                            <li><NavLink href="/collapsible/chromatic">Chromatic</NavLink></li>
                         </ul>
                     </li>
                     // <li>
@@ -240,6 +250,12 @@ pub fn App() -> impl IntoView {
                     <Route path=path!("/aspect-ratio/styled") view=aspect_ratio::Styled />
                     <Route path=path!("/aspect-ratio/custom-ratios") view=aspect_ratio::CustomRatios />
                     <Route path=path!("/aspect-ratio/chromatic") view=aspect_ratio::Chromatic />
+
+                    <Route path=path!("/collapsible/styled") view=collapsible::Styled />
+                    <Route path=path!("/collapsible/controlled") view=collapsible::Controlled />
+                    <Route path=path!("/collapsible/animated") view=collapsible::Animated />
+                    <Route path=path!("/collapsible/animated-horizontal") view=collapsible::AnimatedHorizontal />
+                    <Route path=path!("/collapsible/chromatic") view=collapsible::Chromatic />
 
                     // <Route path="/avatar/styled" view=avatar::Styled />
                     // <Route path="/avatar/chromatic" view=avatar::Chromatic />

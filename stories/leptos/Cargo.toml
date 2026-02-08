@@ -19,6 +19,7 @@ log.workspace = true
 radix-leptos-accessible-icon.workspace = true
 radix-leptos-arrow.workspace = true
 radix-leptos-aspect-ratio.workspace = true
+radix-leptos-collapsible.workspace = true
 # radix-leptos-avatar.workspace = true
 # radix-leptos-checkbox.workspace = true
 # radix-leptos-collection.workspace = true
