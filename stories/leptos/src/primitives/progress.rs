@@ -26,17 +26,52 @@ pub fn Styled() -> impl IntoView {
     }
 }
 
-// NOTE: The React Chromatic story has 7 Progress instances covering every state and
-// style combination. That amount of generic component instantiation causes rust-lld
-// to crash (SIGBUS) when linking the debug wasm binary. The Styled story above covers
-// all states interactively.
 #[component]
 pub fn Chromatic() -> impl IntoView {
+    let root_class = Memo::new(move |_| RootClass::default().to_class());
+    let chromatic_indicator_class =
+        Memo::new(move |_| ChromaticIndicatorClass::default().to_class());
+    let root_attr_class = Memo::new(move |_| RootAttrClass::default().to_class());
+    let indicator_attr_class = Memo::new(move |_| IndicatorAttrClass::default().to_class());
+
     view! {
-        <p>
-            Chromatic story omitted to avoid rust-lld crash. Use the Styled story to test
-            all progress states interactively.
-        </p>
+        <>
+            <h1>"Loading (not started)"</h1>
+            <Progress attr:class=root_class value=0.0>
+                <ProgressIndicator attr:class=chromatic_indicator_class>"/"</ProgressIndicator>
+            </Progress>
+
+            <h1>"Loading (started)"</h1>
+            <Progress attr:class=root_class value=30.0>
+                <ProgressIndicator attr:class=chromatic_indicator_class>"/"</ProgressIndicator>
+            </Progress>
+
+            <h1>"Indeterminate"</h1>
+            <Progress attr:class=root_class>
+                <ProgressIndicator attr:class=chromatic_indicator_class>"/"</ProgressIndicator>
+            </Progress>
+
+            <h1>"Complete"</h1>
+            <Progress attr:class=root_class value=100.0>
+                <ProgressIndicator attr:class=chromatic_indicator_class>"/"</ProgressIndicator>
+            </Progress>
+
+            <h1>"State attributes"</h1>
+            <h2>"Loading (started)"</h2>
+            <Progress attr:class=root_attr_class value=30.0>
+                <ProgressIndicator attr:class=indicator_attr_class>"/"</ProgressIndicator>
+            </Progress>
+
+            <h2>"Indeterminate"</h2>
+            <Progress attr:class=root_attr_class>
+                <ProgressIndicator attr:class=indicator_attr_class>"/"</ProgressIndicator>
+            </Progress>
+
+            <h2>"Complete"</h2>
+            <Progress attr:class=root_attr_class value=100.0>
+                <ProgressIndicator attr:class=indicator_attr_class>"/"</ProgressIndicator>
+            </Progress>
+        </>
     }
 }
 
@@ -79,28 +114,34 @@ struct RootClass {}
 )]
 struct IndicatorClass {}
 
-// Chromatic-only classes kept for reference but unused to avoid rust-lld crash.
-// #[derive(TwClass, Default, Clone, Copy)]
-// #[tw(class = "w-0 h-full bg-[crimson] ... before:content-[attr(data-value)] after:content-[attr(data-max)]")]
-// struct ChromaticIndicatorClass {}
-//
-// #[derive(TwClass, Default, Clone, Copy)]
-// #[tw(class = "bg-[rgba(0,0,255,0.3)] border-[2px] ...")]
-// struct RootAttrClass {}
-//
-// #[derive(TwClass, Default, Clone, Copy)]
-// #[tw(class = "bg-[rgba(0,0,255,0.3)] border-[2px] ... before:content-[attr(data-value)] after:content-[attr(data-max)]")]
-// struct IndicatorAttrClass {}
+#[derive(TwClass, Default, Clone, Copy)]
+#[tw(
+    class = "w-0 h-full bg-[crimson] transition-[background] duration-150 ease-[ease-out] data-[state=indeterminate]:bg-[#aaa] data-[state=complete]:bg-[green] before:content-[attr(data-value)] after:content-[attr(data-max)]"
+)]
+struct ChromaticIndicatorClass {}
 
-type ProgressValueState = (ReadSignal<Option<f64>>, Signal<Option<f64>>, WriteSignal<Option<f64>>);
+#[derive(TwClass, Default, Clone, Copy)]
+#[tw(
+    class = "bg-[rgba(0,0,255,0.3)] border-[2px] border-solid border-[blue] p-[10px] data-[state=loading]:border-[red] data-[state=indeterminate]:border-[purple] data-[state=complete]:border-[green]"
+)]
+struct RootAttrClass {}
+
+#[derive(TwClass, Default, Clone, Copy)]
+#[tw(
+    class = "bg-[rgba(0,0,255,0.3)] border-[2px] border-solid border-[blue] p-[10px] data-[state=loading]:border-[red] data-[state=indeterminate]:border-[purple] data-[state=complete]:border-[green] before:content-[attr(data-value)] after:content-[attr(data-max)]"
+)]
+struct IndicatorAttrClass {}
+
+type ProgressValueState = (
+    ReadSignal<Option<f64>>,
+    Signal<Option<f64>>,
+    WriteSignal<Option<f64>>,
+);
 
 fn use_progress_value_state(initial_state: Option<f64>, max: f64) -> ProgressValueState {
     let (value, set_value) = signal(initial_state);
-    let percentage = Signal::derive(move || {
-        value
-            .get()
-            .map(|value| ((value / max) * 100.0).round())
-    });
+    let percentage =
+        Signal::derive(move || value.get().map(|value| ((value / max) * 100.0).round()));
     (value, percentage, set_value)
 }
 

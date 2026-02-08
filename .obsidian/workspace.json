@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "notes/leptos-primitive.md",
+                "file": "notes/leptos-presence.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -28,7 +28,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "leptos-primitive"
+              "title": "leptos-presence"
             }
           }
         ]
@@ -192,17 +192,17 @@
   },
   "active": "79d59c987f0c5bf4",
   "lastOpenFiles": [
-    "target/debug/incremental/radix_leptos_stories-0zvv7p4g8361i/s-hfm8uhe5u7-1mhap9q-6kfn7dvjkhhvsy4z74nf0anrs/work-products.bin",
-    "target/debug/incremental/radix_leptos_stories-0zvv7p4g8361i/s-hfm8uhe5u7-1mhap9q-6kfn7dvjkhhvsy4z74nf0anrs/query-cache.bin",
-    "target/debug/incremental/radix_leptos_stories-0zvv7p4g8361i/s-hfm8uhe5u7-1mhap9q-6kfn7dvjkhhvsy4z74nf0anrs/dep-graph.bin",
-    "target/debug/incremental/radix_leptos_stories-0zvv7p4g8361i/s-hfm8uhe5u7-1mhap9q-6kfn7dvjkhhvsy4z74nf0anrs",
-    "target/debug/incremental/radix_leptos_stories-38qllwz4oniak/s-hfm8uhe5u8-17rl8yu-6n8jj9d4wi5utlxr96vmy1u8y/query-cache.bin",
-    "target/debug/incremental/radix_leptos_stories-38qllwz4oniak/s-hfm8uhe5u8-17rl8yu-6n8jj9d4wi5utlxr96vmy1u8y/work-products.bin",
-    "target/debug/incremental/radix_leptos_stories-38qllwz4oniak/s-hfm8uhe5u8-17rl8yu-6n8jj9d4wi5utlxr96vmy1u8y/dep-graph.bin",
-    "target/debug/incremental/radix_leptos_stories-38qllwz4oniak/s-hfm8uhe5u8-17rl8yu-6n8jj9d4wi5utlxr96vmy1u8y",
-    "target/debug/incremental/radix_leptos_scroll_area-2nho7mjutv14x/s-hfm8uhadsp-0549r88-3xfcqdzre8vivxihv9ntbvd96/work-products.bin",
-    "target/debug/incremental/radix_leptos_scroll_area-2nho7mjutv14x/s-hfm8uhadsp-0549r88-3xfcqdzre8vivxihv9ntbvd96/query-cache.bin",
-    "target/debug/incremental/radix_leptos_scroll_area-2nho7mjutv14x/s-hfm8uhadsp-0549r88-3xfcqdzre8vivxihv9ntbvd96/dep-graph.bin",
+    "notes/leptos-primitive.md",
+    "stories/leptos/dist/radix-leptos-stories-c4e64d1e60910de7_bg.wasm",
+    "stories/leptos/dist/radix-leptos-stories-c4e64d1e60910de7.js",
+    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-2zixgxdy44478/s-hfm9024f7u-1gnv8rq-bli53o8xb850x9wcjlul9dwzc/work-products.bin",
+    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-2zixgxdy44478/s-hfm9024f7u-1gnv8rq-bli53o8xb850x9wcjlul9dwzc/query-cache.bin",
+    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-2zixgxdy44478/s-hfm9024f7u-1gnv8rq-bli53o8xb850x9wcjlul9dwzc/ez02nuu41z43jl1yn64t3pwzj.o",
+    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-2zixgxdy44478/s-hfm9024f7u-1gnv8rq-bli53o8xb850x9wcjlul9dwzc/ezdqx1f3ub5vk68m8a27eruvz.o",
+    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-2zixgxdy44478/s-hfm9024f7u-1gnv8rq-bli53o8xb850x9wcjlul9dwzc/ex1eq1vl3688obidce31xf4lu.o",
+    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-2zixgxdy44478/s-hfm9024f7u-1gnv8rq-bli53o8xb850x9wcjlul9dwzc/ex7f46mjk77denmac7mj9on0e.o",
+    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-2zixgxdy44478/s-hfm9024f7u-1gnv8rq-bli53o8xb850x9wcjlul9dwzc/ett0j3h4015i219x7vqytoe2q.o",
+    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-2zixgxdy44478/s-hfm9024f7u-1gnv8rq-bli53o8xb850x9wcjlul9dwzc/esser0auzu1breqv9r4p013k1.o",
     "notes/core-primitive.md",
     "notes/core-number.md",
     "reference/leptos-radix-rough-draft/examples/ts-xp-radix/node_modules/@radix-ui/react-toolbar/node_modules/@radix-ui/react-separator/README.md",

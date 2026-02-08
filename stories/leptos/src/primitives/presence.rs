@@ -3,7 +3,7 @@ use leptos_node_ref::AnyNodeRef;
 use radix_leptos_presence::Presence;
 use send_wrapper::SendWrapper;
 use tailwind_fuse::*;
-use web_sys::wasm_bindgen::{closure::Closure, JsCast};
+use web_sys::wasm_bindgen::{JsCast, closure::Closure};
 
 #[component]
 pub fn Basic() -> impl IntoView {
@@ -72,10 +72,9 @@ pub fn WithDeferredMountAnimation() -> impl IntoView {
     let (open, set_open) = signal(false);
     let (animate, set_animate) = signal(false);
 
-    let handler: SendWrapper<Closure<dyn Fn()>> =
-        SendWrapper::new(Closure::new(move || {
-            set_animate.set(true);
-        }));
+    let handler: SendWrapper<Closure<dyn Fn()>> = SendWrapper::new(Closure::new(move || {
+        set_animate.set(true);
+    }));
     let handler = StoredValue::new(handler);
 
     Effect::new(move |_| {
