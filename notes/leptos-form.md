@@ -89,3 +89,8 @@ Three contexts matching React, using Leptos `provide_context`/`expect_context`:
 - **`createFormScope`**: React's `createContextScope` pattern is not needed in Leptos. Components use standard `provide_context`/`expect_context`. Nested forms use Leptos's natural context scoping (inner `provide_context` shadows outer).
 - **`validityStateToObject` utility**: Replaced by `impl From<web_sys::ValidityState> for Validity` which serves the same purpose (converting live DOM ValidityState to a clonable struct).
 - **`DEFAULT_BUILT_IN_MESSAGES` map**: Replaced by `ValidityMatcher::default_message()` method, which is more idiomatic Rust.
+
+### Notes
+
+- doesn't rely on label like react impl, but maybe should
+- uses `DEFAULT_INVALID_MESSAGE` for `ValidityMatcher::Valid`, should be a valid message

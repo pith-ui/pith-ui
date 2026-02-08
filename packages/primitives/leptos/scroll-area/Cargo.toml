@@ -1,0 +1,34 @@
+[package]
+name = "radix-leptos-scroll-area"
+description = "Leptos port of Radix Scroll Area."
+
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+version.workspace = true
+
+[dependencies]
+leptos.workspace = true
+leptos-node-ref.workspace = true
+radix-leptos-compose-refs.workspace = true
+radix-leptos-direction.workspace = true
+radix-leptos-presence.workspace = true
+radix-leptos-primitive.workspace = true
+radix-number.workspace = true
+send_wrapper.workspace = true
+web-sys = { workspace = true, features = [
+    "AddEventListenerOptions",
+    "CssStyleDeclaration",
+    "Document",
+    "DomRect",
+    "Element",
+    "EventTarget",
+    "HtmlElement",
+    "HtmlStyleElement",
+    "PointerEvent",
+    "ResizeObserver",
+    "ResizeObserverEntry",
+    "WheelEvent",
+    "Window",
+] }

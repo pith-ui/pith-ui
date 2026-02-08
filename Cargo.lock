@@ -4113,12 +4113,38 @@ dependencies = [
 ]
 
 [[package]]
+name = "radix-leptos-presence"
+version = "0.0.2"
+dependencies = [
+ "leptos",
+ "leptos-node-ref",
+ "radix-leptos-compose-refs",
+ "send_wrapper",
+ "web-sys",
+]
+
+[[package]]
 name = "radix-leptos-primitive"
 version = "0.0.2"
 dependencies = [
  "leptos",
  "leptos-node-ref",
  "leptos-typed-fallback-show",
+]
+
+[[package]]
+name = "radix-leptos-scroll-area"
+version = "0.0.2"
+dependencies = [
+ "leptos",
+ "leptos-node-ref",
+ "radix-leptos-compose-refs",
+ "radix-leptos-direction",
+ "radix-leptos-presence",
+ "radix-leptos-primitive",
+ "radix-number",
+ "send_wrapper",
+ "web-sys",
 ]
 
 [[package]]
@@ -4143,10 +4169,12 @@ dependencies = [
  "radix-leptos-accessible-icon",
  "radix-leptos-arrow",
  "radix-leptos-aspect-ratio",
+ "radix-leptos-direction",
  "radix-leptos-form",
  "radix-leptos-label",
  "radix-leptos-popper",
  "radix-leptos-portal",
+ "radix-leptos-scroll-area",
  "radix-leptos-separator",
  "radix-leptos-visually-hidden",
  "send_wrapper",

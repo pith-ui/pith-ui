@@ -5,7 +5,8 @@ use leptos_router::{
 };
 
 use crate::primitives::{
-    accessible_icon, arrow, aspect_ratio, form, label, popper, portal, separator, visually_hidden,
+    accessible_icon, arrow, aspect_ratio, form, label, popper, portal, scroll_area, separator,
+    visually_hidden,
 };
 
 #[component]
@@ -171,6 +172,17 @@ pub fn App() -> impl IntoView {
                     //     </ul>
                     // </li>
                     <li>
+                        Scroll Area
+
+                        <ul class="list-none m-0 ms-4 p-0">
+                            <li><NavLink href="/scroll-area/basic">Basic</NavLink></li>
+                            <li><NavLink href="/scroll-area/resizable">Resizable</NavLink></li>
+                            <li><NavLink href="/scroll-area/content-change">Content Change</NavLink></li>
+                            <li><NavLink href="/scroll-area/animated">Animated</NavLink></li>
+                            <li><NavLink href="/scroll-area/chromatic">Chromatic</NavLink></li>
+                        </ul>
+                    </li>
+                    <li>
                         Separator
 
                         <ul class="list-none m-0 ms-4 p-0">
@@ -279,6 +291,12 @@ pub fn App() -> impl IntoView {
 
                     // <Route path="/progress/styled" view=progress::Styled />
                     // <Route path="/progress/chromatic" view=progress::Chromatic />
+
+                    <Route path=path!("/scroll-area/basic") view=scroll_area::Basic />
+                    <Route path=path!("/scroll-area/resizable") view=scroll_area::Resizable />
+                    <Route path=path!("/scroll-area/content-change") view=scroll_area::ContentChange />
+                    <Route path=path!("/scroll-area/animated") view=scroll_area::Animated />
+                    <Route path=path!("/scroll-area/chromatic") view=scroll_area::Chromatic />
 
                     <Route path=path!("/separator/styled") view=separator::Styled />
 

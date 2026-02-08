@@ -54,7 +54,9 @@ Packages follow the pattern `radix-{framework}-{component}`, e.g., `radix-yew-ch
 - **`book/`** — mdBook documentation site
 - **`book-examples/`** — Working code examples used in documentation
 - **`stories/`** — Storybook-like component demos per framework (uses Trunk dev server + Tailwind CSS)
-- **`reference/`** — Git submodule of the original React Radix Primitives for reference during porting
+- **`reference/`** — Reference implementations for porting:
+  - `react-radix-primitives/` — Git submodule of the original React Radix Primitives (primary reference)
+  - `leptos-radix-rough-draft/` — A previous Leptos implementation of these primitives. Not API-strict with React, but useful as a reference for how patterns were solved in Leptos. **Use for implementation hints only; always follow the React API per Rule 4.**
 
 ### Key Dependencies
 
@@ -127,10 +129,11 @@ python3 scripts/topo_sort.py
 
 ### Rule 3: Reference React Only, Never Yew
 
-When porting, reference only the React source in `reference/react-radix-primitives/` and the existing Leptos code. **Never consult the Yew implementation** — it may contain stale patterns or divergences that should not propagate. The two inputs are:
+When porting, reference the React source in `reference/react-radix-primitives/` and the existing Leptos code. **Never consult the Yew implementation** — it may contain stale patterns or divergences that should not propagate. The inputs are:
 
-1. React source: `reference/react-radix-primitives/packages/<area>/<component>/src/`
+1. React source (primary): `reference/react-radix-primitives/packages/<area>/<component>/src/`
 2. Existing Leptos code (if any): `packages/primitives/leptos/<component>/src/`
+3. Rough draft Leptos reference (optional): `reference/leptos-radix-rough-draft/src/primitives/<component>.rs` — A prior Leptos implementation that may not match the React API exactly, but can provide useful implementation hints for Leptos-specific patterns. Use for guidance, not as an authoritative API source.
 
 ### Rule 4: Follow the React API, Write Idiomatic Leptos
 

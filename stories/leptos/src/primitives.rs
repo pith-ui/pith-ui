@@ -13,6 +13,7 @@ pub mod popper;
 pub mod portal;
 // pub mod presence;
 // pub mod progress;
+pub mod scroll_area;
 pub mod separator;
 // pub mod slot;
 // pub mod switch;

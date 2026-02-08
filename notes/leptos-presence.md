@@ -25,14 +25,12 @@ Supports render prop pattern for fine-grained control over presence state during
 
 ```rust
 #[component]
-fn Presence(
-    present: MaybeSignal<bool>,
-    node_ref: NodeRef<AnyElement>,
-    children: ChildrenFn,
+pub fn Presence(
+    #[prop(into)] present: Signal<bool>,
+    #[prop(into, optional)] node_ref: AnyNodeRef,
+    children: TypedChildrenFn<impl IntoView + 'static>,
 ) -> impl IntoView
 ```
-
-**Note:** Uses old Leptos API. Needs migration.
 
 ## React Implementation Notes
 
@@ -45,12 +43,17 @@ fn Presence(
 
 ## Leptos Implementation Notes
 
-- State machine ported as `use_state_machine` with `HashMap<State, HashMap<Event, State>>`.
-- Same three states and four events.
-- Animation event listeners added via `web_sys` closures in effects, cleaned up via `on_cleanup`.
-- `map_children` helper recursively traverses the view tree to attach `node_ref` — a workaround for Leptos's view model differences from React's `cloneElement`.
-- Does not implement the `animationFillMode: 'forwards'` flash fix.
-- Does not support the render prop pattern (React allows `children` as a function).
-- Asserts exactly one child (`children().as_children().len() == 1`).
-- Uses old Leptos API — needs migration.
-- Dependencies: `leptos`, `radix-leptos-compose-refs`, `web-sys` (with `CssStyleDeclaration`).
+- **Migrated to Leptos 0.8** from 0.7. Key changes:
+  - `create_signal` → `signal`, `MaybeSignal` → `Signal`, `ChildrenFn` → `TypedChildrenFn`
+  - `NodeRef<AnyElement>` → `AnyNodeRef` from `leptos-node-ref`
+  - `on_cleanup` → `Owner::on_cleanup`
+  - `window()` → `web_sys::window().unwrap()`
+- State machine ported as `use_state_machine` with `HashMap<S, HashMap<E, S>>`, generic with `Send + Sync` bounds on state/event types.
+- Same three states (`Mounted`, `UnmountSuspended`, `Unmounted`) and four events (`Mount`, `Unmount`, `AnimationOut`, `AnimationEnd`).
+- **Removed `map_children`**: The Leptos 0.7 version recursively walked the `View` enum tree to attach a `NodeRef` to children. This doesn't work in Leptos 0.8 where the view representation changed. Instead, `Presence` now accepts a `node_ref: AnyNodeRef` prop. Callers must apply this ref to their child element and compose it with any other refs using `use_composed_refs`.
+- Animation event listeners (`animationstart`, `animationcancel`, `animationend`) use `web_sys::Closure` wrapped in `SendWrapper` and stored in `StoredValue` for `Send + Sync` compliance required by `Owner::on_cleanup`.
+- Computed styles stored as `RwSignal<Option<SendWrapper<web_sys::CssStyleDeclaration>>>`.
+- **Omitted**: `animationFillMode: 'forwards'` flash fix (React 18 concurrency workaround, not applicable to Leptos).
+- **Omitted**: Render prop pattern (`children` as function receiving `{ present }`). Leptos callers can read the `present` signal directly.
+- **Omitted**: `useCallbackRef` — not needed in Leptos.
+- Dependencies: `leptos`, `leptos-node-ref`, `send_wrapper`, `web-sys` (with `CssStyleDeclaration`).

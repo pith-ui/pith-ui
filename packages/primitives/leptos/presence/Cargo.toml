@@ -10,5 +10,7 @@ version.workspace = true
 
 [dependencies]
 leptos.workspace = true
+leptos-node-ref.workspace = true
 radix-leptos-compose-refs.workspace = true
+send_wrapper.workspace = true
 web-sys = { workspace = true, features = ["CssStyleDeclaration"] }
