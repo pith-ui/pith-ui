@@ -7,7 +7,7 @@ dependencies:
   - "[[leptos-compose-refs]]"
 ported: true
 tested: false
-tested_story: false
+tested_story: true
 ---
 ## Intent
 

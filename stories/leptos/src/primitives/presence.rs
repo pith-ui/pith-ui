@@ -2,8 +2,12 @@ use leptos::prelude::*;
 use leptos_node_ref::AnyNodeRef;
 use radix_leptos_presence::Presence;
 use send_wrapper::SendWrapper;
-use tailwind_fuse::*;
 use web_sys::wasm_bindgen::{JsCast, closure::Closure};
+
+stylance::import_crate_style!(
+    presence_classes,
+    "src/primitives/presence.stories.module.css"
+);
 
 #[component]
 pub fn Basic() -> impl IntoView {
@@ -20,53 +24,41 @@ pub fn Basic() -> impl IntoView {
 
 #[component]
 pub fn WithMountAnimation() -> impl IntoView {
-    let class = MountAnimationClass::default().to_class();
-
     view! {
-        <Animation class=class />
+        <Animation class=presence_classes::mountAnimation />
     }
 }
 
 #[component]
 pub fn WithUnmountAnimation() -> impl IntoView {
-    let class = UnmountAnimationClass::default().to_class();
-
     view! {
-        <Animation class=class />
+        <Animation class=presence_classes::unmountAnimation />
     }
 }
 
 #[component]
 pub fn WithMultipleMountAnimations() -> impl IntoView {
-    let class = MultipleMountAnimationsClass::default().to_class();
-
     view! {
-        <Animation class=class />
+        <Animation class=presence_classes::multipleMountAnimations />
     }
 }
 
 #[component]
 pub fn WithOpenAndCloseAnimation() -> impl IntoView {
-    let class = OpenAndCloseAnimationClass::default().to_class();
-
     view! {
-        <Animation class=class />
+        <Animation class=presence_classes::openAndCloseAnimation />
     }
 }
 
 #[component]
 pub fn WithMultipleOpenAndCloseAnimations() -> impl IntoView {
-    let class = MultipleOpenAndCloseAnimationsClass::default().to_class();
-
     view! {
-        <Animation class=class />
+        <Animation class=presence_classes::multipleOpenAndCloseAnimations />
     }
 }
 
 #[component]
 pub fn WithDeferredMountAnimation() -> impl IntoView {
-    let mount_animation_class = StoredValue::new(MountAnimationClass::default().to_class());
-
     let node_ref = AnyNodeRef::new();
     let timer = RwSignal::new(0);
     let (open, set_open) = signal(false);
@@ -115,7 +107,7 @@ pub fn WithDeferredMountAnimation() -> impl IntoView {
         <Presence present=open node_ref=node_ref>
             <div
                 node_ref=node_ref
-                class=move || animate.get().then(|| mount_animation_class.get_value())
+                class=move || animate.get().then_some(presence_classes::mountAnimation)
             >
                 Content
             </div>
@@ -124,8 +116,7 @@ pub fn WithDeferredMountAnimation() -> impl IntoView {
 }
 
 #[component]
-fn Animation(#[prop(into, optional)] class: String) -> impl IntoView {
-    let class = StoredValue::new(class);
+fn Animation(#[prop(into, optional)] class: &'static str) -> impl IntoView {
     let node_ref = AnyNodeRef::new();
     let (open, set_open) = signal(false);
 
@@ -138,7 +129,7 @@ fn Animation(#[prop(into, optional)] class: String) -> impl IntoView {
         <Presence present=open node_ref=node_ref>
             <div
                 node_ref=node_ref
-                class=move || class.get_value()
+                class=class
                 data-state=move || match open.get() {
                     true => "open",
                     false => "closed",
@@ -189,29 +180,3 @@ fn Toggles(
         </form>
     }
 }
-
-#[derive(TwClass, Default, Clone, Copy)]
-#[tw(class = "animate-[presenceFadeIn_3s_ease-out]")]
-struct MountAnimationClass {}
-
-#[derive(TwClass, Default, Clone, Copy)]
-#[tw(class = "data-[state=closed]:animate-[presenceFadeOut_3s_ease-in]")]
-struct UnmountAnimationClass {}
-
-#[derive(TwClass, Default, Clone, Copy)]
-#[tw(
-    class = "animate-[presenceFadeIn_6s_cubic-bezier(0.22,1,0.36,1),presenceSlideUp_6s_cubic-bezier(0.22,1,0.36,1)]"
-)]
-struct MultipleMountAnimationsClass {}
-
-#[derive(TwClass, Default, Clone, Copy)]
-#[tw(
-    class = "data-[state=open]:animate-[presenceFadeIn_3s_ease-out] data-[state=closed]:animate-[presenceFadeOut_3s_ease-in]"
-)]
-struct OpenAndCloseAnimationClass {}
-
-#[derive(TwClass, Default, Clone, Copy)]
-#[tw(
-    class = "data-[state=open]:animate-[presenceFadeIn_3s_cubic-bezier(0.22,1,0.36,1),presenceSlideUp_1s_cubic-bezier(0.22,1,0.36,1)] data-[state=closed]:animate-[presenceFadeOut_3s_cubic-bezier(0.22,1,0.36,1),presenceSlideDown_1s_cubic-bezier(0.22,1,0.36,1)]"
-)]
-struct MultipleOpenAndCloseAnimationsClass {}

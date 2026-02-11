@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "notes/leptos-collection.md",
+                "file": "notes/leptos-presence.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -28,7 +28,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "leptos-collection"
+              "title": "leptos-presence"
             }
           }
         ]
@@ -192,17 +192,18 @@
   },
   "active": "79d59c987f0c5bf4",
   "lastOpenFiles": [
-    "stories/leptos/style/bundle.css",
-    "stories/leptos/style/stylance/accordion.stories.module-991.css",
-    "stories/leptos/style/stylance/_index.scss",
-    "stories/leptos/style/stylance",
-    "stories/leptos/dist/tailwind.output-f5a94e46a1922100.css",
-    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-1uoi8lbxforzw/s-hfotvxfbf2-0slmgx2-6zsqm9jrns00q4xyv5m52nzfa/work-products.bin",
-    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-1uoi8lbxforzw/s-hfotvxfbf2-0slmgx2-6zsqm9jrns00q4xyv5m52nzfa/query-cache.bin",
-    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-1uoi8lbxforzw/s-hfotvxfbf2-0slmgx2-6zsqm9jrns00q4xyv5m52nzfa/f2tg2z15s7h6em003gcsb5bi9.o",
-    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-1uoi8lbxforzw/s-hfotvxfbf2-0slmgx2-6zsqm9jrns00q4xyv5m52nzfa/f26zzz9hy0v7y54478ytmus49.o",
-    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-1uoi8lbxforzw/s-hfotvxfbf2-0slmgx2-6zsqm9jrns00q4xyv5m52nzfa/ezo3qtdfuxmvq78i66qqia1nh.o",
-    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-1uoi8lbxforzw/s-hfotvxfbf2-0slmgx2-6zsqm9jrns00q4xyv5m52nzfa/ezfrbgfekzm9h1dy5w601jw2o.o",
+    "stories/leptos/dist/tailwind.output-d1b0b203df50eb41.css",
+    "stories/leptos/dist/red-74d32e64207a038a.css",
+    "stories/leptos/dist/green-fbaf4d9bde970701.css",
+    "stories/leptos/dist/favicon-e197903841a5b23b.ico",
+    "stories/leptos/dist/preview-ea45f592923ef9b6.css",
+    "stories/leptos/dist/blue-alpha-9c4e3c532cbba84.css",
+    "stories/leptos/dist/blue-420df321e365d4ba.css",
+    "stories/leptos/dist/index.html",
+    "stories/leptos/dist/radix-leptos-stories-211c92c841839033_bg.wasm",
+    "stories/leptos/dist/gray-5b59ceb998f37280.css",
+    "stories/leptos/dist/bundle-80a121c0485db583.css",
+    "notes/leptos-collection.md",
     "notes/leptos-accordion.md",
     "notes/leptos-presence.md",
     "notes/leptos-primitive.md",
@@ -227,7 +228,6 @@
     "reference/leptos-radix-rough-draft/examples/ts-xp-radix/node_modules/@radix-ui/react-arrow/node_modules/@radix-ui/react-primitive/README.md",
     "reference/leptos-radix-rough-draft/examples/ts-xp-radix/node_modules/@floating-ui/core/README.md",
     "reference/leptos-radix-rough-draft/examples/ts-xp-radix/node_modules/@vitejs/plugin-react/README.md",
-    "reference/leptos-radix-rough-draft/examples/ts-xp-radix/node_modules/@rollup/rollup-darwin-arm64/README.md",
     "reference/leptos-radix-rough-draft/examples/react-radix-primitives/apps/storybook/public/favicon-white.svg",
     "reference/leptos-radix-rough-draft/examples/react-radix-primitives/apps/storybook/public/favicon.png",
     "reference/leptos-radix-rough-draft/examples/react-radix-primitives/primitives.png",
