@@ -5,8 +5,8 @@ use leptos_router::{
 };
 
 use crate::primitives::{
-    accessible_icon, accordion, arrow, aspect_ratio, collapsible, collection, form, label, popper,
-    portal, presence, progress, scroll_area, separator, toggle, visually_hidden,
+    accessible_icon, accordion, arrow, aspect_ratio, collapsible, collection, focus_scope, form,
+    label, popper, portal, presence, progress, scroll_area, separator, toggle, visually_hidden,
 };
 
 #[component]
@@ -122,14 +122,15 @@ pub fn App() -> impl IntoView {
                             <li><NavLink href="/collection/nested">Nested</NavLink></li>
                         </ul>
                     </li>
-                    // <li>
-                    //     Focus Scope
+                    <li>
+                        Focus Scope
 
-                    //     <ul class="list-none m-0 ms-4 p-0">
-                    //         <li><NavLink href="/focus-scope/basic">Basic</NavLink></li>
-                    //         <li><NavLink href="/focus-scope/multiple">Multiple</NavLink></li>
-                    //     </ul>
-                    // </li>
+                        <ul class="list-none m-0 ms-4 p-0">
+                            <li><NavLink href="/focus-scope/basic">Basic</NavLink></li>
+                            <li><NavLink href="/focus-scope/multiple">Multiple</NavLink></li>
+                            <li><NavLink href="/focus-scope/with-options">With Options</NavLink></li>
+                        </ul>
+                    </li>
                     <li>
                         Form
 
@@ -301,8 +302,9 @@ pub fn App() -> impl IntoView {
                     <Route path=path!("/collection/with-changing-item") view=collection::WithChangingItem />
                     <Route path=path!("/collection/nested") view=collection::Nested />
 
-                    // <Route path="/focus-scope/basic" view=focus_scope::Basic />
-                    // <Route path="/focus-scope/multiple" view=focus_scope::Multiple />
+                    <Route path=path!("/focus-scope/basic") view=focus_scope::Basic />
+                    <Route path=path!("/focus-scope/multiple") view=focus_scope::Multiple />
+                    <Route path=path!("/focus-scope/with-options") view=focus_scope::WithOptions />
 
                     <Route path=path!("/form/basic") view=form::Basic />
                     <Route path=path!("/form/cypress") view=form::Cypress />

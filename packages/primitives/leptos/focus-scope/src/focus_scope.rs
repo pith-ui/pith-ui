@@ -1,20 +1,25 @@
+use std::cell::RefCell;
 use std::ops::Deref;
-use std::rc::Rc;
-use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
+use std::sync::Arc;
 use std::sync::Mutex;
-use std::{cell::RefCell, sync::Arc};
+use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
 
-use leptos::{html::AnyElement, *};
+use leptos::{attribute_interceptor::AttributeInterceptor, html, prelude::*};
+use leptos_node_ref::AnyNodeRef;
 use once_cell::sync::Lazy;
 use radix_leptos_compose_refs::use_composed_refs;
+use radix_leptos_primitive::Primitive;
+use send_wrapper::SendWrapper;
 use web_sys::{
-    wasm_bindgen::{closure::Closure, JsCast},
     CustomEvent, CustomEventInit, Event, FocusEvent, KeyboardEvent, MutationObserver,
     MutationObserverInit, MutationRecord, NodeFilter,
+    wasm_bindgen::{JsCast, closure::Closure},
 };
 
 const AUTOFOCUS_ON_MOUNT: &str = "focusScope.autoFocusOnMount";
 const AUTOFOCUS_ON_UNMOUNT: &str = "focusScope.autoFocusOnUnmount";
+
+type FocusEventClosure = Arc<SendWrapper<Closure<dyn Fn(FocusEvent)>>>;
 
 #[component]
 pub fn FocusScope(
@@ -28,47 +33,51 @@ pub fn FocusScope(
     // TODO: hopefully remove the double option
     #[prop(into, optional)] on_unmount_auto_focus: Option<Option<Callback<Event>>>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
-    #[prop(optional)] node_ref: NodeRef<AnyElement>,
-    #[prop(attrs)] attrs: Vec<(&'static str, Attribute)>,
-    children: ChildrenFn,
+    #[prop(into, optional)] node_ref: AnyNodeRef,
+    children: TypedChildrenFn<impl IntoView + 'static>,
 ) -> impl IntoView {
+    let children = StoredValue::new(children.into_inner());
+
     let r#loop = Signal::derive(move || r#loop.get().unwrap_or(false));
     let trapped = Signal::derive(move || trapped.get().unwrap_or(false));
 
-    let container_ref: NodeRef<AnyElement> = NodeRef::new();
+    let container_ref: AnyNodeRef = AnyNodeRef::new();
     let composed_refs = use_composed_refs(vec![node_ref, container_ref]);
-    let last_focused_element: RwSignal<Option<web_sys::HtmlElement>> = RwSignal::new(None);
+    let last_focused_element: RwSignal<Option<SendWrapper<web_sys::HtmlElement>>> =
+        RwSignal::new(None);
     let focus_scope = RwSignal::new(FocusScopeAPI::new());
 
-    let handle_focus_in: Rc<Closure<dyn Fn(FocusEvent)>> =
-        Rc::new(Closure::new(move |event: FocusEvent| {
+    let handle_focus_in: FocusEventClosure =
+        Arc::new(SendWrapper::new(Closure::new(move |event: FocusEvent| {
             if focus_scope.get_untracked().paused() {
                 return;
             }
 
-            if let Some(container) = container_ref.get_untracked() {
+            if let Some(container) = container_ref.get() {
+                let container: &web_sys::HtmlElement = container.unchecked_ref();
                 let target = event
                     .target()
                     .map(|target| target.unchecked_into::<web_sys::HtmlElement>());
 
                 if container.contains(target.as_ref().map(|e| e.unchecked_ref())) {
-                    last_focused_element.set(target);
+                    last_focused_element.set(target.map(SendWrapper::new));
                 } else {
                     focus(
-                        last_focused_element.get_untracked(),
+                        last_focused_element.get_untracked().as_deref().cloned(),
                         Some(FocusOptions { select: true }),
                     );
                 }
             }
-        }));
+        })));
 
-    let handle_focus_out: Rc<Closure<dyn Fn(FocusEvent)>> =
-        Rc::new(Closure::new(move |event: FocusEvent| {
+    let handle_focus_out: FocusEventClosure =
+        Arc::new(SendWrapper::new(Closure::new(move |event: FocusEvent| {
             if focus_scope.get_untracked().paused() {
                 return;
             }
 
-            if let Some(container) = container_ref.get_untracked() {
+            if let Some(container) = container_ref.get() {
+                let container: &web_sys::HtmlElement = container.unchecked_ref();
                 let related_target = event
                     .related_target()
                     .map(|target| target.unchecked_into::<web_sys::HtmlElement>());
@@ -91,18 +100,18 @@ pub fn FocusScope(
                 // that is outside the container, we move focus to the last valid focused element inside.
                 if !container.contains(related_target.as_ref().map(|e| e.unchecked_ref())) {
                     focus(
-                        last_focused_element.get_untracked(),
+                        last_focused_element.get_untracked().as_deref().cloned(),
                         Some(FocusOptions { select: true }),
                     );
                 }
             }
-        }));
+        })));
 
-    let mutation_observer: Rc<RefCell<Option<MutationObserver>>> = Rc::new(RefCell::new(None));
+    let mutation_observer: StoredValue<SendWrapper<RefCell<Option<MutationObserver>>>> =
+        StoredValue::new(SendWrapper::new(RefCell::new(None)));
 
     let cleanup_handle_focus_in = handle_focus_in.clone();
     let cleanup_handle_focus_out = handle_focus_out.clone();
-    let cleanup_mutation_observer = mutation_observer.clone();
 
     // Takes care of trapping focus if focus is moved outside programmatically for example
     Effect::new(move |_| {
@@ -123,60 +132,73 @@ pub fn FocusScope(
     });
 
     Effect::new(move |_| {
-        if trapped.get() {
-            if let Some(container) = container_ref.get() {
-                if let Some(mutation_observer) = mutation_observer.take() {
+        if trapped.get()
+            && let Some(container) = container_ref.get()
+        {
+            let container: web_sys::HtmlElement = container.unchecked_into();
+
+            mutation_observer.with_value(|obs| {
+                if let Some(mutation_observer) = obs.borrow_mut().take() {
                     mutation_observer.disconnect();
                 }
+            });
 
-                // When the focused element gets removed from the DOM, browsers move focus
-                // back to the document.body. In this case, we move focus to the container
-                // to keep focus trapped correctly.
-                let handle_mutations: Closure<dyn Fn(Vec<MutationRecord>)> =
-                    Closure::new(move |mutations: Vec<MutationRecord>| {
-                        let focused_element = document()
-                            .active_element()
-                            .map(|element| element.unchecked_into::<web_sys::HtmlElement>());
-                        if focused_element != document().body() {
-                            return;
+            // When the focused element gets removed from the DOM, browsers move focus
+            // back to the document.body. In this case, we move focus to the container
+            // to keep focus trapped correctly.
+            let handle_mutations: Closure<dyn Fn(Vec<MutationRecord>)> =
+                Closure::new(move |mutations: Vec<MutationRecord>| {
+                    let focused_element = document()
+                        .active_element()
+                        .map(|element| element.unchecked_into::<web_sys::HtmlElement>());
+                    if focused_element != document().body() {
+                        return;
+                    }
+
+                    for mutation in mutations {
+                        if mutation.removed_nodes().length() > 0 {
+                            focus(
+                                container_ref
+                                    .get()
+                                    .map(|el| el.unchecked_into::<web_sys::HtmlElement>()),
+                                None,
+                            );
                         }
+                    }
+                });
 
-                        for mutation in mutations {
-                            if mutation.removed_nodes().length() > 0 {
-                                focus(container_ref.get_untracked().as_deref().cloned(), None);
-                            }
-                        }
-                    });
+            let new_observer =
+                MutationObserver::new(handle_mutations.into_js_value().unchecked_ref())
+                    .expect("Mutation observer should be created.");
 
-                mutation_observer.replace(Some(
-                    MutationObserver::new(handle_mutations.into_js_value().unchecked_ref())
-                        .expect("Mutation observer should be created."),
-                ));
+            let init = MutationObserverInit::new();
+            init.set_child_list(true);
+            init.set_subtree(true);
 
-                let init = MutationObserverInit::new();
-                init.set_child_list(true);
-                init.set_subtree(true);
+            new_observer
+                .observe_with_options(&container, &init)
+                .expect("Mutation observer should observe target.");
 
-                mutation_observer
-                    .borrow()
-                    .as_ref()
-                    .expect("Mutation observer should exist.")
-                    .observe_with_options(&container, &init)
-                    .expect("Mutation observer should observe target.");
-            }
+            mutation_observer.with_value(|obs| {
+                obs.borrow_mut().replace(new_observer);
+            });
         }
     });
 
     type AutoFocusEndFn = Box<dyn Fn()>;
-    let auto_focus_end: Rc<RefCell<Option<AutoFocusEndFn>>> = Rc::new(RefCell::new(None));
-    let cleanup_auto_focus_end = auto_focus_end.clone();
+    let auto_focus_end: StoredValue<SendWrapper<RefCell<Option<AutoFocusEndFn>>>> =
+        StoredValue::new(SendWrapper::new(RefCell::new(None)));
 
     Effect::new(move |_| {
-        if let Some(on_mount_auto_focus_cleanup) = auto_focus_end.take() {
-            on_mount_auto_focus_cleanup();
-        }
+        auto_focus_end.with_value(|end| {
+            if let Some(on_mount_auto_focus_cleanup) = end.borrow_mut().take() {
+                on_mount_auto_focus_cleanup();
+            }
+        });
 
         if let Some(container) = container_ref.get() {
+            let container: web_sys::HtmlElement = container.unchecked_into();
+
             {
                 let mut focus_scope_stack = FOCUS_SCOPE_STACK
                     .lock()
@@ -196,7 +218,7 @@ pub fn FocusScope(
             if !has_focused_candidate {
                 let closure: Closure<dyn Fn(Event)> = Closure::new(move |event: Event| {
                     if let Some(on_mount_auto_focus) = on_mount_auto_focus {
-                        on_mount_auto_focus.call(event);
+                        on_mount_auto_focus.run(event);
                     }
                 });
 
@@ -224,63 +246,66 @@ pub fn FocusScope(
                     );
                     if document().active_element().as_ref() == previously_focused_element.as_deref()
                     {
-                        focus(Some(container.deref().clone()), None);
+                        focus(Some(container.clone()), None);
                     }
                 }
 
-                auto_focus_end.replace(Some(Box::new(move || {
-                    container
-                        .remove_event_listener_with_callback(
-                            AUTOFOCUS_ON_MOUNT,
-                            closure.as_ref().unchecked_ref(),
-                        )
-                        .expect("Auto focus on mount event listener should be removed.");
+                let container_clone = container.clone();
+                auto_focus_end.with_value(|end| {
+                    end.borrow_mut().replace(Box::new(move || {
+                        container_clone
+                            .remove_event_listener_with_callback(
+                                AUTOFOCUS_ON_MOUNT,
+                                closure.as_ref().unchecked_ref(),
+                            )
+                            .expect("Auto focus on mount event listener should be removed.");
 
-                    let closure: Closure<dyn Fn(Event)> = Closure::new(move |event: Event| {
-                        if let Some(on_unmount_auto_focus) = on_unmount_auto_focus.flatten() {
-                            on_unmount_auto_focus.call(event);
+                        let closure: Closure<dyn Fn(Event)> = Closure::new(move |event: Event| {
+                            if let Some(on_unmount_auto_focus) = on_unmount_auto_focus.flatten() {
+                                on_unmount_auto_focus.run(event);
+                            }
+                        });
+
+                        let init = CustomEventInit::new();
+                        init.set_bubbles(false);
+                        init.set_cancelable(true);
+
+                        let unmount_event =
+                            CustomEvent::new_with_event_init_dict(AUTOFOCUS_ON_UNMOUNT, &init)
+                                .expect("Auto focus on unmount event should be instantiated.");
+
+                        container_clone
+                            .add_event_listener_with_callback(
+                                AUTOFOCUS_ON_UNMOUNT,
+                                closure.as_ref().unchecked_ref(),
+                            )
+                            .expect("Auto focus on unmount event listener should be added.");
+                        container_clone
+                            .dispatch_event(&unmount_event)
+                            .expect("Auto focus on unmount event should be dispatched.");
+
+                        if !unmount_event.default_prevented() {
+                            focus(
+                                previously_focused_element.clone().or(document().body()),
+                                Some(FocusOptions { select: true }),
+                            );
                         }
-                    });
 
-                    let init = CustomEventInit::new();
-                    init.set_bubbles(false);
-                    init.set_cancelable(true);
+                        container_clone
+                            .remove_event_listener_with_callback(
+                                AUTOFOCUS_ON_UNMOUNT,
+                                closure.as_ref().unchecked_ref(),
+                            )
+                            .expect("Auto focus on unmount event listener should be removed.");
 
-                    let unmount_event =
-                        CustomEvent::new_with_event_init_dict(AUTOFOCUS_ON_UNMOUNT, &init)
-                            .expect("Auto focus on unmount event should be instantiated.");
-
-                    container
-                        .add_event_listener_with_callback(
-                            AUTOFOCUS_ON_UNMOUNT,
-                            closure.as_ref().unchecked_ref(),
-                        )
-                        .expect("Auto focus on unmount event listener should be added.");
-                    container
-                        .dispatch_event(&unmount_event)
-                        .expect("Auto focus on unmount event should be dispatched.");
-
-                    if !unmount_event.default_prevented() {
-                        focus(
-                            previously_focused_element.clone().or(document().body()),
-                            Some(FocusOptions { select: true }),
-                        );
-                    }
-
-                    container
-                        .remove_event_listener_with_callback(
-                            AUTOFOCUS_ON_UNMOUNT,
-                            closure.as_ref().unchecked_ref(),
-                        )
-                        .expect("Auto focus on unmount event listener should be removed.");
-
-                    {
-                        let mut focus_scope_stack = FOCUS_SCOPE_STACK
-                            .lock()
-                            .expect("Focus scope stack mutex should lock.");
-                        focus_scope_stack.remove(&focus_scope.get_untracked());
-                    }
-                })));
+                        {
+                            let mut focus_scope_stack = FOCUS_SCOPE_STACK
+                                .lock()
+                                .expect("Focus scope stack mutex should lock.");
+                            focus_scope_stack.remove(&focus_scope.get_untracked());
+                        }
+                    }));
+                });
             }
         }
     });
@@ -299,13 +324,17 @@ pub fn FocusScope(
             )
             .expect("Focus out event listener should be removed.");
 
-        if let Some(mutation_observer) = cleanup_mutation_observer.take() {
-            mutation_observer.disconnect();
-        }
+        mutation_observer.with_value(|obs| {
+            if let Some(mutation_observer) = obs.borrow_mut().take() {
+                mutation_observer.disconnect();
+            }
+        });
 
-        if let Some(auto_focus_cleanup) = cleanup_auto_focus_end.take() {
-            auto_focus_cleanup();
-        }
+        auto_focus_end.with_value(|end| {
+            if let Some(auto_focus_cleanup) = end.borrow_mut().take() {
+                auto_focus_cleanup();
+            }
+        });
     });
 
     // Takes care of looping focus (when tabbing whilst at the edges).
@@ -325,56 +354,54 @@ pub fn FocusScope(
             .active_element()
             .map(|element| element.unchecked_into::<web_sys::HtmlElement>());
 
-        if is_tab_key {
-            if let Some(focused_element) = focused_element {
-                let container = event
-                    .current_target()
-                    .expect("Event should have current target.")
-                    .unchecked_into::<web_sys::HtmlElement>();
-                let (first, last) = get_tabbable_edges(&container);
-                let has_tabbable_elements_inside = first.is_some() && last.is_some();
+        if is_tab_key && let Some(focused_element) = focused_element {
+            let container = event
+                .current_target()
+                .expect("Event should have current target.")
+                .unchecked_into::<web_sys::HtmlElement>();
+            let (first, last) = get_tabbable_edges(&container);
+            let has_tabbable_elements_inside = first.is_some() && last.is_some();
 
-                if !has_tabbable_elements_inside {
-                    if focused_element == container {
-                        event.prevent_default();
+            if !has_tabbable_elements_inside {
+                if focused_element == container {
+                    event.prevent_default();
+                }
+            } else {
+                #[allow(clippy::collapsible_else_if)]
+                if !event.shift_key()
+                    && &focused_element == last.as_ref().expect("Last option checked above.")
+                {
+                    event.prevent_default();
+
+                    if r#loop {
+                        focus(first, Some(FocusOptions { select: true }));
                     }
-                } else {
-                    #[allow(clippy::collapsible_else_if)]
-                    if !event.shift_key()
-                        && &focused_element == last.as_ref().expect("Last option checked above.")
-                    {
-                        event.prevent_default();
+                } else if event.shift_key()
+                    && &focused_element == first.as_ref().expect("First option checked above.")
+                {
+                    event.prevent_default();
 
-                        if r#loop {
-                            focus(first, Some(FocusOptions { select: true }));
-                        }
-                    } else if event.shift_key()
-                        && &focused_element == first.as_ref().expect("First option checked above.")
-                    {
-                        event.prevent_default();
-
-                        if r#loop {
-                            focus(last, Some(FocusOptions { select: true }));
-                        }
+                    if r#loop {
+                        focus(last, Some(FocusOptions { select: true }));
                     }
                 }
             }
         }
     };
 
-    let mut attrs = attrs.clone();
-    attrs.extend([("tabindex", "-1".into_attribute())]);
-
     view! {
-        <Primitive
-            element=html::div
-            as_child=as_child
-            on:keydown=handle_key_down
-            node_ref=composed_refs
-            attrs=attrs
-        >
-            {children()}
-        </Primitive>
+        <AttributeInterceptor let:attrs>
+            <Primitive
+                element=html::div
+                as_child=as_child
+                node_ref=composed_refs
+                attr:tabindex="-1"
+                on:keydown=move |event: web_sys::KeyboardEvent| handle_key_down(event)
+                {..attrs}
+            >
+                {children.with_value(|children| children())}
+            </Primitive>
+        </AttributeInterceptor>
     }
 }
 
@@ -430,11 +457,11 @@ fn get_tabbable_candidates(container: &web_sys::HtmlElement) -> Vec<web_sys::Htm
                     return 3;
                 }
 
-                if let Some(input_element) = node.dyn_ref::<web_sys::HtmlInputElement>() {
-                    if input_element.disabled() || input_element.type_() == "hidden" {
-                        // NodeFilter.FILTER_SKIP
-                        return 3;
-                    }
+                if let Some(input_element) = node.dyn_ref::<web_sys::HtmlInputElement>()
+                    && (input_element.disabled() || input_element.type_() == "hidden")
+                {
+                    // NodeFilter.FILTER_SKIP
+                    return 3;
                 }
 
                 if html_element.tab_index() >= 0 {
@@ -459,6 +486,7 @@ fn get_tabbable_candidates(container: &web_sys::HtmlElement) -> Vec<web_sys::Htm
         .next_node()
         .expect("Tree walker should return a next node.")
     {
+        let node: web_sys::Node = node;
         if let Ok(element) = node.dyn_into::<web_sys::HtmlElement>() {
             nodes.push(element);
         }
@@ -493,7 +521,9 @@ struct IsHiddenOptions<'a> {
 fn is_hidden(node: &web_sys::HtmlElement, options: Option<IsHiddenOptions>) -> bool {
     let options = options.unwrap_or_default();
 
-    if window()
+    let window = web_sys::window().expect("Window should exist.");
+
+    if window
         .get_computed_style(node)
         .expect("Element is valid.")
         .expect("Element should have computed style.")
@@ -513,7 +543,7 @@ fn is_hidden(node: &web_sys::HtmlElement, options: Option<IsHiddenOptions>) -> b
                 return false;
             }
 
-            if window()
+            if window
                 .get_computed_style(n)
                 .expect("Element is valid.")
                 .expect("Element should have computed style.")
@@ -615,10 +645,10 @@ impl FocusScopeStack {
 
     fn add(&mut self, focus_scope: FocusScopeAPI) {
         // Pause the currently active focus scope (at the top of the stack).
-        if let Some(active_focus_scope) = self.stack.first_mut() {
-            if focus_scope != *active_focus_scope {
-                active_focus_scope.pause();
-            }
+        if let Some(active_focus_scope) = self.stack.first_mut()
+            && focus_scope != *active_focus_scope
+        {
+            active_focus_scope.pause();
         }
 
         // Remove in case it already exists (because we'll re-add it at the top of the stack).

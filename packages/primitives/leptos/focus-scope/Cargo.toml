@@ -10,13 +10,19 @@ version.workspace = true
 
 [dependencies]
 leptos.workspace = true
+leptos-node-ref.workspace = true
 once_cell = "1.19.0"
 radix-leptos-compose-refs.workspace = true
+radix-leptos-primitive.workspace = true
+send_wrapper.workspace = true
 web-sys = { workspace = true, features = [
     "CustomEvent",
     "CustomEventInit",
+    "HtmlInputElement",
     "MutationObserver",
     "MutationObserverInit",
     "MutationRecord",
     "NodeFilter",
+    "NodeList",
+    "TreeWalker",
 ] }

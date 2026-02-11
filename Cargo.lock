@@ -4079,6 +4079,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "radix-leptos-focus-scope"
+version = "0.0.2"
+dependencies = [
+ "leptos",
+ "leptos-node-ref",
+ "once_cell",
+ "radix-leptos-compose-refs",
+ "radix-leptos-primitive",
+ "send_wrapper",
+ "web-sys",
+]
+
+[[package]]
 name = "radix-leptos-form"
 version = "0.0.2"
 dependencies = [
@@ -4217,6 +4230,7 @@ dependencies = [
  "radix-leptos-collapsible",
  "radix-leptos-collection",
  "radix-leptos-direction",
+ "radix-leptos-focus-scope",
  "radix-leptos-form",
  "radix-leptos-label",
  "radix-leptos-popper",

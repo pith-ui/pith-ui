@@ -1,7 +1,9 @@
 use std::collections::HashMap;
 use std::fmt::{self, Display, Formatter};
 
-use leptos::{attribute_interceptor::AttributeInterceptor, context::Provider, ev, html, prelude::*};
+use leptos::{
+    attribute_interceptor::AttributeInterceptor, context::Provider, ev, html, prelude::*,
+};
 use leptos_node_ref::AnyNodeRef;
 use radix_leptos_compose_refs::use_composed_refs;
 use radix_leptos_direction::{Direction, use_direction};

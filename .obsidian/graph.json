@@ -11,21 +11,21 @@
       "query": "[\"tested_story\":true]",
       "color": {
         "a": 1,
-        "rgb": 14701138
+        "rgb": 1997604
       }
     },
     {
       "query": "[\"ported\":true]",
       "color": {
         "a": 1,
-        "rgb": 14725458
+        "rgb": 5396192
       }
     },
     {
       "query": "[\"react_story\":]",
       "color": {
         "a": 1,
-        "rgb": 5404128
+        "rgb": 14734418
       }
     },
     {
@@ -46,6 +46,6 @@
   "repelStrength": 10,
   "linkStrength": 1,
   "linkDistance": 250,
-  "scale": 0.6402627003247477,
-  "close": false
+  "scale": 0.7074561709084052,
+  "close": true
 }

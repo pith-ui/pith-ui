@@ -1,7 +1,7 @@
 use leptos::prelude::*;
 use radix_leptos_direction::DirectionProvider;
 use radix_leptos_scroll_area::*;
-use web_sys::wasm_bindgen::{closure::Closure, JsCast};
+use web_sys::wasm_bindgen::{JsCast, closure::Closure};
 
 stylance::import_crate_style!(classes, "src/primitives/scroll_area.stories.module.css");
 

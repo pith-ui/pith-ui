@@ -184,8 +184,9 @@ fn CollapsibleContentImpl(
     // Style restoration is handled by the Effect on subsequent open/close changes,
     // matching the React pattern where rAF only clears the flag.
     let raf_handle: RwSignal<Option<i32>> = RwSignal::new(None);
-    let raf_closure: SendWrapper<Closure<dyn Fn()>> =
-        SendWrapper::new(Closure::new(move || is_mount_animation_prevented.set(false)));
+    let raf_closure: SendWrapper<Closure<dyn Fn()>> = SendWrapper::new(Closure::new(move || {
+        is_mount_animation_prevented.set(false)
+    }));
     let raf_closure = StoredValue::new(raf_closure);
 
     // Schedule rAF on mount
