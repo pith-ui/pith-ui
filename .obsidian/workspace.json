@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "notes/leptos-presence.md",
+                "file": "notes/leptos-arrow.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -28,7 +28,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "leptos-presence"
+              "title": "leptos-arrow"
             }
           }
         ]
@@ -195,17 +195,17 @@
     "stories/leptos/dist/tailwind.output-d1b0b203df50eb41.css",
     "stories/leptos/dist/red-74d32e64207a038a.css",
     "stories/leptos/dist/green-fbaf4d9bde970701.css",
+    "stories/leptos/dist/radix-leptos-stories-53dd31c4c5c121d5_bg.wasm",
     "stories/leptos/dist/favicon-e197903841a5b23b.ico",
     "stories/leptos/dist/preview-ea45f592923ef9b6.css",
     "stories/leptos/dist/blue-alpha-9c4e3c532cbba84.css",
     "stories/leptos/dist/blue-420df321e365d4ba.css",
+    "stories/leptos/dist/radix-leptos-stories-53dd31c4c5c121d5.js",
     "stories/leptos/dist/index.html",
-    "stories/leptos/dist/radix-leptos-stories-211c92c841839033_bg.wasm",
     "stories/leptos/dist/gray-5b59ceb998f37280.css",
-    "stories/leptos/dist/bundle-80a121c0485db583.css",
+    "notes/leptos-presence.md",
     "notes/leptos-collection.md",
     "notes/leptos-accordion.md",
-    "notes/leptos-presence.md",
     "notes/leptos-primitive.md",
     "notes/core-primitive.md",
     "notes/core-number.md",

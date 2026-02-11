@@ -4,7 +4,6 @@ use leptos::{
     svg,
 };
 use leptos_node_ref::AnyNodeRef;
-use leptos_typed_fallback_show::TypedFallbackShow;
 use radix_leptos_primitive::Primitive;
 
 #[component]
@@ -29,7 +28,7 @@ pub fn Arrow(
             node_ref={node_ref}
             {..attrs}
         >
-            <TypedFallbackShow
+            <Show
                 when=move || as_child.get().unwrap_or_default()
                 fallback=move || {
                     view! {
@@ -38,7 +37,7 @@ pub fn Arrow(
                 }
             >
                 {children.with_value(|maybe_children| maybe_children.as_ref().map(|child_fn| child_fn()))}
-            </TypedFallbackShow>
+            </Show>
         </Primitive>
-    };
+    }
 }

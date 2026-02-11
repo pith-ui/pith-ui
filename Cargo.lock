@@ -2838,15 +2838,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "leptos-typed-fallback-show"
-version = "0.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "51cbf48cf93cbdebd4bc02a78c647d9dbe482c3153eef27e0731cf0c888258a4"
-dependencies = [
- "leptos",
-]
-
-[[package]]
 name = "leptos_config"
 version = "0.8.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4000,7 +3991,6 @@ version = "0.0.2"
 dependencies = [
  "leptos",
  "leptos-node-ref",
- "leptos-typed-fallback-show",
  "radix-leptos-primitive",
 ]
 

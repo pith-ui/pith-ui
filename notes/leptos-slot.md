@@ -1,7 +1,7 @@
 ---
 react_location: "[[reference/react-radix-primitives/packages/react/slot/src/slot.tsx|slot]]"
 rust_location:
-react_story: "[[reference/react-radix-primitives/apps/storybook/stories/slot.stories.tsx|slot]]"
+react_story: ""
 rust_story: ""
 dependencies:
   - "[[leptos-compose-refs]]"
