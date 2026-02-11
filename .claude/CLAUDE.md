@@ -85,6 +85,7 @@ rust_story: "[[stories/leptos/src/primitives/component.rs|component]]"
 dependencies: []
 ported: false
 tested: false
+tested_story: false
 ---
 ## Intent
 
@@ -116,6 +117,7 @@ Use "Leptos Implementation Notes", "Yew Implementation Notes", etc. for framewor
 - `dependencies` — list of internal radix packages this component depends on; `[]` if none
 - `ported` — `true` if the Rust implementation exists and matches the React source
 - `tested` — `true` if tests exist with reasonable coverage
+- `tested_story` — `false` by default; set to `true` only by the user after they have manually verified the story's functionality against the React reference
 
 **Content guidelines:**
 - Notes should be complete but not overly verbose
@@ -124,7 +126,7 @@ Use "Leptos Implementation Notes", "Yew Implementation Notes", etc. for framewor
 
 ### Rule 2: Follow the Dependency Graph
 
-Use `scripts/topo_sort.py` to determine porting order. Run it to see all components sorted topologically with their ported status. The next item to port is the first entry where `ported` is `false` and all of its dependencies are already `true`. Never port a component before its dependencies are ported.
+Use `scripts/topo_sort.py` to determine porting order. Run it to see all components sorted topologically with their ported and story-tested status. A dependency is considered **complete** when it is `ported: true` AND its story has been tested (`tested_story: true`), or it has no story (`react_story: ""`). The next item to port is the first entry where `ported` is `false` and all of its dependencies are complete. **Never port a component before all its dependencies are both ported and story-tested (when applicable).**
 
 ```bash
 python3 scripts/topo_sort.py
@@ -149,7 +151,12 @@ When porting, reference the React source in `reference/react-radix-primitives/` 
 Create a Leptos story in `stories/leptos/src/primitives/<component>.rs` that closely mirrors the React reference stories at `reference/react-radix-primitives/apps/storybook/stories/<component>.stories.tsx`.
 
 - Wire the new story module into `stories/leptos/src/primitives.rs`, `stories/leptos/src/app.rs` (router + nav), and `stories/leptos/Cargo.toml`.
-- **Borrow CSS from the React reference verbatim.** The React stories use CSS modules (`.stories.module.css`). Convert those styles to equivalent Tailwind classes using `tailwind_fuse` / `TwClass` derive, but preserve the same visual intent — colors, sizes, spacing, data-attribute selectors. **Never modify or "improve" the borrowed styles.**
+- **Copy the CSS module from the React reference directly.** Copy `reference/react-radix-primitives/apps/storybook/stories/<component>.stories.module.css` to `stories/leptos/src/primitives/<component>.stories.module.css`. The file must be an exact copy — **never modify or "improve" the borrowed styles.** Any required CSS variables (e.g., Radix Colors) that the module references should be defined in a shared stylesheet (e.g., `stories/leptos/style/`), not inlined into the module.
+- **Use stylance to import CSS modules.** In the Rust story file, import the CSS module classes using `stylance::import_crate_style!`:
+  ```rust
+  stylance::import_crate_style!(classes, "src/primitives/<component>.stories.module.css");
+  ```
+  Then reference classes via `attr:class=classes::root`, `attr:class=classes::trigger`, etc. See `stories/leptos/src/primitives/accordion.rs` and its corresponding `accordion.stories.module.css` for the reference pattern.
 - Each exported story in the React file (e.g., `Styled`, `Controlled`, `Chromatic`) should have a corresponding Leptos `#[component]` function.
 
 ### Rule 6: Document Omissions and Decisions

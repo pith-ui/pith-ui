@@ -132,7 +132,7 @@ fn use_presence(present: Signal<bool>, node_ref: AnyNodeRef) -> Signal<bool> {
             if is_current_animation
                 && event.target().as_ref()
                     == node_ref
-                        .get()
+                        .get_untracked()
                         .as_ref()
                         .map(|node| node.unchecked_ref::<web_sys::EventTarget>())
             {
@@ -145,7 +145,7 @@ fn use_presence(present: Signal<bool>, node_ref: AnyNodeRef) -> Signal<bool> {
         SendWrapper::new(Closure::new(move |event: web_sys::AnimationEvent| {
             if event.target().as_ref()
                 == node_ref
-                    .get()
+                    .get_untracked()
                     .as_ref()
                     .map(|node| node.unchecked_ref::<web_sys::EventTarget>())
             {
@@ -198,7 +198,7 @@ fn use_presence(present: Signal<bool>, node_ref: AnyNodeRef) -> Signal<bool> {
     });
 
     Owner::on_cleanup(move || {
-        if let Some(node) = node_ref.get() {
+        if let Some(node) = node_ref.get_untracked() {
             let node: &web_sys::EventTarget = node.unchecked_ref();
             handle_animation_start.with_value(|closure| {
                 node.remove_event_listener_with_callback(

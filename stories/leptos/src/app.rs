@@ -5,8 +5,8 @@ use leptos_router::{
 };
 
 use crate::primitives::{
-    accessible_icon, arrow, aspect_ratio, collapsible, form, label, popper, portal, presence,
-    progress, scroll_area, separator, visually_hidden,
+    accessible_icon, accordion, arrow, aspect_ratio, collapsible, collection, form, label, popper,
+    portal, presence, progress, scroll_area, separator, visually_hidden,
 };
 
 #[component]
@@ -37,6 +37,20 @@ pub fn App() -> impl IntoView {
                 <ul class="list-none m-0 p-0">
                     <li>
                         <NavLink href="/">Index</NavLink>
+                    </li>
+                    <li>
+                        Accordion
+
+                        <ul class="list-none m-0 ms-4 p-0">
+                            <li><NavLink href="/accordion/single">Single</NavLink></li>
+                            <li><NavLink href="/accordion/multiple">Multiple</NavLink></li>
+                            <li><NavLink href="/accordion/animated">Animated</NavLink></li>
+                            <li><NavLink href="/accordion/animated-2d">Animated 2D</NavLink></li>
+                            <li><NavLink href="/accordion/animated-controlled">Animated Controlled</NavLink></li>
+                            <li><NavLink href="/accordion/outside-viewport">Outside Viewport</NavLink></li>
+                            <li><NavLink href="/accordion/horizontal">Horizontal</NavLink></li>
+                            <li><NavLink href="/accordion/chromatic">Chromatic</NavLink></li>
+                        </ul>
                     </li>
                     <li>
                         Accessible Icon
@@ -95,19 +109,19 @@ pub fn App() -> impl IntoView {
                     //         <li><NavLink href="/checkbox/chromatic">Chromatic</NavLink></li>
                     //     </ul>
                     // </li>
-                    // <li>
-                    //     Collection
+                    <li>
+                        Collection
 
-                    //     <ul class="list-none m-0 ms-4 p-0">
-                    //         <li><NavLink href="/collection/basic">Basic</NavLink></li>
-                    //         <li><NavLink href="/collection/with-element-in-between">With Element In Between</NavLink></li>
-                    //         <li><NavLink href="/collection/with-wrapped-item">With Wrapped Item</NavLink></li>
-                    //         <li><NavLink href="/collection/with-fragment">With Fragment</NavLink></li>
-                    //         <li><NavLink href="/collection/dynamic-insertion">Dynamic Insertion</NavLink></li>
-                    //         <li><NavLink href="/collection/with-changing-item">With Changing Item</NavLink></li>
-                    //         <li><NavLink href="/collection/nested">Nested</NavLink></li>
-                    //     </ul>
-                    // </li>
+                        <ul class="list-none m-0 ms-4 p-0">
+                            <li><NavLink href="/collection/basic">Basic</NavLink></li>
+                            <li><NavLink href="/collection/with-element-in-between">With Element In Between</NavLink></li>
+                            <li><NavLink href="/collection/with-wrapped-item">With Wrapped Item</NavLink></li>
+                            <li><NavLink href="/collection/with-fragment">With Fragment</NavLink></li>
+                            <li><NavLink href="/collection/dynamic-insertion">Dynamic Insertion</NavLink></li>
+                            <li><NavLink href="/collection/with-changing-item">With Changing Item</NavLink></li>
+                            <li><NavLink href="/collection/nested">Nested</NavLink></li>
+                        </ul>
+                    </li>
                     // <li>
                     //     Focus Scope
 
@@ -240,6 +254,15 @@ pub fn App() -> impl IntoView {
                 <Routes fallback=|| "Not found.".into_view()>
                     <Route path=path!("/") view=Index />
 
+                    <Route path=path!("/accordion/single") view=accordion::Single />
+                    <Route path=path!("/accordion/multiple") view=accordion::Multiple />
+                    <Route path=path!("/accordion/animated") view=accordion::Animated />
+                    <Route path=path!("/accordion/animated-2d") view=accordion::Animated2D />
+                    <Route path=path!("/accordion/animated-controlled") view=accordion::AnimatedControlled />
+                    <Route path=path!("/accordion/outside-viewport") view=accordion::OutsideViewport />
+                    <Route path=path!("/accordion/horizontal") view=accordion::Horizontal />
+                    <Route path=path!("/accordion/chromatic") view=accordion::Chromatic />
+
                     <Route path=path!("/accessible-icon/styled") view=accessible_icon::Styled />
                     <Route path=path!("/accessible-icon/chromatic") view=accessible_icon::Chromatic />
 
@@ -267,13 +290,13 @@ pub fn App() -> impl IntoView {
                     // <Route path="/checkbox/animated" view=checkbox::Animated />
                     // <Route path="/checkbox/chromatic" view=checkbox::Chromatic />
 
-                    // <Route path="/collection/basic" view=collection::Basic />
-                    // <Route path="/collection/with-element-in-between" view=collection::WithElementsInBetween />
-                    // <Route path="/collection/with-wrapped-item" view=collection::WithWrappedItem />
-                    // <Route path="/collection/with-fragment" view=collection::WithFragment />
-                    // <Route path="/collection/dynamic-insertion" view=collection::DynamicInsertion />
-                    // <Route path="/collection/with-changing-item" view=collection::WithChangingItem />
-                    // <Route path="/collection/nested" view=collection::Nested />
+                    <Route path=path!("/collection/basic") view=collection::Basic />
+                    <Route path=path!("/collection/with-element-in-between") view=collection::WithElementsInBetween />
+                    <Route path=path!("/collection/with-wrapped-item") view=collection::WithWrappedItem />
+                    <Route path=path!("/collection/with-fragment") view=collection::WithFragment />
+                    <Route path=path!("/collection/dynamic-insertion") view=collection::DynamicInsertion />
+                    <Route path=path!("/collection/with-changing-item") view=collection::WithChangingItem />
+                    <Route path=path!("/collection/nested") view=collection::Nested />
 
                     // <Route path="/focus-scope/basic" view=focus_scope::Basic />
                     // <Route path="/focus-scope/multiple" view=focus_scope::Multiple />

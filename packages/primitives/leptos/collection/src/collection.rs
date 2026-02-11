@@ -1,10 +1,12 @@
 use std::marker::PhantomData;
-use std::rc::Rc;
 use std::{collections::HashMap, fmt::Debug};
 
-use leptos::{html::AnyElement, *};
+use leptos::{html, prelude::*};
+use leptos_node_ref::{AnyNodeRef, any_node_ref};
 use nanoid::nanoid;
 use radix_leptos_compose_refs::use_composed_refs;
+use send_wrapper::SendWrapper;
+use web_sys::wasm_bindgen::JsCast;
 
 #[derive(Clone, Debug, Eq, Hash, PartialEq)]
 struct CollectionItemId(String);
@@ -17,7 +19,7 @@ impl CollectionItemId {
 
 #[derive(Clone)]
 pub struct CollectionItemValue<ItemData> {
-    pub r#ref: NodeRef<AnyElement>,
+    pub r#ref: AnyNodeRef,
     pub data: ItemData,
 }
 
@@ -30,63 +32,63 @@ impl<ItemData: Debug> Debug for CollectionItemValue<ItemData> {
 }
 
 #[derive(Clone)]
-struct CollectionContextValue<ItemData: Clone + 'static> {
-    collection_ref: NodeRef<AnyElement>,
+struct CollectionContextValue<ItemData: Clone + Send + Sync + 'static> {
+    collection_ref: AnyNodeRef,
     item_map: RwSignal<HashMap<CollectionItemId, CollectionItemValue<ItemData>>>,
 }
 
 #[component]
-pub fn CollectionProvider<ItemData: Clone + 'static>(
+pub fn CollectionProvider<ItemData: Clone + Send + Sync + 'static>(
     #[expect(unused_variables)]
     #[prop(into, optional)]
     item_data_type: Option<PhantomData<ItemData>>,
-    children: ChildrenFn,
+    children: TypedChildrenFn<impl IntoView + 'static>,
 ) -> impl IntoView {
+    let children = StoredValue::new(children.into_inner());
+
     let context_value = CollectionContextValue::<ItemData> {
-        collection_ref: NodeRef::new(),
+        collection_ref: AnyNodeRef::new(),
         item_map: RwSignal::new(HashMap::new()),
     };
 
-    view! {
-        <Provider value=context_value>
-            {children()}
-        </Provider>
-    }
-}
+    provide_context(context_value);
 
-#[component]
-pub fn CollectionSlot<ItemData: Clone + 'static>(
-    #[expect(unused_variables)]
-    #[prop(into, optional)]
-    item_data_type: Option<PhantomData<ItemData>>,
-    #[prop(optional)] node_ref: NodeRef<AnyElement>,
-    #[prop(attrs)] attrs: Vec<(&'static str, Attribute)>,
-    children: ChildrenFn,
-) -> impl IntoView {
-    let context = expect_context::<CollectionContextValue<ItemData>>();
-    let composed_ref = use_composed_refs(vec![node_ref, context.collection_ref]);
-
-    view! {
-        <Slot node_ref=composed_ref attrs=attrs>
-            {children()}
-        </Slot>
-    }
+    children.with_value(|children| children())
 }
 
 const ITEM_DATA_ATTR: &str = "data-radix-collection-item";
 
 #[component]
-pub fn CollectionItemSlot<ItemData: Clone + Debug + 'static>(
+pub fn CollectionSlot<ItemData: Clone + Send + Sync + 'static>(
+    #[expect(unused_variables)]
+    #[prop(into, optional)]
+    item_data_type: Option<PhantomData<ItemData>>,
+    #[prop(into, optional)] node_ref: AnyNodeRef,
+    children: TypedChildrenFn<impl IntoView + 'static>,
+) -> impl IntoView {
+    let children = StoredValue::new(children.into_inner());
+
+    let context = expect_context::<CollectionContextValue<ItemData>>();
+    let composed_ref = use_composed_refs(vec![node_ref, context.collection_ref]);
+
+    children
+        .with_value(|children| children())
+        .add_any_attr(any_node_ref::<html::Div, _>(composed_ref))
+}
+
+#[component]
+pub fn CollectionItemSlot<ItemData: Clone + Debug + Send + Sync + 'static>(
     #[expect(unused_variables)]
     #[prop(into, optional)]
     item_data_type: Option<PhantomData<ItemData>>,
     #[prop(into, optional)] item_data: MaybeProp<ItemData>,
-    #[prop(optional)] node_ref: NodeRef<AnyElement>,
-    #[prop(attrs)] attrs: Vec<(&'static str, Attribute)>,
-    children: ChildrenFn,
+    #[prop(into, optional)] node_ref: AnyNodeRef,
+    children: TypedChildrenFn<impl IntoView + 'static>,
 ) -> impl IntoView {
-    let (id, _) = create_signal(CollectionItemId::new());
-    let item_ref = NodeRef::new();
+    let children = StoredValue::new(children.into_inner());
+
+    let id = StoredValue::new(CollectionItemId::new());
+    let item_ref = AnyNodeRef::new();
     let composed_ref = use_composed_refs(vec![node_ref, item_ref]);
     let context = expect_context::<CollectionContextValue<ItemData>>();
 
@@ -94,7 +96,7 @@ pub fn CollectionItemSlot<ItemData: Clone + Debug + 'static>(
         if let Some(item_data) = item_data.get() {
             context.item_map.update(|item_map| {
                 item_map.insert(
-                    id.get(),
+                    id.get_value(),
                     CollectionItemValue {
                         r#ref: item_ref,
                         data: item_data,
@@ -104,20 +106,19 @@ pub fn CollectionItemSlot<ItemData: Clone + Debug + 'static>(
         }
     });
 
-    on_cleanup(move || {
+    Owner::on_cleanup(move || {
         context.item_map.update(|item_map| {
-            item_map.remove(&id.get());
+            item_map.remove(&id.get_value());
         });
     });
 
-    let mut attrs = attrs.clone();
-    attrs.extend([(ITEM_DATA_ATTR, "".into_attribute())]);
-
-    view! {
-        <Slot node_ref=composed_ref attrs=attrs>
-            {children()}
-        </Slot>
-    }
+    children
+        .with_value(|children| children())
+        .add_any_attr(leptos::attr::custom::custom_attribute(
+            "data-radix-collection-item",
+            "",
+        ))
+        .add_any_attr(any_node_ref::<html::Div, _>(composed_ref))
 }
 
 fn node_list_to_vec(node_list: web_sys::NodeList) -> Vec<web_sys::Node> {
@@ -130,15 +131,16 @@ fn node_list_to_vec(node_list: web_sys::NodeList) -> Vec<web_sys::Node> {
     nodes
 }
 
-pub fn use_collection<ItemData: Clone + 'static>(
-) -> Rc<dyn Fn() -> Vec<CollectionItemValue<ItemData>>> {
+pub fn use_collection<ItemData: Clone + Send + Sync + 'static>()
+-> SendWrapper<Box<dyn Fn() -> Vec<CollectionItemValue<ItemData>>>> {
     let context = expect_context::<CollectionContextValue<ItemData>>();
 
     let get_items = move || {
         let collection_node = context.collection_ref.get();
         if let Some(collection_node) = collection_node {
+            let element: &web_sys::Element = (*collection_node).unchecked_ref();
             let ordered_nodes = node_list_to_vec(
-                collection_node
+                element
                     .query_selector_all(format!("[{ITEM_DATA_ATTR}]").as_str())
                     .expect("Node should be queried."),
             );
@@ -146,12 +148,22 @@ pub fn use_collection<ItemData: Clone + 'static>(
             let mut ordered_items = context.item_map.get().into_values().collect::<Vec<_>>();
             ordered_items.sort_by(|a, b| {
                 let index_a = ordered_nodes.iter().position(|node| {
-                    let a: &web_sys::Node = &a.r#ref.get().expect("Node ref should have element.");
-                    node == a
+                    a.r#ref
+                        .get()
+                        .map(|el| {
+                            let n: &web_sys::Node = (*el).unchecked_ref();
+                            node == n
+                        })
+                        .unwrap_or(false)
                 });
                 let index_b = ordered_nodes.iter().position(|node| {
-                    let b: &web_sys::Node = &b.r#ref.get().expect("Node ref should have element.");
-                    node == b
+                    b.r#ref
+                        .get()
+                        .map(|el| {
+                            let n: &web_sys::Node = (*el).unchecked_ref();
+                            node == n
+                        })
+                        .unwrap_or(false)
                 });
 
                 index_a.cmp(&index_b)
@@ -163,5 +175,5 @@ pub fn use_collection<ItemData: Clone + 'static>(
         }
     };
 
-    Rc::new(get_items)
+    SendWrapper::new(Box::new(get_items))
 }

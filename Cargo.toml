@@ -15,11 +15,13 @@ members = [
     "packages/icons/*",
     "packages/primitives/core/primitive",
     "packages/primitives/core/rect",
+    "packages/primitives/leptos/accordion",
     "packages/primitives/leptos/accessible-icon",
     "packages/primitives/leptos/announce",
     "packages/primitives/leptos/arrow",
     "packages/primitives/leptos/aspect-ratio",
     "packages/primitives/leptos/collapsible",
+    "packages/primitives/leptos/collection",
     "packages/primitives/leptos/compose-refs",
     "packages/primitives/leptos/direction",
     "packages/primitives/leptos/focus-guards",
@@ -65,11 +67,12 @@ leptos_dom = "0.8.0"
 leptos_router = "0.8.0"
 log = "0.4.22"
 radix-dioxus-icons = { path = "./packages/icons/dioxus", version = "0.0.2" }
+radix-leptos-accordion = { path = "./packages/primitives/leptos/accordion", version = "0.0.2" }
 radix-leptos-accessible-icon = { path = "./packages/primitives/leptos/accessible-icon", version = "0.0.2" }
 radix-leptos-announce = { path = "./packages/primitives/leptos/announce", version = "0.0.2" }
 radix-leptos-arrow = { path = "./packages/primitives/leptos/arrow", version = "0.0.2" }
 radix-leptos-aspect-ratio = { path = "./packages/primitives/leptos/aspect-ratio", version = "0.0.2" }
-# radix-leptos-collection = { path = "./packages/primitives/leptos/collection", version = "0.0.2" }
+radix-leptos-collection = { path = "./packages/primitives/leptos/collection", version = "0.0.2" }
 radix-leptos-collapsible = { path = "./packages/primitives/leptos/collapsible", version = "0.0.2" }
 radix-leptos-compose-refs = { path = "./packages/primitives/leptos/compose-refs", version = "0.0.2" }
 # radix-leptos-dismissable-layer = { path = "./packages/primitives/leptos/dismissable-layer", version = "0.0.2" }

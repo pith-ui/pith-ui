@@ -9,7 +9,15 @@ repository.workspace = true
 version.workspace = true
 
 [dependencies]
+getrandom = { version = "0.2", features = ["js"] }
 leptos.workspace = true
+leptos-node-ref.workspace = true
 nanoid = "0.4.0"
 radix-leptos-compose-refs.workspace = true
-web-sys.workspace = true
+send_wrapper.workspace = true
+web-sys = { workspace = true, features = [
+    "Element",
+    "HtmlElement",
+    "Node",
+    "NodeList",
+] }

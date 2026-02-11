@@ -3,10 +3,10 @@ use leptos_node_ref::AnyNodeRef;
 use radix_leptos_compose_refs::use_composed_refs;
 use radix_leptos_id::use_id;
 use radix_leptos_presence::Presence;
-use radix_leptos_primitive::{compose_callbacks, Primitive};
-use radix_leptos_use_controllable_state::{use_controllable_state, UseControllableStateParams};
+use radix_leptos_primitive::{Primitive, compose_callbacks};
+use radix_leptos_use_controllable_state::{UseControllableStateParams, use_controllable_state};
 use send_wrapper::SendWrapper;
-use web_sys::wasm_bindgen::{closure::Closure, JsCast};
+use web_sys::wasm_bindgen::{JsCast, closure::Closure};
 
 /* -------------------------------------------------------------------------------------------------
  * Collapsible
@@ -132,8 +132,7 @@ pub fn CollapsibleContent(
 
     let context = expect_context::<CollapsibleContextValue>();
 
-    let present =
-        Signal::derive(move || force_mount.get().unwrap_or(false) || context.open.get());
+    let present = Signal::derive(move || force_mount.get().unwrap_or(false) || context.open.get());
 
     let presence_ref = AnyNodeRef::new();
 
@@ -187,10 +186,9 @@ fn CollapsibleContentImpl(
 
     // Prevent mount animation via requestAnimationFrame
     let raf_handle: RwSignal<Option<i32>> = RwSignal::new(None);
-    let raf_closure: SendWrapper<Closure<dyn Fn()>> =
-        SendWrapper::new(Closure::new(move || {
-            is_mount_animation_prevented.set(false);
-        }));
+    let raf_closure: SendWrapper<Closure<dyn Fn()>> = SendWrapper::new(Closure::new(move || {
+        is_mount_animation_prevented.set(false);
+    }));
     let raf_closure = StoredValue::new(raf_closure);
 
     // Schedule rAF on mount
@@ -203,7 +201,7 @@ fn CollapsibleContentImpl(
     });
 
     Owner::on_cleanup(move || {
-        if let Some(handle) = raf_handle.get() {
+        if let Some(handle) = raf_handle.get_untracked() {
             web_sys::window()
                 .expect("Window should exist.")
                 .cancel_animation_frame(handle)
