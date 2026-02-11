@@ -6,7 +6,7 @@ use leptos_router::{
 
 use crate::primitives::{
     accessible_icon, accordion, arrow, aspect_ratio, collapsible, collection, form, label, popper,
-    portal, presence, progress, scroll_area, separator, visually_hidden,
+    portal, presence, progress, scroll_area, separator, toggle, visually_hidden,
 };
 
 #[component]
@@ -235,14 +235,15 @@ pub fn App() -> impl IntoView {
                     //         <li><NavLink href="/switch/chromatic">Chromatic</NavLink></li>
                     //     </ul>
                     // </li>
-                    // <li>
-                    //     Toggle
+                    <li>
+                        Toggle
 
-                    //     <ul class="list-none m-0 ms-4 p-0">
-                    //         <li><NavLink href="/toggle/controlled">Controlled</NavLink></li>
-                    //         <li><NavLink href="/toggle/chromatic">Chromatic</NavLink></li>
-                    //     </ul>
-                    // </li>
+                        <ul class="list-none m-0 ms-4 p-0">
+                            <li><NavLink href="/toggle/styled">Styled</NavLink></li>
+                            <li><NavLink href="/toggle/controlled">Controlled</NavLink></li>
+                            <li><NavLink href="/toggle/chromatic">Chromatic</NavLink></li>
+                        </ul>
+                    </li>
                     <li>
                         Visually Hidden
 
@@ -352,8 +353,9 @@ pub fn App() -> impl IntoView {
                     // <Route path="/switch/within-form" view=switch::WithinForm />
                     // <Route path="/switch/chromatic" view=switch::Chromatic />
 
-                    // <Route path="/toggle/controlled" view=toggle::Controlled />
-                    // <Route path="/toggle/chromatic" view=toggle::Chromatic />
+                    <Route path=path!("/toggle/styled") view=toggle::Styled />
+                    <Route path=path!("/toggle/controlled") view=toggle::Controlled />
+                    <Route path=path!("/toggle/chromatic") view=toggle::Chromatic />
 
                     <Route path=path!("/visually-hidden/basic") view=visually_hidden::Basic />
                 </Routes>

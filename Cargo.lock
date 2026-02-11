@@ -4225,11 +4225,22 @@ dependencies = [
  "radix-leptos-progress",
  "radix-leptos-scroll-area",
  "radix-leptos-separator",
+ "radix-leptos-toggle",
  "radix-leptos-visually-hidden",
  "send_wrapper",
  "stylance",
  "tailwind_fuse",
  "web-sys",
+]
+
+[[package]]
+name = "radix-leptos-toggle"
+version = "0.0.2"
+dependencies = [
+ "leptos",
+ "leptos-node-ref",
+ "radix-leptos-primitive",
+ "radix-leptos-use-controllable-state",
 ]
 
 [[package]]

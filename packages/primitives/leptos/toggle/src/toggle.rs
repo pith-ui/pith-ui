@@ -1,6 +1,11 @@
-use leptos::{ev::MouseEvent, html::AnyElement, *};
-use radix_leptos_primitive::{compose_callbacks, Primitive};
-use radix_leptos_use_controllable_state::{use_controllable_state, UseControllableStateParams};
+use leptos::{attribute_interceptor::AttributeInterceptor, ev, html, prelude::*};
+use leptos_node_ref::AnyNodeRef;
+use radix_leptos_primitive::{Primitive, compose_callbacks};
+use radix_leptos_use_controllable_state::{UseControllableStateParams, use_controllable_state};
+
+/* -------------------------------------------------------------------------------------------------
+ * Toggle
+ * -----------------------------------------------------------------------------------------------*/
 
 #[component]
 pub fn Toggle(
@@ -14,20 +19,21 @@ pub fn Toggle(
     #[prop(into, optional)]
     on_pressed_change: Option<Callback<bool>>,
     #[prop(into, optional)] disabled: MaybeProp<bool>,
-    #[prop(into, optional)] on_click: Option<Callback<MouseEvent>>,
+    #[prop(into, optional)] on_click: Option<Callback<ev::MouseEvent>>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
-    #[prop(optional)] node_ref: NodeRef<AnyElement>,
-    #[prop(attrs)] attrs: Vec<(&'static str, Attribute)>,
-    children: ChildrenFn,
+    #[prop(into, optional)] node_ref: AnyNodeRef,
+    children: TypedChildrenFn<impl IntoView + 'static>,
 ) -> impl IntoView {
+    let children = StoredValue::new(children.into_inner());
+
     let disabled = Signal::derive(move || disabled.get().unwrap_or(false));
 
     let (pressed, set_pressed) = use_controllable_state(UseControllableStateParams {
         prop: pressed,
         on_change: on_pressed_change.map(|on_pressed_change| {
-            Callback::new(move |value| {
+            Callback::new(move |value: Option<bool>| {
                 if let Some(value) = value {
-                    on_pressed_change.call(value);
+                    on_pressed_change.run(value);
                 }
             })
         }),
@@ -35,40 +41,33 @@ pub fn Toggle(
     });
     let pressed = Signal::derive(move || pressed.get().unwrap_or(false));
 
-    let mut attrs = attrs.clone();
-    attrs.extend([
-        ("aria-pressed", pressed.into_attribute()),
-        (
-            "data-state",
-            (move || match pressed.get() {
-                true => "on",
-                false => "off",
-            })
-            .into_attribute(),
-        ),
-        (
-            "data-disabled",
-            (move || disabled.get().then_some("")).into_attribute(),
-        ),
-        (
-            "disabled",
-            (move || disabled.get().then_some("")).into_attribute(),
-        ),
-    ]);
-
     view! {
-        <Primitive
-            element=html::button
-            as_child=as_child
-            node_ref=node_ref
-            attrs=attrs
-            on:click=compose_callbacks(on_click, Some(Callback::new(move |_| {
-                if !disabled.get() {
-                    set_pressed.call(Some(!pressed.get()));
+        <AttributeInterceptor let:attrs>
+            <Primitive
+                element=html::button
+                as_child=as_child
+                node_ref=node_ref
+                attr:r#type="button"
+                attr:aria-pressed=move || pressed.get().to_string()
+                attr:data-state=move || match pressed.get() {
+                    true => "on",
+                    false => "off",
                 }
-            })), None)
-        >
-            {children()}
-        </Primitive>
+                attr:data-disabled=move || disabled.get().then_some("")
+                attr:disabled=move || disabled.get().then_some("")
+                on:click=compose_callbacks(
+                    on_click,
+                    Some(Callback::new(move |_: ev::MouseEvent| {
+                        if !disabled.get() {
+                            set_pressed.run(Some(!pressed.get()));
+                        }
+                    })),
+                    None,
+                )
+                {..attrs}
+            >
+                {children.with_value(|children| children())}
+            </Primitive>
+        </AttributeInterceptor>
     }
 }

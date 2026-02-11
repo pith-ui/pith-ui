@@ -9,7 +9,7 @@ dependencies:
   - "[[leptos-use-controllable-state]]"
 ported: true
 tested: false
-tested_story: false
+tested_story: true
 ---
 ## Intent
 
@@ -34,21 +34,25 @@ fn Toggle(
     default_pressed: MaybeProp<bool>,
     on_pressed_change: Option<Callback<bool>>,
     disabled: MaybeProp<bool>,
-    ...
+    on_click: Option<Callback<ev::MouseEvent>>,
+    as_child: MaybeProp<bool>,
+    node_ref: AnyNodeRef,
+    children: TypedChildrenFn<impl IntoView + 'static>,
 ) -> impl IntoView
 ```
-
-**Note:** Uses old Leptos API. Needs migration.
 
 ## React Implementation Notes
 
 - Simple: `useControllableState` for pressed, `composeEventHandlers` for click.
 - `data-state`: `on` | `off`.
 - Respects `disabled` — won't toggle when disabled.
+- Sets `type="button"` on the underlying `<button>`.
 
 ## Leptos Implementation Notes
 
 - Faithful port. Uses `compose_callbacks` and `use_controllable_state`.
 - Disabled check is in the click handler (same as React).
-- Uses old Leptos API — needs migration.
-- Dependencies: `leptos`, `radix-leptos-use-controllable-state`.
+- Uses `AttributeInterceptor` + `{..attrs}` pattern for attribute forwarding (Leptos 0.8).
+- Uses `TypedChildrenFn` + `StoredValue` for children (Leptos 0.8).
+- Uses `AnyNodeRef` from `leptos-node-ref` instead of `NodeRef<AnyElement>`.
+- Dependencies: `leptos`, `leptos-node-ref`, `radix-leptos-primitive`, `radix-leptos-use-controllable-state`.

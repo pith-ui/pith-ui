@@ -1,18 +1,28 @@
-use leptos::*;
+use leptos::prelude::*;
 use radix_leptos_toggle::*;
-use tailwind_fuse::*;
+
+stylance::import_crate_style!(classes, "src/primitives/toggle.stories.module.css");
+
+#[component]
+pub fn Styled() -> impl IntoView {
+    view! {
+        <Toggle attr:class=classes::root>"Toggle"</Toggle>
+    }
+}
 
 #[component]
 pub fn Controlled() -> impl IntoView {
-    let root_class = Memo::new(move |_| RootClass::default().to_class());
-
-    let (pressed, set_pressed) = create_signal(true);
+    let (pressed, set_pressed) = signal(true);
 
     view! {
-        <Toggle attr:class=root_class on_pressed_change=move |pressed| set_pressed.set(pressed)>
+        <Toggle
+            attr:class=classes::root
+            pressed=pressed
+            on_pressed_change=move |value: bool| set_pressed.set(value)
+        >
             {move || match pressed.get() {
                 true => "On",
-                false => "Off"
+                false => "Off",
             }}
         </Toggle>
     }
@@ -20,41 +30,26 @@ pub fn Controlled() -> impl IntoView {
 
 #[component]
 pub fn Chromatic() -> impl IntoView {
-    let root_class = Memo::new(move |_| RootClass::default().to_class());
-    let root_attr_class = Memo::new(move |_| RootAttrClass::default().to_class());
-
     view! {
-        <h1>Uncontrolled</h1>
-        <h2>Off</h2>
-        <Toggle attr:class=root_class>Toggle</Toggle>
+        <h1>"Uncontrolled"</h1>
+        <h2>"Off"</h2>
+        <Toggle attr:class=classes::root>"Toggle"</Toggle>
 
-        <h2>On</h2>
-        <Toggle attr:class=root_class default_pressed=true>Toggle</Toggle>
+        <h2>"On"</h2>
+        <Toggle attr:class=classes::root default_pressed=true>"Toggle"</Toggle>
 
-        <h1>Controlled</h1>
-        <h2>Off</h2>
-        <Toggle attr:class=root_class pressed=false>Toggle</Toggle>
+        <h1>"Controlled"</h1>
+        <h2>"Off"</h2>
+        <Toggle attr:class=classes::root pressed=false>"Toggle"</Toggle>
 
-        <h2>On</h2>
-        <Toggle attr:class=root_class pressed=true>Toggle</Toggle>
+        <h2>"On"</h2>
+        <Toggle attr:class=classes::root pressed=true>"Toggle"</Toggle>
 
-        <h2>Disabled</h2>
-        <Toggle attr:class=root_class disabled=true>Toggle</Toggle>
+        <h1>"Disabled"</h1>
+        <Toggle attr:class=classes::root disabled=true>"Toggle"</Toggle>
 
-        <h2>State attributes</h2>
-        <Toggle attr:class=root_attr_class>Toggle</Toggle>
-        <Toggle attr:class=root_attr_class disabled=true>Toggle</Toggle>
+        <h1>"State attributes"</h1>
+        <Toggle attr:class=classes::rootAttr>"Toggle"</Toggle>
+        <Toggle attr:class=classes::rootAttr disabled=true>"Toggle"</Toggle>
     }
 }
-
-#[derive(TwClass, Default, Clone, Copy)]
-#[tw(
-    class = "p-[6px] leading-[1] border-none font-sans font-bold focus:outline-none focus:shadow-[0_0_0_2px_#111] data-[disabled]:opacity-50 data-[state=off]:bg-[red] data-[state=off]:text-[#fff] data-[state=on]:bg-[green] data-[state=on]:text-[#fff]"
-)]
-struct RootClass {}
-
-#[derive(TwClass, Default, Clone, Copy)]
-#[tw(
-    class = "bg-[rgba(0,0,255,0.3)] border-[2px] border-solid border-[blue] p-[10px] disabled:opacity-50 data-[disabled]:border-dashed"
-)]
-struct RootAttrClass {}

@@ -19,5 +19,5 @@ pub mod scroll_area;
 pub mod separator;
 // pub mod slot;
 // pub mod switch;
-// pub mod toggle;
+pub mod toggle;
 pub mod visually_hidden;
