@@ -278,9 +278,9 @@ fn AccordionImpl(
         disabled,
         orientation,
     };
-    provide_context(context);
 
     view! {
+        <Provider value=context>
         <CollectionSlot item_data_type=ITEM_DATA_PHANTOM node_ref=composed_ref>
             <Primitive
                 element=html::div
@@ -400,6 +400,7 @@ fn AccordionImpl(
                 {children.with_value(|children| children())}
             </Primitive>
         </CollectionSlot>
+        </Provider>
     }
 }
 
@@ -430,10 +431,11 @@ pub fn AccordionItem(
     let trigger_id = use_id(None);
 
     let item_value = StoredValue::new(value);
-    let open = Signal::derive(move || {
+    let open: Signal<bool> = Memo::new(move |_| {
         let val = item_value.get_value();
         value_context.value.get().contains(&val)
-    });
+    })
+    .into();
     let disabled =
         Signal::derive(move || accordion_context.disabled.get() || disabled.get().unwrap_or(false));
 
@@ -442,6 +444,7 @@ pub fn AccordionItem(
         disabled,
         trigger_id,
     };
+    provide_context(item_context);
 
     let on_open_change = Callback::new(move |open_val: bool| {
         let val = item_value.get_value();
@@ -453,21 +456,19 @@ pub fn AccordionItem(
     });
 
     view! {
-        <Provider value=item_context>
-            <AttributeInterceptor let:attrs>
-                <Collapsible
-                    open=open
-                    disabled=disabled
-                    on_open_change=on_open_change
-                    as_child=as_child
-                    node_ref=node_ref
-                    attr:data-orientation=move || accordion_context.orientation.get().to_string()
-                    {..attrs}
-                >
-                    {children.with_value(|children| children())}
-                </Collapsible>
-            </AttributeInterceptor>
-        </Provider>
+        <AttributeInterceptor let:attrs>
+            <Collapsible
+                open=open
+                disabled=disabled
+                on_open_change=on_open_change
+                as_child=as_child
+                node_ref=node_ref
+                attr:data-orientation=move || accordion_context.orientation.get().to_string()
+                {..attrs}
+            >
+                {children.with_value(|children| children())}
+            </Collapsible>
+        </AttributeInterceptor>
     }
 }
 

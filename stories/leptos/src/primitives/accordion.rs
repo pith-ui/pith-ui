@@ -344,38 +344,38 @@ pub fn Chromatic() -> impl IntoView {
         <h1>"Uncontrolled"</h1>
         <h2>"Single closed"</h2>
         <Accordion r#type=AccordionType::Single attr:class=accordion_classes::root>
-            {render_chromatic_items(items, text_suffix, "accordion-item", "accordion-header", "accordion-trigger", "accordion-content")}
+            {render_chromatic_items(items, text_suffix, accordion_classes::item, accordion_classes::header, accordion_classes::trigger, accordion_classes::content)}
         </Accordion>
 
         <h2>"Single open"</h2>
         <Accordion r#type=AccordionType::Single default_value="Two".to_string() attr:class=accordion_classes::root>
-            {render_chromatic_items(items, text_suffix, "accordion-item", "accordion-header", "accordion-trigger", "accordion-content")}
+            {render_chromatic_items(items, text_suffix, accordion_classes::item, accordion_classes::header, accordion_classes::trigger, accordion_classes::content)}
         </Accordion>
 
         <h2>"Multiple closed"</h2>
         <Accordion r#type=AccordionType::Multiple attr:class=accordion_classes::root>
-            {render_chromatic_items(items, text_suffix, "accordion-item", "accordion-header", "accordion-trigger", "accordion-content")}
+            {render_chromatic_items(items, text_suffix, accordion_classes::item, accordion_classes::header, accordion_classes::trigger, accordion_classes::content)}
         </Accordion>
 
         <h2>"Multiple open"</h2>
         <Accordion r#type=AccordionType::Multiple default_values=vec!["One".to_string(), "Two".to_string()] attr:class=accordion_classes::root>
-            {render_chromatic_items(items, text_suffix, "accordion-item", "accordion-header", "accordion-trigger", "accordion-content")}
+            {render_chromatic_items(items, text_suffix, accordion_classes::item, accordion_classes::header, accordion_classes::trigger, accordion_classes::content)}
         </Accordion>
 
         <h1>"Controlled"</h1>
         <h2>"Single open"</h2>
         <Accordion r#type=AccordionType::Single value="Three".to_string() attr:class=accordion_classes::root>
-            {render_chromatic_items(items, text_suffix, "accordion-item", "accordion-header", "accordion-trigger", "accordion-content")}
+            {render_chromatic_items(items, text_suffix, accordion_classes::item, accordion_classes::header, accordion_classes::trigger, accordion_classes::content)}
         </Accordion>
 
         <h2>"Multiple open"</h2>
         <Accordion r#type=AccordionType::Multiple values=vec!["Two".to_string(), "Three".to_string()] attr:class=accordion_classes::root>
-            {render_chromatic_items(items, text_suffix, "accordion-item", "accordion-header", "accordion-trigger", "accordion-content")}
+            {render_chromatic_items(items, text_suffix, accordion_classes::item, accordion_classes::header, accordion_classes::trigger, accordion_classes::content)}
         </Accordion>
 
         <h1>"Disabled (whole)"</h1>
         <Accordion r#type=AccordionType::Single disabled=true attr:class=accordion_classes::root>
-            {render_chromatic_items(items, text_suffix, "accordion-item", "accordion-header", "accordion-trigger", "accordion-content")}
+            {render_chromatic_items(items, text_suffix, accordion_classes::item, accordion_classes::header, accordion_classes::trigger, accordion_classes::content)}
         </Accordion>
 
         <h1>"Disabled (item)"</h1>
@@ -438,7 +438,7 @@ pub fn Chromatic() -> impl IntoView {
         <h1>"State attributes"</h1>
         <h2>"Accordion disabled"</h2>
         <Accordion r#type=AccordionType::Single default_value="Two".to_string() disabled=true attr:class=accordion_classes::rootAttr>
-            {render_chromatic_items(items, text_suffix, "accordion-itemAttr", "accordion-headerAttr", "accordion-triggerAttr", "accordion-contentAttr")}
+            {render_chromatic_items(items, text_suffix, accordion_classes::itemAttr, accordion_classes::headerAttr, accordion_classes::triggerAttr, accordion_classes::contentAttr)}
         </Accordion>
 
         <h2>"Accordion enabled with item override"</h2>

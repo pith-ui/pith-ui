@@ -180,32 +180,12 @@ fn CollapsibleContentImpl(
 
     let composed_ref = use_composed_refs(vec![node_ref, presence_ref]);
 
-    // After the first frame, clear mount animation prevention and restore original styles.
-    // This allows CSS open animations to trigger after the initial measurement frame.
+    // After the first frame, clear mount animation prevention flag.
+    // Style restoration is handled by the Effect on subsequent open/close changes,
+    // matching the React pattern where rAF only clears the flag.
     let raf_handle: RwSignal<Option<i32>> = RwSignal::new(None);
-    let raf_closure: SendWrapper<Closure<dyn Fn()>> = SendWrapper::new(Closure::new(move || {
-        is_mount_animation_prevented.set(false);
-
-        // Restore original styles so the CSS class animation can apply
-        if let Some(node) = composed_ref.get() {
-            let node: &web_sys::HtmlElement = node.unchecked_ref();
-            let style = node.style();
-            style
-                .set_property(
-                    "transition-duration",
-                    &original_transition_duration
-                        .get_untracked()
-                        .unwrap_or_default(),
-                )
-                .ok();
-            style
-                .set_property(
-                    "animation-name",
-                    &original_animation_name.get_untracked().unwrap_or_default(),
-                )
-                .ok();
-        }
-    }));
+    let raf_closure: SendWrapper<Closure<dyn Fn()>> =
+        SendWrapper::new(Closure::new(move || is_mount_animation_prevented.set(false)));
     let raf_closure = StoredValue::new(raf_closure);
 
     // Schedule rAF on mount
