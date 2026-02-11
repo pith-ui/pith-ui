@@ -89,7 +89,7 @@ impl ValidityMatcher {
             Self::TooLong => "This value is too long",
             Self::TooShort => "This value is too short",
             Self::TypeMismatch => "This value does not match the required type",
-            Self::Valid => DEFAULT_INVALID_MESSAGE,
+            Self::Valid => "",
             Self::ValueMissing => "This value is missing",
         }
     }
@@ -802,7 +802,7 @@ fn update_control_validity(
 #[component]
 pub fn FormMessage(
     #[prop(into, optional)] r#match: Option<Match>,
-    #[prop(into, optional)] force_match: Option<bool>,
+    #[prop(into, optional)] force_match: MaybeProp<bool>,
     #[prop(into, optional)] name: Option<String>,
     #[prop(into, optional)] id: Option<String>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
@@ -830,7 +830,7 @@ pub fn FormMessage(
             view! {
                 <FormBuiltInMessage
                     r#match=matcher
-                    force_match=force_match.unwrap_or(false)
+                    force_match=force_match
                     name=name.clone()
                     id=id.clone()
                     as_child=as_child
@@ -847,7 +847,7 @@ pub fn FormMessage(
         Some(Match::Custom(matcher)) => view! {
             <FormCustomMessage
                 matcher=CustomMatcher::Sync(matcher)
-                force_match=force_match.unwrap_or(false)
+                force_match=force_match
                 name=name.clone()
                 id=id.clone()
                 as_child=as_child
@@ -863,7 +863,7 @@ pub fn FormMessage(
         Some(Match::CustomAsync(matcher)) => view! {
             <FormCustomMessage
                 matcher=CustomMatcher::Async(matcher)
-                force_match=force_match.unwrap_or(false)
+                force_match=force_match
                 name=name.clone()
                 id=id.clone()
                 as_child=as_child
@@ -886,7 +886,7 @@ pub fn FormMessage(
 #[component]
 fn FormBuiltInMessage(
     r#match: ValidityMatcher,
-    #[prop(into, optional)] force_match: bool,
+    #[prop(into, optional)] force_match: MaybeProp<bool>,
     #[prop(into)] name: String,
     #[prop(into)] id: String,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
@@ -900,7 +900,7 @@ fn FormBuiltInMessage(
     let validity = Memo::new(move |_| validation_context.get_field_validity(&field_name));
 
     let matches = Memo::new(move |_| {
-        if force_match {
+        if force_match.get().unwrap_or(false) {
             return true;
         }
         if let Some(v) = validity.get() {
@@ -928,7 +928,7 @@ fn FormBuiltInMessage(
 #[component]
 fn FormCustomMessage(
     matcher: CustomMatcher,
-    #[prop(into, optional)] force_match: bool,
+    #[prop(into, optional)] force_match: MaybeProp<bool>,
     #[prop(into)] name: String,
     #[prop(into)] id: String,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
@@ -955,7 +955,7 @@ fn FormCustomMessage(
     let matches_name = name.clone();
     let matches_id = id.clone();
     let matches = Memo::new(move |_| {
-        if force_match {
+        if force_match.get().unwrap_or(false) {
             return true;
         }
         let validity = validation_context.get_field_validity(&matches_name);

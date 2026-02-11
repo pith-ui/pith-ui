@@ -11,7 +11,7 @@ dependencies:
   - "[[leptos-primitive]]"
 ported: true
 tested: false
-tested_story: false
+tested_story: true
 ---
 ## Intent
 
@@ -93,7 +93,7 @@ Three contexts matching React, using Leptos `provide_context`/`expect_context`:
 - **`validityStateToObject` utility**: Replaced by `impl From<web_sys::ValidityState> for Validity` which serves the same purpose (converting live DOM ValidityState to a clonable struct).
 - **`DEFAULT_BUILT_IN_MESSAGES` map**: Replaced by `ValidityMatcher::default_message()` method, which is more idiomatic Rust.
 
-### Notes
+### Review Notes
 
-- doesn't rely on label like react impl, but maybe should
 - uses `DEFAULT_INVALID_MESSAGE` for `ValidityMatcher::Valid`, should be a valid message
+	- updated to empty string

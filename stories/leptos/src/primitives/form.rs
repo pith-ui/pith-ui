@@ -3,6 +3,8 @@ use std::rc::Rc;
 use leptos::prelude::*;
 use radix_leptos_form::*;
 
+stylance::import_crate_style!(form_classes, "src/primitives/form.stories.module.css");
+
 #[component]
 pub fn Basic() -> impl IntoView {
     let (server_errors, set_server_errors) = signal::<(bool, bool)>((false, false));
@@ -38,7 +40,7 @@ pub fn Basic() -> impl IntoView {
 
     view! {
         <Form
-            attr:class="form"
+            attr:class=form_classes::form
             on_clear_server_errors=Callback::new(move |_| set_server_errors.set((false, false)))
             on:submit=on_submit
         >
@@ -54,7 +56,7 @@ pub fn Basic() -> impl IntoView {
                 <FormMessage r#match=Match::BuiltIn(ValidityMatcher::ValueMissing) />
                 <FormMessage
                     r#match=Match::BuiltIn(ValidityMatcher::TypeMismatch)
-                    force_match=server_errors.get_untracked().0
+                    force_match=Signal::derive(move || server_errors.get().0)
                 >
                     Email is invalid
                 </FormMessage>
@@ -76,7 +78,7 @@ pub fn Basic() -> impl IntoView {
                     r#match=Match::Custom(Rc::new(|value: String, _form_data: web_sys::FormData| {
                         !value.chars().any(|c| c.is_ascii_digit())
                     }))
-                    force_match=server_errors.get_untracked().1
+                    force_match=Signal::derive(move || server_errors.get().1)
                 >
                     Password is not complex enough
                 </FormMessage>
@@ -133,7 +135,7 @@ pub fn Cypress() -> impl IntoView {
 
     view! {
         <Form
-            attr:class="form"
+            attr:class=form_classes::form
             on_clear_server_errors=Callback::new(move |_| set_server_errors.set((false, false, false)))
             on:submit=on_submit
         >
@@ -173,7 +175,7 @@ pub fn Cypress() -> impl IntoView {
                 <FormControl attr:r#type="text" attr:pattern="\\d{4,4}" />
                 <FormMessage
                     r#match=Match::BuiltIn(ValidityMatcher::PatternMismatch)
-                    force_match=server_errors.get_untracked().1
+                    force_match=Signal::derive(move || server_errors.get().1)
                 />
             </FormField>
 

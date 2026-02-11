@@ -184,6 +184,18 @@
 }
 
 
+.form-516 {
+  & [data-invalid] {
+    color: var(--red-9);
+    outline-color: currentColor;
+  }
+  & [data-valid] {
+    color: var(--green-9);
+    outline-color: currentColor;
+  }
+}
+
+
 .root-597 {
   /* ensures it can receive vertical margins */
   display: inline-block;
