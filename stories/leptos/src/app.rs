@@ -5,8 +5,9 @@ use leptos_router::{
 };
 
 use crate::primitives::{
-    accessible_icon, accordion, arrow, aspect_ratio, collapsible, collection, focus_scope, form,
-    label, popper, portal, presence, progress, scroll_area, separator, toggle, visually_hidden,
+    accessible_icon, accordion, arrow, aspect_ratio, collapsible, collection, dismissable_layer,
+    focus_scope, form, label, popper, portal, presence, progress, scroll_area, separator, toggle,
+    visually_hidden,
 };
 
 #[component]
@@ -109,6 +110,21 @@ pub fn App() -> impl IntoView {
                     //         <li><NavLink href="/checkbox/chromatic">Chromatic</NavLink></li>
                     //     </ul>
                     // </li>
+                    <li>
+                        Dismissable Layer
+
+                        <ul class="list-none m-0 ms-4 p-0">
+                            <li><NavLink href="/dismissable-layer/basic">Basic</NavLink></li>
+                            <li><NavLink href="/dismissable-layer/nested">Nested</NavLink></li>
+                            <li><NavLink href="/dismissable-layer/with-focus-scope">With Focus Scope</NavLink></li>
+                            <li><NavLink href="/dismissable-layer/dialog-example">Dialog Example</NavLink></li>
+                            <li><NavLink href="/dismissable-layer/popover-fully-modal">Popover Fully Modal</NavLink></li>
+                            <li><NavLink href="/dismissable-layer/popover-semi-modal">Popover Semi Modal</NavLink></li>
+                            <li><NavLink href="/dismissable-layer/popover-non-modal">Popover Non Modal</NavLink></li>
+                            <li><NavLink href="/dismissable-layer/popover-in-dialog">Popover In Dialog</NavLink></li>
+                            <li><NavLink href="/dismissable-layer/popover-nested">Popover Nested</NavLink></li>
+                        </ul>
+                    </li>
                     <li>
                         Collection
 
@@ -293,6 +309,16 @@ pub fn App() -> impl IntoView {
                     // <Route path="/checkbox/within-form" view=checkbox::WithinForm />
                     // <Route path="/checkbox/animated" view=checkbox::Animated />
                     // <Route path="/checkbox/chromatic" view=checkbox::Chromatic />
+
+                    <Route path=path!("/dismissable-layer/basic") view=dismissable_layer::Basic />
+                    <Route path=path!("/dismissable-layer/nested") view=dismissable_layer::Nested />
+                    <Route path=path!("/dismissable-layer/with-focus-scope") view=dismissable_layer::WithFocusScope />
+                    <Route path=path!("/dismissable-layer/dialog-example") view=dismissable_layer::DialogExample />
+                    <Route path=path!("/dismissable-layer/popover-fully-modal") view=dismissable_layer::PopoverFullyModal />
+                    <Route path=path!("/dismissable-layer/popover-semi-modal") view=dismissable_layer::PopoverSemiModal />
+                    <Route path=path!("/dismissable-layer/popover-non-modal") view=dismissable_layer::PopoverNonModal />
+                    <Route path=path!("/dismissable-layer/popover-in-dialog") view=dismissable_layer::PopoverInDialog />
+                    <Route path=path!("/dismissable-layer/popover-nested") view=dismissable_layer::PopoverNested />
 
                     <Route path=path!("/collection/basic") view=collection::Basic />
                     <Route path=path!("/collection/with-element-in-between") view=collection::WithElementsInBetween />

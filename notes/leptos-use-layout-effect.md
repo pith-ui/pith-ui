@@ -1,11 +1,11 @@
 ---
 react_location: "[[reference/react-radix-primitives/packages/react/use-layout-effect/src/use-layout-effect.tsx|use-layout-effect]]"
-rust_location:
+rust_location: ""
 react_story: ""
 rust_story: ""
 dependencies: []
-ported: false
-tested: false
+ported: true
+tested: true
 tested_story: false
 ---
 ## Intent

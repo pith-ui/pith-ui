@@ -4071,6 +4071,20 @@ dependencies = [
 ]
 
 [[package]]
+name = "radix-leptos-dismissable-layer"
+version = "0.0.2"
+dependencies = [
+ "leptos",
+ "leptos-node-ref",
+ "once_cell",
+ "radix-leptos-compose-refs",
+ "radix-leptos-primitive",
+ "radix-leptos-use-escape-keydown",
+ "send_wrapper",
+ "web-sys",
+]
+
+[[package]]
 name = "radix-leptos-focus-guards"
 version = "0.0.2"
 dependencies = [
@@ -4230,6 +4244,8 @@ dependencies = [
  "radix-leptos-collapsible",
  "radix-leptos-collection",
  "radix-leptos-direction",
+ "radix-leptos-dismissable-layer",
+ "radix-leptos-focus-guards",
  "radix-leptos-focus-scope",
  "radix-leptos-form",
  "radix-leptos-label",

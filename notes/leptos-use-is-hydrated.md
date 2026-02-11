@@ -1,11 +1,11 @@
 ---
 react_location: "[[reference/react-radix-primitives/packages/react/use-is-hydrated/src/use-is-hydrated.tsx|use-is-hydrated]]"
-rust_location:
+rust_location: ""
 react_story: ""
 rust_story: ""
 dependencies: []
-ported: false
-tested: false
+ported: true
+tested: true
 tested_story: false
 ---
 ## Intent
@@ -27,4 +27,4 @@ function useIsHydrated(): boolean
 
 ## Leptos Equivalent
 
-Potentially relevant if SSR is used. Leptos has its own hydration system; a similar utility could check `leptos::is_server()` or use `create_effect` to detect client-side mounting. May be needed for components like `PasswordToggleField` that behave differently before/after hydration.
+Not needed for CSR (`wasm32-unknown-unknown` target). Leptos has its own hydration system; if SSR support is added in the future, a similar utility could check `leptos::is_server()` or use `create_effect` to detect client-side mounting. The existing avatar port omits this dependency without issue. May revisit for `PasswordToggleField` or `OneTimePasswordField` if SSR support is added.

@@ -1,11 +1,11 @@
 ---
 react_location: "[[reference/react-radix-primitives/packages/react/use-effect-event/src/use-effect-event.tsx|use-effect-event]]"
-rust_location:
+rust_location: ""
 react_story: ""
 rust_story: ""
 dependencies: []
-ported: false
-tested: false
+ported: true
+tested: true
 tested_story: false
 ---
 ## Intent

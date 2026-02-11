@@ -22,6 +22,7 @@ members = [
     "packages/primitives/leptos/aspect-ratio",
     "packages/primitives/leptos/collapsible",
     "packages/primitives/leptos/collection",
+    "packages/primitives/leptos/dismissable-layer",
     "packages/primitives/leptos/compose-refs",
     "packages/primitives/leptos/direction",
     "packages/primitives/leptos/focus-guards",
@@ -77,7 +78,7 @@ radix-leptos-aspect-ratio = { path = "./packages/primitives/leptos/aspect-ratio"
 radix-leptos-collection = { path = "./packages/primitives/leptos/collection", version = "0.0.2" }
 radix-leptos-collapsible = { path = "./packages/primitives/leptos/collapsible", version = "0.0.2" }
 radix-leptos-compose-refs = { path = "./packages/primitives/leptos/compose-refs", version = "0.0.2" }
-# radix-leptos-dismissable-layer = { path = "./packages/primitives/leptos/dismissable-layer", version = "0.0.2" }
+radix-leptos-dismissable-layer = { path = "./packages/primitives/leptos/dismissable-layer", version = "0.0.2" }
 radix-leptos-direction = { path = "./packages/primitives/leptos/direction", version = "0.0.2" }
 radix-leptos-focus-guards = { path = "./packages/primitives/leptos/focus-guards", version = "0.0.2" }
 radix-leptos-form = { path = "./packages/primitives/leptos/form", version = "0.0.2" }
@@ -95,6 +96,7 @@ radix-leptos-scroll-area = { path = "./packages/primitives/leptos/scroll-area", 
 radix-leptos-separator = { path = "./packages/primitives/leptos/separator", version = "0.0.2" }
 radix-leptos-toggle = { path = "./packages/primitives/leptos/toggle", version = "0.0.2" }
 radix-leptos-use-controllable-state = { path = "./packages/primitives/leptos/use-controllable-state", version = "0.0.2" }
+radix-leptos-use-escape-keydown = { path = "./packages/primitives/leptos/use-escape-keydown", version = "0.0.2" }
 radix-leptos-use-previous = { path = "./packages/primitives/leptos/use-previous", version = "0.0.2" }
 radix-leptos-use-size = { path = "./packages/primitives/leptos/use-size", version = "0.0.2" }
 radix-leptos-visually-hidden = { path = "./packages/primitives/leptos/visually-hidden", version = "0.0.2" }
