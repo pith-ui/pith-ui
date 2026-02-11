@@ -1,6 +1,10 @@
 use leptos::prelude::*;
 use radix_leptos_aspect_ratio::*;
-use tailwind_fuse::*;
+
+stylance::import_crate_style!(
+    aspect_ratio_classes,
+    "src/primitives/aspect_ratio.stories.module.css"
+);
 
 #[component]
 fn Image() -> impl IntoView {
@@ -17,11 +21,9 @@ fn Image() -> impl IntoView {
 
 #[component]
 pub fn Styled() -> impl IntoView {
-    let root_class = Memo::new(move |_| RootClass::default().to_class());
-
     view! {
         <div style:width="500px">
-            <AspectRatio attr:class=root_class>
+            <AspectRatio attr:class=aspect_ratio_classes::root>
                 <h1>Default ratio (1/1)</h1>
             </AspectRatio>
         </div>
@@ -33,7 +35,7 @@ pub fn CustomRatios() -> impl IntoView {
     view! {
         <div style:display="flex" style:gap="20px">
             <div style:width="200px">
-                <AspectRatio ratio=1.0 / 2.0><Image /></AspectRatio>
+                <AspectRatio ratio=1.0 / 2.0 style:bottom="100px"><Image /></AspectRatio>
             </div>
             <div style:width="200px">
                 <AspectRatio><Image /></AspectRatio>
@@ -50,13 +52,11 @@ pub fn CustomRatios() -> impl IntoView {
 
 #[component]
 pub fn Chromatic() -> impl IntoView {
-    let root_class = Memo::new(move |_| RootClass::default().to_class());
-
     view! {
         <h1>Default ratio</h1>
         <div style:width="300px">
-            <AspectRatio attr:class=root_class>
-                <h1>Default ratio (1/1)</h1>
+            <AspectRatio attr:class=aspect_ratio_classes::root>
+                <p>Default ratio (1/1)</p>
             </AspectRatio>
         </div>
 
@@ -77,7 +77,3 @@ pub fn Chromatic() -> impl IntoView {
         </div>
     }
 }
-
-#[derive(TwClass, Default, Clone, Copy)]
-#[tw(class = "flex items-center justify-center bg-[crimson] text-[#fff]")]
-struct RootClass {}

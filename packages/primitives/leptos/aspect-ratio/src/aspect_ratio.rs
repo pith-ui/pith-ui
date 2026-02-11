@@ -22,6 +22,7 @@ pub fn AspectRatio(
                 data-radix-aspect-ratio-wrapper=""
             >
                 <Primitive
+                    {..attrs}
                     element=html::div
                     as_child=as_child
                     node_ref=node_ref
@@ -31,7 +32,6 @@ pub fn AspectRatio(
                     style:right="0px"
                     style:bottom="0px"
                     style:left="0px"
-                    {..attrs}
                 >
                     {children.with_value(|children| children())}
                 </Primitive>

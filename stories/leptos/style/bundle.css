@@ -175,6 +175,15 @@
   }
 }
 
+.root-78f {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--red-9);
+  color: var(--gray-1);
+}
+
+
 @keyframes presence-fadeIn {
   from {
     opacity: 0;
