@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 use std::fmt::{self, Display, Formatter};
 
-use leptos::{attribute_interceptor::AttributeInterceptor, ev, html, prelude::*};
+use leptos::{attribute_interceptor::AttributeInterceptor, context::Provider, ev, html, prelude::*};
 use leptos_node_ref::AnyNodeRef;
 use radix_leptos_compose_refs::use_composed_refs;
 use radix_leptos_direction::{Direction, use_direction};
@@ -441,27 +441,27 @@ pub fn ScrollArea(
         corner_height,
     };
 
-    provide_context(context);
-
     view! {
-        <AttributeInterceptor let:attrs>
-            <Primitive
-                element=html::div
-                as_child=as_child
-                node_ref=composed_ref
-                attr:dir=move || direction.get().to_string()
-                attr:style=move || {
-                    format!(
-                        "position: relative; --radix-scroll-area-corner-width: {}px; --radix-scroll-area-corner-height: {}px;",
-                        corner_width.get(),
-                        corner_height.get()
-                    )
-                }
-                {..attrs}
-            >
-                {children.with_value(|children| children())}
-            </Primitive>
-        </AttributeInterceptor>
+        <Provider value=context>
+            <AttributeInterceptor let:attrs>
+                <Primitive
+                    element=html::div
+                    as_child=as_child
+                    node_ref=composed_ref
+                    attr:dir=move || direction.get().to_string()
+                    attr:style=move || {
+                        format!(
+                            "position: relative; --radix-scroll-area-corner-width: {}px; --radix-scroll-area-corner-height: {}px;",
+                            corner_width.get(),
+                            corner_height.get()
+                        )
+                    }
+                    {..attrs}
+                >
+                    {children.with_value(|children| children())}
+                </Primitive>
+            </AttributeInterceptor>
+        </Provider>
     }
 }
 
@@ -1417,9 +1417,9 @@ fn ScrollAreaScrollbarImpl(
         on_thumb_pointer_down,
         on_thumb_position_change,
     };
-    provide_context(scrollbar_context);
 
     view! {
+        <Provider value=scrollbar_context>
         <AttributeInterceptor let:attrs>
             <Primitive
                 element=html::div
@@ -1479,6 +1479,7 @@ fn ScrollAreaScrollbarImpl(
                 {children.with_value(|children| children())}
             </Primitive>
         </AttributeInterceptor>
+        </Provider>
     }
 }
 

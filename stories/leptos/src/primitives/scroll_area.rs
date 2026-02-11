@@ -1,6 +1,9 @@
 use leptos::prelude::*;
 use radix_leptos_direction::DirectionProvider;
 use radix_leptos_scroll_area::*;
+use web_sys::wasm_bindgen::{closure::Closure, JsCast};
+
+stylance::import_crate_style!(classes, "src/primitives/scroll_area.stories.module.css");
 
 const COPY_TEXT: &str = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce sit amet eros iaculis, bibendum tellus ac, lobortis odio. Aliquam bibendum elit est, in iaculis est commodo id. Donec pulvinar est libero. Proin consectetur pellentesque molestie. Fusce mi ante, ullamcorper eu ante finibus, finibus pellentesque turpis. Mauris convallis, leo in vulputate varius, sapien lectus suscipit eros, ac semper odio sapien sit amet magna. Sed mattis turpis et lacinia ultrices. Nulla a commodo mauris. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Pellentesque id tempor metus. Pellentesque faucibus tortor non nisi maximus dignissim. Etiam leo nisi, molestie a porttitor at, euismod a libero. Nullam placerat tristique enim nec pulvinar. Sed eleifend dictum nulla a aliquam. Sed tempus ipsum eget urna posuere aliquam. Nulla maximus tortor dui, sed laoreet odio aliquet ac. Vestibulum dolor orci, lacinia finibus vehicula eget, posuere ac lectus. Quisque non felis at ipsum scelerisque condimentum. In pharetra semper arcu, ut hendrerit sem auctor vel. Aliquam non lacinia elit, a facilisis ante. Praesent eget eros augue. Praesent nunc orci, ullamcorper non pulvinar eu, elementum id nibh. Nam id lorem euismod, sodales augue quis, porttitor magna. Vivamus ut nisl velit. Nam ultrices maximus felis, quis ullamcorper quam luctus et.";
 
@@ -44,11 +47,11 @@ fn ScrollAreaStory(
         _ => radix_leptos_direction::Direction::Ltr,
     });
 
-    let thumb_class = if animated {
-        "animatedThumb thumb"
+    let thumb_class = StoredValue::new(if animated {
+        format!("{} {}", classes::animatedThumb, classes::thumb)
     } else {
-        "thumb"
-    };
+        classes::thumb.to_string()
+    });
 
     view! {
         <div style=move || style.get()>
@@ -56,22 +59,22 @@ fn ScrollAreaStory(
                 r#type=r#type
                 dir=dir_value
                 scroll_hide_delay=scroll_hide_delay
-                attr:class="scrollArea"
+                attr:class=classes::scrollArea
             >
-                <ScrollAreaViewport attr:class="scrollAreaViewport">
+                <ScrollAreaViewport attr:class=classes::scrollAreaViewport>
                     {children.with_value(|children| children())}
                 </ScrollAreaViewport>
                 {vertical.then(|| view! {
-                    <ScrollAreaScrollbar orientation=Orientation::Vertical class="scrollbar">
-                        <ScrollAreaThumb class=thumb_class>""</ScrollAreaThumb>
+                    <ScrollAreaScrollbar orientation=Orientation::Vertical class=classes::scrollbar>
+                        <ScrollAreaThumb class=thumb_class.get_value()>""</ScrollAreaThumb>
                     </ScrollAreaScrollbar>
                 })}
                 {horizontal.then(|| view! {
-                    <ScrollAreaScrollbar orientation=Orientation::Horizontal class="scrollbar">
-                        <ScrollAreaThumb class=thumb_class>""</ScrollAreaThumb>
+                    <ScrollAreaScrollbar orientation=Orientation::Horizontal class=classes::scrollbar>
+                        <ScrollAreaThumb class=thumb_class.get_value()>""</ScrollAreaThumb>
                     </ScrollAreaScrollbar>
                 })}
-                <ScrollAreaCorner class="corner">""</ScrollAreaCorner>
+                <ScrollAreaCorner class=classes::corner>""</ScrollAreaCorner>
             </ScrollArea>
         </div>
     }
@@ -84,7 +87,7 @@ pub fn Basic() -> impl IntoView {
     let (scroll_hide_delay, set_scroll_hide_delay) = signal(600u32);
 
     view! {
-        <div>
+        <div class=classes::root>
             <div style="margin: 20px auto; width: max-content; text-align: center;">
                 <label>
                     "type: "
@@ -167,7 +170,7 @@ pub fn Basic() -> impl IntoView {
 #[component]
 pub fn Resizable() -> impl IntoView {
     view! {
-        <div style="width: 800px; height: 800px; padding: 20px; resize: both; border: 1px solid gray; overflow: hidden;">
+        <div class=classes::root style="width: 800px; height: 800px; padding: 20px; resize: both; border: 1px solid gray; overflow: hidden;">
             <ScrollAreaStory style="width: 100%; height: 100%;">
                 {(0..30).map(|_| view! { <Copy /> }).collect_view()}
             </ScrollAreaStory>
@@ -181,7 +184,7 @@ pub fn ContentChange() -> impl IntoView {
     let (horizontal_count, set_horizontal_count) = signal(1usize);
 
     view! {
-        <div>
+        <div class=classes::root>
             <button on:click=move |_| set_vertical_count.update(|c| *c += 1)>
                 "Add vertical content"
             </button>
@@ -206,7 +209,7 @@ pub fn ContentChange() -> impl IntoView {
 #[component]
 pub fn Animated() -> impl IntoView {
     view! {
-        <div>
+        <div class=classes::root>
             <ScrollAreaStory animated=true style="width: 800px; height: 800px;">
                 {(0..30).map(|_| view! { <Copy /> }).collect_view()}
             </ScrollAreaStory>
@@ -216,13 +219,19 @@ pub fn Animated() -> impl IntoView {
 
 #[component]
 pub fn Chromatic() -> impl IntoView {
-    // NOTE: The React Chromatic story has ~30 ScrollAreaStory instances covering every
-    // type x orientation x overflow combination. That amount of generic component
-    // instantiation causes rust-lld to crash (SIGBUS) when linking the debug wasm binary.
-    // This trimmed version keeps one representative per section.
     view! {
-        <div>
+        <div class=classes::root>
             <h1>"Vertical"</h1>
+            <h2>"Auto with overflow"</h2>
+            <ScrollAreaStory r#type=ScrollAreaType::Auto horizontal=false>
+                {(0..10).map(|_| view! { <Copy /> }).collect_view()}
+            </ScrollAreaStory>
+
+            <h2>"Auto without overflow"</h2>
+            <ScrollAreaStory r#type=ScrollAreaType::Auto horizontal=false>
+                <Copy style="height: 50px; overflow: hidden;" />
+            </ScrollAreaStory>
+
             <h2>"Always with overflow"</h2>
             <ScrollAreaStory r#type=ScrollAreaType::Always horizontal=false>
                 {(0..10).map(|_| view! { <Copy /> }).collect_view()}
@@ -233,21 +242,126 @@ pub fn Chromatic() -> impl IntoView {
                 <Copy style="height: 50px; overflow: hidden;" />
             </ScrollAreaStory>
 
+            <h2>"Scroll with overflow"</h2>
+            <ScrollAreaStory r#type=ScrollAreaType::Scroll horizontal=false>
+                {(0..10).map(|_| view! { <Copy /> }).collect_view()}
+            </ScrollAreaStory>
+
+            <h2>"Scroll without overflow"</h2>
+            <ScrollAreaStory r#type=ScrollAreaType::Scroll horizontal=false>
+                <Copy style="height: 50px; overflow: hidden;" />
+            </ScrollAreaStory>
+
+            <h2>"Hover with overflow"</h2>
+            <ScrollAreaStory r#type=ScrollAreaType::Hover horizontal=false>
+                {(0..10).map(|_| view! { <Copy /> }).collect_view()}
+            </ScrollAreaStory>
+
+            <h2>"Hover without overflow"</h2>
+            <ScrollAreaStory r#type=ScrollAreaType::Hover horizontal=false>
+                <Copy style="height: 50px; overflow: hidden;" />
+            </ScrollAreaStory>
+
             <h1>"Horizontal"</h1>
+            <h2>"Auto with overflow"</h2>
+            <ScrollAreaStory r#type=ScrollAreaType::Auto vertical=false>
+                {(0..10).map(|_| view! { <Copy /> }).collect_view()}
+            </ScrollAreaStory>
+
+            <h2>"Auto without overflow"</h2>
+            <ScrollAreaStory r#type=ScrollAreaType::Auto vertical=false>
+                <Copy style="width: 50px; overflow: hidden;" />
+            </ScrollAreaStory>
+
             <h2>"Always with overflow"</h2>
             <ScrollAreaStory r#type=ScrollAreaType::Always vertical=false>
                 {(0..10).map(|_| view! { <Copy /> }).collect_view()}
             </ScrollAreaStory>
 
-            <h1>"Both"</h1>
-            <h2>"Always with overflow"</h2>
-            <ScrollAreaStory r#type=ScrollAreaType::Always>
+            <h2>"Always without overflow"</h2>
+            <ScrollAreaStory r#type=ScrollAreaType::Always vertical=false>
+                <Copy style="width: 50px; overflow: hidden;" />
+            </ScrollAreaStory>
+
+            <h2>"Scroll with overflow"</h2>
+            <ScrollAreaStory r#type=ScrollAreaType::Scroll vertical=false>
                 {(0..10).map(|_| view! { <Copy /> }).collect_view()}
+            </ScrollAreaStory>
+
+            <h2>"Scroll without overflow"</h2>
+            <ScrollAreaStory r#type=ScrollAreaType::Scroll vertical=false>
+                <Copy style="width: 50px; overflow: hidden;" />
+            </ScrollAreaStory>
+
+            <h2>"Hover with overflow"</h2>
+            <ScrollAreaStory r#type=ScrollAreaType::Hover vertical=false>
+                {(0..10).map(|_| view! { <Copy /> }).collect_view()}
+            </ScrollAreaStory>
+
+            <h2>"Hover without overflow"</h2>
+            <ScrollAreaStory r#type=ScrollAreaType::Hover vertical=false>
+                <Copy style="width: 50px; overflow: hidden;" />
+            </ScrollAreaStory>
+
+            <h1>"Both"</h1>
+            <h2>"Auto with overflow"</h2>
+            <ScrollAreaStory r#type=ScrollAreaType::Auto>
+                {(0..10).map(|_| view! { <Copy /> }).collect_view()}
+            </ScrollAreaStory>
+
+            <h2>"Auto with horizontal overflow"</h2>
+            <ScrollAreaStory r#type=ScrollAreaType::Auto>
+                {(0..1).map(|_| view! { <Copy /> }).collect_view()}
+            </ScrollAreaStory>
+
+            <h2>"Auto with vertical overflow"</h2>
+            <ScrollAreaStory r#type=ScrollAreaType::Auto>
+                {(0..10).map(|_| view! { <Copy style="width: 50px; overflow: hidden;" /> }).collect_view()}
             </ScrollAreaStory>
 
             <h2>"Auto without overflow"</h2>
             <ScrollAreaStory r#type=ScrollAreaType::Auto>
                 <Copy style="width: 50px; height: 50px; overflow: hidden;" />
+            </ScrollAreaStory>
+
+            <h2>"Always with overflow"</h2>
+            <ScrollAreaStory r#type=ScrollAreaType::Always>
+                {(0..10).map(|_| view! { <Copy /> }).collect_view()}
+            </ScrollAreaStory>
+
+            <h2>"Always without overflow"</h2>
+            <ScrollAreaStory r#type=ScrollAreaType::Always>
+                <Copy style="width: 50px; height: 50px; overflow: hidden;" />
+            </ScrollAreaStory>
+
+            <h2>"Scroll with overflow"</h2>
+            <ScrollAreaStory r#type=ScrollAreaType::Scroll>
+                {(0..10).map(|_| view! { <Copy /> }).collect_view()}
+            </ScrollAreaStory>
+
+            <h2>"Scroll without overflow"</h2>
+            <ScrollAreaStory r#type=ScrollAreaType::Scroll>
+                <Copy style="width: 50px; height: 50px; overflow: hidden;" />
+            </ScrollAreaStory>
+
+            <h2>"Hover with overflow"</h2>
+            <ScrollAreaStory r#type=ScrollAreaType::Hover>
+                {(0..10).map(|_| view! { <Copy /> }).collect_view()}
+            </ScrollAreaStory>
+
+            <h2>"Hover without overflow"</h2>
+            <ScrollAreaStory r#type=ScrollAreaType::Hover>
+                <Copy style="width: 50px; height: 50px; overflow: hidden;" />
+            </ScrollAreaStory>
+
+            <h2>"Hover with horizontal overflow"</h2>
+            <ScrollAreaStory r#type=ScrollAreaType::Hover>
+                {(0..1).map(|_| view! { <Copy /> }).collect_view()}
+            </ScrollAreaStory>
+
+            <h2>"Hover with vertical overflow"</h2>
+            <ScrollAreaStory r#type=ScrollAreaType::Hover>
+                {(0..10).map(|_| view! { <Copy style="width: 50px; overflow: hidden;" /> }).collect_view()}
             </ScrollAreaStory>
 
             <h1>"Min thumb size"</h1>
@@ -269,4 +383,75 @@ pub fn Chromatic() -> impl IntoView {
             </DirectionProvider>
         </div>
     }
+}
+
+const DYNAMIC_CONTENT_DELAY: i32 = 2000;
+
+#[component]
+fn DynamicContentStory(#[prop(optional)] start_loaded: bool) -> impl IntoView {
+    let (show_content, set_show_content) = signal(start_loaded);
+
+    if !start_loaded {
+        let cb = Closure::once(move || {
+            set_show_content.set(true);
+        });
+        web_sys::window()
+            .unwrap()
+            .set_timeout_with_callback_and_timeout_and_arguments_0(
+                cb.as_ref().unchecked_ref(),
+                DYNAMIC_CONTENT_DELAY,
+            )
+            .unwrap();
+        cb.forget();
+    }
+
+    view! {
+        <div class=classes::root>
+            <h1>"Always"</h1>
+            <ScrollAreaStory r#type=ScrollAreaType::Always style="width: 500px; height: 250px;">
+                {move || if show_content.get() {
+                    (0..30).map(|_| view! { <Copy /> }).collect_view().into_any()
+                } else {
+                    view! { <h1>"Loading..."</h1> }.into_any()
+                }}
+            </ScrollAreaStory>
+
+            <h1>"Hover"</h1>
+            <ScrollAreaStory r#type=ScrollAreaType::Hover style="width: 500px; height: 250px;">
+                {move || if show_content.get() {
+                    (0..30).map(|_| view! { <Copy /> }).collect_view().into_any()
+                } else {
+                    view! { <h1>"Loading..."</h1> }.into_any()
+                }}
+            </ScrollAreaStory>
+
+            <h1>"Scroll"</h1>
+            <ScrollAreaStory r#type=ScrollAreaType::Scroll style="width: 500px; height: 250px;">
+                {move || if show_content.get() {
+                    (0..30).map(|_| view! { <Copy /> }).collect_view().into_any()
+                } else {
+                    view! { <h1>"Loading..."</h1> }.into_any()
+                }}
+            </ScrollAreaStory>
+
+            <h1>"Auto"</h1>
+            <ScrollAreaStory r#type=ScrollAreaType::Auto style="width: 500px; height: 250px;">
+                {move || if show_content.get() {
+                    (0..30).map(|_| view! { <Copy /> }).collect_view().into_any()
+                } else {
+                    view! { <h1>"Loading..."</h1> }.into_any()
+                }}
+            </ScrollAreaStory>
+        </div>
+    }
+}
+
+#[component]
+pub fn ChromaticDynamicContentBeforeLoaded() -> impl IntoView {
+    view! { <DynamicContentStory /> }
+}
+
+#[component]
+pub fn ChromaticDynamicContentAfterLoaded() -> impl IntoView {
+    view! { <DynamicContentStory start_loaded=true /> }
 }

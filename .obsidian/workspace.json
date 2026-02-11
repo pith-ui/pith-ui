@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "notes/leptos-separator.md",
+                "file": "notes/leptos-scroll-area.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -28,7 +28,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "leptos-separator"
+              "title": "leptos-scroll-area"
             }
           }
         ]
@@ -192,17 +192,31 @@
   },
   "active": "79d59c987f0c5bf4",
   "lastOpenFiles": [
-    "stories/leptos/dist/tailwind.output-a02b7b1576f8f099.css",
-    "stories/leptos/dist/radix-leptos-stories-6a1cb76af16c0a43_bg.wasm",
-    "stories/leptos/dist/radix-leptos-stories-6a1cb76af16c0a43.js",
-    "target/debug/incremental/radix_leptos_icons-0ootua5cquj2j/s-hfoxvlddil-1895wsg-5xe7ditp44ooescw4jxozatft/work-products.bin",
-    "target/debug/incremental/radix_leptos_icons-0ootua5cquj2j/s-hfoxvlddil-1895wsg-5xe7ditp44ooescw4jxozatft/metadata.rmeta",
-    "target/debug/incremental/radix_leptos_icons-0ootua5cquj2j/s-hfoxvlddil-1895wsg-5xe7ditp44ooescw4jxozatft/query-cache.bin",
-    "target/debug/incremental/radix_leptos_icons-0ootua5cquj2j/s-hfoxvlddil-1895wsg-5xe7ditp44ooescw4jxozatft/dep-graph.bin",
-    "target/debug/incremental/radix_leptos_icons-0ootua5cquj2j/s-hfoxvlddil-1895wsg-5xe7ditp44ooescw4jxozatft",
-    "target/debug/deps/libradix_leptos_icons-687577c8a68b87dc.rmeta",
-    "target/debug/incremental/radix_dioxus_icons-0510fob5tvwog/s-hfoxvl9rgn-1e8vsgs-c8t55rj4myaumuhjm1pumnokn/work-products.bin",
-    "target/debug/incremental/radix_dioxus_icons-0510fob5tvwog/s-hfoxvl9rgn-1e8vsgs-c8t55rj4myaumuhjm1pumnokn/metadata.rmeta",
+    "stories/leptos/dist/radix-leptos-stories-78169cfcf4361a85.js",
+    "stories/leptos/dist/radix-leptos-stories-78169cfcf4361a85_bg.wasm",
+    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-3im4c4zujof2g/s-hfp05afhiq-0u9xuu9-1qqw4qng0pem51zasdybku0kn/work-products.bin",
+    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-3im4c4zujof2g/s-hfp05afhiq-0u9xuu9-1qqw4qng0pem51zasdybku0kn/query-cache.bin",
+    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-3im4c4zujof2g/s-hfp05afhiq-0u9xuu9-1qqw4qng0pem51zasdybku0kn/dep-graph.bin",
+    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-3im4c4zujof2g/s-hfp05afhiq-0u9xuu9-1qqw4qng0pem51zasdybku0kn",
+    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-3im4c4zujof2g/s-hfp05afhiq-0u9xuu9.lock",
+    "target/wasm32-unknown-unknown/debug/deps/radix_leptos_stories-79784c8d2ca4db38.wasm",
+    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-0dm22ci073vyh/s-hfp04wzjmx-15yn8ic-71pjes2ejx8tyjce2z7qyz2jj/work-products.bin",
+    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-0dm22ci073vyh/s-hfp04wzjmx-15yn8ic-71pjes2ejx8tyjce2z7qyz2jj/query-cache.bin",
+    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-0dm22ci073vyh/s-hfp04wzjmx-15yn8ic-71pjes2ejx8tyjce2z7qyz2jj/f43a7j1ffriynieye0lozs7hj.o",
+    "scripts/story-compare/node_modules/playwright/README.md",
+    "scripts/story-compare/node_modules/playwright-core/lib/vite/traceViewer/playwright-logo.svg",
+    "scripts/story-compare/node_modules/playwright-core/lib/vite/recorder/playwright-logo.svg",
+    "scripts/story-compare/node_modules/playwright-core/README.md",
+    "scripts/story-compare/node_modules/playwright/lib/agents/playwright-test-planner.agent.md",
+    "scripts/story-compare/node_modules/playwright/lib/agents/playwright-test-generate.prompt.md",
+    "scripts/story-compare/node_modules/playwright/lib/agents/playwright-test-plan.prompt.md",
+    "scripts/story-compare/node_modules/playwright/lib/agents/playwright-test-healer.agent.md",
+    "scripts/story-compare/node_modules/playwright/lib/agents/playwright-test-heal.prompt.md",
+    "scripts/story-compare/node_modules/playwright/lib/agents/playwright-test-generator.agent.md",
+    "scripts/story-compare/node_modules/playwright/lib/agents/playwright-test-coverage.prompt.md",
+    "scripts/story-compare/node_modules/playwright-core/lib/server/chromium/appIcon.png",
+    "notes/leptos-focus-scope.md",
+    "notes/leptos-separator.md",
     "notes/leptos-progress.md",
     "notes/leptos-portal.md",
     "notes/leptos-form.md",
@@ -217,17 +231,6 @@
     "notes/core-number.md",
     "reference/leptos-radix-rough-draft/examples/ts-xp-radix/node_modules/@radix-ui/react-toolbar/node_modules/@radix-ui/react-separator/README.md",
     "reference/leptos-radix-rough-draft/examples/ts-xp-radix/node_modules/@radix-ui/react-separator/node_modules/@radix-ui/react-primitive/README.md",
-    "reference/leptos-radix-rough-draft/examples/ts-xp-radix/node_modules/@radix-ui/react-separator/node_modules/@radix-ui/react-slot/README.md",
-    "reference/leptos-radix-rough-draft/examples/ts-xp-radix/node_modules/@radix-ui/react-progress/node_modules/@radix-ui/react-slot/README.md",
-    "reference/leptos-radix-rough-draft/examples/ts-xp-radix/node_modules/@radix-ui/react-progress/node_modules/@radix-ui/react-primitive/README.md",
-    "reference/leptos-radix-rough-draft/examples/ts-xp-radix/node_modules/@radix-ui/react-progress/node_modules/@radix-ui/react-context/README.md",
-    "reference/leptos-radix-rough-draft/examples/ts-xp-radix/node_modules/@radix-ui/react-popper/node_modules/@radix-ui/react-arrow/README.md",
-    "reference/leptos-radix-rough-draft/examples/ts-xp-radix/node_modules/@radix-ui/react-label/node_modules/@radix-ui/react-slot/README.md",
-    "reference/leptos-radix-rough-draft/examples/ts-xp-radix/node_modules/@radix-ui/react-label/node_modules/@radix-ui/react-primitive/README.md",
-    "reference/leptos-radix-rough-draft/examples/ts-xp-radix/node_modules/@radix-ui/react-form/node_modules/@radix-ui/react-label/README.md",
-    "reference/leptos-radix-rough-draft/examples/ts-xp-radix/node_modules/@radix-ui/react-avatar/node_modules/@radix-ui/react-slot/README.md",
-    "reference/leptos-radix-rough-draft/examples/ts-xp-radix/node_modules/@radix-ui/react-avatar/node_modules/@radix-ui/react-primitive/README.md",
-    "reference/leptos-radix-rough-draft/examples/ts-xp-radix/node_modules/@radix-ui/react-avatar/node_modules/@radix-ui/react-context/README.md",
     "reference/leptos-radix-rough-draft/examples/react-radix-primitives/apps/storybook/public/favicon-white.svg",
     "reference/leptos-radix-rough-draft/examples/react-radix-primitives/apps/storybook/public/favicon.png",
     "reference/leptos-radix-rough-draft/examples/react-radix-primitives/primitives.png",
@@ -235,8 +238,6 @@
     "reference/radix/examples/react-radix-primitives/apps/storybook/public/favicon.png",
     "reference/radix/examples/react-radix-primitives/apps/storybook/public/favicon-white.svg",
     "target/doc/static.files/rust-logo-9a9549ea.svg",
-    "target/doc/static.files/favicon-32x32-eab170b8.png",
-    "target/doc/static.files/favicon-044be391.svg",
     "Untitled.canvas"
   ]
 }

@@ -13,7 +13,7 @@ dependencies:
   - "[[leptos-use-callback-ref]]"
 ported: true
 tested: false
-tested_story: false
+tested_story: true
 ---
 ## Intent
 

@@ -205,6 +205,8 @@ pub fn App() -> impl IntoView {
                             <li><NavLink href="/scroll-area/content-change">Content Change</NavLink></li>
                             <li><NavLink href="/scroll-area/animated">Animated</NavLink></li>
                             <li><NavLink href="/scroll-area/chromatic">Chromatic</NavLink></li>
+                            <li><NavLink href="/scroll-area/chromatic-dynamic-content-before-loaded">Chromatic Dynamic Content Before Loaded</NavLink></li>
+                            <li><NavLink href="/scroll-area/chromatic-dynamic-content-after-loaded">Chromatic Dynamic Content After Loaded</NavLink></li>
                         </ul>
                     </li>
                     <li>
@@ -337,6 +339,8 @@ pub fn App() -> impl IntoView {
                     <Route path=path!("/scroll-area/content-change") view=scroll_area::ContentChange />
                     <Route path=path!("/scroll-area/animated") view=scroll_area::Animated />
                     <Route path=path!("/scroll-area/chromatic") view=scroll_area::Chromatic />
+                    <Route path=path!("/scroll-area/chromatic-dynamic-content-before-loaded") view=scroll_area::ChromaticDynamicContentBeforeLoaded />
+                    <Route path=path!("/scroll-area/chromatic-dynamic-content-after-loaded") view=scroll_area::ChromaticDynamicContentAfterLoaded />
 
                     <Route path=path!("/separator/styled") view=separator::Styled />
 
