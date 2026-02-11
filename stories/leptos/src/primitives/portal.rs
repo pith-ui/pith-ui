@@ -100,7 +100,7 @@ pub fn Chromatic() -> impl IntoView {
                 style:margin="10px"
                 style:border="1px solid green"
             >
-                <h1>Container B</h1>
+                <p>Container B</p>
                 <Portal as_child=true container_ref=portal_container_ref>
                     <div
                         style:padding="10px"
@@ -121,11 +121,11 @@ pub fn Chromatic() -> impl IntoView {
                 style:margin="10px"
                 style:border="1px solid"
             >
-                <h1>Container C</h1>
+                <p>Container C</p>
             </div>
 
             <h1>zIndex and order</h1>
-            <p>See squares in top-left</p>
+            <p>See squares in the top-left</p>
             <Portal as_child=true>
                 <div
                     style:width="20px"

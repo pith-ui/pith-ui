@@ -7,7 +7,7 @@ dependencies:
   - "[[leptos-primitive]]"
 ported: true
 tested: false
-tested_story: false
+tested_story: true
 ---
 ## Intent
 
@@ -52,3 +52,7 @@ Accepts either a direct element (`container`) or a ref (`container_ref`). Wraps 
 - `SendWrapper` is needed because `web_sys::Element` is not `Send`, but Leptos signals require `Send`.
 - Has a TODO comment about passing attributes to the Primitive (`AttributeInterceptor` code is commented out).
 - Dependencies: `leptos`, `leptos-node-ref`, `leptos_dom`, `radix-leptos-primitive`, `send_wrapper`, `web-sys`.
+
+### Review Notes
+
+- hand-rolled storybook makes the portals look weird & overlapping. The real storybook renders stories inside an iframe so that everything is contained within those bounds. could consider doing the same in the future.
