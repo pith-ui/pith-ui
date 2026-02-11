@@ -12,7 +12,7 @@ dependencies:
   - "[[leptos-use-controllable-state]]"
 ported: true
 tested: false
-tested_story: false
+tested_story: true
 ---
 ## Intent
 

@@ -15,11 +15,11 @@
  * Examples:
  *   node scripts/story-compare/index.mjs scroll-area/basic
  *   node scripts/story-compare/index.mjs progress/styled
- *   node scripts/story-compare/index.mjs progress/chromatic --leptos-port 8080 --react-port 6006
+ *   node scripts/story-compare/index.mjs progress/chromatic --leptos-port 8080 --react-port 9009
  *
  * Options:
  *   --leptos-port <port>   Leptos dev server port (default: 8080)
- *   --react-port <port>    React storybook port (default: 6006)
+ *   --react-port <port>    React storybook port (default: 9009)
  *   --leptos-only           Only capture Leptos markup
  *   --react-only            Only capture React markup
  *   --raw                   Output raw HTML without formatting
@@ -45,7 +45,7 @@ function parseArgs() {
     const opts = {
         storyPath: null,
         leptosPort: 8080,
-        reactPort: 6006,
+        reactPort: 9009,
         leptosOnly: false,
         reactOnly: false,
         raw: false,
