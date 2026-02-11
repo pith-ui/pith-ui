@@ -1,6 +1,6 @@
 use std::fmt::{Display, Formatter};
 
-use leptos::{html, prelude::*};
+use leptos::{context::Provider, html, prelude::*};
 use leptos_node_ref::AnyNodeRef;
 use radix_leptos_primitive::Primitive;
 
@@ -62,24 +62,25 @@ pub fn Progress(
     });
 
     let context_value = ProgressContextValue { value, max };
-    provide_context(context_value);
 
     view! {
-        <Primitive
-            element=html::div
-            as_child=as_child
-            node_ref=node_ref
-            attr:aria-valuemax=move || max.get().to_string()
-            attr:aria-valuemin="0"
-            attr:aria-valuenow=move || value.get().map(|v| v.to_string())
-            attr:aria-valuetext=move || value_label.get()
-            attr:role="progressbar"
-            attr:data-state=move || get_progress_state(value.get(), max.get()).to_string()
-            attr:data-value=move || value.get().map(|v| v.to_string())
-            attr:data-max=move || max.get().to_string()
-        >
-            {children.with_value(|children| children())}
-        </Primitive>
+        <Provider value=context_value>
+            <Primitive
+                element=html::div
+                as_child=as_child
+                node_ref=node_ref
+                attr:aria-valuemax=move || max.get().to_string()
+                attr:aria-valuemin="0"
+                attr:aria-valuenow=move || value.get().map(|v| v.to_string())
+                attr:aria-valuetext=move || value_label.get()
+                attr:role="progressbar"
+                attr:data-state=move || get_progress_state(value.get(), max.get()).to_string()
+                attr:data-value=move || value.get().map(|v| v.to_string())
+                attr:data-max=move || max.get().to_string()
+            >
+                {children.with_value(|children| children())}
+            </Primitive>
+        </Provider>
     }
 }
 
@@ -108,7 +109,7 @@ pub fn ProgressIndicator(
 }
 
 fn default_get_value_label(value: f64, max: f64) -> String {
-    format!("{}%", (value / max).round() * 100.0)
+    format!("{}%", ((value / max) * 100.0).round())
 }
 
 fn get_progress_state(value: Option<f64>, max_value: f64) -> ProgressState {

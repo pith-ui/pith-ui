@@ -7,7 +7,7 @@ dependencies:
   - "[[leptos-primitive]]"
 ported: true
 tested: false
-tested_story: false
+tested_story: true
 ---
 ## Intent
 
@@ -43,9 +43,13 @@ const ProgressIndicator: React.ForwardRefExoticComponent<ProgressIndicatorProps>
 
 ## Leptos Implementation Notes
 
-- `ProgressState` enum with `Display` and `IntoAttribute` impls (old API).
+- `ProgressState` enum with `Display` impl.
 - Validation is simpler: clamps value to `0..=max`, treats `max == 0` as invalid.
 - No console error logging for invalid props (React logs warnings).
-- `get_value_label` accepts `Box<dyn Fn(f64, f64) -> String>` — non-reactive, set once.
-- Uses old Leptos API — needs migration.
-- Dependencies: `leptos` only.
+- `get_value_label` accepts `Callback<(f64, f64), String>`.
+- Context is provided via `<Provider value=context>` wrapper (not bare `provide_context()`). This is required in Leptos to properly scope context per component instance — without it, sibling Progress components all share the last instance's context.
+- Story updated to use stylance + CSS modules (matching accordion pattern) instead of TwClass/tailwind_fuse.
+
+### Bugs fixed
+- **Context scoping**: Changed `provide_context(context_value)` to `<Provider value=context_value>` wrapping the Primitive. Without this, multiple Progress instances on the same page all had their ProgressIndicators reading from the last instance's context.
+- **Value label rounding**: Fixed `(value / max).round() * 100.0` to `((value / max) * 100.0).round()` — the original rounded before multiplying, causing incorrect `aria-valuetext` for non-boundary values (e.g., 30% showed as 0%).
