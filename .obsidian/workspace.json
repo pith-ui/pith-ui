@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "notes/leptos-progress.md",
+                "file": "notes/leptos-separator.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -28,7 +28,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "leptos-progress"
+              "title": "leptos-separator"
             }
           }
         ]
@@ -192,17 +192,17 @@
   },
   "active": "79d59c987f0c5bf4",
   "lastOpenFiles": [
-    "stories/leptos/dist/purple-9b476b30d5443309.css",
-    "stories/leptos/dist/red-74d32e64207a038a.css",
-    "stories/leptos/dist/radix-leptos-stories-b3f86c1c5da02601_bg.wasm",
-    "stories/leptos/dist/green-fbaf4d9bde970701.css",
-    "stories/leptos/dist/bundle-8054fbf4a1c4cdf9.css",
-    "stories/leptos/dist/tailwind.output-9207e1e33605915f.css",
-    "stories/leptos/dist/favicon-e197903841a5b23b.ico",
-    "stories/leptos/dist/blue-alpha-9c4e3c532cbba84.css",
-    "stories/leptos/dist/blue-420df321e365d4ba.css",
-    "stories/leptos/dist/index.html",
-    "stories/leptos/dist/radix-leptos-stories-b3f86c1c5da02601.js",
+    "stories/leptos/dist/tailwind.output-a02b7b1576f8f099.css",
+    "stories/leptos/dist/radix-leptos-stories-6a1cb76af16c0a43_bg.wasm",
+    "stories/leptos/dist/radix-leptos-stories-6a1cb76af16c0a43.js",
+    "target/debug/incremental/radix_leptos_icons-0ootua5cquj2j/s-hfoxvlddil-1895wsg-5xe7ditp44ooescw4jxozatft/work-products.bin",
+    "target/debug/incremental/radix_leptos_icons-0ootua5cquj2j/s-hfoxvlddil-1895wsg-5xe7ditp44ooescw4jxozatft/metadata.rmeta",
+    "target/debug/incremental/radix_leptos_icons-0ootua5cquj2j/s-hfoxvlddil-1895wsg-5xe7ditp44ooescw4jxozatft/query-cache.bin",
+    "target/debug/incremental/radix_leptos_icons-0ootua5cquj2j/s-hfoxvlddil-1895wsg-5xe7ditp44ooescw4jxozatft/dep-graph.bin",
+    "target/debug/incremental/radix_leptos_icons-0ootua5cquj2j/s-hfoxvlddil-1895wsg-5xe7ditp44ooescw4jxozatft",
+    "target/debug/deps/libradix_leptos_icons-687577c8a68b87dc.rmeta",
+    "target/debug/incremental/radix_dioxus_icons-0510fob5tvwog/s-hfoxvl9rgn-1e8vsgs-c8t55rj4myaumuhjm1pumnokn/work-products.bin",
+    "target/debug/incremental/radix_dioxus_icons-0510fob5tvwog/s-hfoxvl9rgn-1e8vsgs-c8t55rj4myaumuhjm1pumnokn/metadata.rmeta",
     "notes/leptos-progress.md",
     "notes/leptos-portal.md",
     "notes/leptos-form.md",

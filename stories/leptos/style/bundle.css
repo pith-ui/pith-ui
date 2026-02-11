@@ -349,3 +349,21 @@
     content: attr(data-max);
   }
 }
+
+
+.root-82b {
+  border: none;
+  background-color: var(--color-red);
+
+  &[data-orientation='horizontal'] {
+    height: 1px;
+    width: 100%;
+    margin: 20px 0;
+  }
+
+  &[data-orientation='vertical'] {
+    height: 100px;
+    width: 1px;
+    margin: 0 20px;
+  }
+}
