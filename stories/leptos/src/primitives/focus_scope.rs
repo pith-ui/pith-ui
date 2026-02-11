@@ -153,7 +153,7 @@ pub fn WithOptions() -> impl IntoView {
         if focus_on_mount != FocusParam::Default {
             event.prevent_default();
             if let FocusParam::Ref(node_ref) = focus_on_mount
-                && let Some(el) = node_ref.get()
+                && let Some(el) = node_ref.get_untracked()
             {
                 let el: &web_sys::HtmlElement = el.unchecked_ref();
                 let _ = el.focus();
@@ -166,7 +166,7 @@ pub fn WithOptions() -> impl IntoView {
         if focus_on_unmount != FocusParam::Default {
             event.prevent_default();
             if let FocusParam::Ref(node_ref) = focus_on_unmount
-                && let Some(el) = node_ref.get()
+                && let Some(el) = node_ref.get_untracked()
             {
                 let el: &web_sys::HtmlElement = el.unchecked_ref();
                 let _ = el.focus();

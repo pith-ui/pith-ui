@@ -53,7 +53,7 @@ pub fn FocusScope(
                 return;
             }
 
-            if let Some(container) = container_ref.get() {
+            if let Some(container) = container_ref.get_untracked() {
                 let container: &web_sys::HtmlElement = container.unchecked_ref();
                 let target = event
                     .target()
@@ -76,7 +76,7 @@ pub fn FocusScope(
                 return;
             }
 
-            if let Some(container) = container_ref.get() {
+            if let Some(container) = container_ref.get_untracked() {
                 let container: &web_sys::HtmlElement = container.unchecked_ref();
                 let related_target = event
                     .related_target()
@@ -110,77 +110,100 @@ pub fn FocusScope(
     let mutation_observer: StoredValue<SendWrapper<RefCell<Option<MutationObserver>>>> =
         StoredValue::new(SendWrapper::new(RefCell::new(None)));
 
-    let cleanup_handle_focus_in = handle_focus_in.clone();
-    let cleanup_handle_focus_out = handle_focus_out.clone();
+    type TrappedCleanupFn = Box<dyn Fn()>;
+    let trapped_cleanup: StoredValue<SendWrapper<RefCell<Option<TrappedCleanupFn>>>> =
+        StoredValue::new(SendWrapper::new(RefCell::new(None)));
 
-    // Takes care of trapping focus if focus is moved outside programmatically for example
+    // Takes care of trapping focus if focus is moved outside programmatically for example.
+    // Mirrors the React useEffect with [trapped, container, focusScope.paused] deps:
+    // cleans up on re-run (e.g. when trapped goes from true → false) and on unmount.
     Effect::new(move |_| {
+        // Clean up previous effect run (equivalent to React useEffect cleanup on deps change)
+        trapped_cleanup.with_value(|f| {
+            if let Some(cleanup) = f.borrow_mut().take() {
+                cleanup();
+            }
+        });
+
         if trapped.get() {
+            let hi = handle_focus_in.clone();
+            let ho = handle_focus_out.clone();
+
             document()
-                .add_event_listener_with_callback(
-                    "focusin",
-                    (*handle_focus_in).as_ref().unchecked_ref(),
-                )
+                .add_event_listener_with_callback("focusin", (*hi).as_ref().unchecked_ref())
                 .expect("Focus in event listener should be added.");
             document()
-                .add_event_listener_with_callback(
-                    "focusout",
-                    (*handle_focus_out).as_ref().unchecked_ref(),
-                )
+                .add_event_listener_with_callback("focusout", (*ho).as_ref().unchecked_ref())
                 .expect("Focus out event listener should be added.");
-        }
-    });
-
-    Effect::new(move |_| {
-        if trapped.get()
-            && let Some(container) = container_ref.get()
-        {
-            let container: web_sys::HtmlElement = container.unchecked_into();
-
-            mutation_observer.with_value(|obs| {
-                if let Some(mutation_observer) = obs.borrow_mut().take() {
-                    mutation_observer.disconnect();
-                }
-            });
 
             // When the focused element gets removed from the DOM, browsers move focus
             // back to the document.body. In this case, we move focus to the container
             // to keep focus trapped correctly.
-            let handle_mutations: Closure<dyn Fn(Vec<MutationRecord>)> =
-                Closure::new(move |mutations: Vec<MutationRecord>| {
-                    let focused_element = document()
-                        .active_element()
-                        .map(|element| element.unchecked_into::<web_sys::HtmlElement>());
-                    if focused_element != document().body() {
-                        return;
-                    }
+            if let Some(container) = container_ref.get() {
+                let container: web_sys::HtmlElement = container.unchecked_into();
 
-                    for mutation in mutations {
-                        if mutation.removed_nodes().length() > 0 {
-                            focus(
-                                container_ref
-                                    .get()
-                                    .map(|el| el.unchecked_into::<web_sys::HtmlElement>()),
-                                None,
-                            );
+                let handle_mutations: Closure<dyn Fn(Vec<MutationRecord>)> =
+                    Closure::new(move |mutations: Vec<MutationRecord>| {
+                        let focused_element = document()
+                            .active_element()
+                            .map(|element| element.unchecked_into::<web_sys::HtmlElement>());
+                        if focused_element != document().body() {
+                            return;
                         }
-                    }
+
+                        for mutation in mutations {
+                            if mutation.removed_nodes().length() > 0 {
+                                focus(
+                                    container_ref
+                                        .get_untracked()
+                                        .map(|el| el.unchecked_into::<web_sys::HtmlElement>()),
+                                    None,
+                                );
+                            }
+                        }
+                    });
+
+                let new_observer =
+                    MutationObserver::new(handle_mutations.into_js_value().unchecked_ref())
+                        .expect("Mutation observer should be created.");
+
+                let init = MutationObserverInit::new();
+                init.set_child_list(true);
+                init.set_subtree(true);
+
+                new_observer
+                    .observe_with_options(&container, &init)
+                    .expect("Mutation observer should observe target.");
+
+                mutation_observer.with_value(|obs| {
+                    obs.borrow_mut().replace(new_observer);
                 });
+            }
 
-            let new_observer =
-                MutationObserver::new(handle_mutations.into_js_value().unchecked_ref())
-                    .expect("Mutation observer should be created.");
+            // Store cleanup for this effect run
+            let cleanup_hi = hi;
+            let cleanup_ho = ho;
+            trapped_cleanup.with_value(|f| {
+                f.borrow_mut().replace(Box::new(move || {
+                    document()
+                        .remove_event_listener_with_callback(
+                            "focusin",
+                            (*cleanup_hi).as_ref().unchecked_ref(),
+                        )
+                        .expect("Focus in event listener should be removed.");
+                    document()
+                        .remove_event_listener_with_callback(
+                            "focusout",
+                            (*cleanup_ho).as_ref().unchecked_ref(),
+                        )
+                        .expect("Focus out event listener should be removed.");
 
-            let init = MutationObserverInit::new();
-            init.set_child_list(true);
-            init.set_subtree(true);
-
-            new_observer
-                .observe_with_options(&container, &init)
-                .expect("Mutation observer should observe target.");
-
-            mutation_observer.with_value(|obs| {
-                obs.borrow_mut().replace(new_observer);
+                    mutation_observer.with_value(|obs| {
+                        if let Some(observer) = obs.borrow_mut().take() {
+                            observer.disconnect();
+                        }
+                    });
+                }));
             });
         }
     });
@@ -311,22 +334,9 @@ pub fn FocusScope(
     });
 
     on_cleanup(move || {
-        document()
-            .remove_event_listener_with_callback(
-                "focusin",
-                (*cleanup_handle_focus_in).as_ref().unchecked_ref(),
-            )
-            .expect("Focus in event listener should be removed.");
-        document()
-            .remove_event_listener_with_callback(
-                "focusout",
-                (*cleanup_handle_focus_out).as_ref().unchecked_ref(),
-            )
-            .expect("Focus out event listener should be removed.");
-
-        mutation_observer.with_value(|obs| {
-            if let Some(mutation_observer) = obs.borrow_mut().take() {
-                mutation_observer.disconnect();
+        trapped_cleanup.with_value(|f| {
+            if let Some(cleanup) = f.borrow_mut().take() {
+                cleanup();
             }
         });
 
@@ -341,7 +351,7 @@ pub fn FocusScope(
     let handle_key_down = move |event: KeyboardEvent| {
         let r#loop = r#loop.get_untracked();
 
-        if r#loop && !trapped.get_untracked() {
+        if !r#loop && !trapped.get_untracked() {
             return;
         }
         if focus_scope.get_untracked().paused() {
@@ -536,26 +546,26 @@ fn is_hidden(node: &web_sys::HtmlElement, options: Option<IsHiddenOptions>) -> b
 
     let mut node: Option<web_sys::Element> = Some(node.deref().clone());
     while let Some(n) = node.as_ref() {
+        // We stop at `upTo` (excluding it).
         if let Some(up_to) = options.up_to.as_ref() {
-            // We stop at `upTo` (excluding it).
             let up_to_element: &web_sys::Element = up_to;
             if n == up_to_element {
                 return false;
             }
-
-            if window
-                .get_computed_style(n)
-                .expect("Element is valid.")
-                .expect("Element should have computed style.")
-                .get_property_value("visibility")
-                .expect("Computed style should have display.")
-                == "none"
-            {
-                return true;
-            }
-
-            node = n.parent_element();
         }
+
+        if window
+            .get_computed_style(n)
+            .expect("Element is valid.")
+            .expect("Element should have computed style.")
+            .get_property_value("display")
+            .expect("Computed style should have display.")
+            == "none"
+        {
+            return true;
+        }
+
+        node = n.parent_element();
     }
 
     false

@@ -8,7 +8,7 @@ dependencies:
   - "[[leptos-primitive]]"
 ported: true
 tested: true
-tested_story: false
+tested_story: true
 ---
 ## Intent
 
@@ -62,6 +62,7 @@ fn FocusScope(
 - `focus()` does not support `preventScroll` option (noted as TODO — `web_sys` limitation).
 - `last_focused_element` stored as `RwSignal<Option<SendWrapper<web_sys::HtmlElement>>>` for `Send+Sync` compatibility.
 - Event listener closures use `Arc<SendWrapper<Closure<...>>>` pattern (same as `use_escape_keydown`) for sharing between `Effect::new` and `on_cleanup`.
+- Trapped effect uses a stored cleanup function (`TrappedCleanupFn`) that runs at the start of each effect re-run — this mirrors React's `useEffect` cleanup-on-deps-change behavior, ensuring focusin/focusout listeners and MutationObserver are properly removed when `trapped` changes from `true` to `false` (not just on unmount).
 - `MutationObserver` and auto-focus cleanup stored in `StoredValue<SendWrapper<RefCell<...>>>` for `Send+Sync` compatibility.
 - `window()` calls in helper functions replaced with `web_sys::window().expect(...)`.
 - Removed `leptos-use-callback-ref` dependency (was listed in old notes but not actually used).
