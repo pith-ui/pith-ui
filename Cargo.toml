@@ -41,6 +41,7 @@ members = [
     "packages/primitives/leptos/tabs",
     "packages/primitives/leptos/toggle",
     "packages/primitives/leptos/toggle-group",
+    "packages/primitives/leptos/toolbar",
     "packages/primitives/leptos/use-controllable-state",
     "packages/primitives/leptos/use-escape-keydown",
     "packages/primitives/leptos/use-previous",
@@ -100,6 +101,7 @@ radix-leptos-separator = { path = "./packages/primitives/leptos/separator", vers
 radix-leptos-tabs = { path = "./packages/primitives/leptos/tabs", version = "0.0.2" }
 radix-leptos-toggle = { path = "./packages/primitives/leptos/toggle", version = "0.0.2" }
 radix-leptos-toggle-group = { path = "./packages/primitives/leptos/toggle-group", version = "0.0.2" }
+radix-leptos-toolbar = { path = "./packages/primitives/leptos/toolbar", version = "0.0.2" }
 radix-leptos-use-controllable-state = { path = "./packages/primitives/leptos/use-controllable-state", version = "0.0.2" }
 radix-leptos-use-escape-keydown = { path = "./packages/primitives/leptos/use-escape-keydown", version = "0.0.2" }
 radix-leptos-use-previous = { path = "./packages/primitives/leptos/use-previous", version = "0.0.2" }

@@ -4275,6 +4275,7 @@ dependencies = [
  "radix-leptos-tabs",
  "radix-leptos-toggle",
  "radix-leptos-toggle-group",
+ "radix-leptos-toolbar",
  "radix-leptos-visually-hidden",
  "send_wrapper",
  "stylance",
@@ -4319,6 +4320,20 @@ dependencies = [
  "radix-leptos-primitive",
  "radix-leptos-roving-focus",
  "radix-leptos-use-controllable-state",
+]
+
+[[package]]
+name = "radix-leptos-toolbar"
+version = "0.0.2"
+dependencies = [
+ "leptos",
+ "leptos-node-ref",
+ "radix-leptos-direction",
+ "radix-leptos-primitive",
+ "radix-leptos-roving-focus",
+ "radix-leptos-separator",
+ "radix-leptos-toggle-group",
+ "web-sys",
 ]
 
 [[package]]

@@ -1,0 +1,20 @@
+[package]
+name = "radix-leptos-toolbar"
+description = "Leptos port of Radix Toolbar."
+homepage = "https://radix.rustforweb.org/primitives/components/toolbar.html"
+
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+version.workspace = true
+
+[dependencies]
+leptos.workspace = true
+leptos-node-ref.workspace = true
+radix-leptos-direction.workspace = true
+radix-leptos-primitive.workspace = true
+radix-leptos-roving-focus.workspace = true
+radix-leptos-separator.workspace = true
+radix-leptos-toggle-group.workspace = true
+web-sys.workspace = true

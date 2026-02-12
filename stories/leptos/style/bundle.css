@@ -811,3 +811,180 @@
     border-style: dashed;
   }
 }
+
+
+.toolbar-a15 {
+  /* ensures things are layed out correctly by default */
+  display: flex;
+  &[data-orientation='vertical'] {
+    flex-direction: column;
+  }
+  /* --------- */
+  display: inline-flex;
+  gap: 5px;
+  box-sizing: border-box;
+  min-width: 130px;
+  background-color: var(--color-white);
+  border: 1px solid var(--color-gray100);
+  border-radius: 6px;
+  padding: 5px;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+  font-family: apple-system, BlinkMacSystemFont, helvetica, arial, sans-serif;
+  font-size: 13px;
+
+  &:focus-within {
+    bordercolor: var(--color-black);
+  }
+}
+
+.toolbarSeparator-a15 {
+  height: 1px;
+  margin: 5px;
+  background-color: var(--color-gray100);
+
+  &[data-orientation='vertical'] {
+    width: 1px;
+    height: auto;
+  }
+}
+
+.toolbarItem-a15 {
+  border: 1px solid var(--color-black);
+  border-radius: 6px;
+  background-color: transparent;
+  padding: 5px 10px;
+  font-family: apple-system, BlinkMacSystemFont, helvetica, arial, sans-serif;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+
+  &:focus,
+  &:focus-within {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.5);
+  }
+
+  &[data-disabled] {
+    opacity: 0.5;
+    user-select: none;
+  }
+}
+
+.toolbarLink-a15 {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  color: black;
+}
+
+.toolbarToggleButton-a15 {
+  &[data-state='on'] {
+    background: black;
+    color: white;
+  }
+}
+
+.toolbarToggleGroup-a15 {
+  display: flex;
+  gap: 5;
+  &[data-orientation='vertical'] {
+    flex-direction: column;
+  }
+}
+
+.toolbarToggleItem-a15 {
+  &[data-state='on'] {
+    background: black;
+    color: white;
+  }
+}
+
+/* ----------- */
+
+.dropdownMenuContent-a15 {
+  display: inline-block;
+  box-sizing: border-box;
+  min-width: 130px;
+  background-color: var(--color-white);
+  border: 1px solid var(--color-gray100);
+  border-radius: 6px;
+  padding: 5px;
+  box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.1);
+  font-family: apple-system, BlinkMacSystemFont, helvetica, arial, sans-serif;
+  font-size: 13px;
+  &:focus-within {
+    border-color: var(--color-black);
+  }
+}
+
+.label-a15,
+.dropdownMenuItem-a15 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  line-height: 1;
+  cursor: default;
+  user-select: none;
+  white-space: nowrap;
+  height: 25px;
+  padding: 0 10px;
+  color: var(--color-black);
+  border-radius: 3px;
+}
+
+.label-a15 {
+  color: var(--color-gray100);
+}
+
+.dropdownMenuItem-a15 {
+  outline: none;
+
+  &[data-highlighted] {
+    background-color: var(--color-black);
+    color: var(--color-white);
+  }
+
+  &[data-disabled] {
+    color: var(--color-gray100);
+  }
+}
+
+@keyframes menu-animateIn {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes menu-animateOut {
+  from {
+    transform: scale(1);
+    opacity: 1;
+  }
+  to {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+}
+
+.animatedContent-a15 {
+  &[data-state='open'] {
+    animation: menu-animateIn 300ms ease;
+  }
+  &[data-state='closed'] {
+    animation: menu-animateOut 300ms ease;
+  }
+}
+
+.animatedItemIndicator-a15 {
+  &[data-state='checked'] {
+    animation: menu-animateIn 300ms ease;
+  }
+  &[data-state='unchecked'] {
+    animation: menu-animateOut 300ms ease;
+  }
+}

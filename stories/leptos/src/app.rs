@@ -7,7 +7,7 @@ use leptos_router::{
 use crate::primitives::{
     accessible_icon, accordion, arrow, aspect_ratio, collapsible, collection, dismissable_layer,
     focus_scope, form, label, popper, portal, presence, progress, roving_focus, scroll_area,
-    separator, tabs, toggle, toggle_group, visually_hidden,
+    separator, tabs, toggle, toggle_group, toolbar, visually_hidden,
 };
 
 #[component]
@@ -290,6 +290,14 @@ pub fn App() -> impl IntoView {
                         </ul>
                     </li>
                     <li>
+                        Toolbar
+
+                        <ul class="list-none m-0 ms-4 p-0">
+                            <li><NavLink href="/toolbar/styled">Styled</NavLink></li>
+                            <li><NavLink href="/toolbar/chromatic">Chromatic</NavLink></li>
+                        </ul>
+                    </li>
+                    <li>
                         Visually Hidden
 
                         <ul class="list-none m-0 ms-4 p-0">
@@ -425,6 +433,9 @@ pub fn App() -> impl IntoView {
                     <Route path=path!("/toggle-group/vertical") view=toggle_group::Vertical />
                     <Route path=path!("/toggle-group/multiple") view=toggle_group::Multiple />
                     <Route path=path!("/toggle-group/chromatic") view=toggle_group::Chromatic />
+
+                    <Route path=path!("/toolbar/styled") view=toolbar::Styled />
+                    <Route path=path!("/toolbar/chromatic") view=toolbar::Chromatic />
 
                     <Route path=path!("/visually-hidden/basic") view=visually_hidden::Basic />
                 </Routes>
