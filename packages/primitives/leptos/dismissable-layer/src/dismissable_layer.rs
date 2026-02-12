@@ -612,6 +612,24 @@ pub fn DismissableLayer(
                 return;
             }
 
+            // If a text-editing element inside this layer has focus, move focus to
+            // the container instead of dismissing. This provides the expected
+            // "two escapes" UX: first Escape leaves the input, second dismisses.
+            if let Some(active) = document().active_element()
+                && is_text_input(&active)
+                && let Some(container) = container_ref.get_untracked()
+            {
+                let container_node: &web_sys::Node = container.unchecked_ref();
+                if container_node.contains(Some(&active)) {
+                    let container_el: &web_sys::HtmlElement = container.unchecked_ref();
+                    if container_el.get_attribute("tabindex").is_none() {
+                        container_el.set_attribute("tabindex", "-1").ok();
+                    }
+                    container_el.focus().ok();
+                    return;
+                }
+            }
+
             if let Some(handler) = on_escape_key_down {
                 handler.run(event.clone());
             }
@@ -898,4 +916,43 @@ pub fn DismissableLayerBranch(
             {children.with_value(|children| children())}
         </Primitive>
     }
+}
+
+/* -------------------------------------------------------------------------------------------------
+ * Utils
+ * -----------------------------------------------------------------------------------------------*/
+
+/// Returns `true` if the element is a text-editing element (text input, textarea, or
+/// contenteditable). Used to implement the "two escapes" UX pattern: when such an element
+/// has focus inside a dismissable layer, the first Escape moves focus to the container
+/// and the second Escape dismisses the layer.
+fn is_text_input(element: &web_sys::Element) -> bool {
+    let tag = element.tag_name();
+    if tag.eq_ignore_ascii_case("TEXTAREA") {
+        return true;
+    }
+    if tag.eq_ignore_ascii_case("INPUT") {
+        let input_type = element
+            .get_attribute("type")
+            .unwrap_or_else(|| "text".to_string())
+            .to_ascii_lowercase();
+        return matches!(
+            input_type.as_str(),
+            "text"
+                | "email"
+                | "number"
+                | "password"
+                | "search"
+                | "tel"
+                | "url"
+                | "date"
+                | "datetime-local"
+                | "month"
+                | "time"
+                | "week"
+        );
+    }
+    element
+        .get_attribute("contenteditable")
+        .is_some_and(|v| v == "true" || v.is_empty())
 }

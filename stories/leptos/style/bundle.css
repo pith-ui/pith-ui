@@ -310,6 +310,141 @@
 }
 
 
+.trigger-29d {
+}
+
+.overlay-29d {
+  /* ensures overlay is positioned correctly */
+  position: fixed;
+  inset: 0;
+  /* ------ */
+  background-color: rgb(0 0 0 / 0.2);
+}
+
+.scrollableOverlay-29d {
+  overflow: auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.contentDefault-29d,
+.contentSheet-29d {
+  /* ensures good default position for content */
+  position: fixed;
+  top: 0;
+  left: 0;
+  /* ------ */
+  min-width: 300px;
+  min-height: 150px;
+  padding: 50px;
+  border-radius: 10px;
+  background-color: white;
+  box-shadow: 0 2px 10px rgb(0 0 0 / 0.12);
+}
+
+.contentDefault-29d {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.contentScrollable-29d {
+  overflow: auto;
+  max-height: 300px;
+}
+
+.contentInScrollableOverlay-29d {
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
+
+.contentSheet-29d {
+  left: initial;
+  right: 0;
+  min-width: 300px;
+  min-height: 100vh;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.close-29d {
+}
+
+@keyframes dialog-fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes dialog-fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes dialog-scaleIn {
+  from {
+    transform: translate(-50%, -50%) scale(0.75);
+  }
+  to {
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+.animatedOverlay-29d {
+  &[data-state='open'] {
+    animation: dialog-fadeIn 300ms ease-out;
+  }
+  &[data-state='closed'] {
+    animation: dialog-fadeOut 300ms ease-in;
+  }
+}
+
+.animatedContent-29d {
+  &[data-state='open'] {
+    animation:
+      dialog-fadeIn 150ms ease-out,
+      dialog-scaleIn 200ms ease-out;
+  }
+  &[data-state='closed'] {
+    animation: dialog-fadeOut 300ms ease-in;
+  }
+}
+
+.duration50-29d {
+  animation-duration: 50ms;
+}
+
+.chromaticContent-29d {
+  padding: 10px;
+  min-width: auto;
+  min-height: auto;
+}
+
+.triggerAttr-29d,
+.overlayAttr-29d,
+.contentAttr-29d,
+.closeAttr-29d {
+  background-color: rgb(0 0 255 / 0.3);
+  border: 2px solid blue;
+  padding: 10px;
+
+  &[data-state='closed'] {
+    border-color: red;
+  }
+  &[data-state='open'] {
+    border-color: green;
+  }
+}
+
+
 .form-516 {
   & [data-invalid] {
     color: var(--red-9);

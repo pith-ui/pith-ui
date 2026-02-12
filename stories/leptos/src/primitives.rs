@@ -6,6 +6,7 @@ pub mod aspect_ratio;
 // pub mod checkbox;
 pub mod collapsible;
 pub mod collection;
+pub mod dialog;
 pub mod dismissable_layer;
 pub mod focus_scope;
 pub mod form;

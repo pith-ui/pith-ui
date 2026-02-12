@@ -1,0 +1,36 @@
+[package]
+name = "radix-leptos-dialog"
+description = "Leptos port of Radix Dialog."
+homepage = "https://radix.rustforweb.org/primitives/components/dialog.html"
+
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+version.workspace = true
+
+[dependencies]
+leptos.workspace = true
+leptos-node-ref.workspace = true
+radix-leptos-compose-refs.workspace = true
+radix-leptos-dismissable-layer.workspace = true
+radix-leptos-focus-guards.workspace = true
+radix-leptos-focus-scope.workspace = true
+radix-leptos-id.workspace = true
+radix-leptos-portal.workspace = true
+radix-leptos-presence.workspace = true
+radix-leptos-primitive.workspace = true
+radix-leptos-use-controllable-state.workspace = true
+js-sys = "0.3"
+send_wrapper.workspace = true
+web-sys = { workspace = true, features = [
+    "CssStyleDeclaration",
+    "DomTokenList",
+    "Element",
+    "HtmlBodyElement",
+    "HtmlCollection",
+    "HtmlElement",
+    "Node",
+    "NodeList",
+    "Window",
+] }

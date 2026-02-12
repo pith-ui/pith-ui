@@ -177,6 +177,12 @@ A port is complete when:
 
 Do not mark a component as ported if functionality is missing without documented justification and user approval.
 
+### Rule 8: Escape Key UX in Dismissable Layers
+
+Components that use `DismissableLayer` (dialogs, popovers, dropdowns, etc.) must implement the **"two escapes" UX pattern**: when a text-editing element (text input, textarea, contenteditable) inside the layer has focus, the first Escape press moves focus to the layer container rather than dismissing. The second Escape dismisses the layer.
+
+This behavior is implemented in `DismissableLayer`'s escape handler via `is_text_input()`. When porting new components that compose `DismissableLayer`, verify this works correctly with the component's stories — especially stories that contain form inputs. If a component manages its own escape handling outside of `DismissableLayer`, it must implement the same pattern.
+
 ## Conventions
 
 - Conventional commit messages: `fix:`, `feat:`, `chore:`, `docs:`

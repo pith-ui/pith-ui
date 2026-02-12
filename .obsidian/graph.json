@@ -15,7 +15,7 @@
       }
     },
     {
-      "query": "[\"react_story\":] AND [\"ported\":true]",
+      "query": "[\"react_story\":\"\"] AND [\"ported\":true]",
       "color": {
         "a": 1,
         "rgb": 5396192
@@ -29,7 +29,7 @@
       }
     },
     {
-      "query": "[\"react_story\":]",
+      "query": "[\"react_story\":] AND [\"rust_story\":]",
       "color": {
         "a": 1,
         "rgb": 12139580

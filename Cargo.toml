@@ -22,6 +22,7 @@ members = [
     "packages/primitives/leptos/aspect-ratio",
     "packages/primitives/leptos/collapsible",
     "packages/primitives/leptos/collection",
+    "packages/primitives/leptos/dialog",
     "packages/primitives/leptos/dismissable-layer",
     "packages/primitives/leptos/compose-refs",
     "packages/primitives/leptos/direction",
@@ -82,6 +83,7 @@ radix-leptos-aspect-ratio = { path = "./packages/primitives/leptos/aspect-ratio"
 radix-leptos-collection = { path = "./packages/primitives/leptos/collection", version = "0.0.2" }
 radix-leptos-collapsible = { path = "./packages/primitives/leptos/collapsible", version = "0.0.2" }
 radix-leptos-compose-refs = { path = "./packages/primitives/leptos/compose-refs", version = "0.0.2" }
+radix-leptos-dialog = { path = "./packages/primitives/leptos/dialog", version = "0.0.2" }
 radix-leptos-dismissable-layer = { path = "./packages/primitives/leptos/dismissable-layer", version = "0.0.2" }
 radix-leptos-direction = { path = "./packages/primitives/leptos/direction", version = "0.0.2" }
 radix-leptos-focus-guards = { path = "./packages/primitives/leptos/focus-guards", version = "0.0.2" }

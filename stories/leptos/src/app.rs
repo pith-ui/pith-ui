@@ -5,9 +5,9 @@ use leptos_router::{
 };
 
 use crate::primitives::{
-    accessible_icon, accordion, arrow, aspect_ratio, collapsible, collection, dismissable_layer,
-    focus_scope, form, label, popper, portal, presence, progress, roving_focus, scroll_area,
-    separator, tabs, toggle, toggle_group, toolbar, visually_hidden,
+    accessible_icon, accordion, arrow, aspect_ratio, collapsible, collection, dialog,
+    dismissable_layer, focus_scope, form, label, popper, portal, presence, progress, roving_focus,
+    scroll_area, separator, tabs, toggle, toggle_group, toolbar, visually_hidden,
 };
 
 #[component]
@@ -88,6 +88,26 @@ pub fn App() -> impl IntoView {
                             <li><NavLink href="/collapsible/animated">Animated</NavLink></li>
                             <li><NavLink href="/collapsible/animated-horizontal">Animated Horizontal</NavLink></li>
                             <li><NavLink href="/collapsible/chromatic">Chromatic</NavLink></li>
+                        </ul>
+                    </li>
+                    <li>
+                        Dialog
+
+                        <ul class="list-none m-0 ms-4 p-0">
+                            <li><NavLink href="/dialog/styled">Styled</NavLink></li>
+                            <li><NavLink href="/dialog/non-modal">Non Modal</NavLink></li>
+                            <li><NavLink href="/dialog/controlled">Controlled</NavLink></li>
+                            <li><NavLink href="/dialog/focus-trap">Focus Trap</NavLink></li>
+                            <li><NavLink href="/dialog/custom-focus">Custom Focus</NavLink></li>
+                            <li><NavLink href="/dialog/no-escape-dismiss">No Escape Dismiss</NavLink></li>
+                            <li><NavLink href="/dialog/no-pointer-down-outside-dismiss">No Pointer Down Outside Dismiss</NavLink></li>
+                            <li><NavLink href="/dialog/with-portal-container">With Portal Container</NavLink></li>
+                            <li><NavLink href="/dialog/animated">Animated</NavLink></li>
+                            <li><NavLink href="/dialog/forced-mount">Forced Mount</NavLink></li>
+                            <li><NavLink href="/dialog/inner-scrollable">Inner Scrollable</NavLink></li>
+                            <li><NavLink href="/dialog/outer-scrollable">Outer Scrollable</NavLink></li>
+                            <li><NavLink href="/dialog/chromatic">Chromatic</NavLink></li>
+                            <li><NavLink href="/dialog/cypress">Cypress</NavLink></li>
                         </ul>
                     </li>
                     // <li>
@@ -335,6 +355,21 @@ pub fn App() -> impl IntoView {
                     <Route path=path!("/collapsible/animated") view=collapsible::Animated />
                     <Route path=path!("/collapsible/animated-horizontal") view=collapsible::AnimatedHorizontal />
                     <Route path=path!("/collapsible/chromatic") view=collapsible::Chromatic />
+
+                    <Route path=path!("/dialog/styled") view=dialog::Styled />
+                    <Route path=path!("/dialog/non-modal") view=dialog::NonModal />
+                    <Route path=path!("/dialog/controlled") view=dialog::Controlled />
+                    <Route path=path!("/dialog/focus-trap") view=dialog::FocusTrap />
+                    <Route path=path!("/dialog/custom-focus") view=dialog::CustomFocus />
+                    <Route path=path!("/dialog/no-escape-dismiss") view=dialog::NoEscapeDismiss />
+                    <Route path=path!("/dialog/no-pointer-down-outside-dismiss") view=dialog::NoPointerDownOutsideDismiss />
+                    <Route path=path!("/dialog/with-portal-container") view=dialog::WithPortalContainer />
+                    <Route path=path!("/dialog/animated") view=dialog::Animated />
+                    <Route path=path!("/dialog/forced-mount") view=dialog::ForcedMount />
+                    <Route path=path!("/dialog/inner-scrollable") view=dialog::InnerScrollable />
+                    <Route path=path!("/dialog/outer-scrollable") view=dialog::OuterScrollable />
+                    <Route path=path!("/dialog/chromatic") view=dialog::Chromatic />
+                    <Route path=path!("/dialog/cypress") view=dialog::Cypress />
 
                     // <Route path="/avatar/styled" view=avatar::Styled />
                     // <Route path="/avatar/chromatic" view=avatar::Chromatic />
