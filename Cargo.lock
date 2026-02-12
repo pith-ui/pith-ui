@@ -3974,6 +3974,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "radix-leptos-alert-dialog"
+version = "0.0.2"
+dependencies = [
+ "leptos",
+ "leptos-node-ref",
+ "radix-leptos-compose-refs",
+ "radix-leptos-dialog",
+ "radix-leptos-primitive",
+ "send_wrapper",
+ "web-sys",
+]
+
+[[package]]
 name = "radix-leptos-announce"
 version = "0.0.2"
 dependencies = [
@@ -4275,6 +4288,7 @@ dependencies = [
  "log",
  "radix-leptos-accessible-icon",
  "radix-leptos-accordion",
+ "radix-leptos-alert-dialog",
  "radix-leptos-arrow",
  "radix-leptos-aspect-ratio",
  "radix-leptos-collapsible",

@@ -18,16 +18,20 @@ pub fn use_controllable_state<T: Clone + PartialEq + Send + Sync>(
             default_prop,
             on_change,
         });
-    let prop = Signal::derive(move || prop.get());
     let is_controlled = Signal::derive(move || prop.get().is_some());
-    let value = Signal::derive(move || match is_controlled.get() {
-        true => prop.get(),
-        false => uncontrolled_prop.get(),
+    let value = Signal::derive(move || {
+        if is_controlled.get() {
+            prop.get()
+        } else {
+            uncontrolled_prop.get()
+        }
     });
 
+    // Use get_untracked() because this callback runs inside event handlers
+    // (non-reactive context). We only need the current value, not reactive tracking.
     let set_value = Callback::new(move |next_value| {
-        if is_controlled.get() {
-            if next_value != prop.get()
+        if prop.get_untracked().is_some() {
+            if next_value != prop.get_untracked()
                 && let Some(on_change) = on_change
             {
                 on_change.run(next_value);

@@ -12,7 +12,7 @@ use radix_leptos_presence::Presence;
 use radix_leptos_primitive::{Primitive, compose_callbacks};
 use radix_leptos_use_controllable_state::{UseControllableStateParams, use_controllable_state};
 use send_wrapper::SendWrapper;
-use web_sys::wasm_bindgen::JsCast;
+use web_sys::wasm_bindgen::{JsCast, closure::Closure};
 
 /* -------------------------------------------------------------------------------------------------
  * Dialog
@@ -257,9 +257,21 @@ struct ContentCallbacks {
     on_interact_outside: StoredValue<Option<Callback<web_sys::CustomEvent>>>,
 }
 
+/// Shared content options that aren't callbacks, stored to thread through layers.
+#[derive(Clone, Copy)]
+struct ContentOptions {
+    /// The ARIA role for the content element. Defaults to `"dialog"`.
+    /// AlertDialog overrides this to `"alertdialog"`.
+    role: StoredValue<String>,
+}
+
 #[component]
 pub fn DialogContent(
     #[prop(into, optional)] force_mount: MaybeProp<bool>,
+    /// The ARIA role for the content element. Defaults to `"dialog"`.
+    /// AlertDialog overrides this to `"alertdialog"`.
+    #[prop(into, optional)]
+    role: Option<String>,
     #[prop(into, optional)] on_open_auto_focus: Option<Callback<web_sys::Event>>,
     #[prop(into, optional)] on_close_auto_focus: Option<Callback<web_sys::Event>>,
     #[prop(into, optional)] on_escape_key_down: Option<Callback<web_sys::KeyboardEvent>>,
@@ -294,6 +306,10 @@ pub fn DialogContent(
         on_interact_outside: StoredValue::new(on_interact_outside),
     };
 
+    let options = ContentOptions {
+        role: StoredValue::new(role.unwrap_or_else(|| "dialog".to_string())),
+    };
+
     let presence_ref = AnyNodeRef::new();
 
     view! {
@@ -306,6 +322,7 @@ pub fn DialogContent(
                         node_ref=node_ref
                         presence_ref=presence_ref
                         callbacks=callbacks
+                        options=options
                     >
                         {children.with_value(|children| children.as_ref().map(|children| children()))}
                     </DialogContentNonModal>
@@ -316,6 +333,7 @@ pub fn DialogContent(
                     node_ref=node_ref
                     presence_ref=presence_ref
                     callbacks=callbacks
+                    options=options
                 >
                     {children.with_value(|children| children.as_ref().map(|children| children()))}
                 </DialogContentModal>
@@ -331,6 +349,7 @@ pub fn DialogContent(
 #[component]
 fn DialogContentModal(
     callbacks: ContentCallbacks,
+    options: ContentOptions,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
     presence_ref: AnyNodeRef,
@@ -347,12 +366,32 @@ fn DialogContentModal(
         presence_ref,
     ]);
 
-    // aria-hide everything except the content (better supported equivalent to setting aria-modal)
+    // aria-hide everything except the content (better supported equivalent to setting aria-modal).
+    // Deferred to requestAnimationFrame to emulate React's useEffect timing (post-layout):
+    // FocusScope auto-focus runs first (as a synchronous Effect, like React's useLayoutEffect),
+    // moving focus into the dialog content before hide_others sets aria-hidden on outside elements.
+    // Without this deferral, hide_others would run while focus is still on the trigger, causing
+    // a "Blocked aria-hidden on an element because its descendant retained focus" browser warning.
+    //
+    // The hidden_elements signal is managed at this level so on_close_auto_focus can remove
+    // aria-hidden BEFORE focusing the trigger (preventing the same warning on close).
+    let hidden_elements: RwSignal<Vec<SendWrapper<web_sys::Element>>> = RwSignal::new(Vec::new());
+
     Effect::new(move |_| {
         if let Some(content) = content_ref.get() {
-            let content: &web_sys::HtmlElement = content.unchecked_ref();
-            hide_others(content);
+            let content: web_sys::HtmlElement = content.unchecked_into();
+            let cb = Closure::once_into_js(move || {
+                hide_others(&content, hidden_elements);
+            });
+            web_sys::window()
+                .expect("Window should exist.")
+                .request_animation_frame(cb.unchecked_ref())
+                .ok();
         }
+    });
+
+    on_cleanup(move || {
+        unhide_others(hidden_elements);
     });
 
     let on_close_auto_focus = Callback::new(move |event: web_sys::Event| {
@@ -361,6 +400,10 @@ fn DialogContentModal(
                 cb.run(event.clone());
             }
         });
+        // Remove aria-hidden from outside elements BEFORE focusing the trigger.
+        // Without this, the trigger (inside an aria-hidden ancestor) would receive focus,
+        // causing a "Blocked aria-hidden on a focused element's ancestor" browser warning.
+        unhide_others(hidden_elements);
         event.prevent_default();
         if let Some(trigger) = context.trigger_ref.get_untracked() {
             let trigger: &web_sys::HtmlElement = trigger.unchecked_ref();
@@ -414,6 +457,7 @@ fn DialogContentModal(
         <DialogContentImpl
             as_child=as_child
             node_ref=composed_refs
+            role=options.role.get_value().clone()
             trap_focus=context.open
             disable_outside_pointer_events=true
             on_open_auto_focus=on_open_auto_focus
@@ -435,6 +479,7 @@ fn DialogContentModal(
 #[component]
 fn DialogContentNonModal(
     callbacks: ContentCallbacks,
+    options: ContentOptions,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
     presence_ref: AnyNodeRef,
@@ -539,6 +584,7 @@ fn DialogContentNonModal(
         <DialogContentImpl
             as_child=as_child
             node_ref=composed_refs
+            role=options.role.get_value().clone()
             trap_focus=false
             disable_outside_pointer_events=false
             on_open_auto_focus=on_open_auto_focus
@@ -559,6 +605,7 @@ fn DialogContentNonModal(
 
 #[component]
 fn DialogContentImpl(
+    #[prop(into, optional)] role: Option<String>,
     #[prop(into, optional)] trap_focus: MaybeProp<bool>,
     #[prop(into, optional)] disable_outside_pointer_events: MaybeProp<bool>,
     #[prop(into)] on_open_auto_focus: Callback<web_sys::Event>,
@@ -574,6 +621,7 @@ fn DialogContentImpl(
     let children = StoredValue::new(children);
 
     let context = expect_context::<DialogContextValue>();
+    let role = StoredValue::new(role.unwrap_or_else(|| "dialog".to_string()));
 
     // Make sure the whole tree has focus guards as our `Dialog` will be
     // the last element in the DOM (because of the `Portal`)
@@ -594,7 +642,7 @@ fn DialogContentImpl(
             <DismissableLayer
                 as_child=as_child
                 node_ref=node_ref
-                attr:role="dialog"
+                attr:role=move || role.get_value()
                 attr:id=move || context.content_id.get()
                 attr:aria-describedby=move || context.description_id.get()
                 attr:aria-labelledby=move || context.title_id.get()
@@ -759,43 +807,45 @@ fn use_body_scroll_lock() {
  * This simplified version only hides body's direct children.
  * -----------------------------------------------------------------------------------------------*/
 
-fn hide_others(content: &web_sys::HtmlElement) {
-    let content = SendWrapper::new(content.clone());
-    let hidden_elements: RwSignal<Vec<SendWrapper<web_sys::Element>>> = RwSignal::new(Vec::new());
+/// Sets `aria-hidden="true"` on body's direct children that don't contain the dialog content,
+/// storing the affected elements in the provided signal for later cleanup.
+fn hide_others(
+    content: &web_sys::HtmlElement,
+    hidden_elements: RwSignal<Vec<SendWrapper<web_sys::Element>>>,
+) {
+    let body = document().body().expect("Document should have body.");
+    let children = body.children();
+    let mut hidden = Vec::new();
 
-    Effect::new(move |_| {
-        let body = document().body().expect("Document should have body.");
-        let children = body.children();
-        let mut hidden = Vec::new();
+    for i in 0..children.length() {
+        if let Some(child) = children.item(i) {
+            // Skip elements that contain the content or are already hidden
+            let contains_content = child.contains(Some(content));
+            let already_hidden = child
+                .get_attribute("aria-hidden")
+                .is_some_and(|v| v == "true");
+            let is_script = child.tag_name().eq_ignore_ascii_case("SCRIPT");
 
-        for i in 0..children.length() {
-            if let Some(child) = children.item(i) {
-                // Skip elements that contain the content or are already hidden
-                let contains_content = child.contains(Some(&content));
-                let already_hidden = child
-                    .get_attribute("aria-hidden")
-                    .is_some_and(|v| v == "true");
-                let is_script = child.tag_name().eq_ignore_ascii_case("SCRIPT");
-
-                if !contains_content && !already_hidden && !is_script {
-                    child
-                        .set_attribute("aria-hidden", "true")
-                        .expect("Attribute should be set.");
-                    hidden.push(SendWrapper::new(child));
-                }
+            if !contains_content && !already_hidden && !is_script {
+                child
+                    .set_attribute("aria-hidden", "true")
+                    .expect("Attribute should be set.");
+                hidden.push(SendWrapper::new(child));
             }
         }
+    }
 
-        hidden_elements.set(hidden);
-    });
+    hidden_elements.set(hidden);
+}
 
-    on_cleanup(move || {
-        for element in hidden_elements.get_untracked() {
-            element
-                .remove_attribute("aria-hidden")
-                .expect("Attribute should be removed.");
-        }
-    });
+/// Removes `aria-hidden` from all elements previously hidden by `hide_others`.
+fn unhide_others(hidden_elements: RwSignal<Vec<SendWrapper<web_sys::Element>>>) {
+    for element in hidden_elements.get_untracked() {
+        element
+            .remove_attribute("aria-hidden")
+            .expect("Attribute should be removed.");
+    }
+    hidden_elements.set(Vec::new());
 }
 
 fn document() -> web_sys::Document {

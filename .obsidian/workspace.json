@@ -4,16 +4,16 @@
     "type": "split",
     "children": [
       {
-        "id": "eb19b02e74a1f56a",
+        "id": "e94e454b0e592409",
         "type": "tabs",
         "children": [
           {
-            "id": "79d59c987f0c5bf4",
+            "id": "8c5a22cb96fe50b9",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "notes/leptos-dialog.md",
+                "file": "notes/leptos-alert-dialog.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -28,7 +28,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "leptos-dialog"
+              "title": "leptos-alert-dialog"
             }
           }
         ]
@@ -88,7 +88,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 300,
+    "collapsed": true
   },
   "right": {
     "id": "98c8a5df7815f7e1",
@@ -190,22 +191,24 @@
       "bases:Create new base": false
     }
   },
-  "active": "79d59c987f0c5bf4",
+  "active": "8c5a22cb96fe50b9",
   "lastOpenFiles": [
+    "stories/leptos/dist/radix-leptos-stories-321432cf32219a78.js",
+    "stories/leptos/dist/radix-leptos-stories-321432cf32219a78_bg.wasm",
+    "target/wasm32-unknown-unknown/debug/deps/radix_leptos_stories-29b3a5f5246269c8.wasm",
+    "target/wasm32-unknown-unknown/debug/deps/radix_leptos_stories-29b3a5f5246269c8.wasm.tmp5c299d9",
+    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-2tkp2exrncish/s-hfqods5yiz-1shadjj-33xw1b5wjt58e6jv7w90vdgyj/work-products.bin",
+    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-2tkp2exrncish/s-hfqods5yiz-1shadjj-33xw1b5wjt58e6jv7w90vdgyj/query-cache.bin",
+    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-2tkp2exrncish/s-hfqods5yiz-1shadjj-33xw1b5wjt58e6jv7w90vdgyj/f2bxiwjtv6krznz3qck5e3jbr.o",
+    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-2tkp2exrncish/s-hfqods5yiz-1shadjj-33xw1b5wjt58e6jv7w90vdgyj/f1jptfqq6ttlj25s2gc6lj2p3.o",
+    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-2tkp2exrncish/s-hfqods5yiz-1shadjj-33xw1b5wjt58e6jv7w90vdgyj/f1262k2wt6w1vyp64vd5i64hr.o",
+    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-2tkp2exrncish/s-hfqods5yiz-1shadjj-33xw1b5wjt58e6jv7w90vdgyj/f0kltt5ekd6eme56y0qel16rs.o",
+    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-2tkp2exrncish/s-hfqods5yiz-1shadjj-33xw1b5wjt58e6jv7w90vdgyj/evxbscy6av5nx38tm1olhfun3.o",
+    "notes/leptos-password-toggle-field.md",
+    "notes/leptos-dialog.md",
     "notes/leptos-toolbar.md",
     "notes/leptos-dismissable-layer.md",
-    "stories/leptos/dist/radix-leptos-stories-cb61fa311f14b418_bg.wasm",
-    "stories/leptos/dist/radix-leptos-stories-cb61fa311f14b418.js",
-    "target/wasm32-unknown-unknown/debug/deps/radix_leptos_stories-41e7785b9a31f381.wasm",
-    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-1umvn4mq6lvih/s-hfqgme2stg-1nnoxjq-5ftcpyytwf6i1zc4w762w4i2q/work-products.bin",
-    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-1umvn4mq6lvih/s-hfqgme2stg-1nnoxjq-5ftcpyytwf6i1zc4w762w4i2q/query-cache.bin",
-    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-1umvn4mq6lvih/s-hfqgme2stg-1nnoxjq-5ftcpyytwf6i1zc4w762w4i2q/f4jo5hlo5doozq7nejowukjec.o",
-    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-1umvn4mq6lvih/s-hfqgme2stg-1nnoxjq-5ftcpyytwf6i1zc4w762w4i2q/f07b582miuqsxy9tfejb4k3ff.o",
-    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-1umvn4mq6lvih/s-hfqgme2stg-1nnoxjq-5ftcpyytwf6i1zc4w762w4i2q/f04zkbrxgvjyymgqzvxj7hih9.o",
-    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-1umvn4mq6lvih/s-hfqgme2stg-1nnoxjq-5ftcpyytwf6i1zc4w762w4i2q/esu828vggpcilzzan78dg2iqj.o",
-    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-1umvn4mq6lvih/s-hfqgme2stg-1nnoxjq-5ftcpyytwf6i1zc4w762w4i2q/es0wkn66c2tfjqa6fjf86djsu.o",
     "notes/leptos-use-escape-keydown.md",
-    "notes/leptos-dialog.md",
     "notes/leptos-focus-guards.md",
     "notes/leptos-context.md",
     "notes/leptos-context-menu.md",
@@ -229,7 +232,6 @@
     "notes/leptos-toggle.md",
     "notes/core-rect.md",
     "notes/leptos-accordion.md",
-    "notes/leptos-compose-refs.md",
     "scripts/story-compare/node_modules/playwright-core/lib/vite/traceViewer/playwright-logo.svg",
     "scripts/story-compare/node_modules/playwright-core/lib/vite/recorder/playwright-logo.svg",
     "scripts/story-compare/node_modules/playwright-core/lib/server/chromium/appIcon.png",

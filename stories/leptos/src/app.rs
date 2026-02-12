@@ -5,7 +5,7 @@ use leptos_router::{
 };
 
 use crate::primitives::{
-    accessible_icon, accordion, arrow, aspect_ratio, collapsible, collection, dialog,
+    accessible_icon, accordion, alert_dialog, arrow, aspect_ratio, collapsible, collection, dialog,
     dismissable_layer, focus_scope, form, label, popper, portal, presence, progress, roving_focus,
     scroll_area, separator, tabs, toggle, toggle_group, toolbar, visually_hidden,
 };
@@ -59,6 +59,15 @@ pub fn App() -> impl IntoView {
                         <ul class="list-none m-0 ms-4 p-0">
                             <li><NavLink href="/accessible-icon/styled">Styled</NavLink></li>
                             <li><NavLink href="/accessible-icon/chromatic">Chromatic</NavLink></li>
+                        </ul>
+                    </li>
+                    <li>
+                        Alert Dialog
+
+                        <ul class="list-none m-0 ms-4 p-0">
+                            <li><NavLink href="/alert-dialog/styled">Styled</NavLink></li>
+                            <li><NavLink href="/alert-dialog/controlled">Controlled</NavLink></li>
+                            <li><NavLink href="/alert-dialog/chromatic">Chromatic</NavLink></li>
                         </ul>
                     </li>
                     <li>
@@ -341,6 +350,10 @@ pub fn App() -> impl IntoView {
 
                     <Route path=path!("/accessible-icon/styled") view=accessible_icon::Styled />
                     <Route path=path!("/accessible-icon/chromatic") view=accessible_icon::Chromatic />
+
+                    <Route path=path!("/alert-dialog/styled") view=alert_dialog::Styled />
+                    <Route path=path!("/alert-dialog/controlled") view=alert_dialog::Controlled />
+                    <Route path=path!("/alert-dialog/chromatic") view=alert_dialog::Chromatic />
 
                     <Route path=path!("/arrow/styled") view=arrow::Styled />
                     <Route path=path!("/arrow/custom-sizes") view=arrow::CustomSizes />

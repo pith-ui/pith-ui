@@ -17,6 +17,7 @@ members = [
     "packages/primitives/core/rect",
     "packages/primitives/leptos/accordion",
     "packages/primitives/leptos/accessible-icon",
+    "packages/primitives/leptos/alert-dialog",
     "packages/primitives/leptos/announce",
     "packages/primitives/leptos/arrow",
     "packages/primitives/leptos/aspect-ratio",
@@ -77,6 +78,7 @@ log = "0.4.22"
 radix-dioxus-icons = { path = "./packages/icons/dioxus", version = "0.0.2" }
 radix-leptos-accordion = { path = "./packages/primitives/leptos/accordion", version = "0.0.2" }
 radix-leptos-accessible-icon = { path = "./packages/primitives/leptos/accessible-icon", version = "0.0.2" }
+radix-leptos-alert-dialog = { path = "./packages/primitives/leptos/alert-dialog", version = "0.0.2" }
 radix-leptos-announce = { path = "./packages/primitives/leptos/announce", version = "0.0.2" }
 radix-leptos-arrow = { path = "./packages/primitives/leptos/arrow", version = "0.0.2" }
 radix-leptos-aspect-ratio = { path = "./packages/primitives/leptos/aspect-ratio", version = "0.0.2" }
