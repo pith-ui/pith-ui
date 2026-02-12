@@ -4274,6 +4274,7 @@ dependencies = [
  "radix-leptos-separator",
  "radix-leptos-tabs",
  "radix-leptos-toggle",
+ "radix-leptos-toggle-group",
  "radix-leptos-visually-hidden",
  "send_wrapper",
  "stylance",
@@ -4305,6 +4306,18 @@ dependencies = [
  "leptos",
  "leptos-node-ref",
  "radix-leptos-primitive",
+ "radix-leptos-use-controllable-state",
+]
+
+[[package]]
+name = "radix-leptos-toggle-group"
+version = "0.0.2"
+dependencies = [
+ "leptos",
+ "leptos-node-ref",
+ "radix-leptos-direction",
+ "radix-leptos-primitive",
+ "radix-leptos-roving-focus",
  "radix-leptos-use-controllable-state",
 ]
 

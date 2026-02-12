@@ -1,0 +1,18 @@
+[package]
+name = "radix-leptos-toggle-group"
+description = "Leptos port of Radix Toggle Group."
+homepage = "https://radix.rustforweb.org/primitives/components/toggle-group.html"
+
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+version.workspace = true
+
+[dependencies]
+leptos.workspace = true
+leptos-node-ref.workspace = true
+radix-leptos-direction.workspace = true
+radix-leptos-primitive.workspace = true
+radix-leptos-roving-focus.workspace = true
+radix-leptos-use-controllable-state.workspace = true

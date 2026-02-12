@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "notes/leptos-tabs.md",
+                "file": "notes/leptos-toggle-group.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -28,7 +28,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "leptos-tabs"
+              "title": "leptos-toggle-group"
             }
           }
         ]
@@ -193,17 +193,17 @@
   },
   "active": "79d59c987f0c5bf4",
   "lastOpenFiles": [
-    "target/wasm32-unknown-unknown/debug/deps/radix_leptos_stories-d9e6c5d6d3debb01.wasm",
-    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-0eq92nhzf0hgz/s-hfpzxhmn5p-1ooc9fw-cf7ot7tgl1mgx8azmjnezf7gb/work-products.bin",
-    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-0eq92nhzf0hgz/s-hfpzxhmn5p-1ooc9fw-cf7ot7tgl1mgx8azmjnezf7gb/query-cache.bin",
-    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-0eq92nhzf0hgz/s-hfpzxhmn5p-1ooc9fw-cf7ot7tgl1mgx8azmjnezf7gb/f5k3yc3vo1wph7jqbbx07y1ii.o",
-    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-0eq92nhzf0hgz/s-hfpzxhmn5p-1ooc9fw-cf7ot7tgl1mgx8azmjnezf7gb/f51he0vg8f5vvmcv6l49oe2d0.o",
-    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-0eq92nhzf0hgz/s-hfpzxhmn5p-1ooc9fw-cf7ot7tgl1mgx8azmjnezf7gb/f33fx7xyzaiwdkguaeks53qio.o",
-    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-0eq92nhzf0hgz/s-hfpzxhmn5p-1ooc9fw-cf7ot7tgl1mgx8azmjnezf7gb/exmzwbwn758wlwwtno110xsko.o",
-    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-0eq92nhzf0hgz/s-hfpzxhmn5p-1ooc9fw-cf7ot7tgl1mgx8azmjnezf7gb/ex3ulnwz7trbqq3h5qpauvoo3.o",
-    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-0eq92nhzf0hgz/s-hfpzxhmn5p-1ooc9fw-cf7ot7tgl1mgx8azmjnezf7gb/eqngo9uqp1h8z61clxtyfm1on.o",
-    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-0eq92nhzf0hgz/s-hfpzxhmn5p-1ooc9fw-cf7ot7tgl1mgx8azmjnezf7gb/ep6jkzsnl2d7q4waoj40qf8be.o",
-    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-0eq92nhzf0hgz/s-hfpzxhmn5p-1ooc9fw-cf7ot7tgl1mgx8azmjnezf7gb/eo9crjlkwnrv5ph5z94gfxe3u.o",
+    "stories/leptos/dist/radix-leptos-stories-b77a018bfcf6ffaa.js",
+    "stories/leptos/dist/radix-leptos-stories-b77a018bfcf6ffaa_bg.wasm",
+    "target/wasm32-unknown-unknown/debug/deps/radix_leptos_stories-95a7b0a6c2a09886.wasm",
+    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-0wg8s72jg1wny/s-hfq0hhpmmd-0qcy03f-d9kizma7c4bhxintg190kf0ed/work-products.bin",
+    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-0wg8s72jg1wny/s-hfq0hhpmmd-0qcy03f-d9kizma7c4bhxintg190kf0ed/query-cache.bin",
+    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-0wg8s72jg1wny/s-hfq0hhpmmd-0qcy03f-d9kizma7c4bhxintg190kf0ed/f0zpuawlcdoone6g5cfvgns4m.o",
+    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-0wg8s72jg1wny/s-hfq0hhpmmd-0qcy03f-d9kizma7c4bhxintg190kf0ed/f080o1ibs5zkhg8v5jz8c8mix.o",
+    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-0wg8s72jg1wny/s-hfq0hhpmmd-0qcy03f-d9kizma7c4bhxintg190kf0ed/ey92zq6u9157vsrry7o88czsi.o",
+    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-0wg8s72jg1wny/s-hfq0hhpmmd-0qcy03f-d9kizma7c4bhxintg190kf0ed/erlvnyz1xa4smxlf8p7rsuz7p.o",
+    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-0wg8s72jg1wny/s-hfq0hhpmmd-0qcy03f-d9kizma7c4bhxintg190kf0ed/epgi374gxadexgjqe81klblx0.o",
+    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-0wg8s72jg1wny/s-hfq0hhpmmd-0qcy03f-d9kizma7c4bhxintg190kf0ed/enn9tsmhk9z2k31vbhmgw1310.o",
     "notes/leptos-tabs.md",
     "notes/leptos-roving-focus.md",
     "notes/leptos-select.md",

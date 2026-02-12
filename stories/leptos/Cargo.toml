@@ -42,6 +42,7 @@ radix-leptos-separator.workspace = true
 # radix-leptos-switch.workspace = true
 radix-leptos-tabs.workspace = true
 radix-leptos-toggle.workspace = true
+radix-leptos-toggle-group.workspace = true
 radix-leptos-visually-hidden.workspace = true
 send_wrapper.workspace = true
 tailwind_fuse.workspace = true
