@@ -4272,11 +4272,29 @@ dependencies = [
  "radix-leptos-roving-focus",
  "radix-leptos-scroll-area",
  "radix-leptos-separator",
+ "radix-leptos-tabs",
  "radix-leptos-toggle",
  "radix-leptos-visually-hidden",
  "send_wrapper",
  "stylance",
  "tailwind_fuse",
+ "web-sys",
+]
+
+[[package]]
+name = "radix-leptos-tabs"
+version = "0.0.2"
+dependencies = [
+ "leptos",
+ "leptos-node-ref",
+ "radix-leptos-compose-refs",
+ "radix-leptos-direction",
+ "radix-leptos-id",
+ "radix-leptos-presence",
+ "radix-leptos-primitive",
+ "radix-leptos-roving-focus",
+ "radix-leptos-use-controllable-state",
+ "send_wrapper",
  "web-sys",
 ]
 

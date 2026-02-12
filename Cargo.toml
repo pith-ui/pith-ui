@@ -38,6 +38,7 @@ members = [
     "packages/primitives/leptos/roving-focus",
     "packages/primitives/leptos/scroll-area",
     "packages/primitives/leptos/separator",
+    "packages/primitives/leptos/tabs",
     "packages/primitives/leptos/toggle",
     "packages/primitives/leptos/use-controllable-state",
     "packages/primitives/leptos/use-escape-keydown",
@@ -95,6 +96,7 @@ radix-leptos-progress = { path = "./packages/primitives/leptos/progress", versio
 radix-leptos-scroll-area = { path = "./packages/primitives/leptos/scroll-area", version = "0.0.2" }
 radix-leptos-roving-focus = { path = "./packages/primitives/leptos/roving-focus", version = "0.0.2" }
 radix-leptos-separator = { path = "./packages/primitives/leptos/separator", version = "0.0.2" }
+radix-leptos-tabs = { path = "./packages/primitives/leptos/tabs", version = "0.0.2" }
 radix-leptos-toggle = { path = "./packages/primitives/leptos/toggle", version = "0.0.2" }
 radix-leptos-use-controllable-state = { path = "./packages/primitives/leptos/use-controllable-state", version = "0.0.2" }
 radix-leptos-use-escape-keydown = { path = "./packages/primitives/leptos/use-escape-keydown", version = "0.0.2" }

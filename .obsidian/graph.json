@@ -29,10 +29,10 @@
       }
     },
     {
-      "query": "",
+      "query": "[\"react_story\":]",
       "color": {
         "a": 1,
-        "rgb": 5431378
+        "rgb": 12139580
       }
     }
   ],
@@ -46,6 +46,6 @@
   "repelStrength": 10,
   "linkStrength": 1,
   "linkDistance": 250,
-  "scale": 0.5622867940281855,
+  "scale": 0.9654865522855762,
   "close": false
 }

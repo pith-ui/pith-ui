@@ -7,7 +7,7 @@ use leptos_router::{
 use crate::primitives::{
     accessible_icon, accordion, arrow, aspect_ratio, collapsible, collection, dismissable_layer,
     focus_scope, form, label, popper, portal, presence, progress, roving_focus, scroll_area,
-    separator, toggle, visually_hidden,
+    separator, tabs, toggle, visually_hidden,
 };
 
 #[component]
@@ -242,6 +242,15 @@ pub fn App() -> impl IntoView {
                             <li><NavLink href="/separator/styled">Styled</NavLink></li>
                         </ul>
                     </li>
+                    <li>
+                        Tabs
+
+                        <ul class="list-none m-0 ms-4 p-0">
+                            <li><NavLink href="/tabs/styled">Styled</NavLink></li>
+                            <li><NavLink href="/tabs/animated">Animated</NavLink></li>
+                            <li><NavLink href="/tabs/chromatic">Chromatic</NavLink></li>
+                        </ul>
+                    </li>
                     // <li>
                     //     Slot
 
@@ -385,6 +394,10 @@ pub fn App() -> impl IntoView {
                     <Route path=path!("/scroll-area/chromatic-dynamic-content-after-loaded") view=scroll_area::ChromaticDynamicContentAfterLoaded />
 
                     <Route path=path!("/separator/styled") view=separator::Styled />
+
+                    <Route path=path!("/tabs/styled") view=tabs::Styled />
+                    <Route path=path!("/tabs/animated") view=tabs::Animated />
+                    <Route path=path!("/tabs/chromatic") view=tabs::Chromatic />
 
                     // <Route path="/slot/without-slottable" view=slot::WithoutSlottable />
                     // <Route path="/slot/with-slottable" view=slot::WithSlottable />
