@@ -6,8 +6,8 @@ use leptos_router::{
 
 use crate::primitives::{
     accessible_icon, accordion, arrow, aspect_ratio, collapsible, collection, dismissable_layer,
-    focus_scope, form, label, popper, portal, presence, progress, scroll_area, separator, toggle,
-    visually_hidden,
+    focus_scope, form, label, popper, portal, presence, progress, roving_focus, scroll_area,
+    separator, toggle, visually_hidden,
 };
 
 #[component]
@@ -214,6 +214,15 @@ pub fn App() -> impl IntoView {
                         </ul>
                     </li>
                     <li>
+                        Roving Focus
+
+                        <ul class="list-none m-0 ms-4 p-0">
+                            <li><NavLink href="/roving-focus/basic">Basic</NavLink></li>
+                            <li><NavLink href="/roving-focus/nested">Nested</NavLink></li>
+                            <li><NavLink href="/roving-focus/edge-cases">Edge Cases</NavLink></li>
+                        </ul>
+                    </li>
+                    <li>
                         Scroll Area
 
                         <ul class="list-none m-0 ms-4 p-0">
@@ -362,6 +371,10 @@ pub fn App() -> impl IntoView {
 
                     <Route path=path!("/progress/styled") view=progress::Styled />
                     <Route path=path!("/progress/chromatic") view=progress::Chromatic />
+
+                    <Route path=path!("/roving-focus/basic") view=roving_focus::Basic />
+                    <Route path=path!("/roving-focus/nested") view=roving_focus::Nested />
+                    <Route path=path!("/roving-focus/edge-cases") view=roving_focus::EdgeCases />
 
                     <Route path=path!("/scroll-area/basic") view=scroll_area::Basic />
                     <Route path=path!("/scroll-area/resizable") view=scroll_area::Resizable />

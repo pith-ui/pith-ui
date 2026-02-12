@@ -4204,6 +4204,22 @@ dependencies = [
 ]
 
 [[package]]
+name = "radix-leptos-roving-focus"
+version = "0.0.2"
+dependencies = [
+ "leptos",
+ "leptos-node-ref",
+ "radix-leptos-collection",
+ "radix-leptos-compose-refs",
+ "radix-leptos-direction",
+ "radix-leptos-id",
+ "radix-leptos-primitive",
+ "radix-leptos-use-controllable-state",
+ "send_wrapper",
+ "web-sys",
+]
+
+[[package]]
 name = "radix-leptos-scroll-area"
 version = "0.0.2"
 dependencies = [
@@ -4253,6 +4269,7 @@ dependencies = [
  "radix-leptos-portal",
  "radix-leptos-presence",
  "radix-leptos-progress",
+ "radix-leptos-roving-focus",
  "radix-leptos-scroll-area",
  "radix-leptos-separator",
  "radix-leptos-toggle",

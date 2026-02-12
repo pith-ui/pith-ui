@@ -10,9 +10,12 @@ version.workspace = true
 
 [dependencies]
 leptos.workspace = true
+leptos-node-ref.workspace = true
 radix-leptos-collection.workspace = true
 radix-leptos-compose-refs.workspace = true
 radix-leptos-direction.workspace = true
 radix-leptos-id.workspace = true
+radix-leptos-primitive.workspace = true
 radix-leptos-use-controllable-state.workspace = true
+send_wrapper.workspace = true
 web-sys = { workspace = true, features = ["CustomEvent", "CustomEventInit"] }
