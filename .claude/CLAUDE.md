@@ -86,6 +86,7 @@ dependencies: []
 ported: false
 tested: false
 tested_story: false
+unstable: false
 ---
 ## Intent
 
@@ -118,6 +119,7 @@ Use "Leptos Implementation Notes", "Yew Implementation Notes", etc. for framewor
 - `ported` — `true` if the Rust implementation exists and matches the React source
 - `tested` — `true` if tests exist with reasonable coverage
 - `tested_story` — `false` by default; set to `true` only by the user after they have manually verified the story's functionality against the React reference
+- `unstable` — `true` if the React source marks the component as unstable/preview; these are deferred per Rule 2
 
 **Content guidelines:**
 - Notes should be complete but not overly verbose
@@ -127,6 +129,8 @@ Use "Leptos Implementation Notes", "Yew Implementation Notes", etc. for framewor
 ### Rule 2: Follow the Dependency Graph
 
 Use `scripts/topo_sort.py` to determine porting order. Run it to see all components sorted topologically with their ported and story-tested status. A dependency is considered **complete** when it is `ported: true` AND its story has been tested (`tested_story: true`), or it has no story (`react_story: ""`). The next item to port is the first entry where `ported` is `false` and all of its dependencies are complete. **Never port a component before all its dependencies are both ported and story-tested (when applicable).**
+
+**Unstable/preview items last:** Components marked as `unstable` in the React source (preview APIs, experimental features) should be deferred until all stable components are ported and story-tested. When determining the next component to port, skip any item with `unstable: true` in its research note unless no stable items remain.
 
 ```bash
 python3 scripts/topo_sort.py
