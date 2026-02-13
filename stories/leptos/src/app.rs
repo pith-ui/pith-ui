@@ -6,8 +6,9 @@ use leptos_router::{
 
 use crate::primitives::{
     accessible_icon, accordion, alert_dialog, arrow, aspect_ratio, collapsible, collection, dialog,
-    dismissable_layer, focus_scope, form, label, popper, portal, presence, progress, roving_focus,
-    scroll_area, separator, tabs, toggle, toggle_group, toolbar, visually_hidden,
+    dismissable_layer, focus_scope, form, label, one_time_password_field, popper, portal, presence,
+    progress, roving_focus, scroll_area, separator, tabs, toggle, toggle_group, toolbar,
+    visually_hidden,
 };
 
 #[component]
@@ -200,6 +201,14 @@ pub fn App() -> impl IntoView {
                     //         <li><NavLink href="/menu/styled">Styled</NavLink></li>
                     //     </ul>
                     // </li>
+                    <li>
+                        {"One Time Password Field"}
+
+                        <ul class="list-none m-0 ms-4 p-0">
+                            <li><NavLink href="/one-time-password-field/uncontrolled">Uncontrolled</NavLink></li>
+                            <li><NavLink href="/one-time-password-field/controlled">Controlled</NavLink></li>
+                        </ul>
+                    </li>
                     <li>
                         Popper
 
@@ -424,6 +433,9 @@ pub fn App() -> impl IntoView {
                     <Route path=path!("/label/with-input-number") view=label::WithInputNumber />
 
                     // <Route path="/menu/styled" view=menu::Styled />
+
+                    <Route path=path!("/one-time-password-field/uncontrolled") view=one_time_password_field::Uncontrolled />
+                    <Route path=path!("/one-time-password-field/controlled") view=one_time_password_field::Controlled />
 
                     <Route path=path!("/popper/styled") view=popper::Styled />
                     <Route path=path!("/popper/with-custom-arrow") view=popper::WithCustomArrow />

@@ -5,6 +5,7 @@
     "tags": "tags",
     "dependencies": "multitext",
     "ported": "checkbox",
-    "tested": "checkbox"
+    "tested": "checkbox",
+    "unstable": "checkbox"
   }
 }

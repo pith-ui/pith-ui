@@ -4179,6 +4179,23 @@ dependencies = [
 ]
 
 [[package]]
+name = "radix-leptos-one-time-password-field"
+version = "0.0.2"
+dependencies = [
+ "js-sys",
+ "leptos",
+ "leptos-node-ref",
+ "radix-leptos-collection",
+ "radix-leptos-compose-refs",
+ "radix-leptos-direction",
+ "radix-leptos-primitive",
+ "radix-leptos-roving-focus",
+ "radix-leptos-use-controllable-state",
+ "send_wrapper",
+ "web-sys",
+]
+
+[[package]]
 name = "radix-leptos-popper"
 version = "0.0.2"
 dependencies = [
@@ -4282,6 +4299,7 @@ version = "0.0.2"
 dependencies = [
  "console_error_panic_hook",
  "console_log",
+ "js-sys",
  "leptos",
  "leptos-node-ref",
  "leptos_router",
@@ -4300,6 +4318,7 @@ dependencies = [
  "radix-leptos-focus-scope",
  "radix-leptos-form",
  "radix-leptos-label",
+ "radix-leptos-one-time-password-field",
  "radix-leptos-popper",
  "radix-leptos-portal",
  "radix-leptos-presence",

@@ -32,6 +32,7 @@ members = [
     "packages/primitives/leptos/form",
     "packages/primitives/leptos/id",
     "packages/primitives/leptos/label",
+    "packages/primitives/leptos/one-time-password-field",
     "packages/primitives/leptos/popper",
     "packages/primitives/leptos/portal",
     "packages/primitives/leptos/presence",
@@ -94,6 +95,7 @@ radix-leptos-focus-scope = { path = "./packages/primitives/leptos/focus-scope", 
 radix-leptos-icons = { path = "./packages/icons/leptos", version = "0.0.2" }
 radix-leptos-id = { path = "./packages/primitives/leptos/id", version = "0.0.2" }
 radix-leptos-label = { path = "./packages/primitives/leptos/label", version = "0.0.2" }
+radix-leptos-one-time-password-field = { path = "./packages/primitives/leptos/one-time-password-field", version = "0.0.2" }
 radix-leptos-popper = { path = "./packages/primitives/leptos/popper", version = "0.0.2" }
 radix-leptos-portal = { path = "./packages/primitives/leptos/portal", version = "0.0.2" }
 radix-leptos-presence = { path = "./packages/primitives/leptos/presence", version = "0.0.2" }

@@ -12,6 +12,7 @@ version.workspace = true
 [dependencies]
 console_error_panic_hook.workspace = true
 console_log.workspace = true
+js-sys = "0.3"
 leptos = { workspace = true, features = ["csr"] }
 leptos-node-ref.workspace = true
 leptos_router.workspace = true
@@ -33,6 +34,7 @@ radix-leptos-focus-scope.workspace = true
 radix-leptos-form.workspace = true
 radix-leptos-label.workspace = true
 # radix-leptos-menu.workspace = true
+radix-leptos-one-time-password-field.workspace = true
 radix-leptos-popper.workspace = true
 radix-leptos-portal.workspace = true
 radix-leptos-presence.workspace = true

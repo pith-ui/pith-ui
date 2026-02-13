@@ -50,6 +50,20 @@ impl Display for Orientation {
     }
 }
 
+/// Public context provided by [`RovingFocusGroup`] for consumers that need
+/// to know whether the group currently has a tab stop.
+#[derive(Clone, Copy)]
+pub struct RovingFocusGroupContext {
+    pub has_tab_stop: Signal<bool>,
+}
+
+/// Public context provided by [`RovingFocusGroupItem`] for consumers that need
+/// to know whether the item is the current tab stop.
+#[derive(Clone, Copy)]
+pub struct RovingFocusGroupItemContext {
+    pub is_current_tab_stop: Signal<bool>,
+}
+
 #[derive(Clone, Debug)]
 struct RovingContextValue {
     orientation: Signal<Option<Orientation>>,
@@ -193,8 +207,13 @@ fn RovingFocusGroupImpl(
         }),
     };
 
+    let public_group_context = RovingFocusGroupContext {
+        has_tab_stop: Signal::derive(move || current_tab_stop_id.get().is_some()),
+    };
+
     view! {
         <Provider value=roving_context_value>
+            <Provider value=public_group_context>
             <AttributeInterceptor let:attrs>
                 <Primitive
                     element=html::div
@@ -260,6 +279,7 @@ fn RovingFocusGroupImpl(
                     {children.with_value(|children| children())}
                 </Primitive>
             </AttributeInterceptor>
+            </Provider>
         </Provider>
     }
 }
@@ -308,6 +328,10 @@ pub fn RovingFocusGroupItem(
         }
     });
 
+    let public_item_context = RovingFocusGroupItemContext {
+        is_current_tab_stop,
+    };
+
     let item_data = Signal::derive(move || ItemData {
         id: id.get(),
         focusable: focusable.get(),
@@ -316,6 +340,7 @@ pub fn RovingFocusGroupItem(
 
     view! {
         <CollectionItemSlot item_data_type=ITEM_DATA_PHANTHOM item_data=item_data>
+            <Provider value=public_item_context>
             <AttributeInterceptor let:attrs>
                 <Primitive
                     element=html::span
@@ -394,6 +419,7 @@ pub fn RovingFocusGroupItem(
                     {children.with_value(|children| children())}
                 </Primitive>
             </AttributeInterceptor>
+            </Provider>
         </CollectionItemSlot>
     }
 }

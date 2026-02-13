@@ -1,0 +1,22 @@
+[package]
+name = "radix-leptos-one-time-password-field"
+description = "Leptos port of Radix One Time Password Field."
+
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+version.workspace = true
+
+[dependencies]
+js-sys = "0.3"
+leptos.workspace = true
+leptos-node-ref.workspace = true
+radix-leptos-collection.workspace = true
+radix-leptos-compose-refs.workspace = true
+radix-leptos-direction.workspace = true
+radix-leptos-primitive.workspace = true
+radix-leptos-roving-focus.workspace = true
+radix-leptos-use-controllable-state.workspace = true
+send_wrapper.workspace = true
+web-sys = { workspace = true, features = ["ClipboardEvent", "DataTransfer", "HtmlFormElement", "HtmlInputElement", "InputEvent", "ValidityState"] }
