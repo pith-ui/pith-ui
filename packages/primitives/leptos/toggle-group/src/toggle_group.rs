@@ -59,9 +59,9 @@ pub fn ToggleGroup(
     #[prop(into, optional)] dir: MaybeProp<Direction>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
-    children: TypedChildrenFn<impl IntoView + 'static>,
+    children: ChildrenFn,
 ) -> impl IntoView {
-    let children = StoredValue::new(children.into_inner());
+    let children = StoredValue::new(children);
 
     let (current_value, set_value) = use_controllable_state(UseControllableStateParams {
         prop: value,
@@ -148,9 +148,9 @@ fn ToggleGroupImpl(
     #[prop(into)] r#loop: Signal<bool>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
-    children: TypedChildrenFn<impl IntoView + 'static>,
+    children: ChildrenFn,
 ) -> impl IntoView {
-    let children = StoredValue::new(children.into_inner());
+    let children = StoredValue::new(children);
 
     view! {
         {move || {
@@ -207,9 +207,9 @@ pub fn ToggleGroupItem(
     #[prop(into, optional)] on_click: Option<Callback<ev::MouseEvent>>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
-    children: TypedChildrenFn<impl IntoView + 'static>,
+    children: ChildrenFn,
 ) -> impl IntoView {
-    let children = StoredValue::new(children.into_inner());
+    let children = StoredValue::new(children);
 
     let value_context = expect_context::<ToggleGroupValueContextValue>();
     let context = expect_context::<ToggleGroupContextValue>();
@@ -281,9 +281,9 @@ fn ToggleGroupItemImpl(
     #[prop(into, optional)] on_click: Option<Option<Callback<ev::MouseEvent>>>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
-    children: TypedChildrenFn<impl IntoView + 'static>,
+    children: ChildrenFn,
 ) -> impl IntoView {
-    let children = StoredValue::new(children.into_inner());
+    let children = StoredValue::new(children);
 
     let value_context = expect_context::<ToggleGroupValueContextValue>();
     let is_single = value_context.r#type == ToggleGroupType::Single;

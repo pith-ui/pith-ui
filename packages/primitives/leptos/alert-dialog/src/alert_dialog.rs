@@ -25,9 +25,9 @@ pub fn AlertDialog(
     #[prop(into, optional)] open: MaybeProp<bool>,
     #[prop(into, optional)] default_open: MaybeProp<bool>,
     #[prop(into, optional)] on_open_change: Option<Callback<bool>>,
-    children: TypedChildrenFn<impl IntoView + 'static>,
+    children: ChildrenFn,
 ) -> impl IntoView {
-    let children = StoredValue::new(children.into_inner());
+    let children = StoredValue::new(children);
 
     // AlertDialog always forces modal=true, unlike Dialog which allows configuration.
     view! {
@@ -51,9 +51,9 @@ pub fn AlertDialogTrigger(
     #[prop(into, optional)] on_click: Option<Callback<ev::MouseEvent>>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
-    children: TypedChildrenFn<impl IntoView + 'static>,
+    children: ChildrenFn,
 ) -> impl IntoView {
-    let children = StoredValue::new(children.into_inner());
+    let children = StoredValue::new(children);
 
     view! {
         <DialogTrigger
@@ -75,9 +75,9 @@ pub fn AlertDialogPortal(
     #[prop(into, optional)] container: MaybeProp<SendWrapper<web_sys::Element>>,
     #[prop(optional)] container_ref: AnyNodeRef,
     #[prop(into, optional)] force_mount: MaybeProp<bool>,
-    children: TypedChildrenFn<impl IntoView + 'static>,
+    children: ChildrenFn,
 ) -> impl IntoView {
-    let children = StoredValue::new(children.into_inner());
+    let children = StoredValue::new(children);
 
     view! {
         <DialogPortal
@@ -218,9 +218,9 @@ pub fn AlertDialogContent(
 pub fn AlertDialogTitle(
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
-    children: TypedChildrenFn<impl IntoView + 'static>,
+    children: ChildrenFn,
 ) -> impl IntoView {
-    let children = StoredValue::new(children.into_inner());
+    let children = StoredValue::new(children);
 
     view! {
         <DialogTitle as_child=as_child node_ref=node_ref>
@@ -237,9 +237,9 @@ pub fn AlertDialogTitle(
 pub fn AlertDialogDescription(
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
-    children: TypedChildrenFn<impl IntoView + 'static>,
+    children: ChildrenFn,
 ) -> impl IntoView {
-    let children = StoredValue::new(children.into_inner());
+    let children = StoredValue::new(children);
 
     view! {
         <DialogDescription as_child=as_child node_ref=node_ref>
@@ -258,9 +258,9 @@ pub fn AlertDialogAction(
     #[prop(into, optional)] on_click: Option<Callback<ev::MouseEvent>>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
-    children: TypedChildrenFn<impl IntoView + 'static>,
+    children: ChildrenFn,
 ) -> impl IntoView {
-    let children = StoredValue::new(children.into_inner());
+    let children = StoredValue::new(children);
 
     view! {
         <DialogClose on_click=wrap_callback(on_click) as_child=as_child node_ref=node_ref>
@@ -280,9 +280,9 @@ pub fn AlertDialogCancel(
     #[prop(into, optional)] on_click: Option<Callback<ev::MouseEvent>>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
-    children: TypedChildrenFn<impl IntoView + 'static>,
+    children: ChildrenFn,
 ) -> impl IntoView {
-    let children = StoredValue::new(children.into_inner());
+    let children = StoredValue::new(children);
 
     let context = expect_context::<AlertDialogContentContextValue>();
     let composed_ref = use_composed_refs(vec![node_ref, context.cancel_ref]);

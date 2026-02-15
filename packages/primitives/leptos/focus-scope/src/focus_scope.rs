@@ -34,9 +34,9 @@ pub fn FocusScope(
     #[prop(into, optional)] on_unmount_auto_focus: Option<Option<Callback<Event>>>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
-    children: TypedChildrenFn<impl IntoView + 'static>,
+    children: ChildrenFn,
 ) -> impl IntoView {
-    let children = StoredValue::new(children.into_inner());
+    let children = StoredValue::new(children);
 
     let r#loop = Signal::derive(move || r#loop.get().unwrap_or(false));
     let trapped = Signal::derive(move || trapped.get().unwrap_or(false));

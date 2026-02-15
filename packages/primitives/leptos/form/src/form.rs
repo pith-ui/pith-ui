@@ -305,7 +305,7 @@ pub fn Form(
     #[prop(into, optional)] on_clear_server_errors: Option<Callback<()>>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
-    children: TypedChildrenFn<impl IntoView + 'static>,
+    children: ChildrenFn,
 ) -> impl IntoView {
     let validation_context = ValidationContextValue {
         validity_map: RwSignal::new(HashMap::new()),
@@ -367,7 +367,7 @@ pub fn Form(
     });
 
     let on_clear = on_clear_server_errors;
-    let children = StoredValue::new(children.into_inner());
+    let children = StoredValue::new(children);
 
     view! {
         <Provider value=validation_context>
@@ -404,7 +404,7 @@ pub fn FormField(
     #[prop(into, optional)] server_invalid: MaybeProp<bool>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
-    children: TypedChildrenFn<impl IntoView + 'static>,
+    children: ChildrenFn,
 ) -> impl IntoView {
     let validation_context = expect_context::<ValidationContextValue>();
     let id = use_id(None);
@@ -425,7 +425,7 @@ pub fn FormField(
     let invalid_attr =
         Memo::new(move |_| get_invalid_attribute(&validity.get(), server_invalid_signal.get()));
 
-    let children = StoredValue::new(children.into_inner());
+    let children = StoredValue::new(children);
 
     view! {
         <Provider value=field_context>
@@ -451,7 +451,7 @@ pub fn FormLabel(
     #[prop(into, optional)] html_for: Option<String>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
-    children: TypedChildrenFn<impl IntoView + 'static>,
+    children: ChildrenFn,
 ) -> impl IntoView {
     let validation_context = expect_context::<ValidationContextValue>();
     let field_context = expect_context::<FormFieldContextValue>();
@@ -465,7 +465,7 @@ pub fn FormLabel(
     let invalid_attr =
         Memo::new(move |_| get_invalid_attribute(&validity.get(), server_invalid.get()));
 
-    let children = StoredValue::new(children.into_inner());
+    let children = StoredValue::new(children);
 
     view! {
         <radix_leptos_label::Label
@@ -1035,9 +1035,9 @@ pub fn FormValidityState(
 pub fn FormSubmit(
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
-    children: TypedChildrenFn<impl IntoView + 'static>,
+    children: ChildrenFn,
 ) -> impl IntoView {
-    let children = StoredValue::new(children.into_inner());
+    let children = StoredValue::new(children);
 
     view! {
         <Primitive

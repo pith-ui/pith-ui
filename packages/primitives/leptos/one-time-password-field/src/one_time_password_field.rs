@@ -269,9 +269,9 @@ pub fn OneTimePasswordField(
     #[prop(into, optional)] on_paste: Option<Callback<ev::ClipboardEvent>>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
-    children: TypedChildrenFn<impl IntoView + 'static>,
+    children: ChildrenFn,
 ) -> impl IntoView {
-    let children = StoredValue::new(children.into_inner());
+    let children = StoredValue::new(children);
 
     let callbacks = OneTimePasswordFieldCallbacks {
         on_value_change: StoredValue::new(on_value_change),
@@ -325,14 +325,14 @@ fn OneTimePasswordFieldImpl(
     #[prop(into, optional)] validation_type: MaybeProp<InputValidationType>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
-    children: TypedChildrenFn<impl IntoView + 'static>,
+    children: ChildrenFn,
 ) -> impl IntoView {
     let callbacks = expect_context::<OneTimePasswordFieldCallbacks>();
     let on_value_change = callbacks.on_value_change.get_value();
     let on_auto_submit = callbacks.on_auto_submit.get_value();
     let sanitize_value = callbacks.sanitize_value.get_value();
     let on_paste = callbacks.on_paste.get_value();
-    let children = StoredValue::new(children.into_inner());
+    let children = StoredValue::new(children);
 
     let direction = use_direction(dir);
     let disabled_sig = Signal::derive(move || disabled.get().unwrap_or(false));

@@ -7,8 +7,8 @@ use leptos_router::{
 use crate::primitives::{
     accessible_icon, accordion, alert_dialog, arrow, aspect_ratio, collapsible, collection, dialog,
     dismissable_layer, focus_scope, form, label, one_time_password_field, popper, portal, presence,
-    progress, radio_group, roving_focus, scroll_area, separator, tabs, toggle, toggle_group,
-    toolbar, visually_hidden,
+    progress, radio_group, roving_focus, scroll_area, separator, slider, tabs, toggle,
+    toggle_group, toolbar, visually_hidden,
 };
 
 #[component]
@@ -293,6 +293,24 @@ pub fn App() -> impl IntoView {
                         </ul>
                     </li>
                     <li>
+                        Slider
+
+                        <ul class="list-none m-0 ms-4 p-0">
+                            <li><NavLink href="/slider/styled">Styled</NavLink></li>
+                            <li><NavLink href="/slider/with-on-value-commit">With On Value Commit</NavLink></li>
+                            <li><NavLink href="/slider/right-to-left">Right To Left</NavLink></li>
+                            <li><NavLink href="/slider/horizontal">Horizontal</NavLink></li>
+                            <li><NavLink href="/slider/vertical">Vertical</NavLink></li>
+                            <li><NavLink href="/slider/inversions">Inversions</NavLink></li>
+                            <li><NavLink href="/slider/with-minimum-steps-between-thumbs">With Min Steps Between Thumbs</NavLink></li>
+                            <li><NavLink href="/slider/with-multiple-ranges">With Multiple Ranges</NavLink></li>
+                            <li><NavLink href="/slider/small-steps">Small Steps</NavLink></li>
+                            <li><NavLink href="/slider/within-form">Within Form</NavLink></li>
+                            <li><NavLink href="/slider/strict">Strict</NavLink></li>
+                            <li><NavLink href="/slider/chromatic">Chromatic</NavLink></li>
+                        </ul>
+                    </li>
+                    <li>
                         Tabs
 
                         <ul class="list-none m-0 ms-4 p-0">
@@ -491,6 +509,19 @@ pub fn App() -> impl IntoView {
                     <Route path=path!("/scroll-area/chromatic-dynamic-content-after-loaded") view=scroll_area::ChromaticDynamicContentAfterLoaded />
 
                     <Route path=path!("/separator/styled") view=separator::Styled />
+
+                    <Route path=path!("/slider/styled") view=slider::Styled />
+                    <Route path=path!("/slider/with-on-value-commit") view=slider::WithOnValueCommit />
+                    <Route path=path!("/slider/right-to-left") view=slider::RightToLeft />
+                    <Route path=path!("/slider/horizontal") view=slider::Horizontal />
+                    <Route path=path!("/slider/vertical") view=slider::Vertical />
+                    <Route path=path!("/slider/inversions") view=slider::Inversions />
+                    <Route path=path!("/slider/with-minimum-steps-between-thumbs") view=slider::WithMinimumStepsBetweenThumbs />
+                    <Route path=path!("/slider/with-multiple-ranges") view=slider::WithMultipleRanges />
+                    <Route path=path!("/slider/small-steps") view=slider::SmallSteps />
+                    <Route path=path!("/slider/within-form") view=slider::WithinForm />
+                    <Route path=path!("/slider/strict") view=slider::Strict />
+                    <Route path=path!("/slider/chromatic") view=slider::Chromatic />
 
                     <Route path=path!("/tabs/styled") view=tabs::Styled />
                     <Route path=path!("/tabs/animated") view=tabs::Animated />

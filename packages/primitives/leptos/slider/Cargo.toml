@@ -1,0 +1,33 @@
+[package]
+name = "radix-leptos-slider"
+description = "Leptos port of Radix Slider."
+homepage = "https://radix.rustforweb.org/primitives/components/slider.html"
+
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+version.workspace = true
+
+[dependencies]
+leptos.workspace = true
+leptos-node-ref.workspace = true
+radix-leptos-collection.workspace = true
+radix-leptos-compose-refs.workspace = true
+radix-leptos-direction.workspace = true
+radix-leptos-primitive.workspace = true
+radix-leptos-use-controllable-state.workspace = true
+radix-leptos-use-previous.workspace = true
+radix-leptos-use-size.workspace = true
+radix-number.workspace = true
+send_wrapper.workspace = true
+web-sys = { workspace = true, features = [
+    "DomRect",
+    "Element",
+    "Event",
+    "EventInit",
+    "HtmlElement",
+    "HtmlInputElement",
+    "KeyboardEvent",
+    "PointerEvent",
+] }

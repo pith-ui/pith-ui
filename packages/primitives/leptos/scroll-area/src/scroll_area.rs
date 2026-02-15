@@ -414,9 +414,9 @@ pub fn ScrollArea(
     #[prop(into, optional)] scroll_hide_delay: Option<u32>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
-    children: TypedChildrenFn<impl IntoView + 'static>,
+    children: ChildrenFn,
 ) -> impl IntoView {
-    let children = StoredValue::new(children.into_inner());
+    let children = StoredValue::new(children);
 
     let r#type = r#type.unwrap_or_default();
     let scroll_hide_delay = scroll_hide_delay.unwrap_or(600);
@@ -476,9 +476,9 @@ pub fn ScrollAreaViewport(
     #[prop(into, optional)] nonce: Option<String>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
-    children: TypedChildrenFn<impl IntoView + 'static>,
+    children: ChildrenFn,
 ) -> impl IntoView {
-    let children = StoredValue::new(children.into_inner());
+    let children = StoredValue::new(children);
     let nonce = StoredValue::new(nonce);
 
     let context = expect_context::<ScrollAreaContextValue>();
@@ -548,9 +548,9 @@ pub fn ScrollAreaScrollbar(
     #[prop(into, optional)] class: MaybeProp<String>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
-    children: TypedChildrenFn<impl IntoView + 'static>,
+    children: ChildrenFn,
 ) -> impl IntoView {
-    let children = StoredValue::new(children.into_inner());
+    let children = StoredValue::new(children);
     let orientation = orientation.unwrap_or_default();
     let force_mount = force_mount.unwrap_or(false);
     let context = expect_context::<ScrollAreaContextValue>();
@@ -641,9 +641,9 @@ fn ScrollAreaScrollbarHover(
     #[prop(into)] force_mount: bool,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
-    children: TypedChildrenFn<impl IntoView + 'static>,
+    children: ChildrenFn,
 ) -> impl IntoView {
-    let children = StoredValue::new(children.into_inner());
+    let children = StoredValue::new(children);
     let context = expect_context::<ScrollAreaContextValue>();
     let visible = RwSignal::new(false);
 
@@ -740,9 +740,9 @@ fn ScrollAreaScrollbarScroll(
     #[prop(into)] force_mount: bool,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
-    children: TypedChildrenFn<impl IntoView + 'static>,
+    children: ChildrenFn,
 ) -> impl IntoView {
-    let children = StoredValue::new(children.into_inner());
+    let children = StoredValue::new(children);
     let context = expect_context::<ScrollAreaContextValue>();
     let is_horizontal = orientation == Orientation::Horizontal;
 
@@ -847,9 +847,9 @@ fn ScrollAreaScrollbarAuto(
     #[prop(into)] force_mount: bool,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
-    children: TypedChildrenFn<impl IntoView + 'static>,
+    children: ChildrenFn,
 ) -> impl IntoView {
-    let children = StoredValue::new(children.into_inner());
+    let children = StoredValue::new(children);
     let context = expect_context::<ScrollAreaContextValue>();
     let visible = RwSignal::new(false);
     let is_horizontal = orientation == Orientation::Horizontal;
@@ -904,9 +904,9 @@ fn ScrollAreaScrollbarVisible(
     #[prop(into, optional)] orientation: Option<Orientation>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
-    children: TypedChildrenFn<impl IntoView + 'static>,
+    children: ChildrenFn,
 ) -> impl IntoView {
-    let children = StoredValue::new(children.into_inner());
+    let children = StoredValue::new(children);
     let orientation = orientation.unwrap_or_default();
     let context = expect_context::<ScrollAreaContextValue>();
 
@@ -1063,9 +1063,9 @@ fn ScrollAreaScrollbarX(
     on_drag_scroll: Callback<f64>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
-    children: TypedChildrenFn<impl IntoView + 'static>,
+    children: ChildrenFn,
 ) -> impl IntoView {
-    let children = StoredValue::new(children.into_inner());
+    let children = StoredValue::new(children);
     let context = expect_context::<ScrollAreaContextValue>();
     let computed_style: RwSignal<Option<SendWrapper<web_sys::CssStyleDeclaration>>> =
         RwSignal::new(None);
@@ -1185,9 +1185,9 @@ fn ScrollAreaScrollbarY(
     on_drag_scroll: Callback<f64>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
-    children: TypedChildrenFn<impl IntoView + 'static>,
+    children: ChildrenFn,
 ) -> impl IntoView {
-    let children = StoredValue::new(children.into_inner());
+    let children = StoredValue::new(children);
     let context = expect_context::<ScrollAreaContextValue>();
     let computed_style: RwSignal<Option<SendWrapper<web_sys::CssStyleDeclaration>>> =
         RwSignal::new(None);
@@ -1313,9 +1313,9 @@ fn ScrollAreaScrollbarImpl(
     #[prop(into)] style: Signal<String>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
-    children: TypedChildrenFn<impl IntoView + 'static>,
+    children: ChildrenFn,
 ) -> impl IntoView {
-    let children = StoredValue::new(children.into_inner());
+    let children = StoredValue::new(children);
     let context = expect_context::<ScrollAreaContextValue>();
 
     // Read forwarded class from public ScrollAreaScrollbar component (StoredValue is Copy,
@@ -1495,9 +1495,9 @@ pub fn ScrollAreaThumb(
     #[prop(into, optional)] class: MaybeProp<String>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
-    children: TypedChildrenFn<impl IntoView + 'static>,
+    children: ChildrenFn,
 ) -> impl IntoView {
-    let children = StoredValue::new(children.into_inner());
+    let children = StoredValue::new(children);
     let force_mount = force_mount.unwrap_or(false);
     let scrollbar_context = expect_context::<ScrollbarContextValue>();
 
@@ -1526,9 +1526,9 @@ pub fn ScrollAreaThumb(
 fn ScrollAreaThumbImpl(
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
-    children: TypedChildrenFn<impl IntoView + 'static>,
+    children: ChildrenFn,
 ) -> impl IntoView {
-    let children = StoredValue::new(children.into_inner());
+    let children = StoredValue::new(children);
     let scroll_area_context = expect_context::<ScrollAreaContextValue>();
     let scrollbar_context = expect_context::<ScrollbarContextValue>();
     let on_thumb_position_change = scrollbar_context.on_thumb_position_change;
@@ -1698,9 +1698,9 @@ pub fn ScrollAreaCorner(
     #[prop(into, optional)] class: MaybeProp<String>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
-    children: TypedChildrenFn<impl IntoView + 'static>,
+    children: ChildrenFn,
 ) -> impl IntoView {
-    let children = StoredValue::new(children.into_inner());
+    let children = StoredValue::new(children);
     let context = expect_context::<ScrollAreaContextValue>();
 
     // Forward class via context to bypass Show boundary
@@ -1734,9 +1734,9 @@ pub fn ScrollAreaCorner(
 fn ScrollAreaCornerImpl(
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
-    children: TypedChildrenFn<impl IntoView + 'static>,
+    children: ChildrenFn,
 ) -> impl IntoView {
-    let children = StoredValue::new(children.into_inner());
+    let children = StoredValue::new(children);
     let context = expect_context::<ScrollAreaContextValue>();
 
     // Read forwarded class from public ScrollAreaCorner component (StoredValue is Copy,

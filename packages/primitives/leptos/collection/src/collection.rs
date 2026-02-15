@@ -42,9 +42,9 @@ pub fn CollectionProvider<ItemData: Clone + Send + Sync + 'static>(
     #[expect(unused_variables)]
     #[prop(into, optional)]
     item_data_type: Option<PhantomData<ItemData>>,
-    children: TypedChildrenFn<impl IntoView + 'static>,
+    children: ChildrenFn,
 ) -> impl IntoView {
-    let children = StoredValue::new(children.into_inner());
+    let children = StoredValue::new(children);
 
     let context_value = CollectionContextValue::<ItemData> {
         collection_ref: AnyNodeRef::new(),
@@ -64,9 +64,9 @@ pub fn CollectionSlot<ItemData: Clone + Send + Sync + 'static>(
     #[prop(into, optional)]
     item_data_type: Option<PhantomData<ItemData>>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
-    children: TypedChildrenFn<impl IntoView + 'static>,
+    children: ChildrenFn,
 ) -> impl IntoView {
-    let children = StoredValue::new(children.into_inner());
+    let children = StoredValue::new(children);
 
     let context = expect_context::<CollectionContextValue<ItemData>>();
     let composed_ref = use_composed_refs(vec![node_ref, context.collection_ref]);
@@ -83,9 +83,9 @@ pub fn CollectionItemSlot<ItemData: Clone + Debug + Send + Sync + 'static>(
     item_data_type: Option<PhantomData<ItemData>>,
     #[prop(into, optional)] item_data: MaybeProp<ItemData>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
-    children: TypedChildrenFn<impl IntoView + 'static>,
+    children: ChildrenFn,
 ) -> impl IntoView {
-    let children = StoredValue::new(children.into_inner());
+    let children = StoredValue::new(children);
 
     let id = StoredValue::new(CollectionItemId::new());
     let item_ref = AnyNodeRef::new();

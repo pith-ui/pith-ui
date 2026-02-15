@@ -7,9 +7,9 @@ pub fn AspectRatio(
     #[prop(into, optional, default = 1.0.into())] ratio: Signal<f64>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(optional)] node_ref: AnyNodeRef,
-    children: TypedChildrenFn<impl IntoView + 'static>,
+    children: ChildrenFn,
 ) -> impl IntoView {
-    let children = StoredValue::new(children.into_inner());
+    let children = StoredValue::new(children);
 
     view! {
         <AttributeInterceptor let:attrs>

@@ -91,11 +91,11 @@ pub fn RovingFocusGroup(
     #[prop(into, optional)] on_blur: Option<Callback<ev::FocusEvent>>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
-    children: TypedChildrenFn<impl IntoView + 'static>,
+    children: ChildrenFn,
 ) -> impl IntoView {
     let current_tab_stop_id = StoredValue::new(current_tab_stop_id);
     let default_current_tab_stop_id = StoredValue::new(default_current_tab_stop_id);
-    let children = StoredValue::new(children.into_inner());
+    let children = StoredValue::new(children);
 
     view! {
         <CollectionProvider item_data_type=ITEM_DATA_PHANTHOM>
@@ -137,9 +137,9 @@ fn RovingFocusGroupImpl(
     #[prop(into, optional)] on_blur: Option<Option<Callback<ev::FocusEvent>>>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
-    children: TypedChildrenFn<impl IntoView + 'static>,
+    children: ChildrenFn,
 ) -> impl IntoView {
-    let children = StoredValue::new(children.into_inner());
+    let children = StoredValue::new(children);
 
     let orientation = Signal::derive(move || orientation.get());
     let r#loop = Signal::derive(move || r#loop.get().unwrap_or(false));
@@ -294,9 +294,9 @@ pub fn RovingFocusGroupItem(
     #[prop(into, optional)] on_key_down: Option<Callback<ev::KeyboardEvent>>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
-    children: TypedChildrenFn<impl IntoView + 'static>,
+    children: ChildrenFn,
 ) -> impl IntoView {
-    let children = StoredValue::new(children.into_inner());
+    let children = StoredValue::new(children);
 
     let focusable = Signal::derive(move || focusable.get().unwrap_or(true));
     let active = Signal::derive(move || active.get().unwrap_or(false));

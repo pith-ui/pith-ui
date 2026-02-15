@@ -55,9 +55,9 @@ pub fn Tabs(
     activation_mode: MaybeProp<ActivationMode>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
-    children: TypedChildrenFn<impl IntoView + 'static>,
+    children: ChildrenFn,
 ) -> impl IntoView {
-    let children = StoredValue::new(children.into_inner());
+    let children = StoredValue::new(children);
 
     let direction = use_direction(dir);
     let orientation = Signal::derive(move || orientation.get().unwrap_or(Orientation::Horizontal));
@@ -115,9 +115,9 @@ pub fn TabsList(
     r#loop: MaybeProp<bool>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
-    children: TypedChildrenFn<impl IntoView + 'static>,
+    children: ChildrenFn,
 ) -> impl IntoView {
-    let children = StoredValue::new(children.into_inner());
+    let children = StoredValue::new(children);
 
     let context = expect_context::<TabsContextValue>();
 
@@ -157,9 +157,9 @@ pub fn TabsTrigger(
     #[prop(into, optional)] on_focus: Option<Callback<ev::FocusEvent>>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
-    children: TypedChildrenFn<impl IntoView + 'static>,
+    children: ChildrenFn,
 ) -> impl IntoView {
-    let children = StoredValue::new(children.into_inner());
+    let children = StoredValue::new(children);
 
     let context = expect_context::<TabsContextValue>();
     let trigger_value = StoredValue::new(value);
@@ -237,9 +237,9 @@ pub fn TabsContent(
     force_mount: MaybeProp<bool>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
-    #[prop(optional)] children: Option<TypedChildrenFn<impl IntoView + 'static>>,
+    #[prop(optional)] children: Option<ChildrenFn>,
 ) -> impl IntoView {
-    let children = StoredValue::new(children.map(|c| c.into_inner()));
+    let children = StoredValue::new(children);
 
     let context = expect_context::<TabsContextValue>();
     let content_value = StoredValue::new(value);

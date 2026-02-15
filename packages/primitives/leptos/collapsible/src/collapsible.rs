@@ -30,9 +30,9 @@ pub fn Collapsible(
     #[prop(into, optional)] on_open_change: Option<Callback<bool>>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
-    children: TypedChildrenFn<impl IntoView + 'static>,
+    children: ChildrenFn,
 ) -> impl IntoView {
-    let children = StoredValue::new(children.into_inner());
+    let children = StoredValue::new(children);
 
     let disabled = Signal::derive(move || disabled.get().unwrap_or(false));
 
@@ -86,9 +86,9 @@ pub fn CollapsibleTrigger(
     #[prop(into, optional)] on_click: Option<Callback<ev::MouseEvent>>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
-    children: TypedChildrenFn<impl IntoView + 'static>,
+    children: ChildrenFn,
 ) -> impl IntoView {
-    let children = StoredValue::new(children.into_inner());
+    let children = StoredValue::new(children);
 
     let context = expect_context::<CollapsibleContextValue>();
 
@@ -128,9 +128,9 @@ pub fn CollapsibleContent(
     #[prop(into, optional)] force_mount: MaybeProp<bool>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
-    #[prop(optional)] children: Option<TypedChildrenFn<impl IntoView + 'static>>,
+    #[prop(optional)] children: Option<ChildrenFn>,
 ) -> impl IntoView {
-    let children = StoredValue::new(children.map(|c| c.into_inner()));
+    let children = StoredValue::new(children);
 
     let context = expect_context::<CollapsibleContextValue>();
 

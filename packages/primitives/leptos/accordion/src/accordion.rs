@@ -96,9 +96,9 @@ pub fn Accordion(
     #[prop(into, optional)] orientation: MaybeProp<Orientation>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
-    children: TypedChildrenFn<impl IntoView + 'static>,
+    children: ChildrenFn,
 ) -> impl IntoView {
-    let children = StoredValue::new(children.into_inner());
+    let children = StoredValue::new(children);
 
     // Create context values based on type. Each is wrapped in a <Provider> to create
     // a child Owner, ensuring sibling Accordion instances get isolated context scopes.
@@ -261,9 +261,9 @@ fn AccordionImpl(
     #[prop(into, optional)] orientation: MaybeProp<Orientation>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
-    children: TypedChildrenFn<impl IntoView + 'static>,
+    children: ChildrenFn,
 ) -> impl IntoView {
-    let children = StoredValue::new(children.into_inner());
+    let children = StoredValue::new(children);
 
     let disabled = Signal::derive(move || disabled.get().unwrap_or(false));
     let orientation = Signal::derive(move || orientation.get().unwrap_or_default());
@@ -422,9 +422,9 @@ pub fn AccordionItem(
     #[prop(into, optional)] disabled: MaybeProp<bool>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
-    children: TypedChildrenFn<impl IntoView + 'static>,
+    children: ChildrenFn,
 ) -> impl IntoView {
-    let children = StoredValue::new(children.into_inner());
+    let children = StoredValue::new(children);
 
     let accordion_context = expect_context::<AccordionImplContextValue>();
     let value_context = expect_context::<AccordionValueContextValue>();
@@ -480,9 +480,9 @@ pub fn AccordionItem(
 pub fn AccordionHeader(
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
-    children: TypedChildrenFn<impl IntoView + 'static>,
+    children: ChildrenFn,
 ) -> impl IntoView {
-    let children = StoredValue::new(children.into_inner());
+    let children = StoredValue::new(children);
 
     let accordion_context = expect_context::<AccordionImplContextValue>();
     let item_context = expect_context::<AccordionItemContextValue>();
@@ -509,9 +509,9 @@ pub fn AccordionHeader(
 pub fn AccordionTrigger(
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
-    children: TypedChildrenFn<impl IntoView + 'static>,
+    children: ChildrenFn,
 ) -> impl IntoView {
-    let children = StoredValue::new(children.into_inner());
+    let children = StoredValue::new(children);
 
     let accordion_context = expect_context::<AccordionImplContextValue>();
     let item_context = expect_context::<AccordionItemContextValue>();
@@ -544,9 +544,9 @@ pub fn AccordionContent(
     #[prop(into, optional)] force_mount: MaybeProp<bool>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
-    #[prop(optional)] children: Option<TypedChildrenFn<impl IntoView + 'static>>,
+    #[prop(optional)] children: Option<ChildrenFn>,
 ) -> impl IntoView {
-    let children = StoredValue::new(children.map(|c| c.into_inner()));
+    let children = StoredValue::new(children);
 
     let accordion_context = expect_context::<AccordionImplContextValue>();
     let item_context = expect_context::<AccordionItemContextValue>();

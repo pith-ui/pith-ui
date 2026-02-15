@@ -4312,6 +4312,24 @@ dependencies = [
 ]
 
 [[package]]
+name = "radix-leptos-slider"
+version = "0.0.2"
+dependencies = [
+ "leptos",
+ "leptos-node-ref",
+ "radix-leptos-collection",
+ "radix-leptos-compose-refs",
+ "radix-leptos-direction",
+ "radix-leptos-primitive",
+ "radix-leptos-use-controllable-state",
+ "radix-leptos-use-previous",
+ "radix-leptos-use-size",
+ "radix-number",
+ "send_wrapper",
+ "web-sys",
+]
+
+[[package]]
 name = "radix-leptos-stories"
 version = "0.0.2"
 dependencies = [
@@ -4345,6 +4363,7 @@ dependencies = [
  "radix-leptos-roving-focus",
  "radix-leptos-scroll-area",
  "radix-leptos-separator",
+ "radix-leptos-slider",
  "radix-leptos-tabs",
  "radix-leptos-toggle",
  "radix-leptos-toggle-group",

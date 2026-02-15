@@ -423,9 +423,9 @@ pub fn DismissableLayer(
     #[prop(into, optional)] on_dismiss: Option<Callback<()>>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
-    children: TypedChildrenFn<impl IntoView + 'static>,
+    children: ChildrenFn,
 ) -> impl IntoView {
-    let children = StoredValue::new(children.into_inner());
+    let children = StoredValue::new(children);
 
     let disable_outside_pointer_events =
         Signal::derive(move || disable_outside_pointer_events.get().unwrap_or(false));
@@ -880,9 +880,9 @@ pub fn DismissableLayer(
 pub fn DismissableLayerBranch(
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
-    children: TypedChildrenFn<impl IntoView + 'static>,
+    children: ChildrenFn,
 ) -> impl IntoView {
-    let children = StoredValue::new(children.into_inner());
+    let children = StoredValue::new(children);
 
     let container_ref: AnyNodeRef = AnyNodeRef::new();
     let composed_refs = use_composed_refs(vec![node_ref, container_ref]);

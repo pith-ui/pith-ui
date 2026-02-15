@@ -42,6 +42,7 @@ members = [
     "packages/primitives/leptos/roving-focus",
     "packages/primitives/leptos/scroll-area",
     "packages/primitives/leptos/separator",
+    "packages/primitives/leptos/slider",
     "packages/primitives/leptos/tabs",
     "packages/primitives/leptos/toggle",
     "packages/primitives/leptos/toggle-group",
@@ -107,6 +108,7 @@ radix-leptos-radio-group = { path = "./packages/primitives/leptos/radio-group", 
 radix-leptos-scroll-area = { path = "./packages/primitives/leptos/scroll-area", version = "0.0.2" }
 radix-leptos-roving-focus = { path = "./packages/primitives/leptos/roving-focus", version = "0.0.2" }
 radix-leptos-separator = { path = "./packages/primitives/leptos/separator", version = "0.0.2" }
+radix-leptos-slider = { path = "./packages/primitives/leptos/slider", version = "0.0.2" }
 radix-leptos-tabs = { path = "./packages/primitives/leptos/tabs", version = "0.0.2" }
 radix-leptos-toggle = { path = "./packages/primitives/leptos/toggle", version = "0.0.2" }
 radix-leptos-toggle-group = { path = "./packages/primitives/leptos/toggle-group", version = "0.0.2" }

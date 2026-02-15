@@ -37,9 +37,9 @@ pub fn Dialog(
     #[prop(into, optional)] default_open: MaybeProp<bool>,
     #[prop(into, optional)] on_open_change: Option<Callback<bool>>,
     #[prop(into, optional)] modal: MaybeProp<bool>,
-    children: TypedChildrenFn<impl IntoView + 'static>,
+    children: ChildrenFn,
 ) -> impl IntoView {
-    let children = StoredValue::new(children.into_inner());
+    let children = StoredValue::new(children);
 
     let trigger_ref = AnyNodeRef::new();
     let content_ref = AnyNodeRef::new();
@@ -94,9 +94,9 @@ pub fn DialogTrigger(
     #[prop(into, optional)] on_click: Option<Callback<ev::MouseEvent>>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
-    children: TypedChildrenFn<impl IntoView + 'static>,
+    children: ChildrenFn,
 ) -> impl IntoView {
-    let children = StoredValue::new(children.into_inner());
+    let children = StoredValue::new(children);
 
     let context = expect_context::<DialogContextValue>();
 
@@ -142,9 +142,9 @@ pub fn DialogPortal(
     #[prop(into, optional)] container: MaybeProp<SendWrapper<web_sys::Element>>,
     #[prop(optional)] container_ref: AnyNodeRef,
     #[prop(into, optional)] force_mount: MaybeProp<bool>,
-    children: TypedChildrenFn<impl IntoView + 'static>,
+    children: ChildrenFn,
 ) -> impl IntoView {
-    let children = StoredValue::new(children.into_inner());
+    let children = StoredValue::new(children);
 
     let force_mount_signal = Signal::derive(move || force_mount.get().unwrap_or(false));
 
@@ -670,9 +670,9 @@ fn DialogContentImpl(
 pub fn DialogTitle(
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
-    children: TypedChildrenFn<impl IntoView + 'static>,
+    children: ChildrenFn,
 ) -> impl IntoView {
-    let children = StoredValue::new(children.into_inner());
+    let children = StoredValue::new(children);
 
     let context = expect_context::<DialogContextValue>();
 
@@ -699,9 +699,9 @@ pub fn DialogTitle(
 pub fn DialogDescription(
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
-    children: TypedChildrenFn<impl IntoView + 'static>,
+    children: ChildrenFn,
 ) -> impl IntoView {
-    let children = StoredValue::new(children.into_inner());
+    let children = StoredValue::new(children);
 
     let context = expect_context::<DialogContextValue>();
 
@@ -729,9 +729,9 @@ pub fn DialogClose(
     #[prop(into, optional)] on_click: Option<Callback<ev::MouseEvent>>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
-    children: TypedChildrenFn<impl IntoView + 'static>,
+    children: ChildrenFn,
 ) -> impl IntoView {
-    let children = StoredValue::new(children.into_inner());
+    let children = StoredValue::new(children);
 
     let context = expect_context::<DialogContextValue>();
 

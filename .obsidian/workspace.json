@@ -11,10 +11,24 @@
             "id": "8c5a22cb96fe50b9",
             "type": "leaf",
             "state": {
-              "type": "graph",
-              "state": {},
-              "icon": "lucide-git-fork",
-              "title": "Graph view"
+              "type": "markdown",
+              "state": {
+                "file": "notes/leptos-slider.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
+              },
+              "icon": "lucide-file",
+              "title": "leptos-slider"
             }
           }
         ]
@@ -179,17 +193,18 @@
   },
   "active": "8c5a22cb96fe50b9",
   "lastOpenFiles": [
-    "notes/leptos-radio-group.md",
     "stories/leptos/dist/purple-9b476b30d5443309.css",
-    "stories/leptos/dist/radix-leptos-stories-b8c8ddfd701ba8a0_bg.wasm",
     "stories/leptos/dist/red-74d32e64207a038a.css",
     "stories/leptos/dist/tailwind.output-2aa416d16be59142.css",
+    "stories/leptos/dist/radix-leptos-stories-aa1425b26feb5de8.js",
     "stories/leptos/dist/green-fbaf4d9bde970701.css",
+    "stories/leptos/dist/radix-leptos-stories-aa1425b26feb5de8_bg.wasm",
     "stories/leptos/dist/favicon-e197903841a5b23b.ico",
-    "stories/leptos/dist/bundle-b56df888a9775683.css",
+    "stories/leptos/dist/bundle-7b3b253ed16505da.css",
     "stories/leptos/dist/blue-alpha-9c4e3c532cbba84.css",
     "stories/leptos/dist/blue-420df321e365d4ba.css",
-    "stories/leptos/dist/index.html",
+    "stories/leptos/dist/preview-d2b050845593ed18.css",
+    "notes/leptos-radio-group.md",
     "notes/leptos-one-time-password-field.md",
     "notes/leptos-alert-dialog.md",
     "notes/leptos-password-toggle-field.md",

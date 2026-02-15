@@ -31,9 +31,9 @@ enum MachineEvent {
 pub fn Presence(
     #[prop(into)] present: Signal<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
-    children: TypedChildrenFn<impl IntoView + 'static>,
+    children: ChildrenFn,
 ) -> impl IntoView {
-    let children = StoredValue::new(children.into_inner());
+    let children = StoredValue::new(children);
 
     let is_present = use_presence(present, node_ref);
 

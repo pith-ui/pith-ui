@@ -44,6 +44,7 @@ radix-leptos-direction.workspace = true
 radix-leptos-roving-focus.workspace = true
 radix-leptos-scroll-area.workspace = true
 radix-leptos-separator.workspace = true
+radix-leptos-slider.workspace = true
 # radix-leptos-switch.workspace = true
 radix-leptos-tabs.workspace = true
 radix-leptos-toggle.workspace = true
