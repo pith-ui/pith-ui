@@ -19,6 +19,7 @@ pub mod popper;
 pub mod portal;
 pub mod presence;
 pub mod progress;
+pub mod radio_group;
 pub mod roving_focus;
 pub mod scroll_area;
 pub mod separator;

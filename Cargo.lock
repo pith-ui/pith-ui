@@ -4254,6 +4254,24 @@ dependencies = [
 ]
 
 [[package]]
+name = "radix-leptos-radio-group"
+version = "0.0.2"
+dependencies = [
+ "leptos",
+ "leptos-node-ref",
+ "radix-leptos-compose-refs",
+ "radix-leptos-direction",
+ "radix-leptos-presence",
+ "radix-leptos-primitive",
+ "radix-leptos-roving-focus",
+ "radix-leptos-use-controllable-state",
+ "radix-leptos-use-previous",
+ "radix-leptos-use-size",
+ "send_wrapper",
+ "web-sys",
+]
+
+[[package]]
 name = "radix-leptos-roving-focus"
 version = "0.0.2"
 dependencies = [
@@ -4323,6 +4341,7 @@ dependencies = [
  "radix-leptos-portal",
  "radix-leptos-presence",
  "radix-leptos-progress",
+ "radix-leptos-radio-group",
  "radix-leptos-roving-focus",
  "radix-leptos-scroll-area",
  "radix-leptos-separator",
@@ -4411,6 +4430,17 @@ name = "radix-leptos-use-previous"
 version = "0.0.2"
 dependencies = [
  "leptos",
+]
+
+[[package]]
+name = "radix-leptos-use-rect"
+version = "0.0.2"
+dependencies = [
+ "leptos",
+ "leptos-node-ref",
+ "radix-rect",
+ "send_wrapper",
+ "web-sys",
 ]
 
 [[package]]

@@ -74,7 +74,10 @@ thread_local! {
 /// that might be in different layers, etc.
 ///
 /// Returns a cleanup function that stops observing when called.
-pub fn observe_element_rect(element: &Element, callback: impl Fn(Rect) + 'static) -> impl FnOnce() {
+pub fn observe_element_rect<F: Fn(Rect) + 'static>(
+    element: &Element,
+    callback: F,
+) -> impl FnOnce() + use<F> {
     let callback: Rc<dyn Fn(Rect)> = Rc::new(callback);
     let element = element.clone();
 

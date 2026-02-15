@@ -7,8 +7,8 @@ use leptos_router::{
 use crate::primitives::{
     accessible_icon, accordion, alert_dialog, arrow, aspect_ratio, collapsible, collection, dialog,
     dismissable_layer, focus_scope, form, label, one_time_password_field, popper, portal, presence,
-    progress, roving_focus, scroll_area, separator, tabs, toggle, toggle_group, toolbar,
-    visually_hidden,
+    progress, radio_group, roving_focus, scroll_area, separator, tabs, toggle, toggle_group,
+    toolbar, visually_hidden,
 };
 
 #[component]
@@ -252,6 +252,18 @@ pub fn App() -> impl IntoView {
                         </ul>
                     </li>
                     <li>
+                        Radio Group
+
+                        <ul class="list-none m-0 ms-4 p-0">
+                            <li><NavLink href="/radio-group/styled">Styled</NavLink></li>
+                            <li><NavLink href="/radio-group/controlled">Controlled</NavLink></li>
+                            <li><NavLink href="/radio-group/unset">Unset</NavLink></li>
+                            <li><NavLink href="/radio-group/within-form">Within Form</NavLink></li>
+                            <li><NavLink href="/radio-group/animated">Animated</NavLink></li>
+                            <li><NavLink href="/radio-group/chromatic">Chromatic</NavLink></li>
+                        </ul>
+                    </li>
+                    <li>
                         Roving Focus
 
                         <ul class="list-none m-0 ms-4 p-0">
@@ -458,6 +470,13 @@ pub fn App() -> impl IntoView {
 
                     <Route path=path!("/progress/styled") view=progress::Styled />
                     <Route path=path!("/progress/chromatic") view=progress::Chromatic />
+
+                    <Route path=path!("/radio-group/styled") view=radio_group::LegacyStyled />
+                    <Route path=path!("/radio-group/controlled") view=radio_group::LegacyControlled />
+                    <Route path=path!("/radio-group/unset") view=radio_group::LegacyUnset />
+                    <Route path=path!("/radio-group/within-form") view=radio_group::LegacyWithinForm />
+                    <Route path=path!("/radio-group/animated") view=radio_group::LegacyAnimated />
+                    <Route path=path!("/radio-group/chromatic") view=radio_group::LegacyChromatic />
 
                     <Route path=path!("/roving-focus/basic") view=roving_focus::Basic />
                     <Route path=path!("/roving-focus/nested") view=roving_focus::Nested />

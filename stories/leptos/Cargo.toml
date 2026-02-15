@@ -39,6 +39,7 @@ radix-leptos-popper.workspace = true
 radix-leptos-portal.workspace = true
 radix-leptos-presence.workspace = true
 radix-leptos-progress.workspace = true
+radix-leptos-radio-group.workspace = true
 radix-leptos-direction.workspace = true
 radix-leptos-roving-focus.workspace = true
 radix-leptos-scroll-area.workspace = true

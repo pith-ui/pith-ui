@@ -11,24 +11,10 @@
             "id": "8c5a22cb96fe50b9",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "notes/leptos-one-time-password-field.md",
-                "mode": "source",
-                "source": false,
-                "backlinks": true,
-                "backlinkOpts": {
-                  "collapseAll": false,
-                  "extraContext": false,
-                  "sortOrder": "alphabetical",
-                  "showSearch": false,
-                  "searchQuery": "",
-                  "backlinkCollapsed": false,
-                  "unlinkedCollapsed": true
-                }
-              },
-              "icon": "lucide-file",
-              "title": "leptos-one-time-password-field"
+              "type": "graph",
+              "state": {},
+              "icon": "lucide-git-fork",
+              "title": "Graph view"
             }
           }
         ]
@@ -193,17 +179,18 @@
   },
   "active": "8c5a22cb96fe50b9",
   "lastOpenFiles": [
+    "notes/leptos-radio-group.md",
     "stories/leptos/dist/purple-9b476b30d5443309.css",
+    "stories/leptos/dist/radix-leptos-stories-b8c8ddfd701ba8a0_bg.wasm",
     "stories/leptos/dist/red-74d32e64207a038a.css",
     "stories/leptos/dist/tailwind.output-2aa416d16be59142.css",
     "stories/leptos/dist/green-fbaf4d9bde970701.css",
-    "stories/leptos/dist/radix-leptos-stories-a715dc690567c104_bg.wasm",
     "stories/leptos/dist/favicon-e197903841a5b23b.ico",
-    "stories/leptos/dist/bundle-91dcfdb6ec96c6a1.css",
+    "stories/leptos/dist/bundle-b56df888a9775683.css",
     "stories/leptos/dist/blue-alpha-9c4e3c532cbba84.css",
     "stories/leptos/dist/blue-420df321e365d4ba.css",
     "stories/leptos/dist/index.html",
-    "stories/leptos/dist/radix-leptos-stories-a715dc690567c104.js",
+    "notes/leptos-one-time-password-field.md",
     "notes/leptos-alert-dialog.md",
     "notes/leptos-password-toggle-field.md",
     "notes/leptos-dialog.md",
@@ -213,8 +200,6 @@
     "notes/leptos-focus-guards.md",
     "notes/leptos-context.md",
     "notes/leptos-context-menu.md",
-    "notes/leptos-one-time-password-field.md",
-    "notes/leptos-radio-group.md",
     "notes/leptos-popper.md",
     "notes/leptos-toast.md",
     "notes/leptos-toggle-group.md",
