@@ -187,6 +187,24 @@ Components that use `DismissableLayer` (dialogs, popovers, dropdowns, etc.) must
 
 This behavior is implemented in `DismissableLayer`'s escape handler via `is_text_input()`. When porting new components that compose `DismissableLayer`, verify this works correctly with the component's stories — especially stories that contain form inputs. If a component manages its own escape handling outside of `DismissableLayer`, it must implement the same pattern.
 
+## Known Dependency Issues
+
+### floating-ui-leptos / floating-ui-core v0.6.0
+
+The Rust port of floating-ui has bugs that diverge from the JavaScript original. When debugging positioning issues, **compare the Rust source in `~/.cargo/registry/src/` against the JS source on GitHub** (`https://github.com/floating-ui/floating-ui`) line-by-line before assuming the library works correctly.
+
+Known bugs and workarounds:
+
+1. **LimitShift cross_axis uses wrong dimension** — In `floating-ui-core`'s `LimitShift` limiter (`shift.rs`), the `check_cross_axis` block uses `main_axis.length()` instead of `cross_axis.length()`. This causes incorrect clamping — e.g., for `Side::Right`, it constrains the X coordinate using height values instead of width values. **Workaround:** When configuring `LimitShift`, always pass `.cross_axis(false)` since `Shift` itself uses `cross_axis: false`, making `LimitShift`'s cross-axis check unnecessary.
+
+### Debugging strategy for third-party Rust WASM crate issues
+
+When a component's visual output is wrong and the cause is unclear:
+
+1. **Check the rough-draft reference first** (`reference/leptos-radix-rough-draft/`) to see how a working Leptos implementation solved the same problem. This narrows whether the issue is in our code or in a dependency.
+2. **Read the upstream Rust crate source** in `~/.cargo/registry/src/` and diff it against the original JS. The Rust ports of JS libraries may have subtle translation bugs.
+3. **Avoid prolonged printf-debugging in the browser.** If adding log statements to middleware pipelines doesn't yield a clear answer within a couple of iterations, pivot to source-level comparison of the Rust port vs. the JS original.
+
 ## Conventions
 
 - Conventional commit messages: `fix:`, `feat:`, `chore:`, `docs:`

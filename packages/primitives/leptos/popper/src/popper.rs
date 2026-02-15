@@ -155,6 +155,7 @@ pub fn PopperContent(
         placement,
         is_positioned,
         middleware_data,
+        update: update_floating_position,
         ..
     } = use_floating(
         context.anchor_ref,
@@ -187,8 +188,15 @@ pub fn PopperContent(
                         .cross_axis(false);
 
                     if sticky.get() == Sticky::Partial {
-                        shift_options = shift_options
-                            .limiter(Box::new(LimitShift::new(LimitShiftOptions::default())));
+                        // Workaround: floating-ui-core's LimitShift has a bug where the
+                        // cross_axis check uses `main_axis.length()` instead of
+                        // `cross_axis.length()`, causing incorrect clamping (e.g., using
+                        // height values to constrain x coordinates for Side::Right).
+                        // Since Shift itself has cross_axis disabled, we disable LimitShift's
+                        // cross_axis check to avoid the buggy code path.
+                        shift_options = shift_options.limiter(Box::new(LimitShift::new(
+                            LimitShiftOptions::default().cross_axis(false),
+                        )));
                     }
 
                     middleware.push(Box::new(Shift::new(shift_options)));
@@ -242,9 +250,13 @@ pub fn PopperContent(
                         }),
                 )));
 
-                middleware.push(Box::new(Arrow::new(
-                    ArrowOptions::new(arrow_ref).padding(Padding::All(arrow_padding.get())),
-                )));
+                // Only add arrow middleware when arrow element exists,
+                // matching React's `arrow && floatingUIarrow(...)` pattern.
+                if arrow_ref.get().is_some() {
+                    middleware.push(Box::new(Arrow::new(
+                        ArrowOptions::new(arrow_ref).padding(Padding::All(arrow_padding.get())),
+                    )));
+                }
 
                 middleware.push(Box::new(TransformOrigin::new(TransformOriginOptions {
                     arrow_width: arrow_width(),
@@ -262,6 +274,18 @@ pub fn PopperContent(
                 Some(SendWrapper::new(middleware))
             })),
     );
+
+    // Force position recomputation when arrow size changes.
+    // floating-ui-leptos's Effect::watch on middleware uses `immediate: false`,
+    // so it misses the initial arrow_size change if use_size's Effect runs first.
+    Effect::new({
+        let update_floating_position = update_floating_position.clone();
+
+        move |_| {
+            let _size = arrow_size.get();
+            update_floating_position();
+        }
+    });
 
     let placed_side = Signal::derive(move || placement.get().side());
     let placed_align = move || Align::from(placement.get().alignment());

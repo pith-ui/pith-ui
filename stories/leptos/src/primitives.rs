@@ -30,6 +30,5 @@ pub mod slider;
 pub mod tabs;
 pub mod toggle;
 pub mod toggle_group;
-#[allow(dead_code)]
 pub mod toolbar;
 pub mod visually_hidden;

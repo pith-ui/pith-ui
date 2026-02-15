@@ -4,27 +4,42 @@ use leptos::prelude::*;
 use radix_leptos_popper::*;
 use radix_leptos_portal::Portal;
 use send_wrapper::SendWrapper;
-use tailwind_fuse::*;
+
+stylance::import_crate_style!(classes, "src/primitives/popper.stories.module.css");
+
+fn anchor_class(size: &str) -> String {
+    let size_class = match size {
+        "small" => classes::anchorSmall,
+        "large" => classes::anchorLarge,
+        _ => "",
+    };
+    format!("{} {}", classes::anchor, size_class)
+}
+
+fn content_class(size: &str) -> String {
+    let size_class = match size {
+        "small" => classes::contentSmall,
+        "large" => classes::contentLarge,
+        _ => "",
+    };
+    format!("{} {}", classes::content, size_class)
+}
 
 #[component]
 pub fn Styled() -> impl IntoView {
-    let anchor_class = Memo::new(move |_| AnchorClass::default().to_class());
-    let content_class = Memo::new(move |_| ContentClass::default().to_class());
-    let arrow_class = Memo::new(move |_| ArrowClass::default().to_class());
-
     let (open, set_open) = signal(false);
 
     view! {
         <Scrollable>
             <Popper>
-                <PopperAnchor attr:class=anchor_class on:click=move |_| set_open.set(true)>
+                <PopperAnchor attr:class=classes::anchor on:click=move |_| set_open.set(true)>
                     open
                 </PopperAnchor>
 
                 <Show when=move || open.get()>
-                    <PopperContent attr:class=content_class side_offset=5.0>
+                    <PopperContent attr:class=classes::content side_offset=5.0>
                         <button on:click=move |_| set_open.set(false)>close</button>
-                        <PopperArrow attr:class=arrow_class width=20.0 height=10.0 />
+                        <PopperArrow attr:class=classes::arrow width=20.0 height=10.0 />
                     </PopperContent>
                 </Show>
             </Popper>
@@ -34,20 +49,17 @@ pub fn Styled() -> impl IntoView {
 
 #[component]
 pub fn WithCustomArrow() -> impl IntoView {
-    let anchor_class = Memo::new(move |_| AnchorClass::default().to_class());
-    let content_class = Memo::new(move |_| ContentClass::default().to_class());
-
     let (open, set_open) = signal(false);
 
     view! {
         <Scrollable>
             <Popper>
-                <PopperAnchor attr:class=anchor_class on:click=move |_| set_open.set(true)>
+                <PopperAnchor attr:class=classes::anchor on:click=move |_| set_open.set(true)>
                     open
                 </PopperAnchor>
 
                 <Show when=move || open.get()>
-                    <PopperContent attr:class=content_class side=Side::Right side_offset=5.0>
+                    <PopperContent attr:class=classes::content side=Side::Right side_offset=5.0>
                         <button on:click=move |_| set_open.set(false)>close</button>
                         <PopperArrow as_child=true>
                             <CustomArrow />
@@ -61,24 +73,24 @@ pub fn WithCustomArrow() -> impl IntoView {
 
 #[component]
 pub fn Animated() -> impl IntoView {
-    let anchor_class = Memo::new(move |_| AnchorClass::default().to_class());
-    let animated_content_class = Memo::new(move |_| AnimatedContentClass::default().to_class());
-    let arrow_class = Memo::new(move |_| ArrowClass::default().to_class());
-
     let (open, set_open) = signal(false);
+    let animated_content_class =
+        Memo::new(move |_| format!("{} {}", classes::content, classes::animatedContent));
 
     view! {
         <Scrollable>
             <Popper>
-                <PopperAnchor attr:class=anchor_class on:click=move |_| set_open.set(true)>
+                <PopperAnchor attr:class=classes::anchor on:click=move |_| set_open.set(true)>
                     open
                 </PopperAnchor>
 
                 <Show when=move || open.get()>
-                    <PopperContent attr:class=animated_content_class side_offset=5.0>
-                        <button on:click=move |_| set_open.set(false)>close</button>
-                        <PopperArrow attr:class=arrow_class width=20.0 height=10.0 />
-                    </PopperContent>
+                    <Portal as_child=true>
+                        <PopperContent attr:class=animated_content_class side_offset=5.0>
+                            <button on:click=move |_| set_open.set(false)>close</button>
+                            <PopperArrow attr:class=classes::arrow width=20.0 height=10.0 />
+                        </PopperContent>
+                    </Portal>
                 </Show>
             </Popper>
         </Scrollable>
@@ -87,24 +99,20 @@ pub fn Animated() -> impl IntoView {
 
 #[component]
 pub fn WithPortal() -> impl IntoView {
-    let anchor_class = Memo::new(move |_| AnchorClass::default().to_class());
-    let content_class = Memo::new(move |_| ContentClass::default().to_class());
-    let arrow_class = Memo::new(move |_| ArrowClass::default().to_class());
-
     let (open, set_open) = signal(false);
 
     view! {
         <Scrollable>
             <Popper>
-                <PopperAnchor attr:class=anchor_class on:click=move |_| set_open.set(true)>
+                <PopperAnchor attr:class=classes::anchor on:click=move |_| set_open.set(true)>
                     open
                 </PopperAnchor>
 
                 <Show when=move || open.get()>
                     <Portal as_child=true>
-                        <PopperContent attr:class=content_class side_offset=5.0>
+                        <PopperContent attr:class=classes::content side_offset=5.0>
                             <button on:click=move |_| set_open.set(false)>close</button>
-                            <PopperArrow attr:class=arrow_class width=20.0 height=10.0 />
+                            <PopperArrow attr:class=classes::arrow width=20.0 height=10.0 />
                         </PopperContent>
                     </Portal>
                 </Show>
@@ -115,10 +123,6 @@ pub fn WithPortal() -> impl IntoView {
 
 #[component]
 pub fn WithUpdatePositionStrategyAlways() -> impl IntoView {
-    let anchor_class = Memo::new(move |_| AnchorClass::default().to_class());
-    let content_class = Memo::new(move |_| ContentClass::default().to_class());
-    let arrow_class = Memo::new(move |_| ArrowClass::default().to_class());
-
     let (open, set_open) = signal(false);
     let (left, set_left) = signal(0);
 
@@ -139,15 +143,23 @@ pub fn WithUpdatePositionStrategyAlways() -> impl IntoView {
     view! {
         <Scrollable>
             <Popper>
-                <PopperAnchor attr:class=anchor_class on:click=move |_| set_open.set(true) attr:style=move || format!("margin-left: {}px;", left.get())>
+                <PopperAnchor
+                    attr:class=classes::anchor
+                    on:click=move |_| set_open.set(true)
+                    attr:style=move || format!("margin-left: {}px;", left.get())
+                >
                     open
                 </PopperAnchor>
 
                 <Show when=move || open.get()>
                     <Portal as_child=true>
-                        <PopperContent attr:class=content_class side_offset=5.0 update_position_strategy=UpdatePositionStrategy::Always>
+                        <PopperContent
+                            attr:class=classes::content
+                            side_offset=5.0
+                            update_position_strategy=UpdatePositionStrategy::Always
+                        >
                             <button on:click=move |_| set_open.set(false)>close</button>
-                            <PopperArrow attr:class=arrow_class width=20.0 height=10.0 />
+                            <PopperArrow attr:class=classes::arrow width=20.0 height=10.0 />
                         </PopperContent>
                     </Portal>
                 </Show>
@@ -158,11 +170,8 @@ pub fn WithUpdatePositionStrategyAlways() -> impl IntoView {
 
 #[component]
 pub fn Chromatic() -> impl IntoView {
-    let anchor_class =
-        Memo::new(move |_| AnchorClass::builder().size(AnchorSize::Small).to_class());
-    let content_class =
-        Memo::new(move |_| ContentClass::builder().size(ContentSize::Small).to_class());
-    let arrow_class = Memo::new(move |_| ArrowClass::default().to_class());
+    let small_anchor = Memo::new(move |_| anchor_class("small"));
+    let small_content = Memo::new(move |_| content_class("small"));
 
     let scroll_container1_ref = NodeRef::new();
     let scroll_container1: Signal<SendWrapper<Vec<web_sys::Element>>> = Signal::derive(move || {
@@ -205,17 +214,17 @@ pub fn Chromatic() -> impl IntoView {
             >
                 <h1>In fixed header</h1>
                 <Popper>
-                    <PopperAnchor attr:class=anchor_class>1</PopperAnchor>
-                    <PopperContent attr:class=content_class side_offset=5.0>
-                        <PopperArrow attr:class=arrow_class width=10.0 height=5.0 />1
+                    <PopperAnchor attr:class=small_anchor>1</PopperAnchor>
+                    <PopperContent attr:class=small_content side_offset=5.0>
+                        <PopperArrow attr:class=classes::arrow width=10.0 height=5.0 />1
                     </PopperContent>
                 </Popper>
 
                 <Popper>
-                    <PopperAnchor attr:class=anchor_class>2</PopperAnchor>
+                    <PopperAnchor attr:class=small_anchor>2</PopperAnchor>
                     <Portal as_child=true>
-                        <PopperContent attr:class=content_class side_offset=5.0>
-                            <PopperArrow attr:class=arrow_class width=10.0 height=5.0 />2 (portalled)
+                        <PopperContent attr:class=small_content side_offset=5.0>
+                            <PopperArrow attr:class=classes::arrow width=10.0 height=5.0 />2 (portalled)
                         </PopperContent>
                     </Portal>
                 </Popper>
@@ -231,17 +240,17 @@ pub fn Chromatic() -> impl IntoView {
             >
                 <h1>In normal page flow</h1>
                 <Popper>
-                    <PopperAnchor attr:class=anchor_class>3</PopperAnchor>
-                    <PopperContent attr:class=content_class side_offset=5.0>
-                        <PopperArrow attr:class=arrow_class width=10.0 height=5.0 />3
+                    <PopperAnchor attr:class=small_anchor>3</PopperAnchor>
+                    <PopperContent attr:class=small_content side_offset=5.0>
+                        <PopperArrow attr:class=classes::arrow width=10.0 height=5.0 />3
                     </PopperContent>
                 </Popper>
 
                 <Popper>
-                    <PopperAnchor attr:class=anchor_class>4</PopperAnchor>
+                    <PopperAnchor attr:class=small_anchor>4</PopperAnchor>
                     <Portal as_child=true>
-                        <PopperContent attr:class=content_class side_offset=5.0>
-                            <PopperArrow attr:class=arrow_class width=10.0 height=5.0 />4 (portalled)
+                        <PopperContent attr:class=small_content side_offset=5.0>
+                            <PopperArrow attr:class=classes::arrow width=10.0 height=5.0 />4 (portalled)
                         </PopperContent>
                     </Portal>
                 </Popper>
@@ -258,17 +267,17 @@ pub fn Chromatic() -> impl IntoView {
             >
                 <h1>In relative parent</h1>
                 <Popper>
-                    <PopperAnchor attr:class=anchor_class>5</PopperAnchor>
-                    <PopperContent attr:class=content_class side_offset=5.0>
-                        <PopperArrow attr:class=arrow_class width=10.0 height=5.0 />5
+                    <PopperAnchor attr:class=small_anchor>5</PopperAnchor>
+                    <PopperContent attr:class=small_content side_offset=5.0>
+                        <PopperArrow attr:class=classes::arrow width=10.0 height=5.0 />5
                     </PopperContent>
                 </Popper>
 
                 <Popper>
-                    <PopperAnchor attr:class=anchor_class>6</PopperAnchor>
+                    <PopperAnchor attr:class=small_anchor>6</PopperAnchor>
                     <Portal as_child=true>
-                        <PopperContent attr:class=content_class side_offset=5.0>
-                            <PopperArrow attr:class=arrow_class width=10.0 height=5.0 />6 (portalled)
+                        <PopperContent attr:class=small_content side_offset=5.0>
+                            <PopperArrow attr:class=classes::arrow width=10.0 height=5.0 />6 (portalled)
                         </PopperContent>
                     </Portal>
                 </Popper>
@@ -285,17 +294,17 @@ pub fn Chromatic() -> impl IntoView {
             >
                 <h1>In translated parent</h1>
                 <Popper>
-                    <PopperAnchor attr:class=anchor_class>7</PopperAnchor>
-                    <PopperContent attr:class=content_class side_offset=5.0>
-                        <PopperArrow attr:class=arrow_class width=10.0 height=5.0 />7
+                    <PopperAnchor attr:class=small_anchor>7</PopperAnchor>
+                    <PopperContent attr:class=small_content side_offset=5.0>
+                        <PopperArrow attr:class=classes::arrow width=10.0 height=5.0 />7
                     </PopperContent>
                 </Popper>
 
                 <Popper>
-                    <PopperAnchor attr:class=anchor_class>8</PopperAnchor>
+                    <PopperAnchor attr:class=small_anchor>8</PopperAnchor>
                     <Portal as_child=true>
-                        <PopperContent attr:class=content_class side_offset=5.0>
-                            <PopperArrow attr:class=arrow_class width=10.0 height=5.0 />8 (portalled)
+                        <PopperContent attr:class=small_content side_offset=5.0>
+                            <PopperArrow attr:class=classes::arrow width=10.0 height=5.0 />8 (portalled)
                         </PopperContent>
                     </Portal>
                 </Popper>
@@ -324,28 +333,28 @@ pub fn Chromatic() -> impl IntoView {
                                         style:padding-bottom="100px"
                                     >
                                         <Popper>
-                                            <PopperAnchor attr:class=anchor_class>9.{i + 1}</PopperAnchor>
+                                            <PopperAnchor attr:class=small_anchor>9.{i + 1}</PopperAnchor>
                                             <PopperContent
-                                                attr:class=content_class
+                                                attr:class=small_content
                                                 side_offset=5.0
                                                 hide_when_detached=true
                                                 collision_boundary=scroll_container1
                                             >
-                                                <PopperArrow attr:class=arrow_class width=10.0 height=5.0 />
+                                                <PopperArrow attr:class=classes::arrow width=10.0 height=5.0 />
                                                 9.{i + 1}
                                             </PopperContent>
                                         </Popper>
 
                                         <Popper>
-                                            <PopperAnchor attr:class=anchor_class>10.{i + 1}</PopperAnchor>
+                                            <PopperAnchor attr:class=small_anchor>10.{i + 1}</PopperAnchor>
                                             <Portal as_child=true>
                                                 <PopperContent
-                                                    attr:class=content_class
+                                                    attr:class=small_content
                                                     side_offset=5.0
                                                     hide_when_detached=true
                                                     collision_boundary=scroll_container1
                                                 >
-                                                    <PopperArrow attr:class=arrow_class width=10.0 height=5.0 />
+                                                    <PopperArrow attr:class=classes::arrow width=10.0 height=5.0 />
                                                     10.{i + 1}
                                                 </PopperContent>
                                             </Portal>
@@ -381,28 +390,28 @@ pub fn Chromatic() -> impl IntoView {
                                         style:top="0px"
                                     >
                                         <Popper>
-                                            <PopperAnchor attr:class=anchor_class>9.{i + 1}</PopperAnchor>
+                                            <PopperAnchor attr:class=small_anchor>9.{i + 1}</PopperAnchor>
                                             <PopperContent
-                                                attr:class=content_class
+                                                attr:class=small_content
                                                 side_offset=5.0
                                                 hide_when_detached=true
                                                 collision_boundary=scroll_container2
                                             >
-                                                <PopperArrow attr:class=arrow_class width=10.0 height=5.0 />
+                                                <PopperArrow attr:class=classes::arrow width=10.0 height=5.0 />
                                                 9.{i + 1}
                                             </PopperContent>
                                         </Popper>
 
                                         <Popper>
-                                            <PopperAnchor attr:class=anchor_class>10.{i + 1}</PopperAnchor>
+                                            <PopperAnchor attr:class=small_anchor>10.{i + 1}</PopperAnchor>
                                             <Portal as_child=true>
                                                 <PopperContent
-                                                    attr:class=content_class
+                                                    attr:class=small_content
                                                     side_offset=5.0
                                                     hide_when_detached=true
                                                     collision_boundary=scroll_container2
                                                 >
-                                                    <PopperArrow attr:class=arrow_class width=10.0 height=5.0 />
+                                                    <PopperArrow attr:class=classes::arrow width=10.0 height=5.0 />
                                                     10.{i + 1}
                                                 </PopperContent>
                                             </Portal>
@@ -425,18 +434,18 @@ pub fn Chromatic() -> impl IntoView {
             >
                 <h1>Logical "start" alignment (LTR)</h1>
                 <Popper>
-                    <PopperAnchor attr:class=anchor_class>11</PopperAnchor>
-                    <PopperContent attr:class=content_class align=Align::Start side_offset=5.0>
-                        <PopperArrow attr:class=arrow_class width=10.0 height=5.0 />
+                    <PopperAnchor attr:class=small_anchor>11</PopperAnchor>
+                    <PopperContent attr:class=small_content align=Align::Start side_offset=5.0>
+                        <PopperArrow attr:class=classes::arrow width=10.0 height=5.0 />
                         11
                     </PopperContent>
                 </Popper>
 
                 <Popper>
-                    <PopperAnchor attr:class=anchor_class>12</PopperAnchor>
+                    <PopperAnchor attr:class=small_anchor>12</PopperAnchor>
                     <Portal as_child=true>
-                        <PopperContent attr:class=content_class align=Align::Start side_offset=5.0>
-                            <PopperArrow attr:class=arrow_class width=10.0 height=5.0 />
+                        <PopperContent attr:class=small_content align=Align::Start side_offset=5.0>
+                            <PopperArrow attr:class=classes::arrow width=10.0 height=5.0 />
                             12 (portalled)
                         </PopperContent>
                     </Portal>
@@ -453,18 +462,18 @@ pub fn Chromatic() -> impl IntoView {
             >
                 <h1>Logical "start" alignment (RTL)</h1>
                 <Popper>
-                    <PopperAnchor attr:class=anchor_class>13</PopperAnchor>
-                    <PopperContent attr:class=content_class attr:dir="rtl" align=Align::Start side_offset=5.0>
-                        <PopperArrow attr:class=arrow_class width=10.0 height=5.0 />
+                    <PopperAnchor attr:class=small_anchor>13</PopperAnchor>
+                    <PopperContent attr:class=small_content attr:dir="rtl" align=Align::Start side_offset=5.0>
+                        <PopperArrow attr:class=classes::arrow width=10.0 height=5.0 />
                         13
                     </PopperContent>
                 </Popper>
 
                 <Popper>
-                    <PopperAnchor attr:class=anchor_class>14</PopperAnchor>
+                    <PopperAnchor attr:class=small_anchor>14</PopperAnchor>
                     <Portal as_child=true>
-                        <PopperContent attr:class=content_class attr:dir="rtl" align=Align::Start side_offset=5.0>
-                            <PopperArrow attr:class=arrow_class width=10.0 height=5.0 />
+                        <PopperContent attr:class=small_content attr:dir="rtl" align=Align::Start side_offset=5.0>
+                            <PopperArrow attr:class=classes::arrow width=10.0 height=5.0 />
                             14 (portalled)
                         </PopperContent>
                     </Portal>
@@ -477,7 +486,7 @@ pub fn Chromatic() -> impl IntoView {
 #[component]
 fn Scrollable(children: Children) -> impl IntoView {
     view! {
-        <div class="flex items-center justify-center h-[200vh]">
+        <div style="display: flex; align-items: center; justify-content: center; height: 200vh;">
             {children()}
         </div>
     }
@@ -494,46 +503,4 @@ fn CustomArrow() -> impl IntoView {
             style:background-color="tomato"
         />
     }
-}
-
-#[derive(TwClass, Default, Clone, Copy)]
-#[tw(class = "origin-[--radix-popper-transform-origin] bg-[#ccc] p-[10px] rounded-[10px]")]
-struct ContentClass {
-    pub size: ContentSize,
-}
-
-#[derive(TwVariant)]
-enum ContentSize {
-    #[tw(class = "w-[100px] h-[50px]")]
-    #[allow(dead_code)]
-    Small,
-    #[tw(default, class = "w-[300px] h-[150px]")]
-    Large,
-}
-
-#[derive(TwVariant)]
-enum AnchorSize {
-    #[tw(class = "size-[50px]")]
-    #[allow(dead_code)]
-    Small,
-    #[tw(default, class = "size-[100px]")]
-    Large,
-}
-
-#[derive(TwClass, Default, Clone, Copy)]
-#[tw(class = "bg-[hotpink]")]
-struct AnchorClass {
-    pub size: AnchorSize,
-}
-
-#[derive(TwClass, Default, Clone, Copy)]
-#[tw(class = "fill-[#ccc]")]
-struct ArrowClass {}
-
-#[derive(TwClass, Default, Clone, Copy)]
-#[tw(
-    class = "bg-[#ccc] p-[10px] rounded-[10px] data-[side=top]:[--direction:1] data-[side=bottom]:[--direction:-1] animate-[popperRotateIn_0.6s_cubic-bezier(0.16,1,0.3,1)]"
-)]
-struct AnimatedContentClass {
-    pub size: ContentSize,
 }

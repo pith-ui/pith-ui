@@ -199,6 +199,12 @@ pub fn App() -> impl IntoView {
 
                     //     <ul class="list-none m-0 ms-4 p-0">
                     //         <li><NavLink href="/menu/styled">Styled</NavLink></li>
+                    //         <li><NavLink href="/menu/submenus">Submenus</NavLink></li>
+                    //         <li><NavLink href="/menu/with-labels">With Labels</NavLink></li>
+                    //         <li><NavLink href="/menu/typeahead">Typeahead</NavLink></li>
+                    //         <li><NavLink href="/menu/checkbox-items">Checkbox Items</NavLink></li>
+                    //         <li><NavLink href="/menu/radio-items">Radio Items</NavLink></li>
+                    //         <li><NavLink href="/menu/animated">Animated</NavLink></li>
                     //     </ul>
                     // </li>
                     <li>
@@ -471,7 +477,13 @@ pub fn App() -> impl IntoView {
                     <Route path=path!("/label/with-control") view=label::WithControl />
                     <Route path=path!("/label/with-input-number") view=label::WithInputNumber />
 
-                    // <Route path="/menu/styled" view=menu::Styled />
+                    // <Route path=path!("/menu/styled") view=menu::Styled />
+                    // <Route path=path!("/menu/submenus") view=menu::Submenus />
+                    // <Route path=path!("/menu/with-labels") view=menu::WithLabels />
+                    // <Route path=path!("/menu/typeahead") view=menu::Typeahead />
+                    // <Route path=path!("/menu/checkbox-items") view=menu::CheckboxItems />
+                    // <Route path=path!("/menu/radio-items") view=menu::RadioItems />
+                    // <Route path=path!("/menu/animated") view=menu::Animated />
 
                     <Route path=path!("/one-time-password-field/uncontrolled") view=one_time_password_field::Uncontrolled />
                     <Route path=path!("/one-time-password-field/controlled") view=one_time_password_field::Controlled />
