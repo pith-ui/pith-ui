@@ -6,9 +6,9 @@ use leptos_router::{
 
 use crate::primitives::{
     accessible_icon, accordion, alert_dialog, arrow, aspect_ratio, collapsible, collection, dialog,
-    dismissable_layer, focus_scope, form, label, one_time_password_field, popper, portal, presence,
-    progress, radio_group, roving_focus, scroll_area, separator, slider, tabs, toggle,
-    toggle_group, toolbar, visually_hidden,
+    dismissable_layer, focus_scope, form, label, one_time_password_field, password_toggle_field,
+    popper, portal, presence, progress, radio_group, roving_focus, scroll_area, separator, slider,
+    tabs, toggle, toggle_group, toolbar, visually_hidden,
 };
 
 #[component]
@@ -207,6 +207,15 @@ pub fn App() -> impl IntoView {
                         <ul class="list-none m-0 ms-4 p-0">
                             <li><NavLink href="/one-time-password-field/uncontrolled">Uncontrolled</NavLink></li>
                             <li><NavLink href="/one-time-password-field/controlled">Controlled</NavLink></li>
+                        </ul>
+                    </li>
+                    <li>
+                        {"Password Toggle Field"}
+
+                        <ul class="list-none m-0 ms-4 p-0">
+                            <li><NavLink href="/password-toggle-field/uncontrolled">Uncontrolled</NavLink></li>
+                            <li><NavLink href="/password-toggle-field/controlled">Controlled</NavLink></li>
+                            <li><NavLink href="/password-toggle-field/inside-form">Inside Form</NavLink></li>
                         </ul>
                     </li>
                     <li>
@@ -466,6 +475,10 @@ pub fn App() -> impl IntoView {
 
                     <Route path=path!("/one-time-password-field/uncontrolled") view=one_time_password_field::Uncontrolled />
                     <Route path=path!("/one-time-password-field/controlled") view=one_time_password_field::Controlled />
+
+                    <Route path=path!("/password-toggle-field/uncontrolled") view=password_toggle_field::Uncontrolled />
+                    <Route path=path!("/password-toggle-field/controlled") view=password_toggle_field::Controlled />
+                    <Route path=path!("/password-toggle-field/inside-form") view=password_toggle_field::InsideForm />
 
                     <Route path=path!("/popper/styled") view=popper::Styled />
                     <Route path=path!("/popper/with-custom-arrow") view=popper::WithCustomArrow />

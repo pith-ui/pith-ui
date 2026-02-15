@@ -4196,6 +4196,20 @@ dependencies = [
 ]
 
 [[package]]
+name = "radix-leptos-password-toggle-field"
+version = "0.0.2"
+dependencies = [
+ "leptos",
+ "leptos-node-ref",
+ "radix-leptos-compose-refs",
+ "radix-leptos-id",
+ "radix-leptos-primitive",
+ "radix-leptos-use-controllable-state",
+ "send_wrapper",
+ "web-sys",
+]
+
+[[package]]
 name = "radix-leptos-popper"
 version = "0.0.2"
 dependencies = [
@@ -4355,6 +4369,7 @@ dependencies = [
  "radix-leptos-form",
  "radix-leptos-label",
  "radix-leptos-one-time-password-field",
+ "radix-leptos-password-toggle-field",
  "radix-leptos-popper",
  "radix-leptos-portal",
  "radix-leptos-presence",

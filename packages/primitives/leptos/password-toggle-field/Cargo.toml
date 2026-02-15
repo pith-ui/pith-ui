@@ -1,0 +1,26 @@
+[package]
+name = "radix-leptos-password-toggle-field"
+description = "Leptos port of Radix Password Toggle Field."
+
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+version.workspace = true
+
+[dependencies]
+leptos.workspace = true
+leptos-node-ref.workspace = true
+radix-leptos-compose-refs.workspace = true
+radix-leptos-id.workspace = true
+radix-leptos-primitive.workspace = true
+radix-leptos-use-controllable-state.workspace = true
+send_wrapper.workspace = true
+web-sys = { workspace = true, features = [
+    "HtmlButtonElement",
+    "HtmlFormElement",
+    "HtmlInputElement",
+    "MutationObserver",
+    "MutationObserverInit",
+    "MutationRecord",
+] }

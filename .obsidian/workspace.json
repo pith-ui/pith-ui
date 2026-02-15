@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "notes/leptos-slider.md",
+                "file": "notes/leptos-password-toggle-field.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -28,7 +28,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "leptos-slider"
+              "title": "leptos-password-toggle-field"
             }
           }
         ]
@@ -193,17 +193,18 @@
   },
   "active": "8c5a22cb96fe50b9",
   "lastOpenFiles": [
-    "stories/leptos/dist/purple-9b476b30d5443309.css",
-    "stories/leptos/dist/red-74d32e64207a038a.css",
-    "stories/leptos/dist/tailwind.output-2aa416d16be59142.css",
-    "stories/leptos/dist/radix-leptos-stories-aa1425b26feb5de8.js",
-    "stories/leptos/dist/green-fbaf4d9bde970701.css",
-    "stories/leptos/dist/radix-leptos-stories-aa1425b26feb5de8_bg.wasm",
-    "stories/leptos/dist/favicon-e197903841a5b23b.ico",
-    "stories/leptos/dist/bundle-7b3b253ed16505da.css",
-    "stories/leptos/dist/blue-alpha-9c4e3c532cbba84.css",
-    "stories/leptos/dist/blue-420df321e365d4ba.css",
-    "stories/leptos/dist/preview-d2b050845593ed18.css",
+    "target/debug/incremental/radix_leptos_stories-295h3vf1jdcpt/s-hftoxmeao9-0i7xlyh-91kq6pn2h1y8rc4w1atfmbogp/dep-graph.bin",
+    "target/debug/incremental/radix_leptos_stories-295h3vf1jdcpt/s-hftoxmeao9-0i7xlyh-91kq6pn2h1y8rc4w1atfmbogp/query-cache.bin",
+    "target/debug/incremental/radix_leptos_stories-295h3vf1jdcpt/s-hftoxmeao9-0i7xlyh-91kq6pn2h1y8rc4w1atfmbogp/work-products.bin",
+    "target/debug/incremental/radix_leptos_stories-295h3vf1jdcpt/s-hftoxmeao9-0i7xlyh-91kq6pn2h1y8rc4w1atfmbogp",
+    "target/debug/deps/libradix_leptos_stories-b70e86847b80781a.rmeta",
+    "target/debug/deps/radix_leptos_stories-b70e86847b80781a.d",
+    "target/debug/incremental/radix_leptos_stories-295h3vf1jdcpt/s-hftoxmeao9-0i7xlyh-working/dep-graph.part.bin",
+    "target/debug/incremental/radix_leptos_stories-295h3vf1jdcpt/s-hftoxmeao9-0i7xlyh-working",
+    "target/debug/incremental/radix_leptos_stories-295h3vf1jdcpt/s-hftoxmeao9-0i7xlyh.lock",
+    "target/debug/incremental/radix_leptos_one_time_password_field-2y9iep695wtcf/s-hftoxlyqwn-05ggoy2-bs7lzi26hyex3glndalrfuxxi/work-products.bin",
+    "target/debug/incremental/radix_leptos_one_time_password_field-2y9iep695wtcf/s-hftoxlyqwn-05ggoy2-bs7lzi26hyex3glndalrfuxxi/query-cache.bin",
+    "notes/leptos-slider.md",
     "notes/leptos-radio-group.md",
     "notes/leptos-one-time-password-field.md",
     "notes/leptos-alert-dialog.md",
@@ -231,7 +232,6 @@
     "target/doc/static.files/favicon-044be391.svg",
     "target/doc/static.files/SourceSerif4-LICENSE-a2cfd9d5.md",
     "notes/leptos-toggle.md",
-    "notes/core-rect.md",
     "scripts/story-compare/node_modules/playwright-core/lib/vite/traceViewer/playwright-logo.svg",
     "scripts/story-compare/node_modules/playwright-core/lib/vite/recorder/playwright-logo.svg",
     "scripts/story-compare/node_modules/playwright-core/lib/server/chromium/appIcon.png",
