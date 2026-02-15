@@ -6,7 +6,8 @@ use leptos_router::{
 
 use crate::primitives::{
     accessible_icon, accordion, alert_dialog, arrow, aspect_ratio, collapsible, collection, dialog,
-    dismissable_layer, focus_scope, form, label, one_time_password_field, password_toggle_field,
+    dismissable_layer, focus_scope, form, hover_card, label, one_time_password_field,
+    password_toggle_field,
     popper, portal, presence, progress, radio_group, roving_focus, scroll_area, separator, slider,
     tabs, toggle, toggle_group, toolbar, visually_hidden,
 };
@@ -183,6 +184,25 @@ pub fn App() -> impl IntoView {
                         <ul class="list-none m-0 ms-4 p-0">
                             <li><NavLink href="/form/basic">Basic</NavLink></li>
                             <li><NavLink href="/form/cypress">Cypress</NavLink></li>
+                        </ul>
+                    </li>
+                    <li>
+                        Hover Card
+
+                        <ul class="list-none m-0 ms-4 p-0">
+                            <li><NavLink href="/hover-card/basic">Basic</NavLink></li>
+                            <li><NavLink href="/hover-card/contain-text-selection">Contain Text Selection</NavLink></li>
+                            <li><NavLink href="/hover-card/async-update">Async Update</NavLink></li>
+                            <li><NavLink href="/hover-card/custom-durations">Custom Durations</NavLink></li>
+                            <li><NavLink href="/hover-card/controlled">Controlled</NavLink></li>
+                            <li><NavLink href="/hover-card/layerable">Layerable</NavLink></li>
+                            <li><NavLink href="/hover-card/animated">Animated</NavLink></li>
+                            <li><NavLink href="/hover-card/forced-mount">Forced Mount</NavLink></li>
+                            <li><NavLink href="/hover-card/nested">Nested</NavLink></li>
+                            <li><NavLink href="/hover-card/non-portal">Non Portal</NavLink></li>
+                            <li><NavLink href="/hover-card/with-slotted-trigger">With Slotted Trigger</NavLink></li>
+                            <li><NavLink href="/hover-card/with-slotted-content">With Slotted Content</NavLink></li>
+                            <li><NavLink href="/hover-card/chromatic">Chromatic</NavLink></li>
                         </ul>
                     </li>
                     <li>
@@ -472,6 +492,20 @@ pub fn App() -> impl IntoView {
 
                     <Route path=path!("/form/basic") view=form::Basic />
                     <Route path=path!("/form/cypress") view=form::Cypress />
+
+                    <Route path=path!("/hover-card/basic") view=hover_card::Basic />
+                    <Route path=path!("/hover-card/contain-text-selection") view=hover_card::ContainTextSelection />
+                    <Route path=path!("/hover-card/async-update") view=hover_card::AsyncUpdate />
+                    <Route path=path!("/hover-card/custom-durations") view=hover_card::CustomDurations />
+                    <Route path=path!("/hover-card/controlled") view=hover_card::Controlled />
+                    <Route path=path!("/hover-card/layerable") view=hover_card::Layerable />
+                    <Route path=path!("/hover-card/animated") view=hover_card::Animated />
+                    <Route path=path!("/hover-card/forced-mount") view=hover_card::ForcedMount />
+                    <Route path=path!("/hover-card/nested") view=hover_card::Nested />
+                    <Route path=path!("/hover-card/non-portal") view=hover_card::NonPortal />
+                    <Route path=path!("/hover-card/with-slotted-trigger") view=hover_card::WithSlottedTrigger />
+                    <Route path=path!("/hover-card/with-slotted-content") view=hover_card::WithSlottedContent />
+                    <Route path=path!("/hover-card/chromatic") view=hover_card::Chromatic />
 
                     <Route path=path!("/label/styled") view=label::Styled />
                     <Route path=path!("/label/with-control") view=label::WithControl />

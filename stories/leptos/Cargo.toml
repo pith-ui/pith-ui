@@ -32,6 +32,7 @@ radix-leptos-dismissable-layer.workspace = true
 radix-leptos-focus-guards.workspace = true
 radix-leptos-focus-scope.workspace = true
 radix-leptos-form.workspace = true
+radix-leptos-hover-card.workspace = true
 radix-leptos-label.workspace = true
 # radix-leptos-menu.workspace = true
 radix-leptos-one-time-password-field.workspace = true

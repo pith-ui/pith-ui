@@ -1,0 +1,35 @@
+[package]
+name = "radix-leptos-hover-card"
+description = "Leptos port of Radix Hover Card."
+homepage = "https://radix.rustforweb.org/primitives/components/hover-card.html"
+
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+version.workspace = true
+
+[dependencies]
+leptos.workspace = true
+leptos-node-ref.workspace = true
+radix-leptos-compose-refs.workspace = true
+radix-leptos-dismissable-layer.workspace = true
+radix-leptos-popper.workspace = true
+radix-leptos-portal.workspace = true
+radix-leptos-presence.workspace = true
+radix-leptos-primitive.workspace = true
+radix-leptos-use-controllable-state.workspace = true
+js-sys = "0.3"
+send_wrapper.workspace = true
+wasm-bindgen = "0.2"
+web-sys = { workspace = true, features = [
+    "CssStyleDeclaration",
+    "Document",
+    "HtmlElement",
+    "Node",
+    "NodeFilter",
+    "PointerEvent",
+    "Selection",
+    "TreeWalker",
+    "Window",
+] }

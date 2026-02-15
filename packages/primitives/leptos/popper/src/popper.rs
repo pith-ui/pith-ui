@@ -54,9 +54,34 @@ pub enum UpdatePositionStrategy {
     Always,
 }
 
-#[derive(Clone)]
+#[derive(Clone, Copy)]
 struct PopperContextValue {
     pub anchor_ref: AnyNodeRef,
+}
+
+/// Opaque handle for re-providing Popper context through scope boundaries (e.g., portals).
+///
+/// React uses `createContextScope` with scope composition to automatically isolate Popper
+/// contexts per component instance. Leptos has no equivalent mechanism, so components that
+/// render children through portals (which create new owner trees via `mount_to`) must
+/// explicitly capture and re-provide the Popper scope to maintain the context chain.
+#[derive(Clone, Copy)]
+pub struct PopperScope(PopperContextValue);
+
+/// Captures the current Popper scope from the reactive owner chain.
+///
+/// Call this before a portal boundary, then call [`provide_popper_scope`] inside the portal's
+/// children to re-establish the context.
+pub fn use_popper_scope() -> Option<PopperScope> {
+    use_context::<PopperContextValue>().map(PopperScope)
+}
+
+/// Re-provides a previously captured Popper scope into the current reactive owner.
+///
+/// Must be called inside the scope where the context should be available (e.g., inside
+/// a portal's children closure).
+pub fn provide_popper_scope(scope: PopperScope) {
+    provide_context(scope.0);
 }
 
 #[component]
@@ -340,21 +365,115 @@ pub fn PopperContent(
         should_hide_arrow: cannot_center_arrow,
     };
 
+    // Apply positioning styles via Effect rather than style: directives. When Leptos's
+    // view composition applies caller attributes (e.g., attr:style="background-color: crimson;")
+    // to this component's returned view, it calls setAttribute("style", "...") on the first
+    // DOM element (the wrapper div), wiping all previously-set style: directive values.
+    // style: directives only re-run when their signal dependencies change; position/top/left
+    // are typically static values from floating-ui that don't change, so they never recover.
+    // Effects run as microtasks after all synchronous DOM construction and attribute application,
+    // so they reliably set these values after any setAttribute wipe.
+    Effect::new(move |_| {
+        if let Some(el) = floating_ref.get() {
+            let el: web_sys::HtmlElement = el.unchecked_into();
+            let style = el.style();
+            let fs = floating_styles.get();
+            let _ = style.set_property("position", &fs.style_position());
+            let _ = style.set_property("top", &fs.style_top());
+            let _ = style.set_property("left", &fs.style_left());
+            let _ = style.set_property("min-width", "max-content");
+            if let Some(wc) = fs.style_will_change() {
+                let _ = style.set_property("will-change", &wc);
+            }
+        }
+    });
+
+    // Transfer caller-added attributes from the wrapper div to the inner Primitive.
+    //
+    // In React, PopperContent spreads all caller props ({...contentProps}) onto the inner
+    // Primitive, while the wrapper div only has hardcoded positioning attributes. In Leptos,
+    // attributes applied to <PopperContent> via parent `add_any_attr` propagation (e.g.,
+    // `<HoverCardContent attr:class=...>` from stories) bypass the AttributeInterceptor
+    // and land on the wrapper div — the first DOM element. Meanwhile, attrs set explicitly
+    // in the view! macro (like `attr:data-state` on `<PopperContent>`) ARE captured by the
+    // interceptor and forwarded to the inner Primitive via {..attrs}.
+    //
+    // This mismatch breaks CSS selectors like `.animatedContent[data-state='open']` that
+    // need both class and data-state on the same element, and causes inline styles (e.g.,
+    // `background-color: crimson`) to remain on the wrapper while the class background
+    // covers them on the inner element.
+    //
+    // This Effect transfers `class` and non-positioning inline style properties from the
+    // wrapper to the inner element after mount, matching React's prop-spreading behavior.
+    Effect::new(move |_| {
+        let (Some(wrapper), Some(inner)) = (floating_ref.get(), content_ref.get()) else {
+            return;
+        };
+        let wrapper: web_sys::HtmlElement = wrapper.unchecked_into();
+        let inner: web_sys::HtmlElement = inner.unchecked_into();
+
+        // Transfer class
+        let wrapper_class = wrapper.get_attribute("class").unwrap_or_default();
+        if !wrapper_class.is_empty() {
+            let inner_class = inner.get_attribute("class").unwrap_or_default();
+            let combined = if inner_class.is_empty() {
+                wrapper_class
+            } else {
+                format!("{inner_class} {wrapper_class}")
+            };
+            inner.set_attribute("class", &combined).ok();
+            wrapper.remove_attribute("class").ok();
+        }
+
+        // Transfer non-positioning style properties. The wrapper's inline style contains
+        // a mix of positioning properties (managed by PopperContent's style: directives
+        // and Effects) and caller properties (from attr:style via add_any_attr). We move
+        // only the caller properties so the inner element gets the intended visual styling.
+        let wrapper_style = wrapper.style();
+        let inner_style = inner.style();
+        let mut caller_props: Vec<(String, String)> = Vec::new();
+        let len = wrapper_style.length();
+        for i in 0..len {
+            let prop = wrapper_style.item(i);
+            if prop.is_empty() {
+                continue;
+            }
+            // Skip properties managed by PopperContent itself
+            let is_positioning = matches!(
+                prop.as_str(),
+                "position"
+                    | "top"
+                    | "left"
+                    | "min-width"
+                    | "will-change"
+                    | "transform"
+                    | "z-index"
+                    | "visibility"
+                    | "pointer-events"
+                    | "animation"
+            ) || prop.starts_with("--radix-popper-");
+            if !is_positioning
+                && let Ok(value) = wrapper_style.get_property_value(&prop)
+            {
+                caller_props.push((prop, value));
+            }
+        }
+        for (prop, value) in &caller_props {
+            let _ = inner_style.set_property(prop, value);
+            let _ = wrapper_style.remove_property(prop);
+        }
+    });
+
     view! {
         <AttributeInterceptor let:attrs>
             <div
                 node_ref={floating_ref}
                 data-radix-popper-content-wrapper=""
-                style:position=move || floating_styles.get().style_position()
-                style:top=move || floating_styles.get().style_top()
-                style:left=move || floating_styles.get().style_left()
                 style:transform=move || match is_positioned.get() {
                     true => floating_styles.get().style_transform(),
                     // Keep off the page when measuring
                     false => Some("translate(0, -200%)".into())
                 }
-                style:will-change=move || floating_styles.get().style_will_change()
-                style:min-width="max-content"
                 style:z-index=content_z_index
                 style=("--radix-popper-transform-origin", transform_origin)
 

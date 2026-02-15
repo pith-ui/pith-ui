@@ -11,6 +11,7 @@ pub mod dialog;
 pub mod dismissable_layer;
 pub mod focus_scope;
 pub mod form;
+pub mod hover_card;
 pub mod label;
 // pub mod menu;
 pub mod one_time_password_field;

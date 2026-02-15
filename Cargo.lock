@@ -4154,6 +4154,25 @@ dependencies = [
 ]
 
 [[package]]
+name = "radix-leptos-hover-card"
+version = "0.0.2"
+dependencies = [
+ "js-sys",
+ "leptos",
+ "leptos-node-ref",
+ "radix-leptos-compose-refs",
+ "radix-leptos-dismissable-layer",
+ "radix-leptos-popper",
+ "radix-leptos-portal",
+ "radix-leptos-presence",
+ "radix-leptos-primitive",
+ "radix-leptos-use-controllable-state",
+ "send_wrapper",
+ "wasm-bindgen",
+ "web-sys",
+]
+
+[[package]]
 name = "radix-leptos-icons"
 version = "0.0.2"
 dependencies = [
@@ -4367,6 +4386,7 @@ dependencies = [
  "radix-leptos-focus-guards",
  "radix-leptos-focus-scope",
  "radix-leptos-form",
+ "radix-leptos-hover-card",
  "radix-leptos-label",
  "radix-leptos-one-time-password-field",
  "radix-leptos-password-toggle-field",

@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "notes/leptos-popper.md",
+                "file": "notes/leptos-hover-card.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -28,7 +28,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "leptos-popper"
+              "title": "leptos-hover-card"
             }
           }
         ]
@@ -193,19 +193,20 @@
   },
   "active": "8c5a22cb96fe50b9",
   "lastOpenFiles": [
-    "stories/leptos/dist/purple-9b476b30d5443309.css",
-    "stories/leptos/dist/radix-leptos-stories-80e0c0b0d2a303e0_bg.wasm",
-    "stories/leptos/dist/red-74d32e64207a038a.css",
-    "stories/leptos/dist/green-fbaf4d9bde970701.css",
-    "stories/leptos/dist/radix-leptos-stories-80e0c0b0d2a303e0.js",
-    "stories/leptos/dist/favicon-e197903841a5b23b.ico",
-    "stories/leptos/dist/tailwind.output-b1c035deef4b416f.css",
-    "stories/leptos/dist/blue-alpha-9c4e3c532cbba84.css",
-    "stories/leptos/dist/blue-420df321e365d4ba.css",
-    "stories/leptos/dist/index.html",
-    "stories/leptos/dist/preview-d2b050845593ed18.css",
-    "notes/leptos-visually-hidden.md",
+    "stories/leptos/dist/radix-leptos-stories-2ac67c649a9800c2.js",
+    "stories/leptos/dist/radix-leptos-stories-2ac67c649a9800c2_bg.wasm",
+    "target/wasm32-unknown-unknown/debug/deps/radix_leptos_stories-538b52d4cae991f4.wasm",
+    "target/wasm32-unknown-unknown/debug/deps/radix_leptos_stories-538b52d4cae991f4.wasm.tmpc765703",
+    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-1mf09a19xms9j/s-hfu2m05zi5-0x43rh2-1k3efc2lx40cg30s5ergyuf3h/work-products.bin",
+    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-1mf09a19xms9j/s-hfu2m05zi5-0x43rh2-1k3efc2lx40cg30s5ergyuf3h/f5cd8exilkcj2pfoqvj9u7xk0.o",
+    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-1mf09a19xms9j/s-hfu2m05zi5-0x43rh2-1k3efc2lx40cg30s5ergyuf3h/f4od9p1rxeyb6gsxck4i7lr3x.o",
+    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-1mf09a19xms9j/s-hfu2m05zi5-0x43rh2-1k3efc2lx40cg30s5ergyuf3h/query-cache.bin",
+    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-1mf09a19xms9j/s-hfu2m05zi5-0x43rh2-1k3efc2lx40cg30s5ergyuf3h/eydlaaf02rlqunvrewvi3bj43.o",
+    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-1mf09a19xms9j/s-hfu2m05zi5-0x43rh2-1k3efc2lx40cg30s5ergyuf3h/f4ofm1xlxa8j4aryxf9aynk5z.o",
+    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-1mf09a19xms9j/s-hfu2m05zi5-0x43rh2-1k3efc2lx40cg30s5ergyuf3h/ew3p66uxvxpofzis84shv1vqf.o",
+    "notes/leptos-hover-card.md",
     "notes/leptos-popper.md",
+    "notes/leptos-visually-hidden.md",
     "notes/leptos-password-toggle-field.md",
     "notes/leptos-slider.md",
     "notes/leptos-radio-group.md",
@@ -231,7 +232,6 @@
     "target/doc/static.files/rust-logo-9a9549ea.svg",
     "target/doc/static.files/favicon-32x32-eab170b8.png",
     "target/doc/static.files/favicon-044be391.svg",
-    "target/doc/static.files/SourceSerif4-LICENSE-a2cfd9d5.md",
     "scripts/story-compare/node_modules/playwright-core/lib/vite/traceViewer/playwright-logo.svg",
     "scripts/story-compare/node_modules/playwright-core/lib/vite/recorder/playwright-logo.svg",
     "scripts/story-compare/node_modules/playwright-core/lib/server/chromium/appIcon.png",
