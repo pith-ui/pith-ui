@@ -25,6 +25,114 @@ where
     }
 }
 
+/// A collapsible top-level tier (e.g. "Components", "Utilities").
+/// Starts expanded. Force-opens when filter is active.
+#[component]
+fn NavTier(title: &'static str, children: Children) -> impl IntoView {
+    let filter = expect_context::<RwSignal<String>>();
+    let open = RwSignal::new(true);
+
+    let is_open = move || {
+        if !filter.get().is_empty() {
+            true
+        } else {
+            open.get()
+        }
+    };
+
+    view! {
+        <li>
+            <span
+                style="cursor: pointer; user-select: none; display: flex; align-items: center; gap: 0.25em; font-weight: 600;"
+                on:click=move |_| open.update(|v| *v = !*v)
+            >
+                <span style="display: inline-block; width: 1em; text-align: center; flex-shrink: 0;">
+                    {move || if is_open() { "\u{25be}" } else { "\u{25b8}" }}
+                </span>
+                {title}
+            </span>
+            <ul
+                class="list-none m-0 ms-2 p-0"
+                style:display=move || if is_open() { "" } else { "none" }
+            >
+                {children()}
+            </ul>
+        </li>
+    }
+}
+
+/// A collapsible component section with data-driven stories.
+/// Filtering matches against both the section title and individual story titles.
+/// When filtering, only matching stories are shown and the section is force-opened.
+/// Set `tested=false` to color the section to indicate it needs story testing.
+#[component]
+fn NavSection(
+    title: &'static str,
+    stories: Vec<(&'static str, &'static str)>,
+    #[prop(default = true)] tested: bool,
+) -> impl IntoView {
+    let filter = expect_context::<RwSignal<String>>();
+    let open = RwSignal::new(false);
+    let color = if tested { "" } else { "#b45309" };
+
+    let stories_for_visible = stories.clone();
+    let visible = move || {
+        let f = filter.get().to_lowercase();
+        if f.is_empty() {
+            return true;
+        }
+        title.to_lowercase().contains(&f)
+            || stories_for_visible
+                .iter()
+                .any(|(_, name)| name.to_lowercase().contains(&f))
+    };
+
+    let is_open = move || {
+        if !filter.get().is_empty() {
+            true
+        } else {
+            open.get()
+        }
+    };
+
+    view! {
+        <li style:display=move || if visible() { "" } else { "none" } style:color=color>
+            <span
+                style="cursor: pointer; user-select: none; display: flex; align-items: center; gap: 0.25em;"
+                on:click=move |_| open.update(|v| *v = !*v)
+            >
+                <span style="display: inline-block; width: 1em; text-align: center; flex-shrink: 0;">
+                    {move || if is_open() { "\u{25be}" } else { "\u{25b8}" }}
+                </span>
+                {title}
+            </span>
+            <ul
+                class="list-none m-0 ms-4 p-0"
+                style:display=move || if is_open() { "" } else { "none" }
+            >
+                {stories
+                    .into_iter()
+                    .map(|(href, name)| {
+                        let story_visible = move || {
+                            let f = filter.get().to_lowercase();
+                            if f.is_empty() {
+                                return true;
+                            }
+                            title.to_lowercase().contains(&f)
+                                || name.to_lowercase().contains(&f)
+                        };
+                        view! {
+                            <li style:display=move || if story_visible() { "" } else { "none" }>
+                                <NavLink href=href>{name}</NavLink>
+                            </li>
+                        }
+                    })
+                    .collect_view()}
+            </ul>
+        </li>
+    }
+}
+
 #[component]
 fn Index() -> impl IntoView {
     view! {
@@ -272,395 +380,272 @@ fn EmbedApp() -> impl IntoView {
 /// The iframe provides full CSS/positioning isolation between the nav and stories.
 #[component]
 fn ShellApp() -> impl IntoView {
+    let filter = RwSignal::new(String::new());
+    provide_context(filter);
+
     view! {
         <Router>
             <nav class="bg-slate-200 p-4 fixed top-0 bottom-0 start-0 w-64 box-border overflow-y-auto leading-normal">
+                <input
+                    type="text"
+                    placeholder="Filter\u{2026}"
+                    class="w-full p-1.5 mb-3 border border-slate-300 rounded text-sm box-border"
+                    prop:value=move || filter.get()
+                    on:input=move |ev| filter.set(event_target_value(&ev))
+                />
                 <ul class="list-none m-0 p-0">
                     <li>
                         <NavLink href="/">Index</NavLink>
                     </li>
-                    <li>
-                        Accordion
 
-                        <ul class="list-none m-0 ms-4 p-0">
-                            <li><NavLink href="/accordion/single">Single</NavLink></li>
-                            <li><NavLink href="/accordion/multiple">Multiple</NavLink></li>
-                            <li><NavLink href="/accordion/animated">Animated</NavLink></li>
-                            <li><NavLink href="/accordion/animated-2d">Animated 2D</NavLink></li>
-                            <li><NavLink href="/accordion/animated-controlled">Animated Controlled</NavLink></li>
-                            <li><NavLink href="/accordion/outside-viewport">Outside Viewport</NavLink></li>
-                            <li><NavLink href="/accordion/horizontal">Horizontal</NavLink></li>
-                            <li><NavLink href="/accordion/chromatic">Chromatic</NavLink></li>
-                        </ul>
-                    </li>
-                    <li>
-                        Accessible Icon
+                    // -- Components --
+                    <NavTier title="Components">
+                        <NavSection title="Accordion" stories=vec![
+                            ("/accordion/single", "Single"),
+                            ("/accordion/multiple", "Multiple"),
+                            ("/accordion/animated", "Animated"),
+                            ("/accordion/animated-2d", "Animated 2D"),
+                            ("/accordion/animated-controlled", "Animated Controlled"),
+                            ("/accordion/outside-viewport", "Outside Viewport"),
+                            ("/accordion/horizontal", "Horizontal"),
+                            ("/accordion/chromatic", "Chromatic"),
+                        ] />
+                        <NavSection title="Alert Dialog" stories=vec![
+                            ("/alert-dialog/styled", "Styled"),
+                            ("/alert-dialog/controlled", "Controlled"),
+                            ("/alert-dialog/chromatic", "Chromatic"),
+                        ] />
+                        <NavSection title="Aspect Ratio" stories=vec![
+                            ("/aspect-ratio/styled", "Styled"),
+                            ("/aspect-ratio/custom-ratios", "Custom Ratios"),
+                            ("/aspect-ratio/chromatic", "Chromatic"),
+                        ] />
+                        // <NavSection title="Avatar" stories=vec![
+                        //     ("/avatar/styled", "Styled"),
+                        //     ("/avatar/chromatic", "Chromatic"),
+                        // ] />
+                        // <NavSection title="Checkbox" stories=vec![
+                        //     ("/checkbox/styled", "Styled"),
+                        //     ("/checkbox/controlled", "Controlled"),
+                        //     ("/checkbox/indeterminate", "Indeterminate"),
+                        //     ("/checkbox/within-form", "Within Form"),
+                        //     ("/checkbox/animated", "Animated"),
+                        //     ("/checkbox/chromatic", "Chromatic"),
+                        // ] />
+                        <NavSection title="Collapsible" stories=vec![
+                            ("/collapsible/styled", "Styled"),
+                            ("/collapsible/controlled", "Controlled"),
+                            ("/collapsible/animated", "Animated"),
+                            ("/collapsible/animated-horizontal", "Animated Horizontal"),
+                            ("/collapsible/chromatic", "Chromatic"),
+                        ] />
+                        <NavSection title="Dialog" stories=vec![
+                            ("/dialog/styled", "Styled"),
+                            ("/dialog/non-modal", "Non Modal"),
+                            ("/dialog/controlled", "Controlled"),
+                            ("/dialog/focus-trap", "Focus Trap"),
+                            ("/dialog/custom-focus", "Custom Focus"),
+                            ("/dialog/no-escape-dismiss", "No Escape Dismiss"),
+                            ("/dialog/no-pointer-down-outside-dismiss", "No Pointer Down Outside Dismiss"),
+                            ("/dialog/with-portal-container", "With Portal Container"),
+                            ("/dialog/animated", "Animated"),
+                            ("/dialog/forced-mount", "Forced Mount"),
+                            ("/dialog/inner-scrollable", "Inner Scrollable"),
+                            ("/dialog/outer-scrollable", "Outer Scrollable"),
+                            ("/dialog/chromatic", "Chromatic"),
+                            ("/dialog/cypress", "Cypress"),
+                        ] />
+                        <NavSection title="Form" stories=vec![
+                            ("/form/basic", "Basic"),
+                            ("/form/cypress", "Cypress"),
+                        ] />
+                        <NavSection title="Hover Card" stories=vec![
+                            ("/hover-card/basic", "Basic"),
+                            ("/hover-card/contain-text-selection", "Contain Text Selection"),
+                            ("/hover-card/async-update", "Async Update"),
+                            ("/hover-card/custom-durations", "Custom Durations"),
+                            ("/hover-card/controlled", "Controlled"),
+                            ("/hover-card/layerable", "Layerable"),
+                            ("/hover-card/animated", "Animated"),
+                            ("/hover-card/forced-mount", "Forced Mount"),
+                            ("/hover-card/nested", "Nested"),
+                            ("/hover-card/non-portal", "Non Portal"),
+                            ("/hover-card/with-slotted-trigger", "With Slotted Trigger"),
+                            ("/hover-card/with-slotted-content", "With Slotted Content"),
+                            ("/hover-card/chromatic", "Chromatic"),
+                        ] />
+                        <NavSection title="Label" stories=vec![
+                            ("/label/styled", "Styled"),
+                            ("/label/with-control", "With Control"),
+                            ("/label/with-input-number", "With Input Number"),
+                        ] />
+                        // <NavSection title="Menu" stories=vec![
+                        //     ("/menu/styled", "Styled"),
+                        //     ("/menu/submenus", "Submenus"),
+                        //     ("/menu/with-labels", "With Labels"),
+                        //     ("/menu/typeahead", "Typeahead"),
+                        //     ("/menu/checkbox-items", "Checkbox Items"),
+                        //     ("/menu/radio-items", "Radio Items"),
+                        //     ("/menu/animated", "Animated"),
+                        // ] />
+                        <NavSection title="One Time Password Field" tested=false stories=vec![
+                            ("/one-time-password-field/uncontrolled", "Uncontrolled"),
+                            ("/one-time-password-field/controlled", "Controlled"),
+                        ] />
+                        <NavSection title="Password Toggle Field" stories=vec![
+                            ("/password-toggle-field/uncontrolled", "Uncontrolled"),
+                            ("/password-toggle-field/controlled", "Controlled"),
+                            ("/password-toggle-field/inside-form", "Inside Form"),
+                        ] />
+                        <NavSection title="Popover" stories=vec![
+                            ("/popover/styled", "Styled"),
+                            ("/popover/boundary", "Boundary"),
+                            ("/popover/modality", "Modality"),
+                            ("/popover/controlled", "Controlled"),
+                            ("/popover/animated", "Animated"),
+                            ("/popover/forced-mount", "Forced Mount"),
+                            ("/popover/nested", "Nested"),
+                            ("/popover/custom-anchor", "Custom Anchor"),
+                            ("/popover/with-slotted-trigger", "With Slotted Trigger"),
+                            ("/popover/chromatic", "Chromatic"),
+                        ] />
+                        <NavSection title="Progress" stories=vec![
+                            ("/progress/styled", "Styled"),
+                            ("/progress/chromatic", "Chromatic"),
+                        ] />
+                        <NavSection title="Radio Group" stories=vec![
+                            ("/radio-group/styled", "Styled"),
+                            ("/radio-group/controlled", "Controlled"),
+                            ("/radio-group/unset", "Unset"),
+                            ("/radio-group/within-form", "Within Form"),
+                            ("/radio-group/animated", "Animated"),
+                            ("/radio-group/chromatic", "Chromatic"),
+                        ] />
+                        <NavSection title="Scroll Area" stories=vec![
+                            ("/scroll-area/basic", "Basic"),
+                            ("/scroll-area/resizable", "Resizable"),
+                            ("/scroll-area/content-change", "Content Change"),
+                            ("/scroll-area/animated", "Animated"),
+                            ("/scroll-area/chromatic", "Chromatic"),
+                            ("/scroll-area/chromatic-dynamic-content-before-loaded", "Chromatic Dynamic Content Before Loaded"),
+                            ("/scroll-area/chromatic-dynamic-content-after-loaded", "Chromatic Dynamic Content After Loaded"),
+                        ] />
+                        <NavSection title="Separator" stories=vec![
+                            ("/separator/styled", "Styled"),
+                        ] />
+                        <NavSection title="Slider" stories=vec![
+                            ("/slider/styled", "Styled"),
+                            ("/slider/with-on-value-commit", "With On Value Commit"),
+                            ("/slider/right-to-left", "Right To Left"),
+                            ("/slider/horizontal", "Horizontal"),
+                            ("/slider/vertical", "Vertical"),
+                            ("/slider/inversions", "Inversions"),
+                            ("/slider/with-minimum-steps-between-thumbs", "With Min Steps Between Thumbs"),
+                            ("/slider/with-multiple-ranges", "With Multiple Ranges"),
+                            ("/slider/small-steps", "Small Steps"),
+                            ("/slider/within-form", "Within Form"),
+                            ("/slider/strict", "Strict"),
+                            ("/slider/chromatic", "Chromatic"),
+                        ] />
+                        // <NavSection title="Switch" stories=vec![
+                        //     ("/switch/styled", "Styled"),
+                        //     ("/switch/controlled", "Controlled"),
+                        //     ("/switch/within-form", "Within Form"),
+                        //     ("/switch/chromatic", "Chromatic"),
+                        // ] />
+                        <NavSection title="Tabs" stories=vec![
+                            ("/tabs/styled", "Styled"),
+                            ("/tabs/animated", "Animated"),
+                            ("/tabs/chromatic", "Chromatic"),
+                        ] />
+                        <NavSection title="Toggle" stories=vec![
+                            ("/toggle/styled", "Styled"),
+                            ("/toggle/controlled", "Controlled"),
+                            ("/toggle/chromatic", "Chromatic"),
+                        ] />
+                        <NavSection title="Toggle Group" stories=vec![
+                            ("/toggle-group/single", "Single"),
+                            ("/toggle-group/vertical", "Vertical"),
+                            ("/toggle-group/multiple", "Multiple"),
+                            ("/toggle-group/chromatic", "Chromatic"),
+                        ] />
+                        <NavSection title="Toolbar" tested=false stories=vec![
+                            ("/toolbar/styled", "Styled"),
+                            ("/toolbar/chromatic", "Chromatic"),
+                        ] />
+                    </NavTier>
 
-                        <ul class="list-none m-0 ms-4 p-0">
-                            <li><NavLink href="/accessible-icon/styled">Styled</NavLink></li>
-                            <li><NavLink href="/accessible-icon/chromatic">Chromatic</NavLink></li>
-                        </ul>
-                    </li>
-                    <li>
-                        Alert Dialog
-
-                        <ul class="list-none m-0 ms-4 p-0">
-                            <li><NavLink href="/alert-dialog/styled">Styled</NavLink></li>
-                            <li><NavLink href="/alert-dialog/controlled">Controlled</NavLink></li>
-                            <li><NavLink href="/alert-dialog/chromatic">Chromatic</NavLink></li>
-                        </ul>
-                    </li>
-                    <li>
-                        Arrow
-
-                        <ul class="list-none m-0 ms-4 p-0">
-                            <li><NavLink href="/arrow/styled">Styled</NavLink></li>
-                            <li><NavLink href="/arrow/custom-sizes">Custom Sizes</NavLink></li>
-                            <li><NavLink href="/arrow/custom-arrow">Custom Arrow</NavLink></li>
-                        </ul>
-                    </li>
-                    <li>
-                        Aspect Ratio
-
-                        <ul class="list-none m-0 ms-4 p-0">
-                            <li><NavLink href="/aspect-ratio/styled">Styled</NavLink></li>
-                            <li><NavLink href="/aspect-ratio/custom-ratios">Custom Ratios</NavLink></li>
-                            <li><NavLink href="/aspect-ratio/chromatic">Chromatic</NavLink></li>
-                        </ul>
-                    </li>
-                    <li>
-                        Collapsible
-
-                        <ul class="list-none m-0 ms-4 p-0">
-                            <li><NavLink href="/collapsible/styled">Styled</NavLink></li>
-                            <li><NavLink href="/collapsible/controlled">Controlled</NavLink></li>
-                            <li><NavLink href="/collapsible/animated">Animated</NavLink></li>
-                            <li><NavLink href="/collapsible/animated-horizontal">Animated Horizontal</NavLink></li>
-                            <li><NavLink href="/collapsible/chromatic">Chromatic</NavLink></li>
-                        </ul>
-                    </li>
-                    <li>
-                        Dialog
-
-                        <ul class="list-none m-0 ms-4 p-0">
-                            <li><NavLink href="/dialog/styled">Styled</NavLink></li>
-                            <li><NavLink href="/dialog/non-modal">Non Modal</NavLink></li>
-                            <li><NavLink href="/dialog/controlled">Controlled</NavLink></li>
-                            <li><NavLink href="/dialog/focus-trap">Focus Trap</NavLink></li>
-                            <li><NavLink href="/dialog/custom-focus">Custom Focus</NavLink></li>
-                            <li><NavLink href="/dialog/no-escape-dismiss">No Escape Dismiss</NavLink></li>
-                            <li><NavLink href="/dialog/no-pointer-down-outside-dismiss">No Pointer Down Outside Dismiss</NavLink></li>
-                            <li><NavLink href="/dialog/with-portal-container">With Portal Container</NavLink></li>
-                            <li><NavLink href="/dialog/animated">Animated</NavLink></li>
-                            <li><NavLink href="/dialog/forced-mount">Forced Mount</NavLink></li>
-                            <li><NavLink href="/dialog/inner-scrollable">Inner Scrollable</NavLink></li>
-                            <li><NavLink href="/dialog/outer-scrollable">Outer Scrollable</NavLink></li>
-                            <li><NavLink href="/dialog/chromatic">Chromatic</NavLink></li>
-                            <li><NavLink href="/dialog/cypress">Cypress</NavLink></li>
-                        </ul>
-                    </li>
-                    // <li>
-                    //     Avatar
-
-                    //     <ul class="list-none m-0 ms-4 p-0">
-                    //         <li><NavLink href="/avatar/styled">Styled</NavLink></li>
-                    //         <li><NavLink href="/avatar/chromatic">Chromatic</NavLink></li>
-                    //     </ul>
-                    // </li>
-                    // <li>
-                    //     Checkbox
-
-                    //     <ul class="list-none m-0 ms-4 p-0">
-                    //         <li><NavLink href="/checkbox/styled">Styled</NavLink></li>
-                    //         <li><NavLink href="/checkbox/controlled">Controlled</NavLink></li>
-                    //         <li><NavLink href="/checkbox/indeterminate">Indeterminate</NavLink></li>
-                    //         <li><NavLink href="/checkbox/within-form">Within Form</NavLink></li>
-                    //         <li><NavLink href="/checkbox/animated">Animated</NavLink></li>
-                    //         <li><NavLink href="/checkbox/chromatic">Chromatic</NavLink></li>
-                    //     </ul>
-                    // </li>
-                    <li>
-                        Dismissable Layer
-
-                        <ul class="list-none m-0 ms-4 p-0">
-                            <li><NavLink href="/dismissable-layer/basic">Basic</NavLink></li>
-                            <li><NavLink href="/dismissable-layer/nested">Nested</NavLink></li>
-                            <li><NavLink href="/dismissable-layer/with-focus-scope">With Focus Scope</NavLink></li>
-                            <li><NavLink href="/dismissable-layer/dialog-example">Dialog Example</NavLink></li>
-                            <li><NavLink href="/dismissable-layer/popover-fully-modal">Popover Fully Modal</NavLink></li>
-                            <li><NavLink href="/dismissable-layer/popover-semi-modal">Popover Semi Modal</NavLink></li>
-                            <li><NavLink href="/dismissable-layer/popover-non-modal">Popover Non Modal</NavLink></li>
-                            <li><NavLink href="/dismissable-layer/popover-in-dialog">Popover In Dialog</NavLink></li>
-                            <li><NavLink href="/dismissable-layer/popover-nested">Popover Nested</NavLink></li>
-                        </ul>
-                    </li>
-                    <li>
-                        Collection
-
-                        <ul class="list-none m-0 ms-4 p-0">
-                            <li><NavLink href="/collection/basic">Basic</NavLink></li>
-                            <li><NavLink href="/collection/with-element-in-between">With Element In Between</NavLink></li>
-                            <li><NavLink href="/collection/with-wrapped-item">With Wrapped Item</NavLink></li>
-                            <li><NavLink href="/collection/with-fragment">With Fragment</NavLink></li>
-                            <li><NavLink href="/collection/dynamic-insertion">Dynamic Insertion</NavLink></li>
-                            <li><NavLink href="/collection/with-changing-item">With Changing Item</NavLink></li>
-                            <li><NavLink href="/collection/nested">Nested</NavLink></li>
-                        </ul>
-                    </li>
-                    <li>
-                        Focus Scope
-
-                        <ul class="list-none m-0 ms-4 p-0">
-                            <li><NavLink href="/focus-scope/basic">Basic</NavLink></li>
-                            <li><NavLink href="/focus-scope/multiple">Multiple</NavLink></li>
-                            <li><NavLink href="/focus-scope/with-options">With Options</NavLink></li>
-                        </ul>
-                    </li>
-                    <li>
-                        Form
-
-                        <ul class="list-none m-0 ms-4 p-0">
-                            <li><NavLink href="/form/basic">Basic</NavLink></li>
-                            <li><NavLink href="/form/cypress">Cypress</NavLink></li>
-                        </ul>
-                    </li>
-                    <li>
-                        Hover Card
-
-                        <ul class="list-none m-0 ms-4 p-0">
-                            <li><NavLink href="/hover-card/basic">Basic</NavLink></li>
-                            <li><NavLink href="/hover-card/contain-text-selection">Contain Text Selection</NavLink></li>
-                            <li><NavLink href="/hover-card/async-update">Async Update</NavLink></li>
-                            <li><NavLink href="/hover-card/custom-durations">Custom Durations</NavLink></li>
-                            <li><NavLink href="/hover-card/controlled">Controlled</NavLink></li>
-                            <li><NavLink href="/hover-card/layerable">Layerable</NavLink></li>
-                            <li><NavLink href="/hover-card/animated">Animated</NavLink></li>
-                            <li><NavLink href="/hover-card/forced-mount">Forced Mount</NavLink></li>
-                            <li><NavLink href="/hover-card/nested">Nested</NavLink></li>
-                            <li><NavLink href="/hover-card/non-portal">Non Portal</NavLink></li>
-                            <li><NavLink href="/hover-card/with-slotted-trigger">With Slotted Trigger</NavLink></li>
-                            <li><NavLink href="/hover-card/with-slotted-content">With Slotted Content</NavLink></li>
-                            <li><NavLink href="/hover-card/chromatic">Chromatic</NavLink></li>
-                        </ul>
-                    </li>
-                    <li>
-                        Label
-
-                        <ul class="list-none m-0 ms-4 p-0">
-                            <li><NavLink href="/label/styled">Styled</NavLink></li>
-                            <li><NavLink href="/label/with-control">With Control</NavLink></li>
-                            <li><NavLink href="/label/with-input-number">With Input Number</NavLink></li>
-                        </ul>
-                    </li>
-                    // <li>
-                    //     Menu
-
-                    //     <ul class="list-none m-0 ms-4 p-0">
-                    //         <li><NavLink href="/menu/styled">Styled</NavLink></li>
-                    //         <li><NavLink href="/menu/submenus">Submenus</NavLink></li>
-                    //         <li><NavLink href="/menu/with-labels">With Labels</NavLink></li>
-                    //         <li><NavLink href="/menu/typeahead">Typeahead</NavLink></li>
-                    //         <li><NavLink href="/menu/checkbox-items">Checkbox Items</NavLink></li>
-                    //         <li><NavLink href="/menu/radio-items">Radio Items</NavLink></li>
-                    //         <li><NavLink href="/menu/animated">Animated</NavLink></li>
-                    //     </ul>
-                    // </li>
-                    <li>
-                        {"One Time Password Field"}
-
-                        <ul class="list-none m-0 ms-4 p-0">
-                            <li><NavLink href="/one-time-password-field/uncontrolled">Uncontrolled</NavLink></li>
-                            <li><NavLink href="/one-time-password-field/controlled">Controlled</NavLink></li>
-                        </ul>
-                    </li>
-                    <li>
-                        {"Password Toggle Field"}
-
-                        <ul class="list-none m-0 ms-4 p-0">
-                            <li><NavLink href="/password-toggle-field/uncontrolled">Uncontrolled</NavLink></li>
-                            <li><NavLink href="/password-toggle-field/controlled">Controlled</NavLink></li>
-                            <li><NavLink href="/password-toggle-field/inside-form">Inside Form</NavLink></li>
-                        </ul>
-                    </li>
-                    <li>
-                        Popover
-
-                        <ul class="list-none m-0 ms-4 p-0">
-                            <li><NavLink href="/popover/styled">Styled</NavLink></li>
-                            <li><NavLink href="/popover/boundary">Boundary</NavLink></li>
-                            <li><NavLink href="/popover/modality">Modality</NavLink></li>
-                            <li><NavLink href="/popover/controlled">Controlled</NavLink></li>
-                            <li><NavLink href="/popover/animated">Animated</NavLink></li>
-                            <li><NavLink href="/popover/forced-mount">Forced Mount</NavLink></li>
-                            <li><NavLink href="/popover/nested">Nested</NavLink></li>
-                            <li><NavLink href="/popover/custom-anchor">Custom Anchor</NavLink></li>
-                            <li><NavLink href="/popover/with-slotted-trigger">With Slotted Trigger</NavLink></li>
-                            <li><NavLink href="/popover/chromatic">Chromatic</NavLink></li>
-                        </ul>
-                    </li>
-                    <li>
-                        Popper
-
-                        <ul class="list-none m-0 ms-4 p-0">
-                            <li><NavLink href="/popper/styled">Styled</NavLink></li>
-                            <li><NavLink href="/popper/with-custom-arrow">With Custom Arrow</NavLink></li>
-                            <li><NavLink href="/popper/animated">Animated</NavLink></li>
-                            <li><NavLink href="/popper/with-portal">With Portal</NavLink></li>
-                            <li><NavLink href="/popper/with-update-position-strategy-always">With Update Position Strategy Always</NavLink></li>
-                            <li><NavLink href="/popper/chromatic">Chromatic</NavLink></li>
-                        </ul>
-                    </li>
-                    <li>
-                        Portal
-
-                        <ul class="list-none m-0 ms-4 p-0">
-                            <li><NavLink href="/portal/base">Base</NavLink></li>
-                            <li><NavLink href="/portal/custom-container">Custom Container</NavLink></li>
-                            <li><NavLink href="/portal/chromatic">Chromatic</NavLink></li>
-                        </ul>
-                    </li>
-                    <li>
-                        Presence
-
-                        <ul class="list-none m-0 ms-4 p-0">
-                            <li><NavLink href="/presence/basic">Basic</NavLink></li>
-                            <li><NavLink href="/presence/with-mount-animation">With Mount Animation</NavLink></li>
-                            <li><NavLink href="/presence/with-unmount-animation">With Unmount Animation</NavLink></li>
-                            <li><NavLink href="/presence/with-multiple-mount-animations">With Multiple Mount Animations</NavLink></li>
-                            <li><NavLink href="/presence/with-open-and-close-animation">With Open and Close Animation</NavLink></li>
-                            <li><NavLink href="/presence/with-multiple-open-and-close-animations">With Multiple Open and Close Animations</NavLink></li>
-                            <li><NavLink href="/presence/with-deferred-mount-animation">With Deferred Mount Animation</NavLink></li>
-                        </ul>
-                    </li>
-                    <li>
-                        Progress
-
-                        <ul class="list-none m-0 ms-4 p-0">
-                            <li><NavLink href="/progress/styled">Styled</NavLink></li>
-                            <li><NavLink href="/progress/chromatic">Chromatic</NavLink></li>
-                        </ul>
-                    </li>
-                    <li>
-                        Radio Group
-
-                        <ul class="list-none m-0 ms-4 p-0">
-                            <li><NavLink href="/radio-group/styled">Styled</NavLink></li>
-                            <li><NavLink href="/radio-group/controlled">Controlled</NavLink></li>
-                            <li><NavLink href="/radio-group/unset">Unset</NavLink></li>
-                            <li><NavLink href="/radio-group/within-form">Within Form</NavLink></li>
-                            <li><NavLink href="/radio-group/animated">Animated</NavLink></li>
-                            <li><NavLink href="/radio-group/chromatic">Chromatic</NavLink></li>
-                        </ul>
-                    </li>
-                    <li>
-                        Roving Focus
-
-                        <ul class="list-none m-0 ms-4 p-0">
-                            <li><NavLink href="/roving-focus/basic">Basic</NavLink></li>
-                            <li><NavLink href="/roving-focus/nested">Nested</NavLink></li>
-                            <li><NavLink href="/roving-focus/edge-cases">Edge Cases</NavLink></li>
-                        </ul>
-                    </li>
-                    <li>
-                        Scroll Area
-
-                        <ul class="list-none m-0 ms-4 p-0">
-                            <li><NavLink href="/scroll-area/basic">Basic</NavLink></li>
-                            <li><NavLink href="/scroll-area/resizable">Resizable</NavLink></li>
-                            <li><NavLink href="/scroll-area/content-change">Content Change</NavLink></li>
-                            <li><NavLink href="/scroll-area/animated">Animated</NavLink></li>
-                            <li><NavLink href="/scroll-area/chromatic">Chromatic</NavLink></li>
-                            <li><NavLink href="/scroll-area/chromatic-dynamic-content-before-loaded">Chromatic Dynamic Content Before Loaded</NavLink></li>
-                            <li><NavLink href="/scroll-area/chromatic-dynamic-content-after-loaded">Chromatic Dynamic Content After Loaded</NavLink></li>
-                        </ul>
-                    </li>
-                    <li>
-                        Separator
-
-                        <ul class="list-none m-0 ms-4 p-0">
-                            <li><NavLink href="/separator/styled">Styled</NavLink></li>
-                        </ul>
-                    </li>
-                    <li>
-                        Slider
-
-                        <ul class="list-none m-0 ms-4 p-0">
-                            <li><NavLink href="/slider/styled">Styled</NavLink></li>
-                            <li><NavLink href="/slider/with-on-value-commit">With On Value Commit</NavLink></li>
-                            <li><NavLink href="/slider/right-to-left">Right To Left</NavLink></li>
-                            <li><NavLink href="/slider/horizontal">Horizontal</NavLink></li>
-                            <li><NavLink href="/slider/vertical">Vertical</NavLink></li>
-                            <li><NavLink href="/slider/inversions">Inversions</NavLink></li>
-                            <li><NavLink href="/slider/with-minimum-steps-between-thumbs">With Min Steps Between Thumbs</NavLink></li>
-                            <li><NavLink href="/slider/with-multiple-ranges">With Multiple Ranges</NavLink></li>
-                            <li><NavLink href="/slider/small-steps">Small Steps</NavLink></li>
-                            <li><NavLink href="/slider/within-form">Within Form</NavLink></li>
-                            <li><NavLink href="/slider/strict">Strict</NavLink></li>
-                            <li><NavLink href="/slider/chromatic">Chromatic</NavLink></li>
-                        </ul>
-                    </li>
-                    <li>
-                        Tabs
-
-                        <ul class="list-none m-0 ms-4 p-0">
-                            <li><NavLink href="/tabs/styled">Styled</NavLink></li>
-                            <li><NavLink href="/tabs/animated">Animated</NavLink></li>
-                            <li><NavLink href="/tabs/chromatic">Chromatic</NavLink></li>
-                        </ul>
-                    </li>
-                    // <li>
-                    //     Slot
-
-                    //     <ul class="list-none m-0 ms-4 p-0">
-                    //         <li><NavLink href="/slot/without-slottable">Without Slottable</NavLink></li>
-                    //         <li><NavLink href="/slot/with-slottable">With Slottable</NavLink></li>
-                    //         // TODO
-                    //     </ul>
-                    // </li>
-                    // <li>
-                    //     Switch
-
-                    //     <ul class="list-none m-0 ms-4 p-0">
-                    //         <li><NavLink href="/switch/styled">Styled</NavLink></li>
-                    //         <li><NavLink href="/switch/controlled">Controlled</NavLink></li>
-                    //         <li><NavLink href="/switch/within-form">Within Form</NavLink></li>
-                    //         <li><NavLink href="/switch/chromatic">Chromatic</NavLink></li>
-                    //     </ul>
-                    // </li>
-                    <li>
-                        Toggle
-
-                        <ul class="list-none m-0 ms-4 p-0">
-                            <li><NavLink href="/toggle/styled">Styled</NavLink></li>
-                            <li><NavLink href="/toggle/controlled">Controlled</NavLink></li>
-                            <li><NavLink href="/toggle/chromatic">Chromatic</NavLink></li>
-                        </ul>
-                    </li>
-                    <li>
-                        Toggle Group
-
-                        <ul class="list-none m-0 ms-4 p-0">
-                            <li><NavLink href="/toggle-group/single">Single</NavLink></li>
-                            <li><NavLink href="/toggle-group/vertical">Vertical</NavLink></li>
-                            <li><NavLink href="/toggle-group/multiple">Multiple</NavLink></li>
-                            <li><NavLink href="/toggle-group/chromatic">Chromatic</NavLink></li>
-                        </ul>
-                    </li>
-                    <li>
-                        Toolbar
-
-                        <ul class="list-none m-0 ms-4 p-0">
-                            <li><NavLink href="/toolbar/styled">Styled</NavLink></li>
-                            <li><NavLink href="/toolbar/chromatic">Chromatic</NavLink></li>
-                        </ul>
-                    </li>
-                    <li>
-                        Visually Hidden
-
-                        <ul class="list-none m-0 ms-4 p-0">
-                            <li><NavLink href="/visually-hidden/basic">Basic</NavLink></li>
-                        </ul>
-                    </li>
+                    // -- Utilities --
+                    <NavTier title="Utilities">
+                        <NavSection title="Accessible Icon" tested=false stories=vec![
+                            ("/accessible-icon/styled", "Styled"),
+                            ("/accessible-icon/chromatic", "Chromatic"),
+                        ] />
+                        <NavSection title="Arrow" stories=vec![
+                            ("/arrow/styled", "Styled"),
+                            ("/arrow/custom-sizes", "Custom Sizes"),
+                            ("/arrow/custom-arrow", "Custom Arrow"),
+                        ] />
+                        <NavSection title="Collection" stories=vec![
+                            ("/collection/basic", "Basic"),
+                            ("/collection/with-element-in-between", "With Element In Between"),
+                            ("/collection/with-wrapped-item", "With Wrapped Item"),
+                            ("/collection/with-fragment", "With Fragment"),
+                            ("/collection/dynamic-insertion", "Dynamic Insertion"),
+                            ("/collection/with-changing-item", "With Changing Item"),
+                            ("/collection/nested", "Nested"),
+                        ] />
+                        <NavSection title="Dismissable Layer" stories=vec![
+                            ("/dismissable-layer/basic", "Basic"),
+                            ("/dismissable-layer/nested", "Nested"),
+                            ("/dismissable-layer/with-focus-scope", "With Focus Scope"),
+                            ("/dismissable-layer/dialog-example", "Dialog Example"),
+                            ("/dismissable-layer/popover-fully-modal", "Popover Fully Modal"),
+                            ("/dismissable-layer/popover-semi-modal", "Popover Semi Modal"),
+                            ("/dismissable-layer/popover-non-modal", "Popover Non Modal"),
+                            ("/dismissable-layer/popover-in-dialog", "Popover In Dialog"),
+                            ("/dismissable-layer/popover-nested", "Popover Nested"),
+                        ] />
+                        <NavSection title="Focus Scope" stories=vec![
+                            ("/focus-scope/basic", "Basic"),
+                            ("/focus-scope/multiple", "Multiple"),
+                            ("/focus-scope/with-options", "With Options"),
+                        ] />
+                        <NavSection title="Popper" stories=vec![
+                            ("/popper/styled", "Styled"),
+                            ("/popper/with-custom-arrow", "With Custom Arrow"),
+                            ("/popper/animated", "Animated"),
+                            ("/popper/with-portal", "With Portal"),
+                            ("/popper/with-update-position-strategy-always", "With Update Position Strategy Always"),
+                            ("/popper/chromatic", "Chromatic"),
+                        ] />
+                        <NavSection title="Portal" stories=vec![
+                            ("/portal/base", "Base"),
+                            ("/portal/custom-container", "Custom Container"),
+                            ("/portal/chromatic", "Chromatic"),
+                        ] />
+                        <NavSection title="Presence" stories=vec![
+                            ("/presence/basic", "Basic"),
+                            ("/presence/with-mount-animation", "With Mount Animation"),
+                            ("/presence/with-unmount-animation", "With Unmount Animation"),
+                            ("/presence/with-multiple-mount-animations", "With Multiple Mount Animations"),
+                            ("/presence/with-open-and-close-animation", "With Open and Close Animation"),
+                            ("/presence/with-multiple-open-and-close-animations", "With Multiple Open and Close Animations"),
+                            ("/presence/with-deferred-mount-animation", "With Deferred Mount Animation"),
+                        ] />
+                        <NavSection title="Roving Focus" stories=vec![
+                            ("/roving-focus/basic", "Basic"),
+                            ("/roving-focus/nested", "Nested"),
+                            ("/roving-focus/edge-cases", "Edge Cases"),
+                        ] />
+                        // <NavSection title="Slot" stories=vec![
+                        //     ("/slot/without-slottable", "Without Slottable"),
+                        //     ("/slot/with-slottable", "With Slottable"),
+                        // ] />
+                        <NavSection title="Visually Hidden" stories=vec![
+                            ("/visually-hidden/basic", "Basic"),
+                        ] />
+                    </NavTier>
                 </ul>
             </nav>
             <main style="position: fixed; top: 0; bottom: 0; left: 16rem; right: 0;">
