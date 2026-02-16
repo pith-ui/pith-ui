@@ -10,6 +10,7 @@ use once_cell::sync::Lazy;
 use radix_leptos_compose_refs::use_composed_refs;
 use radix_leptos_primitive::Primitive;
 use send_wrapper::SendWrapper;
+use wasm_bindgen::JsValue;
 use web_sys::{
     CustomEvent, CustomEventInit, Event, FocusEvent, KeyboardEvent, MutationObserver,
     MutationObserverInit, MutationRecord, NodeFilter,
@@ -263,14 +264,29 @@ pub fn FocusScope(
                     .expect("Auto focus on mount event should be dispatched.");
 
                 if !mount_event.default_prevented() {
-                    focus_first(
-                        remove_links(get_tabbable_candidates(&container)),
-                        Some(FocusOptions { select: true }),
-                    );
-                    if document().active_element().as_ref() == previously_focused_element.as_deref()
-                    {
-                        focus(Some(container.clone()), None);
-                    }
+                    // Defer auto-focus to requestAnimationFrame to emulate React's
+                    // useEffect timing. In React, useEffect runs post-paint with
+                    // children-first ordering, so DismissableLayer registration
+                    // (child) always completes before FocusScope auto-focus (parent).
+                    // In Leptos, Effects run in creation order (parent first), so
+                    // without deferral, auto-focus can move focus before nested
+                    // DismissableLayer layers register, causing parent layers to
+                    // incorrectly dismiss on focus-outside.
+                    let container_for_raf = container.clone();
+                    let prev_for_raf = previously_focused_element.clone();
+                    let cb = Closure::once_into_js(move || {
+                        focus_first(
+                            remove_links(get_tabbable_candidates(&container_for_raf)),
+                            Some(FocusOptions { select: true }),
+                        );
+                        if document().active_element().as_ref() == prev_for_raf.as_deref() {
+                            focus(Some(container_for_raf), None);
+                        }
+                    });
+                    web_sys::window()
+                        .expect("Window should exist.")
+                        .request_animation_frame(cb.unchecked_ref())
+                        .ok();
                 }
 
                 let container_clone = container.clone();
@@ -582,8 +598,21 @@ fn focus(element: Option<web_sys::HtmlElement>, options: Option<FocusOptions>) {
         let previously_focused_element = document().active_element();
 
         // NOTE: We prevent scrolling on focus, to minimize jarring transitions for users.
-        // TODO: web_sys does not support passing options. JS: element.focus({ preventScroll: true })
-        element.focus().expect("Element should be focused.");
+        // web_sys::HtmlElement::focus() does not accept options, so we call the JS method
+        // directly to pass { preventScroll: true }.
+        let focus_options = js_sys::Object::new();
+        js_sys::Reflect::set(
+            &focus_options,
+            &JsValue::from_str("preventScroll"),
+            &JsValue::TRUE,
+        )
+        .expect("Property should be set.");
+        let focus_fn = js_sys::Reflect::get(&element, &JsValue::from_str("focus"))
+            .expect("focus method should exist.")
+            .unchecked_into::<js_sys::Function>();
+        focus_fn
+            .call1(&element, &focus_options)
+            .expect("Element should be focused.");
 
         // Only select if its not the same element, it supports selection and we need to select.
         let el: &web_sys::Element = &element;

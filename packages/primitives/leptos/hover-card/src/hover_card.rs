@@ -1,4 +1,6 @@
-use leptos::{attribute_interceptor::AttributeInterceptor, context::Provider, ev, html, prelude::*};
+use leptos::{
+    attribute_interceptor::AttributeInterceptor, context::Provider, ev, html, prelude::*,
+};
 use leptos_node_ref::AnyNodeRef;
 use radix_leptos_compose_refs::use_composed_refs;
 use radix_leptos_dismissable_layer::DismissableLayer;
@@ -302,8 +304,9 @@ pub fn HoverCardContent(
     #[prop(into, optional, default = 0.0.into())] align_offset: Signal<f64>,
     #[prop(into, optional, default = 0.0.into())] arrow_padding: Signal<f64>,
     #[prop(into, optional, default = true.into())] avoid_collisions: Signal<bool>,
-    #[prop(into, optional, default = SendWrapper::new(vec![]).into())]
-    collision_boundary: Signal<SendWrapper<Vec<web_sys::Element>>>,
+    #[prop(into, optional, default = SendWrapper::new(vec![]).into())] collision_boundary: Signal<
+        SendWrapper<Vec<web_sys::Element>>,
+    >,
     #[prop(into, optional, default = Padding::All(0.0).into())] collision_padding: Signal<Padding>,
     #[prop(into, optional, default = Sticky::Partial.into())] sticky: Signal<Sticky>,
     #[prop(into, optional, default = false.into())] hide_when_detached: Signal<bool>,
@@ -410,8 +413,9 @@ fn HoverCardContentImpl(
     #[prop(into, optional, default = 0.0.into())] align_offset: Signal<f64>,
     #[prop(into, optional, default = 0.0.into())] arrow_padding: Signal<f64>,
     #[prop(into, optional, default = true.into())] avoid_collisions: Signal<bool>,
-    #[prop(into, optional, default = SendWrapper::new(vec![]).into())]
-    collision_boundary: Signal<SendWrapper<Vec<web_sys::Element>>>,
+    #[prop(into, optional, default = SendWrapper::new(vec![]).into())] collision_boundary: Signal<
+        SendWrapper<Vec<web_sys::Element>>,
+    >,
     #[prop(into, optional, default = Padding::All(0.0).into())] collision_padding: Signal<Padding>,
     #[prop(into, optional, default = Sticky::Partial.into())] sticky: Signal<Sticky>,
     #[prop(into, optional, default = false.into())] hide_when_detached: Signal<bool>,

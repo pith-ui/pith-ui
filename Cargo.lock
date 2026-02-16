@@ -4129,12 +4129,14 @@ dependencies = [
 name = "radix-leptos-focus-scope"
 version = "0.0.2"
 dependencies = [
+ "js-sys",
  "leptos",
  "leptos-node-ref",
  "once_cell",
  "radix-leptos-compose-refs",
  "radix-leptos-primitive",
  "send_wrapper",
+ "wasm-bindgen",
  "web-sys",
 ]
 
@@ -4225,6 +4227,28 @@ dependencies = [
  "radix-leptos-primitive",
  "radix-leptos-use-controllable-state",
  "send_wrapper",
+ "web-sys",
+]
+
+[[package]]
+name = "radix-leptos-popover"
+version = "0.0.2"
+dependencies = [
+ "js-sys",
+ "leptos",
+ "leptos-node-ref",
+ "radix-leptos-compose-refs",
+ "radix-leptos-dismissable-layer",
+ "radix-leptos-focus-guards",
+ "radix-leptos-focus-scope",
+ "radix-leptos-id",
+ "radix-leptos-popper",
+ "radix-leptos-portal",
+ "radix-leptos-presence",
+ "radix-leptos-primitive",
+ "radix-leptos-use-controllable-state",
+ "send_wrapper",
+ "wasm-bindgen",
  "web-sys",
 ]
 
@@ -4390,6 +4414,7 @@ dependencies = [
  "radix-leptos-label",
  "radix-leptos-one-time-password-field",
  "radix-leptos-password-toggle-field",
+ "radix-leptos-popover",
  "radix-leptos-popper",
  "radix-leptos-portal",
  "radix-leptos-presence",
@@ -4407,6 +4432,7 @@ dependencies = [
  "send_wrapper",
  "stylance",
  "tailwind_fuse",
+ "wasm-bindgen",
  "web-sys",
 ]
 

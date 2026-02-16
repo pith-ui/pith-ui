@@ -16,6 +16,7 @@ pub mod label;
 // pub mod menu;
 pub mod one_time_password_field;
 pub mod password_toggle_field;
+pub mod popover;
 // pub mod playground;
 pub mod popper;
 pub mod portal;

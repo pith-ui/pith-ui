@@ -11,24 +11,10 @@
             "id": "8c5a22cb96fe50b9",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "notes/leptos-hover-card.md",
-                "mode": "source",
-                "source": false,
-                "backlinks": true,
-                "backlinkOpts": {
-                  "collapseAll": false,
-                  "extraContext": false,
-                  "sortOrder": "alphabetical",
-                  "showSearch": false,
-                  "searchQuery": "",
-                  "backlinkCollapsed": false,
-                  "unlinkedCollapsed": true
-                }
-              },
-              "icon": "lucide-file",
-              "title": "leptos-hover-card"
+              "type": "graph",
+              "state": {},
+              "icon": "lucide-git-fork",
+              "title": "Graph view"
             }
           }
         ]
@@ -193,17 +179,17 @@
   },
   "active": "8c5a22cb96fe50b9",
   "lastOpenFiles": [
-    "stories/leptos/dist/radix-leptos-stories-2ac67c649a9800c2.js",
-    "stories/leptos/dist/radix-leptos-stories-2ac67c649a9800c2_bg.wasm",
-    "target/wasm32-unknown-unknown/debug/deps/radix_leptos_stories-538b52d4cae991f4.wasm",
-    "target/wasm32-unknown-unknown/debug/deps/radix_leptos_stories-538b52d4cae991f4.wasm.tmpc765703",
-    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-1mf09a19xms9j/s-hfu2m05zi5-0x43rh2-1k3efc2lx40cg30s5ergyuf3h/work-products.bin",
-    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-1mf09a19xms9j/s-hfu2m05zi5-0x43rh2-1k3efc2lx40cg30s5ergyuf3h/f5cd8exilkcj2pfoqvj9u7xk0.o",
-    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-1mf09a19xms9j/s-hfu2m05zi5-0x43rh2-1k3efc2lx40cg30s5ergyuf3h/f4od9p1rxeyb6gsxck4i7lr3x.o",
-    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-1mf09a19xms9j/s-hfu2m05zi5-0x43rh2-1k3efc2lx40cg30s5ergyuf3h/query-cache.bin",
-    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-1mf09a19xms9j/s-hfu2m05zi5-0x43rh2-1k3efc2lx40cg30s5ergyuf3h/eydlaaf02rlqunvrewvi3bj43.o",
-    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-1mf09a19xms9j/s-hfu2m05zi5-0x43rh2-1k3efc2lx40cg30s5ergyuf3h/f4ofm1xlxa8j4aryxf9aynk5z.o",
-    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-1mf09a19xms9j/s-hfu2m05zi5-0x43rh2-1k3efc2lx40cg30s5ergyuf3h/ew3p66uxvxpofzis84shv1vqf.o",
+    "notes/leptos-popover.md",
+    "stories/leptos/dist/purple-9b476b30d5443309.css",
+    "stories/leptos/dist/red-74d32e64207a038a.css",
+    "stories/leptos/dist/bundle-8ce2488aa0307820.css",
+    "stories/leptos/dist/green-fbaf4d9bde970701.css",
+    "stories/leptos/dist/favicon-e197903841a5b23b.ico",
+    "stories/leptos/dist/blue-alpha-9c4e3c532cbba84.css",
+    "stories/leptos/dist/tailwind.output-8a7c2b5bae37232e.css",
+    "stories/leptos/dist/blue-420df321e365d4ba.css",
+    "stories/leptos/dist/radix-leptos-stories-5c7c1bd4aa330d8e_bg.wasm",
+    "stories/leptos/dist/radix-leptos-stories-5c7c1bd4aa330d8e.js",
     "notes/leptos-hover-card.md",
     "notes/leptos-popper.md",
     "notes/leptos-visually-hidden.md",

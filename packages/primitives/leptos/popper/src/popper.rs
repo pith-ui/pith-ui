@@ -452,9 +452,7 @@ pub fn PopperContent(
                     | "pointer-events"
                     | "animation"
             ) || prop.starts_with("--radix-popper-");
-            if !is_positioning
-                && let Ok(value) = wrapper_style.get_property_value(&prop)
-            {
+            if !is_positioning && let Ok(value) = wrapper_style.get_property_value(&prop) {
                 caller_props.push((prop, value));
             }
         }
