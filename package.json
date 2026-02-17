@@ -5,8 +5,15 @@
     "repository": "github:RustForWeb/radix",
     "license": "MIT",
     "private": true,
-    "scripts": {},
+    "scripts": {
+        "cy:open": "cypress open",
+        "cy:run": "cypress run",
+        "cy:run:dialog": "cypress run --spec cypress/e2e/Dialog.cy.js"
+    },
     "devDependencies": {
+        "@testing-library/cypress": "^10.0.0",
+        "cypress": "^14.0.0",
+        "cypress-real-events": "^1.15.0",
         "@radix-ui/colors": "^3.0.0",
         "@radix-ui/themes": "^3.1.4",
         "@types/node": "^24.0.0",
