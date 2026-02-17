@@ -35,6 +35,7 @@ radix-leptos-form.workspace = true
 radix-leptos-hover-card.workspace = true
 radix-leptos-label.workspace = true
 # radix-leptos-menu.workspace = true
+radix-leptos-navigation-menu.workspace = true
 radix-leptos-one-time-password-field.workspace = true
 radix-leptos-password-toggle-field.workspace = true
 radix-leptos-popover.workspace = true

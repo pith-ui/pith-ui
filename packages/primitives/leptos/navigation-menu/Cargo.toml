@@ -1,0 +1,48 @@
+[package]
+name = "radix-leptos-navigation-menu"
+description = "Leptos port of Radix Navigation Menu."
+homepage = "https://radix.rustforweb.org/primitives/components/navigation-menu.html"
+
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+version.workspace = true
+
+[dependencies]
+leptos.workspace = true
+leptos-node-ref.workspace = true
+radix-leptos-collection.workspace = true
+radix-leptos-compose-refs.workspace = true
+radix-leptos-direction.workspace = true
+radix-leptos-dismissable-layer.workspace = true
+radix-leptos-id.workspace = true
+radix-leptos-presence.workspace = true
+radix-leptos-primitive.workspace = true
+radix-leptos-use-controllable-state.workspace = true
+radix-leptos-use-previous.workspace = true
+radix-leptos-visually-hidden.workspace = true
+send_wrapper.workspace = true
+wasm-bindgen = "0.2"
+web-sys = { workspace = true, features = [
+    "CssStyleDeclaration",
+    "CustomEvent",
+    "CustomEventInit",
+    "Document",
+    "DomTokenList",
+    "Element",
+    "Event",
+    "EventInit",
+    "EventTarget",
+    "FocusEvent",
+    "HtmlElement",
+    "HtmlInputElement",
+    "KeyboardEvent",
+    "Node",
+    "NodeFilter",
+    "PointerEvent",
+    "ResizeObserver",
+    "ResizeObserverEntry",
+    "TreeWalker",
+    "Window",
+] }

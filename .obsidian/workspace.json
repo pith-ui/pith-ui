@@ -11,10 +11,24 @@
             "id": "8c5a22cb96fe50b9",
             "type": "leaf",
             "state": {
-              "type": "graph",
-              "state": {},
-              "icon": "lucide-git-fork",
-              "title": "Graph view"
+              "type": "markdown",
+              "state": {
+                "file": "notes/leptos-collection.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
+              },
+              "icon": "lucide-file",
+              "title": "leptos-collection"
             }
           }
         ]
@@ -181,15 +195,16 @@
   "lastOpenFiles": [
     "stories/leptos/dist/tailwind.output-1119674ca5379da3.css",
     "stories/leptos/dist/purple-9b476b30d5443309.css",
-    "stories/leptos/dist/radix-leptos-stories-2a204b5efcf3970a_bg.wasm",
     "stories/leptos/dist/red-74d32e64207a038a.css",
-    "stories/leptos/dist/bundle-8ce2488aa0307820.css",
+    "stories/leptos/dist/radix-leptos-stories-9b66cd2a0ac764f6_bg.wasm",
     "stories/leptos/dist/green-fbaf4d9bde970701.css",
-    "stories/leptos/dist/radix-leptos-stories-2a204b5efcf3970a.js",
+    "stories/leptos/dist/radix-leptos-stories-9b66cd2a0ac764f6.js",
     "stories/leptos/dist/favicon-e197903841a5b23b.ico",
     "stories/leptos/dist/blue-alpha-9c4e3c532cbba84.css",
     "stories/leptos/dist/blue-420df321e365d4ba.css",
+    "stories/leptos/dist/bundle-746beb8588c3ab8a.css",
     "stories/leptos/dist/index.html",
+    "notes/leptos-context.md",
     "notes/leptos-toolbar.md",
     "notes/leptos-popover.md",
     "notes/leptos-hover-card.md",
@@ -204,7 +219,6 @@
     "notes/leptos-dismissable-layer.md",
     "notes/leptos-use-escape-keydown.md",
     "notes/leptos-focus-guards.md",
-    "notes/leptos-context.md",
     "notes/leptos-context-menu.md",
     "notes/leptos-toast.md",
     "notes/leptos-toggle-group.md",

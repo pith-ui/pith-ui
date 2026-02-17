@@ -7,9 +7,10 @@ use leptos_router::{
 
 use crate::primitives::{
     accessible_icon, accordion, alert_dialog, arrow, aspect_ratio, collapsible, collection, dialog,
-    dismissable_layer, focus_scope, form, hover_card, label, one_time_password_field,
-    password_toggle_field, popover, popper, portal, presence, progress, radio_group, roving_focus,
-    scroll_area, separator, slider, tabs, toggle, toggle_group, toolbar, visually_hidden,
+    dismissable_layer, focus_scope, form, hover_card, label, navigation_menu,
+    one_time_password_field, password_toggle_field, popover, popper, portal, presence, progress,
+    radio_group, roving_focus, scroll_area, separator, slider, tabs, toggle, toggle_group, toolbar,
+    visually_hidden,
 };
 
 #[component]
@@ -263,6 +264,11 @@ fn EmbedApp() -> impl IntoView {
                     <Route path=path!("/label/with-control") view=label::WithControl />
                     <Route path=path!("/label/with-input-number") view=label::WithInputNumber />
 
+                    <Route path=path!("/navigation-menu/basic") view=navigation_menu::Basic />
+                    <Route path=path!("/navigation-menu/custom-durations") view=navigation_menu::CustomDurations />
+                    <Route path=path!("/navigation-menu/viewport") view=navigation_menu::Viewport />
+                    <Route path=path!("/navigation-menu/submenus") view=navigation_menu::Submenus />
+
                     // <Route path=path!("/menu/styled") view=menu::Styled />
                     // <Route path=path!("/menu/submenus") view=menu::Submenus />
                     // <Route path=path!("/menu/with-labels") view=menu::WithLabels />
@@ -478,6 +484,12 @@ fn ShellApp() -> impl IntoView {
                             ("/label/styled", "Styled"),
                             ("/label/with-control", "With Control"),
                             ("/label/with-input-number", "With Input Number"),
+                        ] />
+                        <NavSection title="Navigation Menu" tested=false stories=vec![
+                            ("/navigation-menu/basic", "Basic"),
+                            ("/navigation-menu/custom-durations", "Custom Durations"),
+                            ("/navigation-menu/viewport", "Viewport"),
+                            ("/navigation-menu/submenus", "Submenus"),
                         ] />
                         // <NavSection title="Menu" stories=vec![
                         //     ("/menu/styled", "Styled"),

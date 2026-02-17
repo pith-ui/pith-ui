@@ -4200,6 +4200,27 @@ dependencies = [
 ]
 
 [[package]]
+name = "radix-leptos-navigation-menu"
+version = "0.0.2"
+dependencies = [
+ "leptos",
+ "leptos-node-ref",
+ "radix-leptos-collection",
+ "radix-leptos-compose-refs",
+ "radix-leptos-direction",
+ "radix-leptos-dismissable-layer",
+ "radix-leptos-id",
+ "radix-leptos-presence",
+ "radix-leptos-primitive",
+ "radix-leptos-use-controllable-state",
+ "radix-leptos-use-previous",
+ "radix-leptos-visually-hidden",
+ "send_wrapper",
+ "wasm-bindgen",
+ "web-sys",
+]
+
+[[package]]
 name = "radix-leptos-one-time-password-field"
 version = "0.0.2"
 dependencies = [
@@ -4412,6 +4433,7 @@ dependencies = [
  "radix-leptos-form",
  "radix-leptos-hover-card",
  "radix-leptos-label",
+ "radix-leptos-navigation-menu",
  "radix-leptos-one-time-password-field",
  "radix-leptos-password-toggle-field",
  "radix-leptos-popover",

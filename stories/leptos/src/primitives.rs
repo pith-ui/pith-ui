@@ -14,6 +14,7 @@ pub mod form;
 pub mod hover_card;
 pub mod label;
 // pub mod menu;
+pub mod navigation_menu;
 pub mod one_time_password_field;
 pub mod password_toggle_field;
 pub mod popover;
