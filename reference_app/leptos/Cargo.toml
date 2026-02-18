@@ -1,0 +1,18 @@
+[package]
+name = "radix-leptos-reference-app"
+description = "Leptos reference app for Radix E2E testing."
+publish = false
+
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+version.workspace = true
+
+[dependencies]
+console_error_panic_hook.workspace = true
+console_log.workspace = true
+leptos = { workspace = true, features = ["csr"] }
+leptos_router.workspace = true
+log.workspace = true
+web-sys.workspace = true

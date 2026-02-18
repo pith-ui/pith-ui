@@ -1,0 +1,22 @@
+{
+    "name": "@rustforweb/radix-reference-app",
+    "description": "Cross-framework E2E testing harness for Radix Leptos.",
+    "private": true,
+    "scripts": {
+        "react:dev": "cd react && npm run dev",
+        "leptos:dev": "cd leptos && trunk serve --port 3000",
+        "cy:open": "cypress open",
+        "cy:run": "cypress run",
+        "cy:run:react": "start-server-and-test react:dev http://localhost:3000 cy:run",
+        "cy:run:leptos": "start-server-and-test leptos:dev http://localhost:3000 cy:run"
+    },
+    "devDependencies": {
+        "@testing-library/cypress": "^10.0.0",
+        "cypress": "^14.0.0",
+        "cypress-real-events": "^1.15.0",
+        "start-server-and-test": "^2.0.0"
+    },
+    "engines": {
+        "node": ">=18"
+    }
+}
