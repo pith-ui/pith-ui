@@ -8,7 +8,8 @@
     "scripts": {
         "cy:open": "cypress open",
         "cy:run": "cypress run",
-        "cy:run:dialog": "cypress run --spec cypress/e2e/Dialog.cy.js"
+        "cy:run:dialog": "cypress run --spec cypress/e2e/Dialog.cy.js",
+        "cy:run:form": "cypress run --spec cypress/e2e/Form.cy.js"
     },
     "devDependencies": {
         "@testing-library/cypress": "^10.0.0",

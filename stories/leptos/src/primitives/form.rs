@@ -95,14 +95,14 @@ pub fn Basic() -> impl IntoView {
 
 #[component]
 pub fn Cypress() -> impl IntoView {
-    let (data, set_data) = signal(String::new());
+    let (data, set_data) = signal("{}".to_string());
     let (simulate_server_errors, set_simulate_server_errors) = signal(false);
     let (server_errors, set_server_errors) = signal::<(bool, bool, bool)>((false, false, false));
 
     let on_submit = move |event: web_sys::SubmitEvent| {
         event.prevent_default();
 
-        set_data.set(String::new());
+        set_data.set("{}".to_string());
 
         let form = event.target().and_then(|t| {
             use web_sys::wasm_bindgen::JsCast;
@@ -122,15 +122,29 @@ pub fn Cypress() -> impl IntoView {
             let country = form_data.get("country").as_string().unwrap_or_default();
 
             let simulate = simulate_server_errors.get_untracked();
+            let data_str = format!(
+                "{{\"name\": \"{name}\", \"age\": \"{age}\", \"email\": \"{email}\", \"password\": \"{password}\", \"pin\": \"{pin}\", \"secret\": \"{secret}\", \"asyncSecret\": \"{async_secret}\", \"country\": \"{country}\"}}"
+            );
 
             if simulate {
-                set_server_errors.set((email.is_empty(), pin.chars().nth(3) != Some('9'), true));
+                // Match React's `await wait(100)` — server errors arrive asynchronously.
+                let email_empty = email.is_empty();
+                let pin_invalid = pin.chars().nth(3) != Some('9');
+                set_timeout(
+                    move || {
+                        set_server_errors.set((email_empty, pin_invalid, true));
+                        set_data.set(data_str);
+                    },
+                    std::time::Duration::from_millis(100),
+                );
+            } else {
+                set_data.set(data_str);
             }
-
-            set_data.set(format!(
-                        "name: {name}, age: {age}, email: {email}, password: {password}, pin: {pin}, secret: {secret}, asyncSecret: {async_secret}, country: {country}"
-                    ));
         }
+    };
+
+    let on_reset = move |_: web_sys::Event| {
+        set_data.set("{}".to_string());
     };
 
     view! {
@@ -138,6 +152,7 @@ pub fn Cypress() -> impl IntoView {
             attr:class=form_classes::form
             on_clear_server_errors=Callback::new(move |_| set_server_errors.set((false, false, false)))
             on:submit=on_submit
+            on:reset=on_reset
         >
             <FormField name="name">
                 <FormLabel>Name (required)</FormLabel>
