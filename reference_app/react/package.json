@@ -13,6 +13,9 @@
         "react-dom": "^19.0.0",
         "react-router-dom": "^7.0.0"
     },
+    "pnpm": {
+        "onlyBuiltDependencies": ["esbuild"]
+    },
     "devDependencies": {
         "@vitejs/plugin-react": "^4.0.0",
         "vite": "^6.0.0"
