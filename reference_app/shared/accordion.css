@@ -1,0 +1,40 @@
+.accordion-root {
+    width: 400px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+.accordion-item {
+    border-bottom: 1px solid #ccc;
+}
+
+.accordion-item:last-child {
+    border-bottom: none;
+}
+
+.accordion-header {
+    margin: 0;
+}
+
+.accordion-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 10px 16px;
+    font-size: 14px;
+    line-height: 1;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.accordion-trigger[data-disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.accordion-content {
+    padding: 10px 16px;
+    font-size: 14px;
+}

@@ -1,0 +1,14 @@
+.collapsible-root {
+    max-width: 300px;
+}
+
+.collapsible-trigger {
+    display: block;
+    padding: 8px 16px;
+    cursor: pointer;
+}
+
+.collapsible-content {
+    padding: 8px 16px;
+    border: 1px solid #ccc;
+}

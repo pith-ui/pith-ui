@@ -1,0 +1,20 @@
+.toggle-root {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background: white;
+    cursor: pointer;
+}
+
+.toggle-root[data-state='on'] {
+    background: #eee;
+    border-color: #999;
+}
+
+.toggle-root[data-disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+}

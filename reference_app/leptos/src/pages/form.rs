@@ -1,0 +1,80 @@
+use leptos::prelude::*;
+use radix_leptos_form::*;
+
+#[component]
+pub fn FormPage() -> impl IntoView {
+    let (data, set_data) = signal("{}".to_string());
+    let (server_errors_name, set_server_errors_name) = signal(false);
+
+    let on_submit = move |event: web_sys::SubmitEvent| {
+        event.prevent_default();
+
+        let form = event.target().and_then(|t| {
+            use web_sys::wasm_bindgen::JsCast;
+            t.dyn_into::<web_sys::HtmlFormElement>().ok()
+        });
+
+        if let Some(form) = form
+            && let Ok(form_data) = web_sys::FormData::new_with_form(&form)
+        {
+            let name = form_data.get("name").as_string().unwrap_or_default();
+            let email = form_data.get("email").as_string().unwrap_or_default();
+
+            // Simulate server validation: name must not be "taken"
+            if name == "taken" {
+                set_server_errors_name.set(true);
+                return;
+            }
+
+            set_data.set(format!("{{\"name\":\"{name}\",\"email\":\"{email}\"}}"));
+        }
+    };
+
+    let on_reset = move |_: web_sys::Event| {
+        set_data.set("{}".to_string());
+    };
+
+    view! {
+        <Form
+            attr:class="form-root"
+            on_clear_server_errors=Callback::new(move |_| set_server_errors_name.set(false))
+            on:submit=on_submit
+            on:reset=on_reset
+        >
+            <FormField
+                name="name"
+                attr:class="form-field"
+                server_invalid=Signal::derive(move || server_errors_name.get())
+            >
+                <FormLabel attr:class="form-label">"Name"</FormLabel>
+                <FormControl attr:class="form-control" attr:r#type="text" attr:required="" />
+                <FormMessage attr:class="form-message" r#match=Match::BuiltIn(ValidityMatcher::ValueMissing)>
+                    "Name is required"
+                </FormMessage>
+                <Show when=move || server_errors_name.get()>
+                    <FormMessage attr:class="form-message">
+                        "Name is already taken"
+                    </FormMessage>
+                </Show>
+            </FormField>
+
+            <FormField name="email" attr:class="form-field">
+                <FormLabel attr:class="form-label">"Email"</FormLabel>
+                <FormControl attr:class="form-control" attr:r#type="email" attr:required="" />
+                <FormMessage attr:class="form-message" r#match=Match::BuiltIn(ValidityMatcher::ValueMissing)>
+                    "Email is required"
+                </FormMessage>
+                <FormMessage attr:class="form-message" r#match=Match::BuiltIn(ValidityMatcher::TypeMismatch)>
+                    "Please enter a valid email"
+                </FormMessage>
+            </FormField>
+
+            <FormSubmit attr:class="form-submit">"Submit"</FormSubmit>
+            <button type="reset">"reset"</button>
+        </Form>
+
+        <pre data-testid="form-result">"Data: " {move || data.get()}</pre>
+
+        <button data-testid="outside-button">"outside"</button>
+    }
+}

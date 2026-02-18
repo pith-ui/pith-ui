@@ -1,0 +1,26 @@
+.hover-card-trigger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background: white;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+}
+
+.hover-card-content {
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    min-width: 200px;
+}
+
+.hover-card-arrow {
+    fill: white;
+    stroke: #ccc;
+}

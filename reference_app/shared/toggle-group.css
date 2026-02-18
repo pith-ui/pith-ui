@@ -1,0 +1,29 @@
+.toggle-group-root {
+    display: inline-flex;
+    gap: 1px;
+    border-radius: 4px;
+}
+
+.toggle-group-root[data-orientation='vertical'] {
+    flex-direction: column;
+}
+
+.toggle-group-item {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 16px;
+    border: 1px solid #ccc;
+    background: white;
+    cursor: pointer;
+}
+
+.toggle-group-item[data-state='on'] {
+    background: #eee;
+    border-color: #999;
+}
+
+.toggle-group-item[data-disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+}

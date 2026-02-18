@@ -1,0 +1,33 @@
+.switch-root {
+    display: inline-flex;
+    align-items: center;
+    width: 42px;
+    height: 25px;
+    border: none;
+    border-radius: 9999px;
+    background: #ccc;
+    padding: 2px;
+    cursor: pointer;
+}
+
+.switch-root[data-state='checked'] {
+    background: #111;
+}
+
+.switch-root[data-disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.switch-thumb {
+    display: block;
+    width: 21px;
+    height: 21px;
+    border-radius: 50%;
+    background: white;
+    transition: transform 100ms;
+}
+
+.switch-thumb[data-state='checked'] {
+    transform: translateX(17px);
+}

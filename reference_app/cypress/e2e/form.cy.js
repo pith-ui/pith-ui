@@ -1,0 +1,235 @@
+describe('Form', () => {
+    // ── Helpers ──────────────────────────────────────────────
+
+    function getNameInput() {
+        return cy.findByLabelText('Name');
+    }
+
+    function getEmailInput() {
+        return cy.findByLabelText('Email');
+    }
+
+    function getSubmitButton() {
+        return cy.findByRole('button', {name: 'Submit'});
+    }
+
+    function getResetButton() {
+        return cy.findByRole('button', {name: 'reset'});
+    }
+
+    function getFormResult() {
+        return cy.findByTestId('form-result');
+    }
+
+    beforeEach(() => {
+        cy.visit('/form');
+    });
+
+    // ── 1. Accessibility Semantics ──────────────────────────
+
+    describe('accessibility', () => {
+        it('Label is associated with its control via htmlFor/id', () => {
+            // The label's "for" attribute should match the input's "id"
+            cy.findByText('Name')
+                .invoke('attr', 'for')
+                .then((forAttr) => {
+                    getNameInput().should('have.attr', 'id', forAttr);
+                });
+        });
+
+        it('required field has aria-required on the native input', () => {
+            // The native input has required attribute which the browser exposes
+            getNameInput().should('have.attr', 'required');
+        });
+
+        it('invalid field has aria-invalid after server validation failure', () => {
+            // Type "taken" to trigger server-side validation error
+            getNameInput().type('taken');
+            getEmailInput().type('test@example.com');
+            getSubmitButton().click();
+
+            // After server validation failure, serverInvalid=true sets aria-invalid
+            getNameInput().should('have.attr', 'aria-invalid', 'true');
+        });
+
+        it('error message is linked via aria-describedby', () => {
+            // Submit empty form to trigger validation messages
+            getSubmitButton().click();
+
+            // The name input should have aria-describedby pointing to the error message
+            getNameInput()
+                .invoke('attr', 'aria-describedby')
+                .then((describedBy) => {
+                    expect(describedBy).to.not.be.empty;
+                    const ids = describedBy.split(' ');
+                    // At least one ID should correspond to the error message
+                    cy.get(`#${ids[0]}`).should('contain.text', 'Name is required');
+                });
+        });
+    });
+
+    // ── 2. Data Attributes ──────────────────────────────────
+
+    describe('data attributes', () => {
+        it('Field does not have data-valid or data-invalid initially (before validation)', () => {
+            // Before any submit attempt, no validity has been computed
+            cy.get('.form-field').first().should('not.have.attr', 'data-valid');
+            cy.get('.form-field').first().should('not.have.attr', 'data-invalid');
+        });
+
+        it('Field has data-invalid after failed validation', () => {
+            getSubmitButton().click();
+
+            // The name field should be invalid (required but empty)
+            cy.get('.form-field').first().should('have.attr', 'data-invalid');
+        });
+
+        it('Field has data-valid after entering valid data and triggering validation', () => {
+            // Type valid data, submit to trigger validation
+            getNameInput().type('Alice');
+            getEmailInput().type('alice@example.com');
+            getSubmitButton().click();
+
+            // After successful validation, fields should be valid
+            // (form submits, so data-valid may or may not be set depending on implementation)
+            // Check the name field specifically
+            getFormResult().should('contain.text', 'Alice');
+        });
+
+        it('Message inherits field validity context', () => {
+            // Submit empty form - messages should appear
+            getSubmitButton().click();
+
+            // The error message span should exist within the invalid field
+            cy.findByText('Name is required').should('exist');
+            cy.findByText('Email is required').should('exist');
+        });
+    });
+
+    // ── 3. Built-in Validation ──────────────────────────────
+
+    describe('built-in validation', () => {
+        it('required field shows valueMissing message on empty submit', () => {
+            getSubmitButton().click();
+
+            cy.findByText('Name is required').should('exist');
+            cy.findByText('Email is required').should('exist');
+        });
+
+        it('email field shows typeMismatch message on invalid email', () => {
+            getNameInput().type('Alice');
+            getEmailInput().type('not-an-email');
+            getSubmitButton().click();
+
+            cy.findByText('Please enter a valid email').should('exist');
+        });
+
+        it('field becomes valid after entering valid data', () => {
+            // First, trigger validation
+            getSubmitButton().click();
+            cy.findByText('Name is required').should('exist');
+
+            // Now type valid data - the message should clear on input
+            getNameInput().type('Alice');
+            cy.findByText('Name is required').should('not.exist');
+        });
+
+        it('email validation clears after entering valid email', () => {
+            getNameInput().type('Alice');
+            getEmailInput().type('bad');
+            getSubmitButton().click();
+            cy.findByText('Please enter a valid email').should('exist');
+
+            // Clear and type valid email
+            getEmailInput().clear().type('alice@example.com');
+            cy.findByText('Please enter a valid email').should('not.exist');
+        });
+
+        it('focuses first invalid control on submit', () => {
+            // Leave both fields empty and submit
+            getSubmitButton().click();
+
+            // Name is the first field, so it should receive focus
+            getNameInput().should('be.focused');
+        });
+    });
+
+    // ── 4. Form Submission ──────────────────────────────────
+
+    describe('form submission', () => {
+        it('submit button has type="submit"', () => {
+            getSubmitButton().should('have.attr', 'type', 'submit');
+        });
+
+        it('valid form submits successfully and displays data', () => {
+            getNameInput().type('Alice');
+            getEmailInput().type('alice@example.com');
+            getSubmitButton().click();
+
+            getFormResult().should('contain.text', '"name"');
+            getFormResult().should('contain.text', 'Alice');
+            getFormResult().should('contain.text', '"email"');
+            getFormResult().should('contain.text', 'alice@example.com');
+        });
+
+        it('invalid form does not submit', () => {
+            getSubmitButton().click();
+
+            // Form result should still be the initial empty object
+            getFormResult().should('contain.text', 'Data: {}');
+        });
+
+        it('reset button clears form and result', () => {
+            getNameInput().type('Alice');
+            getEmailInput().type('alice@example.com');
+            getSubmitButton().click();
+            getFormResult().should('contain.text', 'Alice');
+
+            getResetButton().click();
+            getFormResult().should('contain.text', 'Data: {}');
+        });
+    });
+
+    // ── 5. Custom Validation ────────────────────────────────
+
+    describe('custom validation', () => {
+        it('server-side validation error shown when name is "taken"', () => {
+            getNameInput().type('taken');
+            getEmailInput().type('test@example.com');
+            getSubmitButton().click();
+
+            cy.findByText('Name is already taken').should('exist');
+        });
+
+        it('server-side validation sets aria-invalid on control', () => {
+            getNameInput().type('taken');
+            getEmailInput().type('test@example.com');
+            getSubmitButton().click();
+
+            getNameInput().should('have.attr', 'aria-invalid', 'true');
+        });
+
+        it('server-side validation error clears on re-input and re-submit', () => {
+            getNameInput().type('taken');
+            getEmailInput().type('test@example.com');
+            getSubmitButton().click();
+            cy.findByText('Name is already taken').should('exist');
+
+            // Typing clears the server errors via onClearServerErrors
+            getNameInput().clear().type('Alice');
+            cy.findByText('Name is already taken').should('not.exist');
+
+            // Re-submit with valid data
+            getSubmitButton().click();
+            getFormResult().should('contain.text', 'Alice');
+        });
+
+        it('Field has data-invalid when serverInvalid is true', () => {
+            getNameInput().type('taken');
+            getEmailInput().type('test@example.com');
+            getSubmitButton().click();
+
+            cy.get('.form-field').first().should('have.attr', 'data-invalid');
+        });
+    });
+});

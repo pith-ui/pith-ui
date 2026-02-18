@@ -1,0 +1,89 @@
+.toolbar-root {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background: white;
+}
+
+.toolbar-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background: white;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.toolbar-button:hover {
+    background: #f5f5f5;
+}
+
+.toolbar-button:focus {
+    outline: 2px solid #111;
+    outline-offset: 1px;
+}
+
+.toolbar-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 12px;
+    border-radius: 4px;
+    color: #111;
+    font-size: 14px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.toolbar-link:hover {
+    text-decoration: underline;
+}
+
+.toolbar-link:focus {
+    outline: 2px solid #111;
+    outline-offset: 1px;
+}
+
+.toolbar-separator {
+    width: 1px;
+    height: 20px;
+    background: #ccc;
+    margin: 0 4px;
+}
+
+.toolbar-toggle-group {
+    display: inline-flex;
+    gap: 1px;
+    border-radius: 4px;
+}
+
+.toolbar-toggle-item {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    background: white;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.toolbar-toggle-item:hover {
+    background: #f5f5f5;
+}
+
+.toolbar-toggle-item:focus {
+    outline: 2px solid #111;
+    outline-offset: 1px;
+}
+
+.toolbar-toggle-item[data-state='on'] {
+    background: #eee;
+    border-color: #999;
+}
