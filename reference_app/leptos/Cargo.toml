@@ -15,4 +15,5 @@ console_log.workspace = true
 leptos = { workspace = true, features = ["csr"] }
 leptos_router.workspace = true
 log.workspace = true
+radix-leptos-dialog.workspace = true
 web-sys.workspace = true

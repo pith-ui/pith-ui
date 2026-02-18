@@ -4358,6 +4358,7 @@ dependencies = [
  "leptos",
  "leptos_router",
  "log",
+ "radix-leptos-dialog",
  "web-sys",
 ]
 

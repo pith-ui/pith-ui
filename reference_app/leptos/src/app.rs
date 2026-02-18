@@ -2,6 +2,8 @@ use leptos::prelude::*;
 use leptos_router::components::{Route, Router, Routes};
 use leptos_router::path;
 
+use crate::pages;
+
 #[component]
 fn Index() -> impl IntoView {
     view! {
@@ -17,8 +19,7 @@ pub fn App() -> impl IntoView {
             <main>
                 <Routes fallback=|| "Not found.".into_view()>
                     <Route path=path!("/") view=Index />
-                    // Add component routes here, e.g.:
-                    // <Route path=path!("/dialog") view=pages::dialog::DialogPage />
+                    <Route path=path!("/dialog") view=pages::dialog::DialogPage />
                     // <Route path=path!("/form") view=pages::form::FormPage />
                 </Routes>
             </main>
