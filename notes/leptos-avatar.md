@@ -8,8 +8,8 @@ dependencies:
   - "[[leptos-use-callback-ref]]"
   - "[[leptos-use-is-hydrated]]"
 ported: true
-tested: false
-tested_story: false
+tested: true
+tested_story: true
 ---
 ## Intent
 

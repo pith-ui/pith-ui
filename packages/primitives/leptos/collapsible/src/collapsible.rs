@@ -4,7 +4,7 @@ use leptos::{
 use leptos_node_ref::AnyNodeRef;
 use radix_leptos_compose_refs::use_composed_refs;
 use radix_leptos_id::use_id;
-use radix_leptos_presence::Presence;
+use radix_leptos_presence::use_presence;
 use radix_leptos_primitive::{Primitive, compose_callbacks};
 use radix_leptos_use_controllable_state::{UseControllableStateParams, use_controllable_state};
 use send_wrapper::SendWrapper;
@@ -107,7 +107,9 @@ pub fn CollapsibleTrigger(
                 on:click=compose_callbacks(
                     on_click,
                     Some(Callback::new(move |_: ev::MouseEvent| {
-                        context.on_open_toggle.run(());
+                        if !context.disabled.get() {
+                            context.on_open_toggle.run(());
+                        }
                     })),
                     None,
                 )
@@ -137,19 +139,19 @@ pub fn CollapsibleContent(
     let present = Signal::derive(move || force_mount.get().unwrap_or(false) || context.open.get());
 
     let presence_ref = AnyNodeRef::new();
+    let is_present = use_presence(present, presence_ref);
 
     view! {
         <AttributeInterceptor let:attrs>
             {view! {
-                <Presence present=present node_ref=presence_ref>
-                    <CollapsibleContentImpl
-                        as_child=as_child
-                        node_ref=node_ref
-                        presence_ref=presence_ref
-                    >
-                        {children.with_value(|children| children.as_ref().map(|children| children()))}
-                    </CollapsibleContentImpl>
-                </Presence>
+                <CollapsibleContentImpl
+                    is_present=is_present
+                    as_child=as_child
+                    node_ref=node_ref
+                    presence_ref=presence_ref
+                >
+                    {children.with_value(|children| children.as_ref().map(|children| children()))}
+                </CollapsibleContentImpl>
             }.add_any_attr(attrs)}
         </AttributeInterceptor>
     }
@@ -161,6 +163,8 @@ pub fn CollapsibleContent(
 
 #[component]
 fn CollapsibleContentImpl(
+    /// Whether the content is currently present (from use_presence, includes animation state).
+    is_present: Signal<bool>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
     presence_ref: AnyNodeRef,
@@ -170,19 +174,18 @@ fn CollapsibleContentImpl(
 
     let context = expect_context::<CollapsibleContextValue>();
 
-    // This component only exists while Presence renders it (Mounted or UnmountSuspended).
-    // During that time the element should always be visible — Presence handles unmounting.
-    // So we don't need is_present/is_open/hidden tracking like React does with its render prop.
+    // Match React's pattern: isOpen = context.open || isPresent
+    // When opening: immediately open to retrieve dimensions.
+    // When closing: is_present stays true during exit animation, allowing dimension measurement.
+    let is_open = Signal::derive(move || context.open.get() || is_present.get());
 
-    let is_mount_animation_prevented = RwSignal::new(true);
+    let is_mount_animation_prevented = RwSignal::new(is_open.get_untracked());
     let original_transition_duration: RwSignal<Option<String>> = RwSignal::new(None);
     let original_animation_name: RwSignal<Option<String>> = RwSignal::new(None);
 
     let composed_ref = use_composed_refs(vec![node_ref, presence_ref]);
 
     // After the first frame, clear mount animation prevention flag.
-    // Style restoration is handled by the Effect on subsequent open/close changes,
-    // matching the React pattern where rAF only clears the flag.
     let raf_handle: RwSignal<Option<i32>> = RwSignal::new(None);
     let raf_closure: SendWrapper<Closure<dyn Fn()>> = SendWrapper::new(Closure::new(move || {
         is_mount_animation_prevented.set(false)
@@ -211,8 +214,9 @@ fn CollapsibleContentImpl(
     // All style manipulation is done directly on the DOM node to avoid conflicts
     // with reactive `attr:style` which would overwrite inline styles via setAttribute.
     Effect::new(move |_| {
-        // Track open state to re-run when it changes
+        // Track open state and present to re-run when they change
         let _open = context.open.get();
+        let _present = is_present.get();
 
         if let Some(node) = composed_ref.get() {
             let node: &web_sys::HtmlElement = node.unchecked_ref();
@@ -287,9 +291,12 @@ fn CollapsibleContentImpl(
                 attr:data-state=move || get_state(context.open.get())
                 attr:data-disabled=move || context.disabled.get().then_some("")
                 attr:id=move || context.content_id.get()
+                attr:hidden=move || (!is_open.get()).then_some("")
                 {..attrs}
             >
-                {children.with_value(|children| children.as_ref().map(|children| children()))}
+                <Show when=move || is_open.get()>
+                    {children.with_value(|children| children.as_ref().map(|children| children()))}
+                </Show>
             </Primitive>
         </AttributeInterceptor>
     }

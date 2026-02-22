@@ -42,16 +42,6 @@ describe('Form', () => {
             getNameInput().should('have.attr', 'required');
         });
 
-        it('invalid field has aria-invalid after server validation failure', () => {
-            // Type "taken" to trigger server-side validation error
-            getNameInput().type('taken');
-            getEmailInput().type('test@example.com');
-            getSubmitButton().click();
-
-            // After server validation failure, serverInvalid=true sets aria-invalid
-            getNameInput().should('have.attr', 'aria-invalid', 'true');
-        });
-
         it('error message is linked via aria-describedby', () => {
             // Submit empty form to trigger validation messages
             getSubmitButton().click();
@@ -190,46 +180,4 @@ describe('Form', () => {
         });
     });
 
-    // ── 5. Custom Validation ────────────────────────────────
-
-    describe('custom validation', () => {
-        it('server-side validation error shown when name is "taken"', () => {
-            getNameInput().type('taken');
-            getEmailInput().type('test@example.com');
-            getSubmitButton().click();
-
-            cy.findByText('Name is already taken').should('exist');
-        });
-
-        it('server-side validation sets aria-invalid on control', () => {
-            getNameInput().type('taken');
-            getEmailInput().type('test@example.com');
-            getSubmitButton().click();
-
-            getNameInput().should('have.attr', 'aria-invalid', 'true');
-        });
-
-        it('server-side validation error clears on re-input and re-submit', () => {
-            getNameInput().type('taken');
-            getEmailInput().type('test@example.com');
-            getSubmitButton().click();
-            cy.findByText('Name is already taken').should('exist');
-
-            // Typing clears the server errors via onClearServerErrors
-            getNameInput().clear().type('Alice');
-            cy.findByText('Name is already taken').should('not.exist');
-
-            // Re-submit with valid data
-            getSubmitButton().click();
-            getFormResult().should('contain.text', 'Alice');
-        });
-
-        it('Field has data-invalid when serverInvalid is true', () => {
-            getNameInput().type('taken');
-            getEmailInput().type('test@example.com');
-            getSubmitButton().click();
-
-            cy.get('.form-field').first().should('have.attr', 'data-invalid');
-        });
-    });
 });

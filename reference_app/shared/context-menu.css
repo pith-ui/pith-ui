@@ -1,0 +1,65 @@
+.context-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 300px;
+    height: 150px;
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+    color: #888;
+    user-select: none;
+}
+
+.context-content {
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    min-width: 180px;
+}
+
+.context-item {
+    display: flex;
+    align-items: center;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: default;
+    outline: none;
+    user-select: none;
+    font-size: 14px;
+}
+
+.context-item[data-highlighted] {
+    background: #4a90d9;
+    color: white;
+}
+
+.context-item[data-disabled] {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.context-label {
+    padding: 6px 12px;
+    font-size: 12px;
+    color: #888;
+}
+
+.context-separator {
+    height: 1px;
+    background: #eee;
+    margin: 4px 0;
+}
+
+.context-indicator {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    margin-right: 4px;
+}
+
+.context-sub-trigger {
+    justify-content: space-between;
+}

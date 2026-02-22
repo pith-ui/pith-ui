@@ -100,6 +100,22 @@ describe('Checkbox', () => {
             cy.realPress('Enter');
             shouldBeUnchecked();
         });
+
+        it('Tab moves focus away from checkbox in one press', () => {
+            cy.findByRole('checkbox', {name: 'accept terms'}).focus();
+            cy.findByRole('checkbox', {name: 'accept terms'}).should('be.focused');
+            cy.realPress('Tab');
+            cy.findByRole('checkbox', {name: 'accept terms'}).should('not.be.focused');
+            // The hidden bubble input should NOT receive focus
+            cy.focused().should('not.have.attr', 'aria-hidden');
+        });
+
+        it('Shift+Tab moves focus back to checkbox', () => {
+            cy.findByRole('checkbox', {name: 'accept terms'}).focus();
+            cy.realPress('Tab');
+            cy.realPress(['Shift', 'Tab']);
+            cy.findByRole('checkbox', {name: 'accept terms'}).should('be.focused');
+        });
     });
 
     // ── 4. Pointer Interaction ──────────────────────────────

@@ -6,11 +6,11 @@ use leptos_router::{
 };
 
 use crate::primitives::{
-    accessible_icon, accordion, alert_dialog, arrow, aspect_ratio, collapsible, collection, dialog,
-    dismissable_layer, focus_scope, form, hover_card, label, navigation_menu,
-    one_time_password_field, password_toggle_field, popover, popper, portal, presence, progress,
-    radio_group, roving_focus, scroll_area, separator, slider, tabs, toggle, toggle_group, toolbar,
-    visually_hidden,
+    accessible_icon, accordion, alert_dialog, arrow, aspect_ratio, avatar, checkbox, collapsible,
+    collection, dialog, dismissable_layer, focus_scope, form, hover_card, label, menu,
+    navigation_menu, one_time_password_field, password_toggle_field, popover, popper, portal,
+    presence, progress, radio_group, roving_focus, scroll_area, select, separator, slider, switch,
+    tabs, toast, toggle, toggle_group, toolbar, tooltip, visually_hidden,
 };
 
 #[component]
@@ -211,15 +211,15 @@ fn EmbedApp() -> impl IntoView {
                     <Route path=path!("/dialog/chromatic") view=dialog::Chromatic />
                     <Route path=path!("/dialog/cypress") view=dialog::Cypress />
 
-                    // <Route path="/avatar/styled" view=avatar::Styled />
-                    // <Route path="/avatar/chromatic" view=avatar::Chromatic />
+                    <Route path=path!("/avatar/styled") view=avatar::Styled />
+                    <Route path=path!("/avatar/chromatic") view=avatar::Chromatic />
 
-                    // <Route path="/checkbox/styled" view=checkbox::Styled />
-                    // <Route path="/checkbox/controlled" view=checkbox::Controlled />
-                    // <Route path="/checkbox/indeterminate" view=checkbox::Indeterminate />
-                    // <Route path="/checkbox/within-form" view=checkbox::WithinForm />
-                    // <Route path="/checkbox/animated" view=checkbox::Animated />
-                    // <Route path="/checkbox/chromatic" view=checkbox::Chromatic />
+                    <Route path=path!("/checkbox/styled") view=checkbox::Styled />
+                    <Route path=path!("/checkbox/controlled") view=checkbox::Controlled />
+                    <Route path=path!("/checkbox/indeterminate") view=checkbox::Indeterminate />
+                    <Route path=path!("/checkbox/within-form") view=checkbox::WithinForm />
+                    <Route path=path!("/checkbox/animated") view=checkbox::Animated />
+                    <Route path=path!("/checkbox/chromatic") view=checkbox::Chromatic />
 
                     <Route path=path!("/dismissable-layer/basic") view=dismissable_layer::Basic />
                     <Route path=path!("/dismissable-layer/nested") view=dismissable_layer::Nested />
@@ -269,13 +269,13 @@ fn EmbedApp() -> impl IntoView {
                     <Route path=path!("/navigation-menu/viewport") view=navigation_menu::Viewport />
                     <Route path=path!("/navigation-menu/submenus") view=navigation_menu::Submenus />
 
-                    // <Route path=path!("/menu/styled") view=menu::Styled />
-                    // <Route path=path!("/menu/submenus") view=menu::Submenus />
-                    // <Route path=path!("/menu/with-labels") view=menu::WithLabels />
-                    // <Route path=path!("/menu/typeahead") view=menu::Typeahead />
-                    // <Route path=path!("/menu/checkbox-items") view=menu::CheckboxItems />
-                    // <Route path=path!("/menu/radio-items") view=menu::RadioItems />
-                    // <Route path=path!("/menu/animated") view=menu::Animated />
+                    <Route path=path!("/menu/styled") view=menu::Styled />
+                    <Route path=path!("/menu/submenus") view=menu::Submenus />
+                    <Route path=path!("/menu/with-labels") view=menu::WithLabels />
+                    <Route path=path!("/menu/typeahead") view=menu::Typeahead />
+                    <Route path=path!("/menu/checkbox-items") view=menu::CheckboxItems />
+                    <Route path=path!("/menu/radio-items") view=menu::RadioItems />
+                    <Route path=path!("/menu/animated") view=menu::Animated />
 
                     <Route path=path!("/one-time-password-field/uncontrolled") view=one_time_password_field::Uncontrolled />
                     <Route path=path!("/one-time-password-field/controlled") view=one_time_password_field::Controlled />
@@ -336,6 +336,30 @@ fn EmbedApp() -> impl IntoView {
                     <Route path=path!("/scroll-area/chromatic-dynamic-content-before-loaded") view=scroll_area::ChromaticDynamicContentBeforeLoaded />
                     <Route path=path!("/scroll-area/chromatic-dynamic-content-after-loaded") view=scroll_area::ChromaticDynamicContentAfterLoaded />
 
+                    <Route path=path!("/select/styled") view=select::Styled />
+                    <Route path=path!("/select/controlled") view=select::Controlled />
+                    <Route path=path!("/select/position") view=select::Position />
+                    <Route path=path!("/select/no-default-value") view=select::NoDefaultValue />
+                    <Route path=path!("/select/typeahead") view=select::Typeahead />
+                    <Route path=path!("/select/with-groups") view=select::WithGroups />
+                    <Route path=path!("/select/labelling") view=select::Labelling />
+                    <Route path=path!("/select/right-to-left") view=select::RightToLeft />
+                    <Route path=path!("/select/within-form") view=select::WithinForm />
+                    <Route path=path!("/select/disabled-within-form") view=select::DisabledWithinForm />
+                    <Route path=path!("/select/required-within-form") view=select::RequiredWithinForm />
+                    <Route path=path!("/select/within-dialog") view=select::WithinDialog />
+                    <Route path=path!("/select/with-very-long-select-items") view=select::WithVeryLongSelectItems />
+                    <Route path=path!("/select/chromatic-short-options-padded-content") view=select::ChromaticShortOptionsPaddedContent />
+                    <Route path=path!("/select/chromatic-short-options-padded-viewport") view=select::ChromaticShortOptionsPaddedViewport />
+                    <Route path=path!("/select/chromatic-long-options-padded-content") view=select::ChromaticLongOptionsPaddedContent />
+                    <Route path=path!("/select/chromatic-long-options-padded-viewport") view=select::ChromaticLongOptionsPaddedViewport />
+                    <Route path=path!("/select/chromatic-top-first-padded-content") view=select::ChromaticTopFirstPaddedContent />
+                    <Route path=path!("/select/chromatic-top-first-padded-viewport") view=select::ChromaticTopFirstPaddedViewport />
+                    <Route path=path!("/select/chromatic-bottom-last-padded-content") view=select::ChromaticBottomLastPaddedContent />
+                    <Route path=path!("/select/chromatic-bottom-last-padded-viewport") view=select::ChromaticBottomLastPaddedViewport />
+                    <Route path=path!("/select/chromatic-no-default-value") view=select::ChromaticNoDefaultValue />
+                    <Route path=path!("/select/cypress") view=select::Cypress />
+
                     <Route path=path!("/separator/styled") view=separator::Styled />
 
                     <Route path=path!("/slider/styled") view=slider::Styled />
@@ -355,13 +379,18 @@ fn EmbedApp() -> impl IntoView {
                     <Route path=path!("/tabs/animated") view=tabs::Animated />
                     <Route path=path!("/tabs/chromatic") view=tabs::Chromatic />
 
+                    <Route path=path!("/toast/styled") view=toast::Styled />
+                    <Route path=path!("/toast/controlled") view=toast::Controlled />
+                    <Route path=path!("/toast/animated") view=toast::Animated />
+                    <Route path=path!("/toast/chromatic") view=toast::Chromatic />
+
                     // <Route path="/slot/without-slottable" view=slot::WithoutSlottable />
                     // <Route path="/slot/with-slottable" view=slot::WithSlottable />
 
-                    // <Route path="/switch/styled" view=switch::Styled />
-                    // <Route path="/switch/controlled" view=switch::Controlled />
-                    // <Route path="/switch/within-form" view=switch::WithinForm />
-                    // <Route path="/switch/chromatic" view=switch::Chromatic />
+                    <Route path=path!("/switch/styled") view=switch::Styled />
+                    <Route path=path!("/switch/controlled") view=switch::Controlled />
+                    <Route path=path!("/switch/within-form") view=switch::WithinForm />
+                    <Route path=path!("/switch/chromatic") view=switch::Chromatic />
 
                     <Route path=path!("/toggle/styled") view=toggle::Styled />
                     <Route path=path!("/toggle/controlled") view=toggle::Controlled />
@@ -374,6 +403,23 @@ fn EmbedApp() -> impl IntoView {
 
                     <Route path=path!("/toolbar/styled") view=toolbar::Styled />
                     <Route path=path!("/toolbar/chromatic") view=toolbar::Chromatic />
+
+                    <Route path=path!("/tooltip/styled") view=tooltip::Styled />
+                    <Route path=path!("/tooltip/controlled") view=tooltip::Controlled />
+                    <Route path=path!("/tooltip/custom-durations") view=tooltip::CustomDurations />
+                    <Route path=path!("/tooltip/positions") view=tooltip::Positions />
+                    <Route path=path!("/tooltip/custom-content") view=tooltip::CustomContent />
+                    <Route path=path!("/tooltip/aria-label") view=tooltip::AriaLabel />
+                    <Route path=path!("/tooltip/with-text") view=tooltip::WithText />
+                    <Route path=path!("/tooltip/with-external-ref") view=tooltip::WithExternalRef />
+                    <Route path=path!("/tooltip/unmount") view=tooltip::Unmount />
+                    <Route path=path!("/tooltip/animated") view=tooltip::Animated />
+                    <Route path=path!("/tooltip/slottable-content") view=tooltip::SlottableContent />
+                    <Route path=path!("/tooltip/within-dialog") view=tooltip::WithinDialog />
+                    <Route path=path!("/tooltip/keep-open-on-activation") view=tooltip::KeepOpenOnActivation />
+                    <Route path=path!("/tooltip/within-scrollable") view=tooltip::WithinScrollable />
+                    <Route path=path!("/tooltip/disable-hoverable-content") view=tooltip::DisableHoverableContent />
+                    <Route path=path!("/tooltip/chromatic") view=tooltip::Chromatic />
 
                     <Route path=path!("/visually-hidden/basic") view=visually_hidden::Basic />
                 </Routes>
@@ -426,18 +472,18 @@ fn ShellApp() -> impl IntoView {
                             ("/aspect-ratio/custom-ratios", "Custom Ratios"),
                             ("/aspect-ratio/chromatic", "Chromatic"),
                         ] />
-                        // <NavSection title="Avatar" stories=vec![
-                        //     ("/avatar/styled", "Styled"),
-                        //     ("/avatar/chromatic", "Chromatic"),
-                        // ] />
-                        // <NavSection title="Checkbox" stories=vec![
-                        //     ("/checkbox/styled", "Styled"),
-                        //     ("/checkbox/controlled", "Controlled"),
-                        //     ("/checkbox/indeterminate", "Indeterminate"),
-                        //     ("/checkbox/within-form", "Within Form"),
-                        //     ("/checkbox/animated", "Animated"),
-                        //     ("/checkbox/chromatic", "Chromatic"),
-                        // ] />
+                        <NavSection title="Avatar" stories=vec![
+                            ("/avatar/styled", "Styled"),
+                            ("/avatar/chromatic", "Chromatic"),
+                        ] />
+                        <NavSection title="Checkbox" stories=vec![
+                            ("/checkbox/styled", "Styled"),
+                            ("/checkbox/controlled", "Controlled"),
+                            ("/checkbox/indeterminate", "Indeterminate"),
+                            ("/checkbox/within-form", "Within Form"),
+                            ("/checkbox/animated", "Animated"),
+                            ("/checkbox/chromatic", "Chromatic"),
+                        ] />
                         <NavSection title="Collapsible" stories=vec![
                             ("/collapsible/styled", "Styled"),
                             ("/collapsible/controlled", "Controlled"),
@@ -491,15 +537,6 @@ fn ShellApp() -> impl IntoView {
                             ("/navigation-menu/viewport", "Viewport"),
                             ("/navigation-menu/submenus", "Submenus"),
                         ] />
-                        // <NavSection title="Menu" stories=vec![
-                        //     ("/menu/styled", "Styled"),
-                        //     ("/menu/submenus", "Submenus"),
-                        //     ("/menu/with-labels", "With Labels"),
-                        //     ("/menu/typeahead", "Typeahead"),
-                        //     ("/menu/checkbox-items", "Checkbox Items"),
-                        //     ("/menu/radio-items", "Radio Items"),
-                        //     ("/menu/animated", "Animated"),
-                        // ] />
                         <NavSection title="One Time Password Field" tested=false stories=vec![
                             ("/one-time-password-field/uncontrolled", "Uncontrolled"),
                             ("/one-time-password-field/controlled", "Controlled"),
@@ -542,6 +579,31 @@ fn ShellApp() -> impl IntoView {
                             ("/scroll-area/chromatic-dynamic-content-before-loaded", "Chromatic Dynamic Content Before Loaded"),
                             ("/scroll-area/chromatic-dynamic-content-after-loaded", "Chromatic Dynamic Content After Loaded"),
                         ] />
+                        <NavSection title="Select" stories=vec![
+                            ("/select/styled", "Styled"),
+                            ("/select/controlled", "Controlled"),
+                            ("/select/position", "Position"),
+                            ("/select/no-default-value", "No Default Value"),
+                            ("/select/typeahead", "Typeahead"),
+                            ("/select/with-groups", "With Groups"),
+                            ("/select/labelling", "Labelling"),
+                            ("/select/right-to-left", "Right To Left"),
+                            ("/select/within-form", "Within Form"),
+                            ("/select/disabled-within-form", "Disabled Within Form"),
+                            ("/select/required-within-form", "Required Within Form"),
+                            ("/select/within-dialog", "Within Dialog"),
+                            ("/select/with-very-long-select-items", "With Very Long Select Items"),
+                            ("/select/chromatic-short-options-padded-content", "Chromatic Short Options Padded Content"),
+                            ("/select/chromatic-short-options-padded-viewport", "Chromatic Short Options Padded Viewport"),
+                            ("/select/chromatic-long-options-padded-content", "Chromatic Long Options Padded Content"),
+                            ("/select/chromatic-long-options-padded-viewport", "Chromatic Long Options Padded Viewport"),
+                            ("/select/chromatic-top-first-padded-content", "Chromatic Top First Padded Content"),
+                            ("/select/chromatic-top-first-padded-viewport", "Chromatic Top First Padded Viewport"),
+                            ("/select/chromatic-bottom-last-padded-content", "Chromatic Bottom Last Padded Content"),
+                            ("/select/chromatic-bottom-last-padded-viewport", "Chromatic Bottom Last Padded Viewport"),
+                            ("/select/chromatic-no-default-value", "Chromatic No Default Value"),
+                            ("/select/cypress", "Cypress"),
+                        ] />
                         <NavSection title="Separator" stories=vec![
                             ("/separator/styled", "Styled"),
                         ] />
@@ -559,16 +621,22 @@ fn ShellApp() -> impl IntoView {
                             ("/slider/strict", "Strict"),
                             ("/slider/chromatic", "Chromatic"),
                         ] />
-                        // <NavSection title="Switch" stories=vec![
-                        //     ("/switch/styled", "Styled"),
-                        //     ("/switch/controlled", "Controlled"),
-                        //     ("/switch/within-form", "Within Form"),
-                        //     ("/switch/chromatic", "Chromatic"),
-                        // ] />
+                        <NavSection title="Switch" stories=vec![
+                            ("/switch/styled", "Styled"),
+                            ("/switch/controlled", "Controlled"),
+                            ("/switch/within-form", "Within Form"),
+                            ("/switch/chromatic", "Chromatic"),
+                        ] />
                         <NavSection title="Tabs" stories=vec![
                             ("/tabs/styled", "Styled"),
                             ("/tabs/animated", "Animated"),
                             ("/tabs/chromatic", "Chromatic"),
+                        ] />
+                        <NavSection title="Toast" tested=false stories=vec![
+                            ("/toast/styled", "Styled"),
+                            ("/toast/controlled", "Controlled"),
+                            ("/toast/animated", "Animated"),
+                            ("/toast/chromatic", "Chromatic"),
                         ] />
                         <NavSection title="Toggle" stories=vec![
                             ("/toggle/styled", "Styled"),
@@ -581,9 +649,27 @@ fn ShellApp() -> impl IntoView {
                             ("/toggle-group/multiple", "Multiple"),
                             ("/toggle-group/chromatic", "Chromatic"),
                         ] />
-                        <NavSection title="Toolbar" tested=false stories=vec![
+                        <NavSection title="Toolbar" stories=vec![
                             ("/toolbar/styled", "Styled"),
                             ("/toolbar/chromatic", "Chromatic"),
+                        ] />
+                        <NavSection title="Tooltip" stories=vec![
+                            ("/tooltip/styled", "Styled"),
+                            ("/tooltip/controlled", "Controlled"),
+                            ("/tooltip/custom-durations", "Custom Durations"),
+                            ("/tooltip/positions", "Positions"),
+                            ("/tooltip/custom-content", "Custom Content"),
+                            ("/tooltip/aria-label", "Aria Label"),
+                            ("/tooltip/with-text", "With Text"),
+                            ("/tooltip/with-external-ref", "With External Ref"),
+                            ("/tooltip/unmount", "Unmount"),
+                            ("/tooltip/animated", "Animated"),
+                            ("/tooltip/slottable-content", "Slottable Content"),
+                            ("/tooltip/within-dialog", "Within Dialog"),
+                            ("/tooltip/keep-open-on-activation", "Keep Open On Activation"),
+                            ("/tooltip/within-scrollable", "Within Scrollable"),
+                            ("/tooltip/disable-hoverable-content", "Disable Hoverable Content"),
+                            ("/tooltip/chromatic", "Chromatic"),
                         ] />
                     </NavTier>
 
@@ -622,6 +708,15 @@ fn ShellApp() -> impl IntoView {
                             ("/focus-scope/basic", "Basic"),
                             ("/focus-scope/multiple", "Multiple"),
                             ("/focus-scope/with-options", "With Options"),
+                        ] />
+                        <NavSection title="Menu" stories=vec![
+                            ("/menu/styled", "Styled"),
+                            ("/menu/submenus", "Submenus"),
+                            ("/menu/with-labels", "With Labels"),
+                            ("/menu/typeahead", "Typeahead"),
+                            ("/menu/checkbox-items", "Checkbox Items"),
+                            ("/menu/radio-items", "Radio Items"),
+                            ("/menu/animated", "Animated"),
                         ] />
                         <NavSection title="Popper" stories=vec![
                             ("/popper/styled", "Styled"),

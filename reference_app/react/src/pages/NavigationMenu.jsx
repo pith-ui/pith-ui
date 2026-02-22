@@ -8,30 +8,38 @@ export default function NavigationMenuPage() {
                 <NavigationMenu.List className="nav-list">
                     <NavigationMenu.Item className="nav-item" value="products">
                         <NavigationMenu.Trigger className="nav-trigger">Products</NavigationMenu.Trigger>
-                        <NavigationMenu.Content className="nav-content" data-testid="products-content">
-                            <ul className="nav-content-list">
-                                <li>
-                                    <NavigationMenu.Link className="nav-content-link" href="#">
-                                        Product A
-                                    </NavigationMenu.Link>
-                                </li>
-                                <li>
-                                    <NavigationMenu.Link className="nav-content-link" href="#">
-                                        Product B
-                                    </NavigationMenu.Link>
-                                </li>
-                                <li>
-                                    <NavigationMenu.Link className="nav-content-link" href="#">
-                                        Product C
-                                    </NavigationMenu.Link>
-                                </li>
-                            </ul>
+                        <NavigationMenu.Content className="nav-content nav-content-products" data-testid="products-content" style={{gridTemplateColumns: '1fr 1fr'}}>
+                            <div className="nav-content-group" data-testid="products-featured">
+                                <h3 className="nav-group-heading">Featured</h3>
+                                <ul className="nav-content-list">
+                                    <li>
+                                        <NavigationMenu.Link className="nav-content-link" href="#">
+                                            Product A
+                                        </NavigationMenu.Link>
+                                    </li>
+                                    <li>
+                                        <NavigationMenu.Link className="nav-content-link" href="#">
+                                            Product B
+                                        </NavigationMenu.Link>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div className="nav-content-group" data-testid="products-all">
+                                <h3 className="nav-group-heading">All Products</h3>
+                                <ul className="nav-content-list">
+                                    <li>
+                                        <NavigationMenu.Link className="nav-content-link" href="#">
+                                            Product C
+                                        </NavigationMenu.Link>
+                                    </li>
+                                </ul>
+                            </div>
                         </NavigationMenu.Content>
                     </NavigationMenu.Item>
 
                     <NavigationMenu.Item className="nav-item" value="resources">
                         <NavigationMenu.Trigger className="nav-trigger">Resources</NavigationMenu.Trigger>
-                        <NavigationMenu.Content className="nav-content" data-testid="resources-content">
+                        <NavigationMenu.Content className="nav-content nav-content-resources" data-testid="resources-content">
                             <ul className="nav-content-list">
                                 <li>
                                     <NavigationMenu.Link className="nav-content-link" href="#">

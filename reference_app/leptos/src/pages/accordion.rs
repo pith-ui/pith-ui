@@ -44,9 +44,8 @@ pub fn AccordionPage() -> impl IntoView {
     let (collapsible, set_collapsible) = signal(false);
 
     view! {
-        <Show
-            when=move || !is_multiple.get()
-            fallback=move || {
+        {move || {
+            if is_multiple.get() {
                 view! {
                     <Accordion
                         r#type=AccordionType::Multiple
@@ -56,17 +55,19 @@ pub fn AccordionPage() -> impl IntoView {
                         <AccordionItems />
                     </Accordion>
                 }
+            } else {
+                view! {
+                    <Accordion
+                        r#type=AccordionType::Single
+                        collapsible=collapsible
+                        attr:class="accordion-root"
+                        attr:data-testid="accordion-root"
+                    >
+                        <AccordionItems />
+                    </Accordion>
+                }
             }
-        >
-            <Accordion
-                r#type=AccordionType::Single
-                collapsible=collapsible
-                attr:class="accordion-root"
-                attr:data-testid="accordion-root"
-            >
-                <AccordionItems />
-            </Accordion>
-        </Show>
+        }}
 
         <br />
         <br />

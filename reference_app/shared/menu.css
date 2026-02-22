@@ -1,0 +1,72 @@
+.menu-anchor {
+    display: inline-block;
+    padding: 4px 8px;
+    font-size: 12px;
+    color: #888;
+}
+
+.menu-content {
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    min-width: 180px;
+    outline: none;
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: default;
+    outline: none;
+    user-select: none;
+    font-size: 14px;
+}
+
+.menu-item[data-highlighted] {
+    background: #4a90d9;
+    color: white;
+}
+
+.menu-item[data-disabled] {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.menu-label {
+    padding: 6px 12px;
+    font-size: 12px;
+    color: #888;
+}
+
+.menu-separator {
+    height: 1px;
+    background: #eee;
+    margin: 4px 0;
+}
+
+.menu-item-indicator {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+}
+
+/* Animated submenu content */
+.menu-content-animated[data-state='open'] {
+    animation: menu-fadeIn 150ms ease;
+}
+.menu-content-animated[data-state='closed'] {
+    animation: menu-fadeOut 150ms ease;
+}
+@keyframes menu-fadeIn {
+    from { opacity: 0; transform: translateX(-4px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+@keyframes menu-fadeOut {
+    from { opacity: 1; transform: translateX(0); }
+    to { opacity: 0; transform: translateX(-4px); }
+}

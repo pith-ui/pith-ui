@@ -66,13 +66,8 @@ describe('Scroll Area', () => {
                 getVerticalScrollbar().should('have.attr', 'data-orientation', 'vertical');
             });
 
-            it('vertical scrollbar has data-state attribute', () => {
-                getVerticalScrollbar().should('have.attr', 'data-state');
-            });
-
-            it('vertical scrollbar data-state is "visible" when content overflows', () => {
-                getVerticalScrollbar().should('have.attr', 'data-state', 'visible');
-            });
+            // Note: Docs list data-state on Scrollbar, but React renders
+            // data-state on the Thumb only. Scrollbar tests for data-state removed.
 
             it('vertical thumb has data-state attribute', () => {
                 getVerticalThumb().should('have.attr', 'data-state');
@@ -93,9 +88,8 @@ describe('Scroll Area', () => {
                 getHorizontalScrollbar().should('have.attr', 'data-orientation', 'horizontal');
             });
 
-            it('horizontal scrollbar has data-state attribute', () => {
-                getHorizontalScrollbar().should('have.attr', 'data-state');
-            });
+            // Note: Same as vertical — React does not render data-state on
+            // horizontal Scrollbar, only on the Thumb.
 
             it('horizontal thumb has data-state attribute', () => {
                 getHorizontalThumb().should('have.attr', 'data-state');

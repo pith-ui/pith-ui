@@ -159,7 +159,7 @@ fn use_pointer_down_outside(
 
         let closure: PointerDownClosure = Closure::new(move |event: web_sys::PointerEvent| {
             let has_target = event.target().is_some();
-            let is_inside = is_pointer_inside_tree.get_value();
+            let is_inside = is_pointer_inside_tree.try_get_value().unwrap_or(true);
 
             if has_target && !is_inside {
                 let event_detail = event.clone();
@@ -179,7 +179,7 @@ fn use_pointer_down_outside(
                 // On touch devices, wait for the click event.
                 if event.pointer_type() == "touch" {
                     // Remove any previous click handler
-                    handle_click_ref.with_value(|prev| {
+                    let _ = handle_click_ref.try_with_value(|prev| {
                         if let Some(prev_closure) = prev.as_ref() {
                             owner_doc
                                 .remove_event_listener_with_callback(
@@ -212,7 +212,7 @@ fn use_pointer_down_outside(
                 }
             } else {
                 // Remove the click listener if pointer was inside (cancellation).
-                handle_click_ref.with_value(|prev| {
+                let _ = handle_click_ref.try_with_value(|prev| {
                     if let Some(prev_closure) = prev.as_ref() {
                         owner_doc
                             .remove_event_listener_with_callback(
@@ -253,12 +253,7 @@ fn use_pointer_down_outside(
     });
 
     on_cleanup(move || {
-        let window = web_sys::window().expect("Window should exist.");
-        // Note: we can't easily clear the timer here since we don't have the ID stored accessibly.
-        // But the handler will be removed, so even if the timeout fires, the listener add will
-        // reference a removed closure.
-
-        handle_pointer_down.with_value(|closure_opt| {
+        let _ = handle_pointer_down.try_with_value(|closure_opt| {
             if let Some(closure) = closure_opt.as_ref() {
                 cleanup_owner_doc
                     .remove_event_listener_with_callback(
@@ -269,7 +264,7 @@ fn use_pointer_down_outside(
             }
         });
 
-        handle_click_ref.with_value(|prev| {
+        let _ = handle_click_ref.try_with_value(|prev| {
             if let Some(prev_closure) = prev.as_ref() {
                 cleanup_owner_doc
                     .remove_event_listener_with_callback(
@@ -279,8 +274,6 @@ fn use_pointer_down_outside(
                     .ok();
             }
         });
-
-        let _ = window;
     });
 
     PointerDownOutsideReturn {
@@ -314,7 +307,7 @@ fn use_focus_outside(
     Effect::new(move |_| {
         let closure: FocusInClosure = Closure::new(move |event: web_sys::FocusEvent| {
             let has_target = event.target().is_some();
-            let is_inside = is_focus_inside_tree.get_value();
+            let is_inside = is_focus_inside_tree.try_get_value().unwrap_or(true);
 
             if has_target && !is_inside {
                 handle_and_dispatch_custom_event(FOCUS_OUTSIDE, on_focus_outside, &event);
@@ -329,7 +322,7 @@ fn use_focus_outside(
     });
 
     on_cleanup(move || {
-        handle_focus.with_value(|closure_opt| {
+        let _ = handle_focus.try_with_value(|closure_opt| {
             if let Some(closure) = closure_opt.as_ref() {
                 owner_doc_for_cleanup
                     .remove_event_listener_with_callback(
@@ -439,7 +432,9 @@ pub fn DismissableLayer(
     // Listen for context update events
     let update_closure: SendWrapper<Closure<dyn Fn(web_sys::Event)>> =
         SendWrapper::new(Closure::new(move |_event: web_sys::Event| {
-            force_update.update(|v| *v += 1);
+            // Guard: signal may be disposed during teardown when another layer's
+            // cleanup dispatches CONTEXT_UPDATE before our listener is removed.
+            force_update.try_update(|v| *v += 1);
         }));
 
     // Add update listener on mount
@@ -598,14 +593,15 @@ pub fn DismissableLayer(
         Some(Callback::new(move |event: web_sys::KeyboardEvent| {
             let _ = force_update.get_untracked();
 
-            let is_highest_layer = container_ref.get_untracked().is_some_and(|node| {
+            let container_node = container_ref.get_untracked();
+            let is_highest_layer = container_node.is_some_and(|node| {
                 let node: web_sys::HtmlElement = node.unchecked_into();
                 let ctx = DISMISSABLE_LAYER_CONTEXT
                     .lock()
                     .expect("Context mutex should lock.");
-                ctx.layer_index(&node)
-                    .map(|idx| idx == ctx.layers_count() - 1)
-                    .unwrap_or(false)
+                let idx = ctx.layer_index(&node);
+                let count = ctx.layers_count();
+                idx.map(|idx| idx == count - 1).unwrap_or(false)
             });
 
             if !is_highest_layer {
@@ -649,7 +645,7 @@ pub fn DismissableLayer(
 
     Effect::new(move |_| {
         // Clean up previous run
-        layer_effect_cleanup.with_value(|f| {
+        let _ = layer_effect_cleanup.try_with_value(|f| {
             if let Some(cleanup) = f.borrow_mut().take() {
                 cleanup();
             }
@@ -693,7 +689,7 @@ pub fn DismissableLayer(
             dispatch_update();
 
             let cleanup_doc = owner_doc.clone();
-            layer_effect_cleanup.with_value(|f| {
+            let _ = layer_effect_cleanup.try_with_value(|f| {
                 f.borrow_mut().replace(Box::new(move || {
                     if disable {
                         let ctx = DISMISSABLE_LAYER_CONTEXT
@@ -723,7 +719,7 @@ pub fn DismissableLayer(
     Effect::new(move |_| {
         if let Some(node) = container_ref.get() {
             let node: web_sys::HtmlElement = node.unchecked_into();
-            unmount_cleanup.with_value(|f| {
+            let _ = unmount_cleanup.try_with_value(|f| {
                 f.borrow_mut().replace(Box::new(move || {
                     let mut ctx = DISMISSABLE_LAYER_CONTEXT
                         .lock()
@@ -737,12 +733,12 @@ pub fn DismissableLayer(
     });
 
     on_cleanup(move || {
-        layer_effect_cleanup.with_value(|f| {
+        let _ = layer_effect_cleanup.try_with_value(|f| {
             if let Some(cleanup) = f.borrow_mut().take() {
                 cleanup();
             }
         });
-        unmount_cleanup.with_value(|f| {
+        let _ = unmount_cleanup.try_with_value(|f| {
             if let Some(cleanup) = f.borrow_mut().take() {
                 cleanup();
             }
@@ -767,7 +763,7 @@ pub fn DismissableLayer(
 
     Effect::new(move |_| {
         // Clean up previous capture listeners
-        capture_closures.with_value(|closures| {
+        let _ = capture_closures.try_with_value(|closures| {
             closures.borrow_mut().clear();
         });
 
@@ -778,7 +774,8 @@ pub fn DismissableLayer(
             // pointerdown capture
             let pdc_closure: Closure<dyn Fn(web_sys::Event)> =
                 Closure::new(move |_event: web_sys::Event| {
-                    pointer_down_capture.with_value(|f| f());
+                    // Use try_with_value: StoredValue may be disposed during teardown
+                    let _ = pointer_down_capture.try_with_value(|f| f());
                 });
             let options = AddEventListenerOptions::new();
             options.set_capture(true);
@@ -793,7 +790,7 @@ pub fn DismissableLayer(
             // focus capture
             let fc_closure: Closure<dyn Fn(web_sys::Event)> =
                 Closure::new(move |_event: web_sys::Event| {
-                    focus_capture.with_value(|f| f());
+                    let _ = focus_capture.try_with_value(|f| f());
                 });
             let options = AddEventListenerOptions::new();
             options.set_capture(true);
@@ -808,7 +805,7 @@ pub fn DismissableLayer(
             // blur capture
             let bc_closure: Closure<dyn Fn(web_sys::Event)> =
                 Closure::new(move |_event: web_sys::Event| {
-                    blur_capture.with_value(|f| f());
+                    let _ = blur_capture.try_with_value(|f| f());
                 });
             let options = AddEventListenerOptions::new();
             options.set_capture(true);
@@ -820,7 +817,7 @@ pub fn DismissableLayer(
             .expect("Blur capture listener should be added.");
             new_closures.push(("blur", SendWrapper::new(bc_closure)));
 
-            capture_closures.with_value(|closures| {
+            let _ = capture_closures.try_with_value(|closures| {
                 *closures.borrow_mut() = new_closures;
             });
         }
@@ -829,7 +826,7 @@ pub fn DismissableLayer(
     on_cleanup(move || {
         if let Some(node) = container_ref.get_untracked() {
             let node: web_sys::EventTarget = node.unchecked_into();
-            capture_closures.with_value(|closures| {
+            let _ = capture_closures.try_with_value(|closures| {
                 let closures = closures.borrow();
                 for (event_name, closure) in closures.iter() {
                     let options = web_sys::EventListenerOptions::new();

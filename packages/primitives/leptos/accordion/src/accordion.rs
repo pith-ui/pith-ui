@@ -413,6 +413,7 @@ struct AccordionItemContextValue {
     open: Signal<bool>,
     disabled: Signal<bool>,
     trigger_id: ReadSignal<String>,
+    item_value: StoredValue<String>,
 }
 
 #[component]
@@ -431,11 +432,8 @@ pub fn AccordionItem(
     let trigger_id = use_id(None);
 
     let item_value = StoredValue::new(value);
-    let open: Signal<bool> = Memo::new(move |_| {
-        let val = item_value.get_value();
-        value_context.value.get().contains(&val)
-    })
-    .into();
+    let item_value_str = item_value.get_value();
+    let open = Signal::derive(move || value_context.value.get().contains(&item_value_str));
     let disabled =
         Signal::derive(move || accordion_context.disabled.get() || disabled.get().unwrap_or(false));
 
@@ -443,7 +441,9 @@ pub fn AccordionItem(
         open,
         disabled,
         trigger_id,
+        item_value,
     };
+    let item_context_stored = StoredValue::new(item_context.clone());
     provide_context(item_context);
 
     let on_open_change = Callback::new(move |open_val: bool| {
@@ -466,7 +466,9 @@ pub fn AccordionItem(
                 attr:data-orientation=move || accordion_context.orientation.get().to_string()
                 {..attrs}
             >
-                {children.with_value(|children| children())}
+                <Provider value=item_context_stored.get_value()>
+                    {children.with_value(|children| children())}
+                </Provider>
             </Collapsible>
         </AttributeInterceptor>
     }
@@ -492,8 +494,8 @@ pub fn AccordionHeader(
             element=html::h3
             as_child=as_child
             node_ref=node_ref
-            attr:data-orientation=move || accordion_context.orientation.get().to_string()
             attr:data-state=move || get_state(item_context.open.get())
+            attr:data-orientation=move || accordion_context.orientation.get().to_string()
             attr:data-disabled=move || item_context.disabled.get().then_some("")
         >
             {children.with_value(|children| children())}

@@ -320,7 +320,12 @@ fn RadioButton(
                     on_click,
                     Some(Callback::new(move |event: ev::MouseEvent| {
                         // Radios cannot be unchecked so we only communicate a checked state.
-                        if !checked.get()
+                        // Also guard against disabled — native `disabled` attr prevents clicks from
+                        // user interaction, but programmatic clicks (e.g. Cypress `force: true`)
+                        // can bypass that. React relies on event delegation which respects disabled;
+                        // we must check explicitly.
+                        if !disabled.get()
+                            && !checked.get()
                             && let Some(on_check) = on_check
                         {
                             on_check.run(());

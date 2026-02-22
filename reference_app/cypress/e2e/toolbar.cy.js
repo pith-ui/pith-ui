@@ -13,12 +13,17 @@ describe('Toolbar', () => {
         return cy.findByRole('link', {name});
     }
 
+    function getToggleItem(name) {
+        // In single-mode ToggleGroup, items have role="radio", not role="button"
+        return cy.findByText(name, {selector: '.toolbar-toggle-item'});
+    }
+
     function shouldBeOn(name) {
-        getButton(name).should('have.attr', 'data-state', 'on');
+        getToggleItem(name).should('have.attr', 'data-state', 'on');
     }
 
     function shouldBeOff(name) {
-        getButton(name).should('have.attr', 'data-state', 'off');
+        getToggleItem(name).should('have.attr', 'data-state', 'off');
     }
 
     beforeEach(() => {
@@ -50,10 +55,10 @@ describe('Toolbar', () => {
             getLink('Learn More').should('be.focused');
         });
 
-        it('ToggleItems render as buttons', () => {
-            getButton('Left').should('exist');
-            getButton('Center').should('exist');
-            getButton('Right').should('exist');
+        it('ToggleItems render as button elements', () => {
+            getToggleItem('Left').should('exist').and('match', 'button');
+            getToggleItem('Center').should('exist').and('match', 'button');
+            getToggleItem('Right').should('exist').and('match', 'button');
         });
     });
 
@@ -75,14 +80,14 @@ describe('Toolbar', () => {
         });
 
         it('ToggleItem data-state changes to "on" on click', () => {
-            getButton('Left').click();
+            getToggleItem('Left').click();
             shouldBeOn('Left');
         });
 
         it('ToggleItem data-state goes back to "off" when another is selected', () => {
-            getButton('Left').click();
+            getToggleItem('Left').click();
             shouldBeOn('Left');
-            getButton('Center').click();
+            getToggleItem('Center').click();
             shouldBeOn('Center');
             shouldBeOff('Left');
         });
@@ -92,7 +97,7 @@ describe('Toolbar', () => {
         });
 
         it('ToggleItem has data-orientation', () => {
-            getButton('Left').should('have.attr', 'data-orientation', 'horizontal');
+            getToggleItem('Left').should('have.attr', 'data-orientation', 'horizontal');
         });
     });
 
@@ -100,8 +105,7 @@ describe('Toolbar', () => {
 
     describe('keyboard navigation', () => {
         it('Tab enters toolbar and focuses first item', () => {
-            getToolbar().parent().focus();
-            cy.realPress('Tab');
+            getButton('Bold').focus();
             getButton('Bold').should('be.focused');
         });
 
@@ -112,7 +116,7 @@ describe('Toolbar', () => {
             getButton('Bold').should('not.be.focused');
             getButton('Italic').should('not.be.focused');
             getLink('Learn More').should('not.be.focused');
-            getButton('Left').should('not.be.focused');
+            getToggleItem('Left').should('not.be.focused');
         });
 
         it('ArrowRight moves to next item', () => {
@@ -130,7 +134,7 @@ describe('Toolbar', () => {
         it('ArrowRight moves from link to toggle items', () => {
             getLink('Learn More').focus();
             cy.realPress('ArrowRight');
-            getButton('Left').should('be.focused');
+            getToggleItem('Left').should('be.focused');
         });
 
         it('ArrowLeft moves to previous item', () => {
@@ -146,7 +150,7 @@ describe('Toolbar', () => {
         });
 
         it('Home moves to first item', () => {
-            getButton('Right').focus();
+            getToggleItem('Right').focus();
             cy.realPress('Home');
             getButton('Bold').should('be.focused');
         });
@@ -154,11 +158,11 @@ describe('Toolbar', () => {
         it('End moves to last item', () => {
             getButton('Bold').focus();
             cy.realPress('End');
-            getButton('Right').should('be.focused');
+            getToggleItem('Right').should('be.focused');
         });
 
         it('ArrowRight wraps from last to first', () => {
-            getButton('Right').focus();
+            getToggleItem('Right').focus();
             cy.realPress('ArrowRight');
             getButton('Bold').should('be.focused');
         });
@@ -166,17 +170,17 @@ describe('Toolbar', () => {
         it('ArrowLeft wraps from first to last', () => {
             getButton('Bold').focus();
             cy.realPress('ArrowLeft');
-            getButton('Right').should('be.focused');
+            getToggleItem('Right').should('be.focused');
         });
 
         it('Space activates a ToggleItem', () => {
-            getButton('Left').focus();
+            getToggleItem('Left').focus();
             cy.realPress('Space');
             shouldBeOn('Left');
         });
 
         it('Enter activates a ToggleItem', () => {
-            getButton('Center').focus();
+            getToggleItem('Center').focus();
             cy.realPress('Enter');
             shouldBeOn('Center');
         });
@@ -191,17 +195,17 @@ describe('Toolbar', () => {
         });
 
         it('Click ToggleItem toggles state', () => {
-            getButton('Left').click();
+            getToggleItem('Left').click();
             shouldBeOn('Left');
-            getButton('Left').click();
+            getToggleItem('Left').click();
             // In single mode, clicking active item deselects it
             shouldBeOff('Left');
         });
 
         it('Clicking one ToggleItem deselects others (single mode)', () => {
-            getButton('Left').click();
+            getToggleItem('Left').click();
             shouldBeOn('Left');
-            getButton('Right').click();
+            getToggleItem('Right').click();
             shouldBeOn('Right');
             shouldBeOff('Left');
         });
@@ -216,8 +220,7 @@ describe('Toolbar', () => {
 
     describe('focus management', () => {
         it('Tab into toolbar focuses first item, Shift+Tab returns', () => {
-            getToolbar().parent().focus();
-            cy.realPress('Tab');
+            getButton('Bold').focus();
             getButton('Bold').should('be.focused');
             cy.realPress(['Shift', 'Tab']);
             getButton('Bold').should('not.be.focused');

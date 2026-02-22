@@ -9,6 +9,21 @@ describe('Hover Card', () => {
         cy.findByTestId('hover-card-content').should('not.exist');
     }
 
+    // Fire pointerleave on a given element. realHover() on another element
+    // doesn't reliably fire pointerleave in headless Electron, so we
+    // dispatch the events natively.
+    function pointerLeave(testId) {
+        cy.findByTestId(testId).then(($el) => {
+            const target = $el[0];
+            target.dispatchEvent(
+                new PointerEvent('pointerout', {bubbles: true, pointerType: 'mouse'})
+            );
+            target.dispatchEvent(
+                new PointerEvent('pointerleave', {bubbles: false, pointerType: 'mouse'})
+            );
+        });
+    }
+
     beforeEach(() => {
         cy.visit('/hover-card');
     });
@@ -46,8 +61,7 @@ describe('Hover Card', () => {
         it('Trigger data-state returns to "closed" after mouse leaves', () => {
             cy.findByTestId('hover-card-trigger').realHover();
             cy.findByTestId('hover-card-trigger').should('have.attr', 'data-state', 'open');
-            // Move mouse away from trigger to an outside element
-            cy.findByTestId('outside-element').realHover();
+            pointerLeave('hover-card-trigger');
             cy.findByTestId('hover-card-trigger').should('have.attr', 'data-state', 'closed');
         });
     });
@@ -61,10 +75,10 @@ describe('Hover Card', () => {
             shouldBeOpen();
         });
 
-        it('moving mouse away from trigger closes content after delay', () => {
+        it('moving mouse away from trigger closes content', () => {
             cy.findByTestId('hover-card-trigger').realHover();
             shouldBeOpen();
-            cy.findByTestId('outside-element').realHover();
+            pointerLeave('hover-card-trigger');
             shouldBeClosed();
         });
 
@@ -81,8 +95,7 @@ describe('Hover Card', () => {
             shouldBeOpen();
             cy.findByTestId('hover-card-content').realHover();
             shouldBeOpen();
-            // Move mouse away from content
-            cy.findByTestId('outside-element').realHover();
+            pointerLeave('hover-card-content');
             shouldBeClosed();
         });
     });

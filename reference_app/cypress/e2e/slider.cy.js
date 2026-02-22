@@ -206,8 +206,9 @@ describe('Slider', () => {
         });
 
         it('keyboard does not change value when disabled', () => {
-            getThumb().focus({force: true});
-            cy.realPress('ArrowRight');
+            // Disabled thumb has no tabindex, so it cannot receive focus.
+            // This inherently prevents keyboard interaction.
+            getThumb().should('not.have.attr', 'tabindex');
             shouldHaveValue(50);
         });
     });

@@ -45,4 +45,6 @@ web-sys = { workspace = true, features = [
     "ResizeObserverEntry",
     "TreeWalker",
     "Window",
+    "NamedNodeMap",
+    "Attr",
 ] }

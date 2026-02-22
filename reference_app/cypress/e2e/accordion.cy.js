@@ -22,7 +22,8 @@ describe('Accordion', () => {
         cy.findByRole('button', {name: itemName})
             .invoke('attr', 'aria-controls')
             .then((contentId) => {
-                cy.get(`#${contentId}`).should('not.exist');
+                cy.get(`#${contentId}`).should('have.attr', 'data-state', 'closed');
+                cy.get(`#${contentId}`).should('not.be.visible');
             });
     }
 

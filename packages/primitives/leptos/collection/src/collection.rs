@@ -37,6 +37,33 @@ struct CollectionContextValue<ItemData: Clone + Send + Sync + 'static> {
     item_map: RwSignal<HashMap<CollectionItemId, CollectionItemValue<ItemData>>>,
 }
 
+// Manual Copy impl: AnyNodeRef and RwSignal are always Copy regardless of ItemData.
+impl<ItemData: Clone + Send + Sync + 'static> Copy for CollectionContextValue<ItemData> {}
+
+/// Opaque handle capturing the current Collection scope from the reactive owner chain.
+///
+/// Call [`use_collection_scope`] before a portal boundary, then call
+/// [`provide_collection_scope`] inside the portal's children to re-establish the context.
+#[derive(Clone)]
+pub struct CollectionScope<ItemData: Clone + Send + Sync + 'static>(
+    CollectionContextValue<ItemData>,
+);
+
+impl<ItemData: Clone + Send + Sync + 'static> Copy for CollectionScope<ItemData> {}
+
+/// Captures the current Collection scope, if one exists.
+pub fn use_collection_scope<ItemData: Clone + Send + Sync + 'static>()
+-> Option<CollectionScope<ItemData>> {
+    use_context::<CollectionContextValue<ItemData>>().map(CollectionScope)
+}
+
+/// Re-provides a previously captured Collection scope into the current reactive owner.
+pub fn provide_collection_scope<ItemData: Clone + Send + Sync + 'static>(
+    scope: CollectionScope<ItemData>,
+) {
+    provide_context(scope.0);
+}
+
 #[component]
 pub fn CollectionProvider<ItemData: Clone + Send + Sync + 'static>(
     #[expect(unused_variables)]
@@ -87,7 +114,9 @@ pub fn CollectionItemSlot<ItemData: Clone + Debug + Send + Sync + 'static>(
 ) -> impl IntoView {
     let children = StoredValue::new(children);
 
-    let id = StoredValue::new(CollectionItemId::new());
+    let id = CollectionItemId::new();
+    let id_for_effect = id.clone();
+    let id_for_cleanup = id.clone();
     let item_ref = AnyNodeRef::new();
     let composed_ref = use_composed_refs(vec![node_ref, item_ref]);
     let context = expect_context::<CollectionContextValue<ItemData>>();
@@ -96,7 +125,7 @@ pub fn CollectionItemSlot<ItemData: Clone + Debug + Send + Sync + 'static>(
         if let Some(item_data) = item_data.get() {
             context.item_map.update(|item_map| {
                 item_map.insert(
-                    id.get_value(),
+                    id_for_effect.clone(),
                     CollectionItemValue {
                         r#ref: item_ref,
                         data: item_data,
@@ -108,7 +137,7 @@ pub fn CollectionItemSlot<ItemData: Clone + Debug + Send + Sync + 'static>(
 
     Owner::on_cleanup(move || {
         context.item_map.update(|item_map| {
-            item_map.remove(&id.get_value());
+            item_map.remove(&id_for_cleanup);
         });
     });
 
@@ -136,7 +165,7 @@ pub fn use_collection<ItemData: Clone + Send + Sync + 'static>()
     let context = expect_context::<CollectionContextValue<ItemData>>();
 
     let get_items = move || {
-        let collection_node = context.collection_ref.get();
+        let collection_node = context.collection_ref.get_untracked();
         if let Some(collection_node) = collection_node {
             let element: &web_sys::Element = (*collection_node).unchecked_ref();
             let ordered_nodes = node_list_to_vec(
@@ -145,11 +174,15 @@ pub fn use_collection<ItemData: Clone + Send + Sync + 'static>()
                     .expect("Node should be queried."),
             );
 
-            let mut ordered_items = context.item_map.get().into_values().collect::<Vec<_>>();
+            let mut ordered_items = context
+                .item_map
+                .get_untracked()
+                .into_values()
+                .collect::<Vec<_>>();
             ordered_items.sort_by(|a, b| {
                 let index_a = ordered_nodes.iter().position(|node| {
                     a.r#ref
-                        .get()
+                        .get_untracked()
                         .map(|el| {
                             let n: &web_sys::Node = (*el).unchecked_ref();
                             node == n
@@ -158,7 +191,7 @@ pub fn use_collection<ItemData: Clone + Send + Sync + 'static>()
                 });
                 let index_b = ordered_nodes.iter().position(|node| {
                     b.r#ref
-                        .get()
+                        .get_untracked()
                         .map(|el| {
                             let n: &web_sys::Node = (*el).unchecked_ref();
                             node == n

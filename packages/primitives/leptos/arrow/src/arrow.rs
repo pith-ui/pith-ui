@@ -23,8 +23,8 @@ pub fn Arrow(
         <Primitive
             element=svg::svg
             as_child=as_child
-            attr:width=move || width.get()
-            attr:height=move || height.get()
+            attr:width=move || width.get().unwrap_or(10.0)
+            attr:height=move || height.get().unwrap_or(5.0)
             node_ref={node_ref}
             {..attrs}
         >

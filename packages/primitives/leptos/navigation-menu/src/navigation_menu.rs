@@ -125,6 +125,14 @@ pub struct ContentData {
     pub on_pointer_down_outside: Option<Callback<web_sys::CustomEvent>>,
     pub on_interact_outside: Option<Callback<web_sys::CustomEvent>>,
     pub content_ref: AnyNodeRef,
+    /// The NavigationMenuItem's internal content ref, used by handle_content_entry to focus
+    /// into content on ArrowDown. Must be included in the viewport's ref chain so it gets
+    /// set when the content element mounts.
+    pub item_content_ref: AnyNodeRef,
+    /// User attributes (e.g., data-testid, class) captured from the component and forwarded
+    /// to the viewport rendering path. In React, these are spread via {...contentProps}; in
+    /// Leptos, we capture them from a hidden element and transfer them explicitly.
+    pub extra_attrs: Vec<(String, String)>,
 }
 
 /* -------------------------------------------------------------------------------------------------
@@ -710,7 +718,7 @@ pub fn NavigationMenuItem(
     let restore_content_tab_order: StoredValue<TabOrderBackup> = StoredValue::new(None);
 
     let handle_content_entry = Callback::new(move |side: &'static str| {
-        if let Some(el) = content_ref.get() {
+        if let Some(el) = content_ref.get_untracked() {
             let el: web_sys::HtmlElement = el.unchecked_into();
             // Restore tab order first
             restore_content_tab_order.with_value(|saved| {
@@ -734,7 +742,7 @@ pub fn NavigationMenuItem(
     });
 
     let handle_content_exit = Callback::new(move |_: ()| {
-        if let Some(el) = content_ref.get() {
+        if let Some(el) = content_ref.get_untracked() {
             let el: web_sys::HtmlElement = el.unchecked_into();
             let candidates = get_tabbable_candidates(&el);
             if !candidates.is_empty() {
@@ -1060,8 +1068,48 @@ pub fn NavigationMenuIndicator(
 
     let presence_ref = AnyNodeRef::new();
 
+    // Capture user attributes (e.g., data-testid) from a hidden span for forwarding.
+    // The indicator renders inside a reactive closure, and user attrs from add_any_attr
+    // are not reliably forwarded through reactive boundaries that change their output.
+    let indicator_attr_capture_ref = AnyNodeRef::new();
+    let indicator_captured_attrs: StoredValue<Vec<(String, String)>> = StoredValue::new(vec![]);
+
+    Effect::new(move |_| {
+        if let Some(el) = indicator_attr_capture_ref.get() {
+            let el: web_sys::Element = el.unchecked_into();
+            let attrs = el.attributes();
+            let mut user_attrs = vec![];
+            for i in 0..attrs.length() {
+                if let Some(attr) = attrs.item(i) {
+                    let name = attr.name();
+                    if matches!(name.as_str(), "style" | "hidden" | "aria-hidden") {
+                        continue;
+                    }
+                    user_attrs.push((name, attr.value()));
+                }
+            }
+            for (name, _) in &user_attrs {
+                el.remove_attribute(name).ok();
+            }
+            indicator_captured_attrs.set_value(user_attrs);
+        }
+    });
+
+    // Apply captured attrs to the indicator element after mount
+    Effect::new(move |_| {
+        if let Some(el) = node_ref.get() {
+            let el: web_sys::HtmlElement = el.unchecked_into();
+            indicator_captured_attrs.with_value(|attrs| {
+                for (name, value) in attrs {
+                    el.set_attribute(name, value).ok();
+                }
+            });
+        }
+    });
+
     // Render into indicator track via Portal pattern (mount_to)
     view! {
+        <span node_ref=indicator_attr_capture_ref hidden=true aria-hidden="true" style="display:none" />
         {move || {
             let track = context.indicator_track.get();
             if track.is_some() {
@@ -1226,6 +1274,59 @@ pub fn NavigationMenuContent(
     // inline before the viewport Effect fires.
     let has_viewport = Signal::derive(move || context.has_viewport_component.get());
 
+    // Capture user attributes (e.g., data-testid, class) from a hidden span so they can be
+    // forwarded to the viewport rendering path. In React, these are spread via {...contentProps};
+    // in Leptos, user attrs from add_any_attr bypass child components and land on the first DOM
+    // element, which we use as a capture target.
+    let attr_capture_ref = AnyNodeRef::new();
+    let captured_attrs: StoredValue<Vec<(String, String)>> = StoredValue::new(vec![]);
+
+    Effect::new(move |_| {
+        if let Some(el) = attr_capture_ref.get() {
+            let el: web_sys::Element = el.unchecked_into();
+            let attrs = el.attributes();
+            let mut user_attrs = vec![];
+            for i in 0..attrs.length() {
+                if let Some(attr) = attrs.item(i) {
+                    let name = attr.name();
+                    // Skip the hidden span's own structural attributes
+                    if matches!(name.as_str(), "hidden" | "aria-hidden") {
+                        continue;
+                    }
+                    if name == "style" {
+                        // The span has its own style="display:none". Extract only
+                        // the user-contributed style properties (e.g., grid-template-columns,
+                        // width) by stripping the span's "display: none".
+                        let value = attr.value();
+                        let user_style: String = value
+                            .split(';')
+                            .map(|s| s.trim())
+                            .filter(|prop| {
+                                if prop.is_empty() {
+                                    return false;
+                                }
+                                let normalized = prop.to_lowercase().replace(' ', "");
+                                normalized != "display:none"
+                            })
+                            .collect::<Vec<_>>()
+                            .join("; ");
+                        if !user_style.is_empty() {
+                            user_attrs.push(("style".to_string(), user_style));
+                        }
+                        continue;
+                    }
+                    user_attrs.push((name, attr.value()));
+                }
+            }
+            // Remove captured attrs from the span to prevent DOM query conflicts
+            // (e.g., findByTestId finding the hidden span instead of the actual content)
+            for (name, _) in &user_attrs {
+                el.remove_attribute(name).ok();
+            }
+            captured_attrs.set_value(user_attrs);
+        }
+    });
+
     Effect::new(move |_| {
         if has_viewport.get() {
             let content_data = ContentData {
@@ -1246,6 +1347,8 @@ pub fn NavigationMenuContent(
                 on_pointer_down_outside,
                 on_interact_outside,
                 content_ref: node_ref,
+                item_content_ref: item_context.content_ref,
+                extra_attrs: captured_attrs.get_value(),
             };
             context
                 .on_viewport_content_change
@@ -1270,6 +1373,10 @@ pub fn NavigationMenuContent(
     let presence_ref = AnyNodeRef::new();
 
     view! {
+        // Hidden span captures user attrs (e.g., data-testid) via add_any_attr propagation.
+        // Being the first DOM element in the view, it receives attrs that would otherwise be
+        // lost when the inline Presence is not present (viewport mode).
+        <span node_ref=attr_capture_ref hidden=true aria-hidden="true" style="display:none" />
         <Presence present=present node_ref=presence_ref>
             <NavigationMenuContentImpl
                 value=item_value.get_value()
@@ -1452,7 +1559,7 @@ fn NavigationMenuContentImpl(
         if let Some(target) = event
             .target()
             .and_then(|t| t.dyn_into::<web_sys::HtmlElement>().ok())
-            && let Some(root) = context.root_navigation_menu.get()
+            && let Some(root) = context.root_navigation_menu.get_untracked()
         {
             let root: web_sys::Node = root.unchecked_into();
             if root.contains(Some(target.unchecked_ref())) {
@@ -1506,7 +1613,7 @@ fn NavigationMenuContentImpl(
                 as_child=true
                 disable_outside_pointer_events=false
                 on_dismiss=Callback::new(move |_| {
-                    if let Some(el) = content_ref.get() {
+                    if let Some(el) = content_ref.get_untracked() {
                         let el: web_sys::HtmlElement = el.unchecked_into();
                         let mut init = web_sys::EventInit::new();
                         init.set_bubbles(true);
@@ -1724,10 +1831,12 @@ fn NavigationMenuViewportImpl(
                     let data_on_pointer_down_outside = StoredValue::new(data.on_pointer_down_outside);
                     let data_on_interact_outside = StoredValue::new(data.on_interact_outside);
                     let data_content_ref = data.content_ref;
+                    let data_item_content_ref = data.item_content_ref;
+                    let data_extra_attrs = StoredValue::new(data.extra_attrs.clone());
 
                     // Capture content element ref for viewport sizing
                     let inner_ref = AnyNodeRef::new();
-                    let combined_ref = use_composed_refs(vec![data_content_ref, inner_ref]);
+                    let combined_ref = use_composed_refs(vec![data_content_ref, data_item_content_ref, inner_ref]);
 
                     // When active, set content_el for resize observation
                     Effect::new(move |_| {
@@ -1736,6 +1845,20 @@ fn NavigationMenuViewportImpl(
                         {
                             let html_el: web_sys::HtmlElement = el.unchecked_into();
                             content_el.set(Some(SendWrapper::new(html_el)));
+                        }
+                    });
+
+                    // Apply user attributes captured from NavigationMenuContent to the
+                    // rendered content element. These were lost during the viewport
+                    // registration process (React forwards them via {...contentProps}).
+                    Effect::new(move |_| {
+                        if let Some(el) = inner_ref.get() {
+                            let el: web_sys::HtmlElement = el.unchecked_into();
+                            data_extra_attrs.with_value(|attrs| {
+                                for (name, value) in attrs {
+                                    el.set_attribute(name, value).ok();
+                                }
+                            });
                         }
                     });
 
@@ -1770,6 +1893,10 @@ fn NavigationMenuViewportImpl(
                                 on_focus_outside=data_on_focus_outside.get_value().unwrap_or(Callback::new(|_| {}))
                                 on_pointer_down_outside=data_on_pointer_down_outside.get_value().unwrap_or(Callback::new(|_| {}))
                                 on_interact_outside=data_on_interact_outside.get_value().unwrap_or(Callback::new(|_| {}))
+                                attr:data-state=move || get_open_state(is_active)
+                                style:pointer-events=move || {
+                                    if !is_active && context.is_root_menu { Some("none") } else { None }
+                                }
                             >
                                 {data_children.with_value(|c| c.as_ref().map(|c| c()))}
                             </NavigationMenuContentImpl>
@@ -1826,6 +1953,12 @@ fn FocusGroupItem(children: ChildrenFn) -> impl IntoView {
                 element=html::button
                 as_child=MaybeProp::from(true)
                 on:keydown=move |event: ev::KeyboardEvent| {
+                    // Check defaultPrevented so composed handlers (e.g. trigger's ArrowDown
+                    // into content) can prevent FocusGroupItem from moving focus.
+                    // In React, composeEventHandlers gates on !event.defaultPrevented.
+                    if event.default_prevented() {
+                        return;
+                    }
                     let is_focus_navigation_key = event.key() == "Home"
                         || event.key() == "End"
                         || ARROW_KEYS.contains(&event.key().as_str());

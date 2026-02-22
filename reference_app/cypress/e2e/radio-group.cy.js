@@ -87,6 +87,8 @@ describe('Radio Group', () => {
 
     describe('keyboard navigation', () => {
         it('Tab enters group and focuses first item', () => {
+            // Ensure WASM app has rendered radio items before pressing Tab
+            cy.findByRole('radio', {name: 'Cat'}).should('exist');
             cy.realPress('Tab');
             cy.findByRole('radio', {name: 'Cat'}).should('be.focused');
         });

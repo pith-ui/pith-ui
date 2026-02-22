@@ -157,6 +157,13 @@ fn RovingFocusGroupImpl(
     let get_items = StoredValue::new(use_collection::<ItemData>());
     let is_click_focus = RwSignal::new(false);
     let (focusable_items_count, set_focusable_items_count) = signal(0);
+    // Track whether any item has registered yet. In React, effects run
+    // synchronously before paint so focusable_items_count is updated before the
+    // user can interact. In Leptos WASM, effects run asynchronously after DOM
+    // mount, creating a brief window where focusable_items_count is still 0 and
+    // tabindex would be "-1", preventing Tab from focusing the group. We default
+    // to tabindex="0" until at least one item effect has run.
+    let items_initialized = RwSignal::new(false);
 
     let on_entry_focus = on_entry_focus.flatten();
     let handle_entry_focus: SendWrapper<Closure<dyn Fn(ev::Event)>> =
@@ -178,7 +185,7 @@ fn RovingFocusGroupImpl(
     });
 
     Owner::on_cleanup(move || {
-        if let Some(node) = group_ref.get() {
+        if let Some(node) = group_ref.get_untracked() {
             let el: &web_sys::HtmlElement = node.deref().unchecked_ref();
             handle_entry_focus.with_value(|closure| {
                 el.remove_event_listener_with_callback(
@@ -200,9 +207,11 @@ fn RovingFocusGroupImpl(
         }),
         on_item_shift_tab: Callback::new(move |_| set_is_tabbing_back_out.set(true)),
         on_focusable_item_add: Callback::new(move |_| {
+            items_initialized.set(true);
             set_focusable_items_count.update(|focusable_items_count| *focusable_items_count += 1)
         }),
         on_focusable_item_remove: Callback::new(move |_| {
+            items_initialized.set(true);
             set_focusable_items_count.update(|focusable_items_count| *focusable_items_count -= 1)
         }),
     };
@@ -219,7 +228,7 @@ fn RovingFocusGroupImpl(
                     element=html::div
                     as_child=as_child
                     node_ref=composed_refs
-                    attr:tabindex=move || match is_tabbing_back_out.get() || focusable_items_count.get() == 0 {
+                    attr:tabindex=move || match is_tabbing_back_out.get() || (items_initialized.get() && focusable_items_count.get() == 0) {
                         true => "-1",
                         false => "0",
                     }
@@ -362,7 +371,23 @@ pub fn RovingFocusGroupItem(
                         }
                     })), None)
                     on:focus=compose_callbacks(on_focus, Some(Callback::new(move |_: ev::FocusEvent| {
-                        context.on_item_focus.run(id.get());
+                        // Defer the tab stop update to a macrotask to avoid WASM
+                        // closure panics. When focus_first() is called synchronously
+                        // from the keydown handler, .focus() triggers this handler.
+                        // Updating set_current_tab_stop_id synchronously would trigger
+                        // reactive effects while the keydown closure is on the stack.
+                        let on_item_focus = context.on_item_focus;
+                        let item_id = id.get();
+                        let window = web_sys::window().expect("Window should exist.");
+                        window
+                            .set_timeout_with_callback_and_timeout_and_arguments_0(
+                                Closure::once_into_js(move || {
+                                    on_item_focus.run(item_id);
+                                })
+                                .unchecked_ref(),
+                                0,
+                            )
+                            .expect("setTimeout should succeed.");
                     })), None)
                     on:keydown=compose_callbacks(on_key_down, Some(Callback::new(move |event: ev::KeyboardEvent| {
                         if event.key() == "Tab" && event.shift_key() {

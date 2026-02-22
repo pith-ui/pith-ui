@@ -21,21 +21,29 @@ pub fn App() -> impl IntoView {
                     <Route path=path!("/") view=Index />
                     <Route path=path!("/accordion") view=pages::accordion::AccordionPage />
                     <Route path=path!("/alert-dialog") view=pages::alert_dialog::AlertDialogPage />
+                    <Route path=path!("/avatar") view=pages::avatar::AvatarPage />
+                    <Route path=path!("/checkbox") view=pages::checkbox::CheckboxPage />
                     <Route path=path!("/collapsible") view=pages::collapsible::CollapsiblePage />
                     <Route path=path!("/dialog") view=pages::dialog::DialogPage />
                     <Route path=path!("/form") view=pages::form::FormPage />
+                    <Route path=path!("/menu") view=pages::menu::MenuPage />
                     <Route path=path!("/hover-card") view=pages::hover_card::HoverCardPage />
                     <Route path=path!("/navigation-menu") view=pages::navigation_menu::NavigationMenuPage />
                     <Route path=path!("/popover") view=pages::popover::PopoverPage />
                     <Route path=path!("/progress") view=pages::progress::ProgressPage />
                     <Route path=path!("/radio-group") view=pages::radio_group::RadioGroupPage />
                     <Route path=path!("/scroll-area") view=pages::scroll_area::ScrollAreaPage />
+                    <Route path=path!("/select") view=pages::select::SelectPage />
+                    <Route path=path!("/select/forced-open") view=pages::select::SelectForcedOpenPage />
                     <Route path=path!("/separator") view=pages::separator::SeparatorPage />
                     <Route path=path!("/slider") view=pages::slider::SliderPage />
+                    <Route path=path!("/switch") view=pages::switch::SwitchPage />
                     <Route path=path!("/tabs") view=pages::tabs::TabsPage />
+                    <Route path=path!("/toast") view=pages::toast::ToastPage />
                     <Route path=path!("/toggle") view=pages::toggle::TogglePage />
                     <Route path=path!("/toggle-group") view=pages::toggle_group::ToggleGroupPage />
                     <Route path=path!("/toolbar") view=pages::toolbar::ToolbarPage />
+                    <Route path=path!("/tooltip") view=pages::tooltip::TooltipPage />
                 </Routes>
             </main>
         </Router>

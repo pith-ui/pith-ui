@@ -16,7 +16,7 @@ dependencies:
   - "[[leptos-visually-hidden]]"
 ported: true
 tested: false
-tested_story: false
+tested_story: true
 unstable: false
 ---
 
@@ -191,3 +191,11 @@ pub fn NavigationMenuViewport(
 7. **Content motion attribute**: Computed as a `Memo` that watches `context.value`, `context.previous_value`, and the collection items. Compares item indices to determine animation direction. Stored in `prev_motion_attribute: StoredValue<Option<&'static str>>` to persist across reactive updates.
 
 8. **Event delegation for dismiss**: Uses `web_sys::CustomEvent` dispatch/listen for `LINK_SELECT` and `ROOT_CONTENT_DISMISS` events, following the React pattern of inter-component communication through the DOM event system rather than shared state.
+
+9. **Merged indicator track into `<ul>`**: React's `NavigationMenuList` wraps the `<ul>` in a `<div style="position: relative">` for indicator tracking. In Leptos, `position: relative` is applied directly to the `<ul>` to avoid an extra wrapper div that would intercept user spread attributes.
+
+10. **Attribute capture for viewport rendering**: When a viewport exists, `NavigationMenuContent` renders a hidden `<span>` as the first DOM element to capture user-supplied attributes (e.g., `attr:class`, `attr:style`, `attr:data-testid`) via Leptos's `add_any_attr` propagation. These attributes are read by an Effect, stripped from the span, and forwarded to the viewport-rendered content element via `set_attribute()`. The span's `style="display:none"` is filtered out during capture so only user styles are forwarded.
+
+### Known issues
+
+1. **Visual regression: root element sizing in Viewport story** — When opening a submenu in the Viewport story, the navigation menu root element (or a surrounding div) grows in size. This does not occur in the React reference implementation. E2E behavioral tests all pass (42/42), so the issue is purely visual. Root cause not yet identified — may require DOM inspection in DevTools to determine which element is expanding and why. Suspect areas: the missing indicator track wrapper div (see key decision #9), or timing of attribute forwarding Effects causing a brief layout shift.

@@ -29,31 +29,31 @@ pub fn use_escape_keydown(
         let handle_key_down = handle_key_down.clone();
 
         move |_| {
-            let options = AddEventListenerOptions::new();
-            options.set_capture(true);
+            if let Some(doc) = owner_document.try_get_value() {
+                let options = AddEventListenerOptions::new();
+                options.set_capture(true);
 
-            owner_document
-                .get_value()
-                .add_event_listener_with_callback_and_add_event_listener_options(
+                doc.add_event_listener_with_callback_and_add_event_listener_options(
                     "keydown",
                     (*handle_key_down).as_ref().unchecked_ref(),
                     &options,
                 )
                 .expect("Key down event listener should be added.");
+            }
         }
     });
 
     on_cleanup(move || {
-        let options = EventListenerOptions::new();
-        options.set_capture(true);
+        if let Some(doc) = owner_document.try_get_value() {
+            let options = EventListenerOptions::new();
+            options.set_capture(true);
 
-        owner_document
-            .get_value()
-            .remove_event_listener_with_callback_and_event_listener_options(
+            doc.remove_event_listener_with_callback_and_event_listener_options(
                 "keydown",
                 (*handle_key_down).as_ref().unchecked_ref(),
                 &options,
             )
             .expect("Key down event listener should be removed.");
+        }
     });
 }

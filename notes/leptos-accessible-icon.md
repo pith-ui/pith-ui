@@ -7,14 +7,13 @@ dependencies:
   - "[[leptos-visually-hidden]]"
 ported: true
 tested: false
-tested_story: false
+tested_story: true
 ---
 ## Intent
 
 Makes icons accessible by pairing them with a visually hidden label. The icon is hidden from assistive technology (`aria-hidden="true"`) while the label is announced by screen readers, similar to `alt` text on images.
 
 ## React API
-
 ```ts
 interface AccessibleIconProps {
   children?: React.ReactNode;  // expects exactly one child (the icon)

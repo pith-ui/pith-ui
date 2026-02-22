@@ -300,13 +300,15 @@ pub fn PopperContent(
             })),
     );
 
-    // Force position recomputation when arrow size changes.
+    // Force position recomputation when arrow ref or size changes.
     // floating-ui-leptos's Effect::watch on middleware uses `immediate: false`,
-    // so it misses the initial arrow_size change if use_size's Effect runs first.
+    // so it misses the initial changes if use_size's Effect or arrow mount runs first.
+    // We watch both arrow_ref (to catch mount) and arrow_size (to catch measurement).
     Effect::new({
         let update_floating_position = update_floating_position.clone();
 
         move |_| {
+            let _ref = arrow_ref.get();
             let _size = arrow_size.get();
             update_floating_position();
         }
@@ -325,7 +327,13 @@ pub fn PopperContent(
     let arrow_x = Signal::derive(move || arrow_data().and_then(|arrow_data| arrow_data.x));
     let arrow_y = Signal::derive(move || arrow_data().and_then(|arrow_data| arrow_data.y));
     let cannot_center_arrow = Signal::derive(move || {
-        arrow_data().is_none_or(|arrow_data| arrow_data.center_offset != 0.0)
+        // Only hide the arrow when the Arrow middleware explicitly reports it cannot
+        // be centered. When arrow_data is None (middleware hasn't run yet or no Arrow
+        // middleware was added), default to showing the arrow — hiding it would require
+        // a subsequent reactive update to make it visible, and timing differences
+        // between React's synchronous useLayoutEffect and Leptos's async Effects can
+        // prevent that update from firing reliably.
+        arrow_data().is_some_and(|arrow_data| arrow_data.center_offset != 0.0)
     });
 
     let (content_z_index, set_content_z_index) = signal::<Option<String>>(None);
@@ -459,6 +467,30 @@ pub fn PopperContent(
         for (prop, value) in &caller_props {
             let _ = inner_style.set_property(prop, value);
             let _ = wrapper_style.remove_property(prop);
+        }
+
+        // Transfer non-internal attributes (e.g., data-testid, aria-*) from wrapper to inner.
+        // In React, all user props spread onto the inner Primitive via {...contentProps}. In
+        // Leptos, user attrs from add_any_attr bypass the AttributeInterceptor and land on
+        // the wrapper div. Transfer them to the inner element to match React's behavior.
+        let attrs = wrapper.attributes();
+        let mut attrs_to_transfer: Vec<(String, String)> = Vec::new();
+        for i in 0..attrs.length() {
+            if let Some(attr) = attrs.item(i) {
+                let name = attr.name();
+                // Skip internal wrapper attributes
+                if matches!(
+                    name.as_str(),
+                    "data-radix-popper-content-wrapper" | "dir" | "style" | "class"
+                ) {
+                    continue;
+                }
+                attrs_to_transfer.push((name, attr.value()));
+            }
+        }
+        for (name, value) in &attrs_to_transfer {
+            inner.set_attribute(name, value).ok();
+            wrapper.remove_attribute(name).ok();
         }
     });
 

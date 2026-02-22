@@ -4,7 +4,6 @@ use radix_leptos_radio_group::*;
 #[component]
 pub fn RadioGroupPage() -> impl IntoView {
     let (disabled, set_disabled) = signal(false);
-
     view! {
         <RadioGroup
             attr:class="radio-group-root"

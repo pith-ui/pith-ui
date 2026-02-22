@@ -1,15 +1,15 @@
 use leptos::{
-    ev::MouseEvent,
-    html::{AnyElement, Input},
-    *,
+    attribute_interceptor::AttributeInterceptor, context::Provider, ev, html, prelude::*,
 };
+use leptos_node_ref::AnyNodeRef;
 use radix_leptos_compose_refs::use_composed_refs;
-use radix_leptos_primitive::{compose_callbacks, Primitive};
-use radix_leptos_use_controllable_state::{use_controllable_state, UseControllableStateParams};
+use radix_leptos_primitive::{Primitive, compose_callbacks};
+use radix_leptos_use_controllable_state::{UseControllableStateParams, use_controllable_state};
 use radix_leptos_use_previous::use_previous;
 use radix_leptos_use_size::use_size;
+use web_sys::wasm_bindgen::JsCast;
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Copy, Debug)]
 struct SwitchContextValue {
     checked: Signal<bool>,
     disabled: Signal<bool>,
@@ -24,24 +24,28 @@ pub fn Switch(
     #[prop(into, optional)] required: MaybeProp<bool>,
     #[prop(into, optional)] disabled: MaybeProp<bool>,
     #[prop(into, optional)] value: MaybeProp<String>,
-    #[prop(into, optional)] on_click: Option<Callback<MouseEvent>>,
+    #[prop(into, optional)] on_click: Option<Callback<ev::MouseEvent>>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
-    #[prop(optional)] node_ref: NodeRef<AnyElement>,
-    #[prop(attrs)] attrs: Vec<(&'static str, Attribute)>,
+    #[prop(into, optional)] node_ref: AnyNodeRef,
     children: ChildrenFn,
 ) -> impl IntoView {
+    let children = StoredValue::new(children);
+
     let name = Signal::derive(move || name.get());
     let required = Signal::derive(move || required.get().unwrap_or(false));
     let disabled = Signal::derive(move || disabled.get().unwrap_or(false));
     let value = Signal::derive(move || value.get().unwrap_or("on".into()));
 
-    let button_ref = NodeRef::new();
+    let button_ref = AnyNodeRef::new();
     let composed_refs = use_composed_refs(vec![node_ref, button_ref]);
 
     let is_form_control = Signal::derive(move || {
         button_ref
             .get()
-            .and_then(|button| button.closest("form").ok())
+            .and_then(|button| {
+                let el: &web_sys::Element = button.unchecked_ref();
+                el.closest("form").ok()
+            })
             .flatten()
             .is_some()
     });
@@ -50,7 +54,7 @@ pub fn Switch(
         on_change: on_checked_change.map(|on_checked_change| {
             Callback::new(move |value| {
                 if let Some(value) = value {
-                    on_checked_change.call(value);
+                    on_checked_change.run(value);
                 }
             })
         }),
@@ -60,64 +64,47 @@ pub fn Switch(
 
     let context_value = SwitchContextValue { checked, disabled };
 
-    let mut attrs = attrs.clone();
-    attrs.extend([
-        ("type", "button".into_attribute()),
-        ("role", "switch".into_attribute()),
-        (
-            "aria-checked",
-            (move || match checked.get() {
-                true => "true",
-                false => "false",
-            })
-            .into_attribute(),
-        ),
-        (
-            "aria-required",
-            (move || match required.get() {
-                true => "true",
-                false => "false",
-            })
-            .into_attribute(),
-        ),
-        (
-            "data-state",
-            (move || get_state(checked.get())).into_attribute(),
-        ),
-        (
-            "data-disabled",
-            (move || disabled.get().then_some("")).into_attribute(),
-        ),
-        (
-            "disabled",
-            (move || disabled.get().then_some("")).into_attribute(),
-        ),
-        ("value", value.into_attribute()),
-    ]);
-
     view! {
         <Provider value=context_value>
-            <Primitive
-                element=html::button
-                as_child=as_child
-                node_ref=composed_refs
-                attrs=attrs
-                on:click=compose_callbacks(on_click, Some(Callback::new(move |event: MouseEvent| {
-                    set_checked.call(Some(!checked.get()));
-
-                    if is_form_control.get() {
-                        // If switch is in a form, stop propagation from the button, so that we only propagate
-                        // one click event (from the input). We propagate changes from an input so that native
-                        // form validation works and form events reflect switch updates.
-                        event.stop_propagation();
+            <AttributeInterceptor let:attrs>
+                <Primitive
+                    element=html::button
+                    as_child=as_child
+                    node_ref=composed_refs
+                    attr:r#type="button"
+                    attr:role="switch"
+                    attr:aria-checked=move || match checked.get() {
+                        true => "true",
+                        false => "false",
                     }
-                })), None)
-            >
-                {children()}
-            </Primitive>
+                    attr:aria-required=move || match required.get() {
+                        true => "true",
+                        false => "false",
+                    }
+                    attr:data-state=move || get_state(checked.get())
+                    attr:data-disabled=move || disabled.get().then_some("")
+                    attr:disabled=move || disabled.get().then_some("")
+                    attr:value=move || value.get()
+                    on:click=compose_callbacks(on_click, Some(Callback::new(move |event: ev::MouseEvent| {
+                        if !disabled.get() {
+                            set_checked.run(Some(!checked.get()));
+
+                            if is_form_control.get() {
+                                // If switch is in a form, stop propagation from the button, so that we only propagate
+                                // one click event (from the input). We propagate changes from an input so that native
+                                // form validation works and form events reflect switch updates.
+                                event.stop_propagation();
+                            }
+                        }
+                    })), None)
+                    {..attrs}
+                >
+                    {children.with_value(|children| children())}
+                </Primitive>
+            </AttributeInterceptor>
             <Show when=move || is_form_control.get()>
                 <BubbleInput
-                    attr:name=name
+                    attr:name=move || name.get()
                     control_ref=button_ref
                     bubbles=Signal::derive(|| true)
                     value=value
@@ -133,30 +120,20 @@ pub fn Switch(
 #[component]
 pub fn SwitchThumb(
     #[prop(into, optional)] as_child: MaybeProp<bool>,
-    #[prop(attrs)] attrs: Vec<(&'static str, Attribute)>,
+    #[prop(into, optional)] node_ref: AnyNodeRef,
     #[prop(optional)] children: Option<ChildrenFn>,
 ) -> impl IntoView {
     let children = StoredValue::new(children);
 
     let context = expect_context::<SwitchContextValue>();
 
-    let mut attrs = attrs.clone();
-    attrs.extend([
-        (
-            "data-state",
-            (move || get_state(context.checked.get())).into_attribute(),
-        ),
-        (
-            "data-disabled",
-            (move || context.disabled.get().then_some("")).into_attribute(),
-        ),
-    ]);
-
     view! {
         <Primitive
             element=html::span
             as_child=as_child
-            attrs=attrs
+            node_ref=node_ref
+            attr:data-state=move || get_state(context.checked.get())
+            attr:data-disabled=move || context.disabled.get().then_some("")
         >
             {children.with_value(|children| children.as_ref().map(|children| children()))}
         </Primitive>
@@ -165,15 +142,14 @@ pub fn SwitchThumb(
 
 #[component]
 fn BubbleInput(
-    #[prop(into)] control_ref: NodeRef<AnyElement>,
+    #[prop(into)] control_ref: AnyNodeRef,
     #[prop(into)] checked: Signal<bool>,
     #[prop(into)] bubbles: Signal<bool>,
     #[prop(into)] required: Signal<bool>,
     #[prop(into)] disabled: Signal<bool>,
     #[prop(into)] value: Signal<String>,
-    #[prop(attrs)] attrs: Vec<(&'static str, Attribute)>,
 ) -> impl IntoView {
-    let node_ref: NodeRef<Input> = NodeRef::new();
+    let node_ref: NodeRef<html::Input> = NodeRef::new();
     let prev_checked = use_previous(checked);
     let control_size = use_size(control_ref);
 
@@ -204,8 +180,8 @@ fn BubbleInput(
             checked=move || checked.get().then_some("")
             required=move || required.get().then_some("")
             disabled=move || disabled.get().then_some("")
-            value=value
-            tab-index="-1"
+            value=move || value.get()
+            tabindex="-1"
             // We transform because the input is absolutely positioned, but we have
             // rendered it **after** the button. This pulls it back to sit on top
             // of the button.
@@ -216,7 +192,6 @@ fn BubbleInput(
             style:pointer-events="none"
             style:opacity="0"
             style:margin="0px"
-            {..attrs}
         />
     }
 }

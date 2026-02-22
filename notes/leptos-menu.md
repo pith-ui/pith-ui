@@ -20,8 +20,8 @@ dependencies:
   - "[[leptos-slot]]"
   - "[[leptos-use-callback-ref]]"
 ported: true
-tested: false
-tested_story: false
+tested: true
+tested_story: true
 ---
 ## Intent
 

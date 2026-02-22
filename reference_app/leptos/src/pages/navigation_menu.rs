@@ -10,24 +10,32 @@ pub fn NavigationMenuPage() -> impl IntoView {
                     <NavigationMenuTrigger attr:class="nav-trigger">
                         "Products"
                     </NavigationMenuTrigger>
-                    <NavigationMenuContent attr:class="nav-content" attr:data-testid="products-content">
-                        <ul class="nav-content-list">
-                            <li>
-                                <NavigationMenuLink attr:class="nav-content-link" attr:href="#">
-                                    "Product A"
-                                </NavigationMenuLink>
-                            </li>
-                            <li>
-                                <NavigationMenuLink attr:class="nav-content-link" attr:href="#">
-                                    "Product B"
-                                </NavigationMenuLink>
-                            </li>
-                            <li>
-                                <NavigationMenuLink attr:class="nav-content-link" attr:href="#">
-                                    "Product C"
-                                </NavigationMenuLink>
-                            </li>
-                        </ul>
+                    <NavigationMenuContent attr:class="nav-content nav-content-products" attr:data-testid="products-content" attr:style="grid-template-columns: 1fr 1fr;">
+                        <div class="nav-content-group" data-testid="products-featured">
+                            <h3 class="nav-group-heading">"Featured"</h3>
+                            <ul class="nav-content-list">
+                                <li>
+                                    <NavigationMenuLink attr:class="nav-content-link" attr:href="#">
+                                        "Product A"
+                                    </NavigationMenuLink>
+                                </li>
+                                <li>
+                                    <NavigationMenuLink attr:class="nav-content-link" attr:href="#">
+                                        "Product B"
+                                    </NavigationMenuLink>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="nav-content-group" data-testid="products-all">
+                            <h3 class="nav-group-heading">"All Products"</h3>
+                            <ul class="nav-content-list">
+                                <li>
+                                    <NavigationMenuLink attr:class="nav-content-link" attr:href="#">
+                                        "Product C"
+                                    </NavigationMenuLink>
+                                </li>
+                            </ul>
+                        </div>
                     </NavigationMenuContent>
                 </NavigationMenuItem>
 
@@ -35,7 +43,7 @@ pub fn NavigationMenuPage() -> impl IntoView {
                     <NavigationMenuTrigger attr:class="nav-trigger">
                         "Resources"
                     </NavigationMenuTrigger>
-                    <NavigationMenuContent attr:class="nav-content" attr:data-testid="resources-content">
+                    <NavigationMenuContent attr:class="nav-content nav-content-resources" attr:data-testid="resources-content">
                         <ul class="nav-content-list">
                             <li>
                                 <NavigationMenuLink attr:class="nav-content-link" attr:href="#">

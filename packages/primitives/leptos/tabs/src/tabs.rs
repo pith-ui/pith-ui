@@ -176,11 +176,47 @@ pub fn TabsTrigger(
             .is_some_and(|v| v == trigger_value.get_value())
     });
 
+    // Compose the user's on_focus with automatic activation into a single handler.
+    // This is passed through RovingFocusGroupItem's on_focus prop so that only ONE
+    // on:focus listener is registered on the DOM element, avoiding duplicate event
+    // handler closures that can lead to WASM "closure invoked after being dropped"
+    // panics when multiple focus listeners interact with the reactive system.
+    let composed_on_focus: Callback<ev::FocusEvent> = Callback::new(compose_callbacks(
+        on_focus,
+        Some(Callback::new(move |_: ev::FocusEvent| {
+            // Handle "automatic" activation if necessary:
+            // activate tab following focus.
+            let is_automatic_activation = context.activation_mode.get() != ActivationMode::Manual;
+            if !is_selected.get() && !disabled.get() && is_automatic_activation {
+                // Defer the value change to a macrotask (setTimeout 0) to avoid
+                // re-entrant signal updates in WASM. In React, setState is batched;
+                // in Leptos, signal updates are synchronous. When RovingFocusGroup's
+                // keydown handler calls focus_first() which triggers this focus handler,
+                // the synchronous signal update can cause reactive effects while the
+                // keydown closure is still on the call stack.
+                let on_value_change = context.on_value_change;
+                let value = trigger_value.get_value();
+                let window = web_sys::window().expect("Window should exist.");
+                window
+                    .set_timeout_with_callback_and_timeout_and_arguments_0(
+                        &Closure::once_into_js(move || {
+                            on_value_change.run(value);
+                        })
+                        .unchecked_ref(),
+                        0,
+                    )
+                    .expect("setTimeout should succeed.");
+            }
+        })),
+        None,
+    ));
+
     view! {
         <RovingFocusGroupItem
             as_child=true
             focusable=Signal::derive(move || !disabled.get())
             active=is_selected
+            on_focus=composed_on_focus
         >
             <Primitive
                 element=html::button
@@ -206,14 +242,6 @@ pub fn TabsTrigger(
                 })), None)
                 on:keydown=compose_callbacks(on_key_down, Some(Callback::new(move |event: ev::KeyboardEvent| {
                     if [" ", "Enter"].contains(&event.key().as_str()) {
-                        context.on_value_change.run(trigger_value.get_value());
-                    }
-                })), None)
-                on:focus=compose_callbacks(on_focus, Some(Callback::new(move |_: ev::FocusEvent| {
-                    // Handle "automatic" activation if necessary:
-                    // activate tab following focus.
-                    let is_automatic_activation = context.activation_mode.get() != ActivationMode::Manual;
-                    if !is_selected.get() && !disabled.get() && is_automatic_activation {
                         context.on_value_change.run(trigger_value.get_value());
                     }
                 })), None)
@@ -304,11 +332,22 @@ fn TabsContentImpl(
     }));
     let raf_closure = StoredValue::new(raf_closure);
 
-    raf_closure.with_value(|closure| {
+    let raf_id = raf_closure.with_value(|closure| {
         let window = web_sys::window().expect("Window should exist.");
         window
             .request_animation_frame(closure.as_ref().unchecked_ref())
-            .expect("requestAnimationFrame should succeed.");
+            .expect("requestAnimationFrame should succeed.")
+    });
+
+    // Cancel the rAF when the component unmounts to prevent invoking a dropped
+    // Closure. When a tab change causes this content to unmount via Presence,
+    // the StoredValue (and its Closure) is dropped. Without cancellation, the
+    // browser would fire the rAF callback on the dropped Closure, causing a
+    // WASM "closure invoked after being dropped" panic.
+    Owner::on_cleanup(move || {
+        if let Some(window) = web_sys::window() {
+            window.cancel_animation_frame(raf_id).ok();
+        }
     });
 
     view! {

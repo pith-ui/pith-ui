@@ -11,7 +11,7 @@ dependencies:
   - "[[leptos-separator]]"
   - "[[leptos-toggle-group]]"
 ported: true
-tested: false
+tested: true
 tested_story: true
 ---
 ## Intent

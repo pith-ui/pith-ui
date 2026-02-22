@@ -11,7 +11,9 @@ version.workspace = true
 
 [dependencies]
 leptos.workspace = true
+leptos-node-ref.workspace = true
 radix-leptos-compose-refs.workspace = true
+radix-leptos-primitive.workspace = true
 radix-leptos-use-controllable-state.workspace = true
 radix-leptos-use-previous.workspace = true
 radix-leptos-use-size.workspace = true

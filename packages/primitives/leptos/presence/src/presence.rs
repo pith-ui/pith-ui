@@ -44,7 +44,7 @@ pub fn Presence(
     }
 }
 
-fn use_presence(present: Signal<bool>, node_ref: AnyNodeRef) -> Signal<bool> {
+pub fn use_presence(present: Signal<bool>, node_ref: AnyNodeRef) -> Signal<bool> {
     let styles: RwSignal<Option<SendWrapper<web_sys::CssStyleDeclaration>>> = RwSignal::new(None);
     let prev_present = RwSignal::new(present.get_untracked());
     let prev_animation_name = RwSignal::new("none".to_string());

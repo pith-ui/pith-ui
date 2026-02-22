@@ -269,8 +269,11 @@ The **Radix documentation** is the source of truth for what to test. The **React
 1. **Write the Cypress test first**, derived from the Radix docs. The docs' data-attribute tables, Keyboard Interactions table, and Accessibility section define every assertion. See the **E2E Testing Methodology** section below for the full process.
 2. **Write the React page second** — a minimal test fixture with variant toggles and outside interaction targets.
 3. **Run the tests against React to validate them.** This catches cases where the docs are ambiguous or underspecified (exact tab order, what gets auto-focused, animation timing). Fix tests only if they assert something the docs don't actually require; add tests for undocumented behaviors discovered during validation.
+   - When testing, use `just test_react_component <component>` to run the suite of tests against a react component.
 4. **Write the Leptos page last**, making it produce equivalent DOM output.
 5. **Run the same Cypress test against Leptos.** It must pass without modification.
+   - When testing, use `just test_leptos_component <component>` to run the suite of tests against a react component.
+   - When you need to compile from scratch, use `trunk clean` and/or `cargo clean`
 
 Writing tests from the docs (not from the React implementation) prevents tests from just confirming "what React happens to do" instead of "what the spec says should happen."
 
@@ -602,16 +605,16 @@ it('handles focus when focused element is removed', () => {
 
 Each component variant that changes behavior must be tested independently. Common variants:
 
-| Variant | Components | What changes |
-|---------|-----------|-------------|
-| `modal` / non-modal | Dialog, AlertDialog | Focus trap, outside interaction blocking, scroll lock |
-| `controlled` / `uncontrolled` | All stateful components | State is driven by props vs internal |
-| `disabled` | Accordion, Checkbox, RadioGroup, etc. | Prevents interaction, sets `data-disabled` |
-| `orientation` (`vertical`/`horizontal`) | Accordion, Tabs, Slider, etc. | Arrow key direction, `data-orientation` |
-| `type` (`single`/`multiple`) | Accordion | One vs many items open |
-| `collapsible` | Accordion (`single` type) | Whether last open item can be closed |
-| `required` | Checkbox, RadioGroup, Select | Form validation behavior |
-| `dir` (`ltr`/`rtl`) | Components with directional arrow keys | Arrow key mapping flips |
+| Variant                                 | Components                             | What changes                                          |
+| --------------------------------------- | -------------------------------------- | ----------------------------------------------------- |
+| `modal` / non-modal                     | Dialog, AlertDialog                    | Focus trap, outside interaction blocking, scroll lock |
+| `controlled` / `uncontrolled`           | All stateful components                | State is driven by props vs internal                  |
+| `disabled`                              | Accordion, Checkbox, RadioGroup, etc.  | Prevents interaction, sets `data-disabled`            |
+| `orientation` (`vertical`/`horizontal`) | Accordion, Tabs, Slider, etc.          | Arrow key direction, `data-orientation`               |
+| `type` (`single`/`multiple`)            | Accordion                              | One vs many items open                                |
+| `collapsible`                           | Accordion (`single` type)              | Whether last open item can be closed                  |
+| `required`                              | Checkbox, RadioGroup, Select           | Form validation behavior                              |
+| `dir` (`ltr`/`rtl`)                     | Components with directional arrow keys | Arrow key mapping flips                               |
 
 For each variant that the component supports:
 1. Set up the variant (via control toggle or route parameter).

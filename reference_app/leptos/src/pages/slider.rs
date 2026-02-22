@@ -8,21 +8,28 @@ pub fn SliderPage() -> impl IntoView {
     let (value, set_value) = signal(vec![50.0]);
 
     view! {
-        <Slider
-            attr:class="slider-root"
-            disabled=disabled
-            orientation=orientation
-            value=value
-            on_value_change=Callback::new(move |v: Vec<f64>| set_value.set(v))
-            min=0.0
-            max=100.0
-            step=1.0
-        >
-            <SliderTrack attr:class="slider-track">
-                <SliderRange attr:class="slider-range" />
-            </SliderTrack>
-            <SliderThumb attr:class="slider-thumb" attr:aria-label="Volume" />
-        </Slider>
+        // Wrap in reactive closure so the Slider remounts when orientation changes,
+        // ensuring attr:class is properly applied to the new DOM element.
+        {move || {
+            let o = orientation.get();
+            view! {
+                <Slider
+                    attr:class="slider-root"
+                    disabled=disabled
+                    orientation=o
+                    value=value
+                    on_value_change=Callback::new(move |v: Vec<f64>| set_value.set(v))
+                    min=0.0
+                    max=100.0
+                    step=1.0
+                >
+                    <SliderTrack attr:class="slider-track">
+                        <SliderRange attr:class="slider-range" />
+                    </SliderTrack>
+                    <SliderThumb attr:class="slider-thumb" attr:aria-label="Volume" />
+                </Slider>
+            }
+        }}
 
         <br />
         <br />

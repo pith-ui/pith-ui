@@ -1,99 +1,89 @@
-use leptos::{ev::Event, *};
+use leptos::{ev::Event, prelude::*};
 use radix_leptos_checkbox::*;
 use radix_leptos_label::*;
-use tailwind_fuse::*;
+
+stylance::import_crate_style!(classes, "src/primitives/checkbox.stories.module.css");
 
 #[component]
 pub fn Styled() -> impl IntoView {
-    let label_class = Memo::new(move |_| LabelClass::default().to_class());
-    let root_class = Memo::new(move |_| RootClass::default().to_class());
-    let indicator_class = Memo::new(move |_| IndicatorClass::default().to_class());
-
     view! {
-        <p>This checkbox is nested inside a label. The state is uncontrolled.</p>
+        <p>"This checkbox is nested inside a label. The state is uncontrolled."</p>
 
-        <h1>Custom label</h1>
-        <Label attr:class=label_class>
-            Label{' '}
-            <Checkbox attr:class=root_class>
-                <CheckboxIndicator attr:class=indicator_class />
+        <h1>"Custom label"</h1>
+        <Label attr:class=classes::label>
+            "Label "
+            <Checkbox attr:class=classes::root>
+                <CheckboxIndicator attr:class=classes::indicator />
             </Checkbox>
         </Label>
 
         <br />
         <br />
 
-        <h1>Native label</h1>
+        <h1>"Native label"</h1>
         <label>
-            Label{' '}
-            <Checkbox attr:class=root_class>
-                <CheckboxIndicator attr:class=indicator_class />
+            "Label "
+            <Checkbox attr:class=classes::root>
+                <CheckboxIndicator attr:class=classes::indicator />
             </Checkbox>
         </label>
 
-        <h1>Native label + native checkbox</h1>
+        <h1>"Native label + native checkbox"</h1>
         <label>
-            Label <input type="checkbox" />
+            "Label " <input type="checkbox" />
         </label>
 
-        <h1>Custom label + for</h1>
-        <Label attr:for="one">Label</Label>
-        <Checkbox attr:id="one" attr:class=root_class>
-            <CheckboxIndicator attr:class=indicator_class />
+        <h1>"Custom label + for"</h1>
+        <Label attr:r#for="one">"Label"</Label>
+        <Checkbox attr:id="one" attr:class=classes::root>
+            <CheckboxIndicator attr:class=classes::indicator />
         </Checkbox>
 
         <br />
         <br />
 
-        <h1>Native label + for</h1>
-        <label for="two">Label</label>
-        <Checkbox attr:id="two" attr:class=root_class>
-            <CheckboxIndicator attr:class=indicator_class />
+        <h1>"Native label + for"</h1>
+        <label for="two">"Label"</label>
+        <Checkbox attr:id="two" attr:class=classes::root>
+            <CheckboxIndicator attr:class=classes::indicator />
         </Checkbox>
 
-        <h1>Native label + native checkbox</h1>
-        <label for="three">Label</label>
+        <h1>"Native label + native checkbox"</h1>
+        <label for="three">"Label"</label>
         <input id="three" type="checkbox" />
     }
 }
 
 #[component]
 pub fn Controlled() -> impl IntoView {
-    let label_class = Memo::new(move |_| LabelClass::default().to_class());
-    let root_class = Memo::new(move |_| RootClass::default().to_class());
-    let indicator_class = Memo::new(move |_| IndicatorClass::default().to_class());
-
-    let (checked, set_checked) = create_signal(CheckedState::True);
+    let (checked, set_checked) = signal(CheckedState::True);
 
     view! {
-        <p>This checkbox is placed adjacent to its label. The state is controlled.</p>
-        <Label attr:for="randBox" attr:class=label_class>Label</Label>{' '}
+        <p>"This checkbox is placed adjacent to its label. The state is controlled."</p>
+        <Label attr:r#for="randBox" attr:class=classes::label>"Label"</Label>{' '}
         <Checkbox
             attr:id="randBox"
-            attr:class=root_class
+            attr:class=classes::root
             checked=checked
             on_checked_change=move |checked| set_checked.set(checked)
         >
-            <CheckboxIndicator attr:class=indicator_class />
+            <CheckboxIndicator attr:class=classes::indicator />
         </Checkbox>
     }
 }
 
 #[component]
 pub fn Indeterminate() -> impl IntoView {
-    let root_class = Memo::new(move |_| RootClass::default().to_class());
-    let indicator_class = Memo::new(move |_| IndicatorClass::default().to_class());
-
-    let (checked, set_checked) = create_signal(CheckedState::Indeterminate);
+    let (checked, set_checked) = signal(CheckedState::Indeterminate);
 
     view! {
         <p>
             <Checkbox
-                attr:class=root_class
+                attr:class=classes::root
                 checked=checked
                 on_checked_change=move |checked| set_checked.set(checked)
             >
-                <CheckboxIndicator attr:class=indicator_class />
+                <CheckboxIndicator attr:class=classes::indicator />
             </Checkbox>
         </p>
 
@@ -108,28 +98,25 @@ pub fn Indeterminate() -> impl IntoView {
                 })
             }
         >
-            Toggle indeterminate
+            "Toggle indeterminate"
         </button>
     }
 }
 
 #[component]
 pub fn WithinForm() -> impl IntoView {
-    let root_class = Memo::new(move |_| RootClass::default().to_class());
-    let indicator_class = Memo::new(move |_| IndicatorClass::default().to_class());
-
     struct Data {
         optional: bool,
         required: bool,
         stopprop: bool,
     }
 
-    let (data, set_data) = create_signal(Data {
+    let (data, set_data) = signal(Data {
         optional: false,
         required: false,
         stopprop: false,
     });
-    let (checked, set_checked) = create_signal(CheckedState::Indeterminate);
+    let (checked, set_checked) = signal(CheckedState::Indeterminate);
 
     view! {
         <form
@@ -155,10 +142,10 @@ pub fn WithinForm() -> impl IntoView {
             }
         >
             <fieldset>
-                <legend>optional checked: {move || format!("{}", data.with(|data| data.optional))}</legend>
+                <legend>"optional checked: " {move || format!("{}", data.with(|data| data.optional))}</legend>
                 <label>
                     <Checkbox
-                        attr:class=root_class
+                        attr:class=classes::root
                         name="optional"
                         checked=checked
                         on_checked_change=move |checked| {
@@ -168,9 +155,9 @@ pub fn WithinForm() -> impl IntoView {
                             })
                         }
                     >
-                        <CheckboxIndicator attr:class=indicator_class />
+                        <CheckboxIndicator attr:class=classes::indicator />
                     </Checkbox>{' '}
-                    with label
+                    "with label"
                 </label>
                 <br />
                 <br />
@@ -186,7 +173,7 @@ pub fn WithinForm() -> impl IntoView {
                         })
                     }
                 >
-                    Toggle indeterminate
+                    "Toggle indeterminate"
                 </button>
             </fieldset>
 
@@ -194,9 +181,9 @@ pub fn WithinForm() -> impl IntoView {
             <br />
 
             <fieldset>
-                <legend>required checked: {move || format!("{}", data.with(|data| data.required))}</legend>
+                <legend>"required checked: " {move || format!("{}", data.with(|data| data.required))}</legend>
                 <Checkbox
-                    attr:class=root_class
+                    attr:class=classes::root
                     name="required"
                     required=true
                     on_checked_change=move |checked| {
@@ -205,7 +192,7 @@ pub fn WithinForm() -> impl IntoView {
                         });
                     }
                 >
-                    <CheckboxIndicator attr:class=indicator_class />
+                    <CheckboxIndicator attr:class=classes::indicator />
                 </Checkbox>
             </fieldset>
 
@@ -214,42 +201,41 @@ pub fn WithinForm() -> impl IntoView {
             <br />
 
             <fieldset>
-                <legend>stop propagation checked: {move || format!("{}", data.with(|data| data.stopprop))}</legend>
+                <legend>"stop propagation checked: " {move || format!("{}", data.with(|data| data.stopprop))}</legend>
                 <Checkbox
-                    attr:class=root_class
+                    attr:class=classes::root
                     name="stopprop"
                     on:click=move |event| event.stop_propagation()
                 >
-                    <CheckboxIndicator attr:class=indicator_class />
+                    <CheckboxIndicator attr:class=classes::indicator />
                 </Checkbox>
             </fieldset>
 
             <br />
             <br />
 
-            <button type="reset">Reset</button>
-            <button>Submit</button>
+            <button type="reset">"Reset"</button>
+            <button>"Submit"</button>
         </form>
     }
 }
 
 #[component]
 pub fn Animated() -> impl IntoView {
-    let root_class = Memo::new(move |_| RootClass::default().to_class());
-    let animated_indicator_class = Memo::new(move |_| AnimatedIndicatorClass::default().to_class());
+    let (checked, set_checked) = signal(CheckedState::Indeterminate);
 
-    let (checked, set_checked) = create_signal(CheckedState::Indeterminate);
+    let animated_class = format!("{} {}", classes::indicator, classes::animatedIndicator);
 
     // TODO: fade out doesn't work, might be an issue with Presence component?
 
     view! {
         <p>
             <Checkbox
-                attr:class=root_class
+                attr:class=classes::root
                 checked=checked
                 on_checked_change=move |checked| set_checked.set(checked)
             >
-                <CheckboxIndicator attr:class=animated_indicator_class />
+                <CheckboxIndicator attr:class=animated_class.clone() />
             </Checkbox>
         </p>
 
@@ -264,116 +250,75 @@ pub fn Animated() -> impl IntoView {
                 })
             }
         >
-            Toggle indeterminate
+            "Toggle indeterminate"
         </button>
     }
 }
 
 #[component]
 pub fn Chromatic() -> impl IntoView {
-    let root_class = Memo::new(move |_| RootClass::default().to_class());
-    let indicator_class = Memo::new(move |_| IndicatorClass::default().to_class());
-    let root_attr_class = Memo::new(move |_| RootAttrClass::default().to_class());
-    let indicator_attr_class = Memo::new(move |_| IndicatorAttrClass::default().to_class());
-
     view! {
-        <h1>Uncontrolled</h1>
-        <h2>Unchecked</h2>
-        <Checkbox attr:class=root_class>
-            <CheckboxIndicator attr:class=indicator_class />
+        <h1>"Uncontrolled"</h1>
+        <h2>"Unchecked"</h2>
+        <Checkbox attr:class=classes::root>
+            <CheckboxIndicator attr:class=classes::indicator />
         </Checkbox>
 
-        <h2>Checked</h2>
-        <Checkbox attr:class=root_class default_checked=CheckedState::True>
-            <CheckboxIndicator attr:class=indicator_class />
+        <h2>"Checked"</h2>
+        <Checkbox attr:class=classes::root default_checked=CheckedState::True>
+            <CheckboxIndicator attr:class=classes::indicator />
         </Checkbox>
 
-        <h1>Controlled</h1>
-        <h2>Unchecked</h2>
-        <Checkbox attr:class=root_class checked=CheckedState::False>
-            <CheckboxIndicator attr:class=indicator_class />
+        <h1>"Controlled"</h1>
+        <h2>"Unchecked"</h2>
+        <Checkbox attr:class=classes::root checked=CheckedState::False>
+            <CheckboxIndicator attr:class=classes::indicator />
         </Checkbox>
 
-        <h2>Checked</h2>
-        <Checkbox attr:class=root_class checked=CheckedState::True>
-            <CheckboxIndicator attr:class=indicator_class />
+        <h2>"Checked"</h2>
+        <Checkbox attr:class=classes::root checked=CheckedState::True>
+            <CheckboxIndicator attr:class=classes::indicator />
         </Checkbox>
 
-        <h1>Indeterminate</h1>
-        <Checkbox attr:class=root_class checked=CheckedState::Indeterminate>
-            <CheckboxIndicator attr:class=indicator_class />
+        <h1>"Indeterminate"</h1>
+        <Checkbox attr:class=classes::root checked=CheckedState::Indeterminate>
+            <CheckboxIndicator attr:class=classes::indicator />
         </Checkbox>
 
-        <h1>Disabled</h1>
-        <Checkbox attr:class=root_class default_checked=CheckedState::True disabled=true>
-            <CheckboxIndicator attr:class=indicator_class />
+        <h1>"Disabled"</h1>
+        <Checkbox attr:class=classes::root default_checked=CheckedState::True disabled=true>
+            <CheckboxIndicator attr:class=classes::indicator />
         </Checkbox>
 
-        <h1>Force mounted indicator</h1>
-        <Checkbox attr:class=root_class>
-            <CheckboxIndicator attr:class=indicator_class force_mount=true />
-            {/* style:height="20px" */}
+        <h1>"Force mounted indicator"</h1>
+        <Checkbox attr:class=classes::root>
+            <CheckboxIndicator attr:class=classes::indicator force_mount=true />
         </Checkbox>
 
-        <h1>State attributes</h1>
-        <h2>Unchecked</h2>
-        <Checkbox attr:class=root_attr_class>
-            <CheckboxIndicator attr:class=indicator_attr_class />
+        <h1>"State attributes"</h1>
+        <h2>"Unchecked"</h2>
+        <Checkbox attr:class=classes::rootAttr>
+            <CheckboxIndicator attr:class=classes::indicatorAttr />
         </Checkbox>
 
-        <h2>Checked</h2>
-        <Checkbox attr:class=root_attr_class default_checked=CheckedState::True>
-            <CheckboxIndicator attr:class=indicator_attr_class />
+        <h2>"Checked"</h2>
+        <Checkbox attr:class=classes::rootAttr default_checked=CheckedState::True>
+            <CheckboxIndicator attr:class=classes::indicatorAttr />
         </Checkbox>
 
-        <h2>Indeterminate</h2>
-        <Checkbox attr:class=root_attr_class checked=CheckedState::Indeterminate>
-            <CheckboxIndicator attr:class=indicator_attr_class />
+        <h2>"Indeterminate"</h2>
+        <Checkbox attr:class=classes::rootAttr checked=CheckedState::Indeterminate>
+            <CheckboxIndicator attr:class=classes::indicatorAttr />
         </Checkbox>
 
-        <h2>Disabled</h2>
-        <Checkbox attr:class=root_attr_class default_checked=CheckedState::True disabled=true>
-            <CheckboxIndicator attr:class=indicator_attr_class />
+        <h2>"Disabled"</h2>
+        <Checkbox attr:class=classes::rootAttr default_checked=CheckedState::True disabled=true>
+            <CheckboxIndicator attr:class=classes::indicatorAttr />
         </Checkbox>
 
-        <h2>Force mounted indicator</h2>
-        <Checkbox attr:class=root_class>
-            <CheckboxIndicator attr:class=indicator_attr_class force_mount=true />
-            {/* style:height="20px" */}
+        <h2>"Force mounted indicator"</h2>
+        <Checkbox attr:class=classes::rootAttr>
+            <CheckboxIndicator attr:class=classes::indicatorAttr force_mount=true />
         </Checkbox>
     }
 }
-
-#[derive(TwClass, Default, Clone, Copy)]
-#[tw(class = "inline-block align-middle cursor-default")]
-struct LabelClass {}
-
-#[derive(TwClass, Default, Clone, Copy)]
-#[tw(
-    class = "align-middle border-[1px] border-solid border-[#aaa] w-[30px] h-[30px] p-[4px] box-border leading-[normal] focus:outline-none focus:border-[crimson] focus:shadow-[0_0_0_1px_crimson] data-[disabled]:opacity-30"
-)]
-struct RootClass {}
-
-#[derive(TwClass, Default, Clone, Copy)]
-#[tw(
-    class = "bg-[crimson] block w-[20px] h-[4px] data-[state=checked]:h-[20px] data-[state=unchecked]:h-[20px]"
-)]
-struct IndicatorClass {}
-
-#[derive(TwClass, Default, Clone, Copy)]
-#[tw(
-    class = "bg-[crimson] block w-[20px] h-[4px] data-[state=checked]:h-[20px] data-[state=unchecked]:h-[20px] transition-[height] duration-[300ms] data-[state=checked]:animate-[checkboxFadeIn_1000ms_ease-out] data-[state=unchecked]:animate-[checkboxFadeOut_1000ms_ease-in]"
-)]
-struct AnimatedIndicatorClass {}
-
-#[derive(TwClass, Default, Clone, Copy)]
-#[tw(
-    class = "bg-[rgba(0,0,255,0.3)] border-[2px] border-solid border-[blue] p-[10px] box-border leading-[normal] data-[state=unchecked]:border-[red] data-[state=checked]:border-[green] data-[state=indeterminate]:border-[purple] data-[disabled]:border-dashed disabled:opacity-50"
-)]
-struct RootAttrClass {}
-
-#[derive(TwClass, Default, Clone, Copy)]
-#[tw(
-    class = "bg-[rgba(0,0,255,0.3)] border-[2px] border-solid border-[blue] p-[10px] leading-[normal] data-[state=unchecked]:border-[red] data-[state=checked]:border-[green] data-[state=indeterminate]:border-[purple] data-[disabled]:border-dashed disabled:opacity-50"
-)]
-struct IndicatorAttrClass {}

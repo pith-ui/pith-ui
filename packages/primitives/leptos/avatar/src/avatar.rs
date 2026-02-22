@@ -1,4 +1,6 @@
-use leptos::{html::AnyElement, *};
+use leptos::{context::Provider, html, prelude::*};
+use leptos_node_ref::AnyNodeRef;
+use radix_leptos_primitive::{Primitive, VoidPrimitive};
 use web_sys::{
     wasm_bindgen::{closure::Closure, JsCast},
     HtmlImageElement,
@@ -12,7 +14,7 @@ pub enum ImageLoadingStatus {
     Error,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone)]
 struct AvatarContextValue {
     image_loading_status: ReadSignal<ImageLoadingStatus>,
     on_image_loading_status_change: Callback<ImageLoadingStatus>,
@@ -21,28 +23,28 @@ struct AvatarContextValue {
 #[component]
 pub fn Avatar(
     #[prop(into, optional)] as_child: MaybeProp<bool>,
-    #[prop(optional)] node_ref: NodeRef<AnyElement>,
-    #[prop(attrs)] attrs: Vec<(&'static str, Attribute)>,
+    #[prop(into, optional)] node_ref: AnyNodeRef,
     children: ChildrenFn,
 ) -> impl IntoView {
-    let (image_loading_status, set_image_loading_status) = create_signal(ImageLoadingStatus::Idle);
+    let children = StoredValue::new(children);
+
+    let (image_loading_status, set_image_loading_status) = signal(ImageLoadingStatus::Idle);
 
     let context_value = AvatarContextValue {
         image_loading_status,
-        on_image_loading_status_change: Callback::new(move |image_loading_status| {
-            set_image_loading_status.set(image_loading_status)
+        on_image_loading_status_change: Callback::new(move |status| {
+            set_image_loading_status.set(status)
         }),
     };
 
     view! {
         <Provider value=context_value>
-             <Primitive
+            <Primitive
                 element=html::span
                 as_child=as_child
                 node_ref=node_ref
-                attrs=attrs
             >
-                {children()}
+                {children.with_value(|children| children())}
             </Primitive>
         </Provider>
     }
@@ -53,8 +55,7 @@ pub fn AvatarImage(
     #[prop(into, optional)] src: MaybeProp<String>,
     #[prop(into, optional)] on_loading_status_change: Option<Callback<ImageLoadingStatus>>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
-    #[prop(optional)] node_ref: NodeRef<AnyElement>,
-    #[prop(attrs)] attrs: Vec<(&'static str, Attribute)>,
+    #[prop(into, optional)] node_ref: AnyNodeRef,
     #[prop(optional)] children: Option<ChildrenFn>,
 ) -> impl IntoView {
     let children = StoredValue::new(children);
@@ -63,32 +64,28 @@ pub fn AvatarImage(
     let image_loading_status = use_image_loading_status(src.clone());
     let handle_loading_status_change = move |status: ImageLoadingStatus| {
         if let Some(on_loading_status_change) = on_loading_status_change {
-            on_loading_status_change.call(status);
+            on_loading_status_change.run(status);
         }
-        context.on_image_loading_status_change.call(status);
+        context.on_image_loading_status_change.run(status);
     };
 
     Effect::new(move |_| {
-        let image_loading_status = image_loading_status.get();
-        if image_loading_status != ImageLoadingStatus::Idle {
-            handle_loading_status_change(image_loading_status);
+        let status = image_loading_status.get();
+        if status != ImageLoadingStatus::Idle {
+            handle_loading_status_change(status);
         }
     });
 
-    let mut attrs = attrs.clone();
-    attrs.extend([("src", src.into_attribute())]);
-    let attrs = StoredValue::new(attrs);
-
     view! {
         <Show when=move || image_loading_status.get() == ImageLoadingStatus::Loaded>
-            <Primitive
+            <VoidPrimitive
                 element=html::img
                 as_child=as_child
                 node_ref=node_ref
-                attrs=attrs.get_value()
+                attr:src=move || src.get()
             >
                 {children.with_value(|children| children.as_ref().map(|children| children()))}
-            </Primitive>
+            </VoidPrimitive>
         </Show>
     }
 }
@@ -97,15 +94,13 @@ pub fn AvatarImage(
 pub fn AvatarFallback(
     #[prop(into, optional)] delay_ms: MaybeProp<i32>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
-    #[prop(optional)] node_ref: NodeRef<AnyElement>,
-    #[prop(attrs)] attrs: Vec<(&'static str, Attribute)>,
+    #[prop(into, optional)] node_ref: AnyNodeRef,
     #[prop(optional)] children: Option<ChildrenFn>,
 ) -> impl IntoView {
-    let attrs = StoredValue::new(attrs);
     let children = StoredValue::new(children);
 
     let context = expect_context::<AvatarContextValue>();
-    let (can_render, set_can_render) = create_signal(delay_ms.get().is_none());
+    let (can_render, set_can_render) = signal(delay_ms.get().is_none());
 
     let handler: Closure<dyn Fn()> = Closure::new(move || {
         set_can_render.set(true);
@@ -141,7 +136,6 @@ pub fn AvatarFallback(
                 element=html::span
                 as_child=as_child
                 node_ref=node_ref
-                attrs=attrs.get_value()
             >
                 {children.with_value(|children| children.as_ref().map(|children| children()))}
             </Primitive>
@@ -150,7 +144,7 @@ pub fn AvatarFallback(
 }
 
 fn use_image_loading_status(src: MaybeProp<String>) -> ReadSignal<ImageLoadingStatus> {
-    let (loading_status, set_loading_status) = create_signal(ImageLoadingStatus::Idle);
+    let (loading_status, set_loading_status) = signal(ImageLoadingStatus::Idle);
     let is_mounted = StoredValue::new(true);
 
     let update_status_loaded: Closure<dyn Fn()> = Closure::new(move || {

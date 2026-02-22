@@ -4017,6 +4017,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "radix-leptos-avatar"
+version = "0.0.2"
+dependencies = [
+ "leptos",
+ "leptos-node-ref",
+ "radix-leptos-primitive",
+ "web-sys",
+]
+
+[[package]]
 name = "radix-leptos-book-icons"
 version = "0.0.2"
 dependencies = [
@@ -4038,6 +4048,22 @@ dependencies = [
  "radix-leptos-aspect-ratio",
  "radix-leptos-label",
  "radix-leptos-separator",
+]
+
+[[package]]
+name = "radix-leptos-checkbox"
+version = "0.0.2"
+dependencies = [
+ "leptos",
+ "leptos-node-ref",
+ "radix-leptos-compose-refs",
+ "radix-leptos-presence",
+ "radix-leptos-primitive",
+ "radix-leptos-use-controllable-state",
+ "radix-leptos-use-previous",
+ "radix-leptos-use-size",
+ "send_wrapper",
+ "web-sys",
 ]
 
 [[package]]
@@ -4200,6 +4226,29 @@ dependencies = [
 ]
 
 [[package]]
+name = "radix-leptos-menu"
+version = "0.0.2"
+dependencies = [
+ "leptos",
+ "leptos-node-ref",
+ "radix-leptos-collection",
+ "radix-leptos-compose-refs",
+ "radix-leptos-direction",
+ "radix-leptos-dismissable-layer",
+ "radix-leptos-focus-guards",
+ "radix-leptos-focus-scope",
+ "radix-leptos-id",
+ "radix-leptos-popper",
+ "radix-leptos-portal",
+ "radix-leptos-presence",
+ "radix-leptos-primitive",
+ "radix-leptos-roving-focus",
+ "send_wrapper",
+ "wasm-bindgen",
+ "web-sys",
+]
+
+[[package]]
 name = "radix-leptos-navigation-menu"
 version = "0.0.2"
 dependencies = [
@@ -4356,26 +4405,34 @@ dependencies = [
  "console_error_panic_hook",
  "console_log",
  "leptos",
+ "leptos-node-ref",
  "leptos_router",
  "log",
  "radix-leptos-accordion",
  "radix-leptos-alert-dialog",
+ "radix-leptos-avatar",
+ "radix-leptos-checkbox",
  "radix-leptos-collapsible",
  "radix-leptos-dialog",
  "radix-leptos-form",
  "radix-leptos-hover-card",
+ "radix-leptos-menu",
  "radix-leptos-navigation-menu",
  "radix-leptos-popover",
  "radix-leptos-progress",
  "radix-leptos-radio-group",
  "radix-leptos-roving-focus",
  "radix-leptos-scroll-area",
+ "radix-leptos-select",
  "radix-leptos-separator",
  "radix-leptos-slider",
+ "radix-leptos-switch",
  "radix-leptos-tabs",
+ "radix-leptos-toast",
  "radix-leptos-toggle",
  "radix-leptos-toggle-group",
  "radix-leptos-toolbar",
+ "radix-leptos-tooltip",
  "web-sys",
 ]
 
@@ -4407,6 +4464,30 @@ dependencies = [
  "radix-leptos-primitive",
  "radix-number",
  "send_wrapper",
+ "web-sys",
+]
+
+[[package]]
+name = "radix-leptos-select"
+version = "0.0.2"
+dependencies = [
+ "js-sys",
+ "leptos",
+ "leptos-node-ref",
+ "radix-leptos-collection",
+ "radix-leptos-compose-refs",
+ "radix-leptos-direction",
+ "radix-leptos-dismissable-layer",
+ "radix-leptos-focus-guards",
+ "radix-leptos-focus-scope",
+ "radix-leptos-id",
+ "radix-leptos-popper",
+ "radix-leptos-portal",
+ "radix-leptos-primitive",
+ "radix-leptos-use-controllable-state",
+ "radix-leptos-visually-hidden",
+ "send_wrapper",
+ "wasm-bindgen",
  "web-sys",
 ]
 
@@ -4453,6 +4534,8 @@ dependencies = [
  "radix-leptos-alert-dialog",
  "radix-leptos-arrow",
  "radix-leptos-aspect-ratio",
+ "radix-leptos-avatar",
+ "radix-leptos-checkbox",
  "radix-leptos-collapsible",
  "radix-leptos-collection",
  "radix-leptos-dialog",
@@ -4463,6 +4546,7 @@ dependencies = [
  "radix-leptos-form",
  "radix-leptos-hover-card",
  "radix-leptos-label",
+ "radix-leptos-menu",
  "radix-leptos-navigation-menu",
  "radix-leptos-one-time-password-field",
  "radix-leptos-password-toggle-field",
@@ -4474,17 +4558,35 @@ dependencies = [
  "radix-leptos-radio-group",
  "radix-leptos-roving-focus",
  "radix-leptos-scroll-area",
+ "radix-leptos-select",
  "radix-leptos-separator",
  "radix-leptos-slider",
+ "radix-leptos-switch",
  "radix-leptos-tabs",
+ "radix-leptos-toast",
  "radix-leptos-toggle",
  "radix-leptos-toggle-group",
  "radix-leptos-toolbar",
+ "radix-leptos-tooltip",
  "radix-leptos-visually-hidden",
  "send_wrapper",
  "stylance",
  "tailwind_fuse",
  "wasm-bindgen",
+ "web-sys",
+]
+
+[[package]]
+name = "radix-leptos-switch"
+version = "0.0.2"
+dependencies = [
+ "leptos",
+ "leptos-node-ref",
+ "radix-leptos-compose-refs",
+ "radix-leptos-primitive",
+ "radix-leptos-use-controllable-state",
+ "radix-leptos-use-previous",
+ "radix-leptos-use-size",
  "web-sys",
 ]
 
@@ -4502,6 +4604,26 @@ dependencies = [
  "radix-leptos-roving-focus",
  "radix-leptos-use-controllable-state",
  "send_wrapper",
+ "web-sys",
+]
+
+[[package]]
+name = "radix-leptos-toast"
+version = "0.0.2"
+dependencies = [
+ "js-sys",
+ "leptos",
+ "leptos-node-ref",
+ "radix-leptos-collection",
+ "radix-leptos-compose-refs",
+ "radix-leptos-dismissable-layer",
+ "radix-leptos-portal",
+ "radix-leptos-presence",
+ "radix-leptos-primitive",
+ "radix-leptos-use-controllable-state",
+ "radix-leptos-visually-hidden",
+ "send_wrapper",
+ "wasm-bindgen",
  "web-sys",
 ]
 
@@ -4538,6 +4660,27 @@ dependencies = [
  "radix-leptos-roving-focus",
  "radix-leptos-separator",
  "radix-leptos-toggle-group",
+ "web-sys",
+]
+
+[[package]]
+name = "radix-leptos-tooltip"
+version = "0.0.2"
+dependencies = [
+ "js-sys",
+ "leptos",
+ "leptos-node-ref",
+ "radix-leptos-compose-refs",
+ "radix-leptos-dismissable-layer",
+ "radix-leptos-id",
+ "radix-leptos-popper",
+ "radix-leptos-portal",
+ "radix-leptos-presence",
+ "radix-leptos-primitive",
+ "radix-leptos-use-controllable-state",
+ "radix-leptos-visually-hidden",
+ "send_wrapper",
+ "wasm-bindgen",
  "web-sys",
 ]
 

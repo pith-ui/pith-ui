@@ -3,7 +3,6 @@ use leptos_node_ref::AnyNodeRef;
 use radix_leptos_compose_refs::use_composed_refs;
 use radix_leptos_dialog::*;
 use send_wrapper::SendWrapper;
-use web_sys::wasm_bindgen::{JsCast, closure::Closure};
 
 /// Helper: wraps an `Option<Callback<T>>` into a concrete `Callback<T>` that
 /// conditionally calls the inner callback if present. This is needed because
@@ -147,17 +146,17 @@ pub fn AlertDialogContent(
 
     let context = AlertDialogContentContextValue { cancel_ref };
 
-    // Override onOpenAutoFocus: compose with user callback, then focus cancel button.
-    // In React, cancelRef.current is synchronously available so it can be focused immediately.
-    // In Leptos, use_composed_refs propagates the ref via an Effect that hasn't run yet when
-    // this callback fires. We defer cancel focus to requestAnimationFrame, after all Effects
-    // (including use_composed_refs) have propagated the ref.
+    // In React, AlertDialogContent overrides onOpenAutoFocus to call
+    // event.preventDefault() and directly focus the cancel button via cancelRef.
     //
-    // We intentionally do NOT call event.prevent_default() here, unlike React. This lets
-    // FocusScope's focus_first() move focus into the dialog content immediately. Without this,
-    // focus would stay on the trigger and hide_others (which sets aria-hidden on the trigger's
-    // ancestors) would trigger a browser warning. The rAF then overrides focus to the cancel
-    // button, matching the final behavior of the React implementation.
+    // In Leptos, we rely on FocusScope's default focus_first() behavior instead.
+    // FocusScope auto-focuses the first tabbable element in the dialog, which by
+    // convention is the cancel button (AlertDialogCancel). This avoids timing issues
+    // with use_composed_refs Effect propagation (cancel_ref may not be set when
+    // the auto-focus callback fires synchronously).
+    //
+    // We forward the user's callback but do NOT add our own focus logic — FocusScope
+    // handles it correctly.
     let user_on_open_auto_focus = StoredValue::new(on_open_auto_focus);
     let alert_on_open_auto_focus = Callback::new(move |event: web_sys::Event| {
         user_on_open_auto_focus.with_value(|cb| {
@@ -165,22 +164,6 @@ pub fn AlertDialogContent(
                 cb.run(event.clone());
             }
         });
-        // If user prevented default, they're handling focus themselves (matches
-        // React's composeEventHandlers behavior).
-        if event.default_prevented() {
-            return;
-        }
-        // Defer cancel button focus to next frame when cancel_ref is available.
-        let cb = Closure::once_into_js(move || {
-            if let Some(cancel_el) = cancel_ref.get_untracked() {
-                let cancel_el: &web_sys::HtmlElement = cancel_el.unchecked_ref();
-                cancel_el.focus().ok();
-            }
-        });
-        web_sys::window()
-            .expect("Window should exist.")
-            .request_animation_frame(cb.unchecked_ref())
-            .ok();
     });
 
     // Prevent outside interactions — AlertDialog cannot be dismissed by clicking outside.
