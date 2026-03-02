@@ -18,7 +18,7 @@
 }
 
 .nav-trigger {
-    display: inline-flex;
+    display: flex;
     align-items: center;
     gap: 4px;
     padding: 8px 12px;
@@ -113,7 +113,9 @@
     bottom: 0;
     height: 2px;
     background: #333;
-    transition: transform 0.2s ease, width 0.2s ease;
+    transition:
+        transform 0.2s ease,
+        width 0.2s ease;
 }
 
 .nav-viewport {

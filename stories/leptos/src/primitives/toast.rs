@@ -1,15 +1,36 @@
 use leptos::prelude::*;
+use leptos_node_ref::AnyNodeRef;
+use radix_leptos_dialog::{
+    Dialog, DialogClose, DialogContent, DialogDescription, DialogOverlay, DialogTitle,
+    DialogTrigger,
+};
 use radix_leptos_toast::*;
 use web_sys::wasm_bindgen::{closure::Closure, JsCast};
 
 stylance::import_crate_style!(classes, "src/primitives/toast.stories.module.css");
+
+/// Helper to apply a class to the viewport `<ol>` element via node_ref.
+/// `attr:class` on `<ToastViewport>` goes to the outer DismissableLayerBranch `<div>`,
+/// not the inner `<ol>`, so we use this helper to target the correct element.
+#[component]
+fn StyledViewport(#[prop(into)] class: String) -> impl IntoView {
+    let class = StoredValue::new(class);
+    let node_ref = AnyNodeRef::new();
+    Effect::new(move |_| {
+        if let Some(el) = node_ref.get() {
+            let el: &web_sys::HtmlElement = el.unchecked_ref();
+            let _ = el.set_attribute("class", &class.get_value());
+        }
+    });
+    view! { <ToastViewport node_ref=node_ref /> }
+}
 
 #[component]
 pub fn Styled() -> impl IntoView {
     view! {
         <ToastProvider>
             <ToastUpgradeAvailable />
-            <ToastViewport attr:class=classes::viewport />
+            <StyledViewport class=classes::viewport />
         </ToastProvider>
     }
 }
@@ -66,7 +87,7 @@ pub fn Controlled() -> impl IntoView {
                 let:_i
             >
                 <Toast
-                    attr:class=format!("{} {}", classes::root, classes::errorRoot)
+                    class=format!("{} {}", classes::root, classes::errorRoot)
                 >
                     <ToastDescription>"There was an error"</ToastDescription>
                     <ToastAction
@@ -83,12 +104,166 @@ pub fn Controlled() -> impl IntoView {
                 key=|i| *i
                 let:_i
             >
-                <Toast attr:class=classes::root>
+                <Toast class=classes::root>
                     <ToastDescription>"Successfully saved"</ToastDescription>
                 </Toast>
             </For>
 
-            <ToastViewport attr:class=classes::viewport />
+            <StyledViewport class=classes::viewport />
+        </ToastProvider>
+    }
+}
+
+#[component]
+pub fn FromDialog() -> impl IntoView {
+    let (open, set_open) = signal(false);
+    view! {
+        <ToastProvider>
+            <Dialog>
+                <DialogTrigger>"Open"</DialogTrigger>
+                <DialogOverlay />
+                <DialogContent attr:style="border: 1px solid; width: 300px; padding: 30px">
+                    <DialogTitle attr:style="margin: 0">"Title"</DialogTitle>
+                    <DialogDescription>"Description"</DialogDescription>
+                    <button on:click=move |_| set_open.set(true)>"Open toast"</button>
+                    <DialogClose>"Close"</DialogClose>
+                </DialogContent>
+            </Dialog>
+
+            <Toast
+                class=format!("{} {}", classes::root, classes::errorRoot)
+                open=open
+                on_open_change=Callback::new(move |o: bool| set_open.set(o))
+            >
+                <ToastDescription>"There was an error"</ToastDescription>
+                <ToastAction
+                    attr:class=classes::button
+                    alt_text="Resubmit the form to try again."
+                >
+                    "Try again"
+                </ToastAction>
+            </Toast>
+
+            <StyledViewport class=classes::viewport />
+        </ToastProvider>
+    }
+}
+
+#[component]
+pub fn Promise() -> impl IntoView {
+    let (saving, set_saving) = signal(false);
+    let (open, set_open) = signal(false);
+
+    // When saving becomes true, clear it after 2 seconds
+    Effect::new(move |_| {
+        if saving.get() {
+            let callback: Closure<dyn Fn()> = Closure::new(move || {
+                set_saving.set(false);
+            });
+            let id = web_sys::window()
+                .expect("Window should exist.")
+                .set_timeout_with_callback_and_timeout_and_arguments_0(
+                    callback.as_ref().unchecked_ref(),
+                    2000,
+                )
+                .expect("setTimeout should succeed.");
+
+            std::mem::forget(callback);
+
+            on_cleanup(move || {
+                web_sys::window()
+                    .expect("Window should exist.")
+                    .clear_timeout_with_handle(id);
+            });
+        }
+    });
+
+    // React uses Infinity when saving; we use a very large value
+    let duration = Signal::derive(move || if saving.get() { 1_000_000 } else { 2000 });
+
+    view! {
+        <ToastProvider>
+            <form on:submit=move |event: web_sys::SubmitEvent| {
+                event.prevent_default();
+                set_saving.set(true);
+                set_open.set(true);
+            }>
+                <button>"Save"</button>
+                <Toast
+                    class=classes::root
+                    duration=duration
+                    open=open
+                    on_open_change=Callback::new(move |o: bool| set_open.set(o))
+                >
+                    <Show
+                        when=move || saving.get()
+                        fallback=|| view! { <ToastDescription>"Saved!"</ToastDescription> }
+                    >
+                        <ToastDescription>"Saving\u{2026}"</ToastDescription>
+                    </Show>
+                </Toast>
+            </form>
+
+            <StyledViewport class=classes::viewport />
+        </ToastProvider>
+    }
+}
+
+#[component]
+pub fn KeyChange() -> impl IntoView {
+    let (toast_one_count, set_toast_one_count) = signal(0u32);
+    let (toast_two_count, set_toast_two_count) = signal(0u32);
+
+    view! {
+        <ToastProvider>
+            <button on:click=move |_| set_toast_one_count.update(|c| *c += 1)>"Open toast one"</button>
+            <button on:click=move |_| set_toast_two_count.update(|c| *c += 1)>"Open toast two"</button>
+
+            <Show when=move || toast_one_count.get() != 0>
+                {move || {
+                    // Re-key by wrapping in a keyed reactive block
+                    let _count = toast_one_count.get();
+                    view! {
+                        <Toast class=classes::root>
+                            <ToastDescription>"Toast one"</ToastDescription>
+                        </Toast>
+                    }
+                }}
+            </Show>
+
+            <Show when=move || toast_two_count.get() != 0>
+                {move || {
+                    let _count = toast_two_count.get();
+                    view! {
+                        <Toast class=classes::root>
+                            <ToastDescription>"Toast two"</ToastDescription>
+                        </Toast>
+                    }
+                }}
+            </Show>
+
+            <StyledViewport class=classes::viewport />
+        </ToastProvider>
+    }
+}
+
+#[component]
+pub fn PauseResumeProps() -> impl IntoView {
+    let (toast_count, set_toast_count) = signal(0u32);
+
+    view! {
+        <ToastProvider>
+            <button on:click=move |_| set_toast_count.update(|c| *c += 1)>"Add toast"</button>
+
+            <For
+                each=move || 0..toast_count.get()
+                key=|i| *i
+                let:_i
+            >
+                <ToastWithProgress />
+            </For>
+
+            <StyledViewport class=classes::viewport />
         </ToastProvider>
     }
 }
@@ -148,7 +323,7 @@ pub fn Animated() -> impl IntoView {
                 <option value="down">"Slide down"</option>
             </select>
             <Toast
-                attr:class=format!("{} {}", classes::root, classes::animatedRoot)
+                class=format!("{} {}", classes::root, classes::animatedRoot)
                 open=open
                 on_open_change=Callback::new(move |o: bool| set_open.set(o))
             >
@@ -162,17 +337,66 @@ pub fn Animated() -> impl IntoView {
                 </ToastDescription>
                 <ToastClose attr:class=classes::button>"Dismiss"</ToastClose>
             </Toast>
-            <ToastViewport attr:class=classes::viewport />
+            <StyledViewport class=classes::viewport />
+        </ToastProvider>
+    }
+}
+
+#[component]
+pub fn Cypress() -> impl IntoView {
+    let (count, set_count) = signal(0u32);
+
+    view! {
+        <ToastProvider>
+            <button on:click=move |_| set_count.update(|c| *c += 1)>"Add toast"</button>
+            <div style="display: flex; justify-content: space-between; max-width: 700px; margin: auto">
+                <button>"Focusable before viewport"</button>
+
+                <For
+                    each=move || 1..=count.get()
+                    key=|i| *i
+                    let:identifier
+                >
+                    <Toast
+                        class=classes::root
+                        open=true
+                        attr:data-testid=format!("toast-{identifier}")
+                    >
+                        <ToastTitle attr:class=classes::title>
+                            {format!("Toast {identifier} title")}
+                        </ToastTitle>
+                        <ToastDescription attr:class=classes::description>
+                            {format!("Toast {identifier} description")}
+                        </ToastDescription>
+                        <ToastClose attr:class=classes::button attr:aria-label="Close">
+                            {format!("Toast button {identifier}.1")}
+                        </ToastClose>
+                        <ToastAction
+                            alt_text="Go and perform an action"
+                            attr:class=classes::button
+                            attr:style="margin-top: 10px"
+                        >
+                            {format!("Toast button {identifier}.2")}
+                        </ToastAction>
+                    </Toast>
+                </For>
+                <StyledViewport class=classes::viewport />
+
+                <button>"Focusable after viewport"</button>
+            </div>
         </ToastProvider>
     }
 }
 
 #[component]
 pub fn Chromatic() -> impl IntoView {
+    let (open, set_open) = signal(true);
+    let snapshot_delay = 300;
+
     view! {
         <h1>"Order"</h1>
         <ToastProvider duration=Signal::derive(|| 1_000_000)>
-            <Toast attr:class=classes::root>
+            <Toast class=classes::root>
                 <div class=classes::header>
                     <ToastTitle attr:class=classes::title>"Toast 1"</ToastTitle>
                     <ToastClose attr:class=classes::close>"\u{00d7}"</ToastClose>
@@ -186,7 +410,7 @@ pub fn Chromatic() -> impl IntoView {
                     "Action"
                 </ToastAction>
             </Toast>
-            <Toast attr:class=classes::root>
+            <Toast class=classes::root>
                 <div class=classes::header>
                     <ToastTitle attr:class=classes::title>"Toast 2"</ToastTitle>
                     <ToastClose attr:class=classes::close>"\u{00d7}"</ToastClose>
@@ -200,14 +424,14 @@ pub fn Chromatic() -> impl IntoView {
                     "Action"
                 </ToastAction>
             </Toast>
-            <ToastViewport attr:class=classes::chromaticViewport />
+            <StyledViewport class=classes::chromaticViewport />
         </ToastProvider>
 
         <h1>"Uncontrolled"</h1>
 
         <h2>"Open"</h2>
         <ToastProvider>
-            <Toast duration=MaybeProp::from(Some(1_000_000)) attr:class=classes::root>
+            <Toast duration=MaybeProp::from(Some(1_000_000)) class=classes::root>
                 <div class=classes::header>
                     <ToastTitle attr:class=classes::title>"Toast"</ToastTitle>
                     <ToastClose attr:class=classes::close>"\u{00d7}"</ToastClose>
@@ -221,7 +445,7 @@ pub fn Chromatic() -> impl IntoView {
                     "Action"
                 </ToastAction>
             </Toast>
-            <ToastViewport attr:class=classes::chromaticViewport />
+            <StyledViewport class=classes::chromaticViewport />
         </ToastProvider>
 
         <h2>"Closed"</h2>
@@ -229,7 +453,7 @@ pub fn Chromatic() -> impl IntoView {
             <Toast
                 default_open=false
                 duration=MaybeProp::from(Some(1_000_000))
-                attr:class=classes::root
+                class=classes::root
             >
                 <div class=classes::header>
                     <ToastTitle attr:class=classes::title>"Title"</ToastTitle>
@@ -244,7 +468,7 @@ pub fn Chromatic() -> impl IntoView {
                     "Action"
                 </ToastAction>
             </Toast>
-            <ToastViewport attr:class=classes::chromaticViewport />
+            <StyledViewport class=classes::chromaticViewport />
         </ToastProvider>
 
         <h1>"Controlled"</h1>
@@ -254,7 +478,7 @@ pub fn Chromatic() -> impl IntoView {
             <Toast
                 open=true
                 duration=MaybeProp::from(Some(1_000_000))
-                attr:class=classes::root
+                class=classes::root
             >
                 <div class=classes::header>
                     <ToastTitle attr:class=classes::title>"Toast"</ToastTitle>
@@ -269,7 +493,7 @@ pub fn Chromatic() -> impl IntoView {
                     "Action"
                 </ToastAction>
             </Toast>
-            <ToastViewport attr:class=classes::chromaticViewport />
+            <StyledViewport class=classes::chromaticViewport />
         </ToastProvider>
 
         <h2>"Closed"</h2>
@@ -277,7 +501,7 @@ pub fn Chromatic() -> impl IntoView {
             <Toast
                 open=false
                 duration=MaybeProp::from(Some(1_000_000))
-                attr:class=classes::root
+                class=classes::root
             >
                 <div class=classes::header>
                     <ToastTitle attr:class=classes::title>"Toast"</ToastTitle>
@@ -292,7 +516,98 @@ pub fn Chromatic() -> impl IntoView {
                     "Action"
                 </ToastAction>
             </Toast>
-            <ToastViewport attr:class=classes::chromaticViewport />
+            <StyledViewport class=classes::chromaticViewport />
+        </ToastProvider>
+
+        <h1>"Dismissed"</h1>
+
+        <h2>"Uncontrolled"</h2>
+        <ToastProvider>
+            <Toast
+                duration=MaybeProp::from(Some(snapshot_delay - 100))
+                class=classes::root
+            >
+                <div class=classes::header>
+                    <ToastTitle attr:class=classes::title>"Toast"</ToastTitle>
+                    <ToastClose attr:class=classes::close>"\u{00d7}"</ToastClose>
+                </div>
+                <ToastDescription attr:class=classes::description>"Description"</ToastDescription>
+                <ToastAction
+                    alt_text="alternative"
+                    attr:class=classes::button
+                    attr:style="margin-top: 10px"
+                >
+                    "Action"
+                </ToastAction>
+            </Toast>
+            <StyledViewport class=classes::chromaticViewport />
+        </ToastProvider>
+
+        <h2>"Controlled"</h2>
+        <ToastProvider>
+            <Toast
+                duration=MaybeProp::from(Some(snapshot_delay - 100))
+                open=open
+                on_open_change=Callback::new(move |o: bool| set_open.set(o))
+                class=classes::root
+            >
+                <div class=classes::header>
+                    <ToastTitle attr:class=classes::title>"Toast"</ToastTitle>
+                    <ToastClose attr:class=classes::close>"\u{00d7}"</ToastClose>
+                </div>
+                <ToastDescription attr:class=classes::description>"Description"</ToastDescription>
+                <ToastAction
+                    alt_text="alternative"
+                    attr:class=classes::button
+                    attr:style="margin-top: 10px"
+                >
+                    "Action"
+                </ToastAction>
+            </Toast>
+            <StyledViewport class=classes::chromaticViewport />
+        </ToastProvider>
+
+        <h1>"Provider"</h1>
+
+        <h2>"Duration"</h2>
+        <ToastProvider duration=Signal::derive(move || snapshot_delay - 100)>
+            <Toast class=classes::root>
+                <div class=classes::header>
+                    <ToastTitle attr:class=classes::title>"Toast"</ToastTitle>
+                    <ToastClose attr:class=classes::close>"\u{00d7}"</ToastClose>
+                </div>
+                <ToastDescription attr:class=classes::description>"Description"</ToastDescription>
+                <ToastAction
+                    alt_text="alternative"
+                    attr:class=classes::button
+                    attr:style="margin-top: 10px"
+                >
+                    "Action"
+                </ToastAction>
+            </Toast>
+            <StyledViewport class=classes::chromaticViewport />
+        </ToastProvider>
+
+        <h2>"Duration overridden"</h2>
+        <ToastProvider duration=Signal::derive(|| 1_000_000)>
+            <Toast
+                duration=MaybeProp::from(Some(snapshot_delay - 100))
+                class=classes::root
+            >
+                <div class=classes::header>
+                    <ToastTitle attr:class=classes::title>"Toast"</ToastTitle>
+                    <ToastClose attr:class=classes::close>"\u{00d7}"</ToastClose>
+                </div>
+                <ToastDescription attr:class=classes::description>"Description"</ToastDescription>
+                <ToastAction
+                    alt_text="alternative"
+                    attr:class=classes::button
+                    attr:style="margin-top: 10px"
+                >
+                    "Action"
+                </ToastAction>
+            </Toast>
+            <StyledViewport class=classes::chromaticViewport />
         </ToastProvider>
     }
 }
@@ -308,7 +623,7 @@ fn ToastUpgradeAvailable(
 ) -> impl IntoView {
     view! {
         <Toast
-            attr:class=classes::root
+            class=classes::root
             open=open
             on_open_change=on_open_change.unwrap_or(Callback::new(|_| {}))
         >
@@ -339,7 +654,7 @@ fn ToastSubscribeSuccess(
 ) -> impl IntoView {
     view! {
         <Toast
-            attr:class=classes::root
+            class=classes::root
             open=open
             on_open_change=on_open_change.unwrap_or(Callback::new(|_| {}))
         >
@@ -352,6 +667,30 @@ fn ToastSubscribeSuccess(
             <ToastDescription attr:class=classes::description>
                 "You have subscribed. We\u{2019}ll be in touch."
             </ToastDescription>
+        </Toast>
+    }
+}
+
+#[component]
+fn ToastWithProgress() -> impl IntoView {
+    let (paused, set_paused) = signal(false);
+    let duration = 3000;
+
+    view! {
+        <Toast
+            class=classes::root
+            duration=MaybeProp::from(Some(duration))
+            on_pause=Callback::new(move |_: ()| set_paused.set(true))
+            on_resume=Callback::new(move |_: ()| set_paused.set(false))
+        >
+            <ToastDescription>"Successfully saved"</ToastDescription>
+            <div class=classes::progressBar>
+                <div
+                    class=classes::progressBarInner
+                    style:animation-duration=format!("{}ms", duration - 100)
+                    style:animation-play-state=move || if paused.get() { "paused" } else { "running" }
+                />
+            </div>
         </Toast>
     }
 }

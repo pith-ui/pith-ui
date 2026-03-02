@@ -440,19 +440,21 @@ pub fn ToastViewport(
                     })
                 });
 
-                if let Some(index) = index {
-                    let remaining = &sorted_candidates[index + 1..];
-                    if focus_first_html(remaining) {
-                        event.prevent_default();
-                    } else if is_tabbing_backwards {
-                        if let Some(el) = head_focus_proxy_ref.get_untracked() {
-                            let el: &web_sys::HtmlElement = (*el).unchecked_ref();
-                            let _ = el.focus();
-                        }
-                    } else if let Some(el) = tail_focus_proxy_ref.get_untracked() {
+                // Match React behavior: when focused element is not found
+                // (JS findIndex returns -1, slice(-1+1) = slice(0) = full array),
+                // try the full candidate list instead of skipping.
+                let start = index.map(|i| i + 1).unwrap_or(0);
+                let remaining = &sorted_candidates[start..];
+                if focus_first_html(remaining) {
+                    event.prevent_default();
+                } else if is_tabbing_backwards {
+                    if let Some(el) = head_focus_proxy_ref.get_untracked() {
                         let el: &web_sys::HtmlElement = (*el).unchecked_ref();
                         let _ = el.focus();
                     }
+                } else if let Some(el) = tail_focus_proxy_ref.get_untracked() {
+                    let el: &web_sys::HtmlElement = (*el).unchecked_ref();
+                    let _ = el.focus();
                 }
             });
 
@@ -581,6 +583,11 @@ pub fn Toast(
     #[prop(into, optional)] on_swipe_move: Option<Callback<SwipeEvent>>,
     #[prop(into, optional)] on_swipe_cancel: Option<Callback<SwipeEvent>>,
     #[prop(into, optional)] on_swipe_end: Option<Callback<SwipeEvent>>,
+    /// Explicit class forwarding — `attr:class` on `<Toast>` cannot cross the Portal
+    /// boundary (Portal uses `mount_to` which creates a separate rendering context).
+    /// Use `attr:class` as usual; this prop is for internal forwarding to the `<li>`.
+    #[prop(into, optional)]
+    class: MaybeProp<String>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     children: ChildrenFn,
@@ -588,10 +595,7 @@ pub fn Toast(
     let children = StoredValue::new(children);
 
     let (open_signal, set_open) = use_controllable_state(UseControllableStateParams {
-        prop: match open.get_untracked() {
-            Some(_) => open,
-            None => MaybeProp::from(Some(true)),
-        },
+        prop: open,
         default_prop: match default_open.get_untracked() {
             Some(_) => default_open,
             None => MaybeProp::from(Some(true)),
@@ -751,6 +755,7 @@ pub fn Toast(
             <Show when=move || has_viewport.get()>
                 <Provider value=ToastInteractiveContextValue { on_close: handle_close }>
                     <Portal
+                        as_child=true
                         container=Signal::derive(move || {
                             context.viewport.get().map(|v| {
                                 let el: web_sys::Element = (*v).clone().unchecked_into();
@@ -760,11 +765,12 @@ pub fn Toast(
                     >
                         <Provider value=context>
                             <Provider value=ToastInteractiveContextValue { on_close: handle_close }>
-                                <CollectionItemSlot item_data_type=ITEM_DATA_PHANTOM>
+                                <CollectionItemSlot item_data_type=ITEM_DATA_PHANTOM item_data=()>
                                     <Primitive
                                         element=html::li
                                         as_child=as_child
                                         node_ref=composed_refs
+                                        attr:class=move || class.get().unwrap_or_default()
                                         attr:role="status"
                                         attr:aria-live=move || {
                                             if r#type.get_value() == "foreground" { "assertive" } else { "polite" }
@@ -1019,9 +1025,12 @@ fn ToastAnnounceExclude(
     let children = StoredValue::new(children);
     let alt_text = StoredValue::new(alt_text);
 
+    // React always uses asChild here — the data attributes are merged onto the child
+    // element rather than rendering a wrapper <div>.
     view! {
         <Primitive
             element=html::div
+            as_child=true
             attr:data-radix-toast-announce-exclude=""
             attr:data-radix-toast-announce-alt=move || alt_text.get_value()
         >
@@ -1088,7 +1097,7 @@ fn compute_sorted_tabbable(
     let tabbable_candidates: Vec<Vec<SendWrapper<web_sys::HtmlElement>>> = toast_items
         .iter()
         .map(|toast_item| {
-            let Some(node) = toast_item.r#ref.get() else {
+            let Some(node) = toast_item.r#ref.get_untracked() else {
                 return vec![];
             };
             let toast_node: web_sys::HtmlElement = (*node).clone().unchecked_into();

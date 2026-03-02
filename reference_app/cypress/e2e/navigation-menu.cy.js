@@ -325,9 +325,7 @@ describe('Navigation Menu', () => {
                     cy.findByRole('button', {name: 'Resources'}).click();
                     shouldBeOpen('Resources');
                     cy.findByTestId('nav-viewport').should(($vp) => {
-                        const resourcesWidth = $vp[0].style.getPropertyValue(
-                            '--radix-navigation-menu-viewport-width'
-                        );
+                        const resourcesWidth = $vp[0].style.getPropertyValue('--radix-navigation-menu-viewport-width');
                         expect(resourcesWidth).to.not.equal(productsWidth);
                     });
                 });
@@ -343,7 +341,7 @@ describe('Navigation Menu', () => {
                     shouldBeOpen('Resources');
                     cy.findByTestId('nav-viewport').should(($vp) => {
                         const resourcesHeight = $vp[0].style.getPropertyValue(
-                            '--radix-navigation-menu-viewport-height'
+                            '--radix-navigation-menu-viewport-height',
                         );
                         expect(resourcesHeight).to.not.equal(productsHeight);
                     });
@@ -385,6 +383,84 @@ describe('Navigation Menu', () => {
                 // grid-template-columns is set via inline style, not CSS class
                 const gtc = $el[0].style.gridTemplateColumns;
                 expect(gtc).to.not.be.empty;
+            });
+        });
+    });
+
+    // ── 9. Layout Stability ────────────────────────────────────
+
+    describe('layout stability', () => {
+        function getNavList() {
+            return cy.findByTestId('nav-root').find('ul').first();
+        }
+
+        it('indicator is not a child of the nav list', () => {
+            // React portals the indicator into a wrapper div outside the <ul>.
+            // The indicator must not be a direct descendant of the <ul> — if it is,
+            // non-absolute-positioned indicator styles (like the viewport story CSS)
+            // will cause the <ul> to grow when the indicator appears.
+            cy.findByRole('button', {name: 'Products'}).click();
+            shouldBeOpen('Products');
+
+            cy.findByTestId('nav-indicator').then(($indicator) => {
+                getNavList().should(($ul) => {
+                    const isInsideUl = $ul[0].contains($indicator[0]);
+                    expect(isInsideUl, 'indicator should not be inside the <ul>').to.be.false;
+                });
+            });
+        });
+
+        it('nav list does not contain the indicator as a visible child', () => {
+            // The <ul> should not contain the indicator div as a child.
+            // In React, the indicator is portaled into the wrapper div outside the <ul>.
+            cy.findByRole('button', {name: 'Products'}).click();
+            shouldBeOpen('Products');
+
+            getNavList().should(($ul) => {
+                const children = Array.from($ul[0].children);
+                const visibleNonLi = children.filter(
+                    (c) => c.tagName !== 'LI' && !c.hidden && c.getAttribute('aria-hidden') !== 'true',
+                );
+                expect(
+                    visibleNonLi.length,
+                    `Expected no visible non-<li> children, but found: ${visibleNonLi.map((c) => `${c.tagName}(${c.className})`).join(', ')}`,
+                ).to.equal(0);
+            });
+        });
+
+        it('nav list height does not change when opening a menu item', () => {
+            // When a trigger opens, internal elements (VisuallyHidden focus proxy,
+            // aria-owns span) appear inside the <li>. These must not affect the
+            // <ul> height — they should be out of normal flow.
+            getNavList().then(($ul) => {
+                const initialHeight = $ul[0].getBoundingClientRect().height;
+
+                cy.findByRole('button', {name: 'Products'}).click();
+                shouldBeOpen('Products');
+
+                getNavList().should(($ul) => {
+                    const openHeight = $ul[0].getBoundingClientRect().height;
+                    expect(openHeight, 'ul height should remain stable when menu opens').to.equal(initialHeight);
+                });
+            });
+        });
+
+        it('nav list height does not change when switching between menu items', () => {
+            getNavList().then(($ul) => {
+                const initialHeight = $ul[0].getBoundingClientRect().height;
+
+                cy.findByRole('button', {name: 'Products'}).click();
+                shouldBeOpen('Products');
+
+                cy.findByRole('button', {name: 'Resources'}).click();
+                shouldBeOpen('Resources');
+
+                getNavList().should(($ul) => {
+                    const switchedHeight = $ul[0].getBoundingClientRect().height;
+                    expect(switchedHeight, 'ul height should remain stable when switching items').to.equal(
+                        initialHeight,
+                    );
+                });
             });
         });
     });

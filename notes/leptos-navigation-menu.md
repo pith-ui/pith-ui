@@ -15,7 +15,7 @@ dependencies:
   - "[[leptos-use-previous]]"
   - "[[leptos-visually-hidden]]"
 ported: true
-tested: false
+tested: true
 tested_story: true
 unstable: false
 ---

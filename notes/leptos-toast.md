@@ -15,7 +15,7 @@ dependencies:
   - "[[leptos-visually-hidden]]"
 ported: true
 tested: true
-tested_story: false
+tested_story: true
 ---
 ## Intent
 

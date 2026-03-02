@@ -9,6 +9,8 @@ pub fn ToastPage() -> impl IntoView {
     let (auto_dismiss, set_auto_dismiss) = signal(false);
     let (count, set_count) = signal(0u32);
     let timer_ref: StoredValue<Option<i32>> = StoredValue::new(None);
+    let (show_uncontrolled, set_show_uncontrolled) = signal(false);
+    let (multi_count, set_multi_count) = signal(0u32);
 
     let add_toast = move |_: web_sys::MouseEvent| {
         set_open.set(false);
@@ -30,17 +32,21 @@ pub fn ToastPage() -> impl IntoView {
 
     let duration = Signal::derive(move || if auto_dismiss.get() { 2000 } else { 1_000_000 });
 
-    // node_ref for the viewport <ol> element, used to set data-testid on the correct element
+    // node_ref for the viewport <ol> element.
+    // attr:class on ToastViewport goes to the outer DismissableLayerBranch div,
+    // not the inner <ol>, so we apply class and data-testid via node_ref.
     let viewport_ref = AnyNodeRef::new();
     Effect::new(move |_| {
         if let Some(el) = viewport_ref.get() {
             let el: &web_sys::HtmlElement = el.unchecked_ref();
+            let _ = el.set_attribute("class", "toast-viewport");
             let _ = el.set_attribute("data-testid", "toast-viewport");
         }
     });
 
     view! {
         <ToastProvider duration=duration swipe_direction=Signal::derive(|| SwipeDirection::Right)>
+            <h2>"Controlled"</h2>
             <button on:click=add_toast data-testid="add-toast">
                 "Add toast"
             </button>
@@ -71,7 +77,7 @@ pub fn ToastPage() -> impl IntoView {
             <button data-testid="outside-button">"outside"</button>
 
             <Toast
-                attr:class="toast-root"
+                class="toast-root"
                 open=open
                 on_open_change=Callback::new(move |value: bool| set_open.set(value))
             >
@@ -85,7 +91,82 @@ pub fn ToastPage() -> impl IntoView {
                 </ToastClose>
             </Toast>
 
-            <ToastViewport node_ref=viewport_ref attr:class="toast-viewport" label="Notifications" />
+            <h2>"Uncontrolled"</h2>
+            <button
+                data-testid="show-uncontrolled"
+                on:click=move |_| set_show_uncontrolled.update(|v| *v = !*v)
+            >
+                {move || if show_uncontrolled.get() { "Hide uncontrolled" } else { "Show uncontrolled" }}
+            </button>
+
+            <Show when=move || show_uncontrolled.get()>
+                <UncontrolledToast />
+            </Show>
+
+            <h2>"Multi-toast tab order"</h2>
+            <button data-testid="add-multi-toast" on:click=move |_| set_multi_count.update(|c| *c += 1)>
+                "Add multi toast"
+            </button>
+            <button data-testid="before-viewport">"Before viewport"</button>
+
+            <For
+                each=move || 1..=multi_count.get()
+                key=|i| *i
+                let:id
+            >
+                <MultiToast id=id />
+            </For>
+
+            <ToastViewport node_ref=viewport_ref label="Notifications" />
+            <button data-testid="after-viewport">"After viewport"</button>
         </ToastProvider>
+    }
+}
+
+#[component]
+fn MultiToast(id: u32) -> impl IntoView {
+    let toast_ref = AnyNodeRef::new();
+    let testid = format!("multi-toast-{id}");
+    Effect::new(move |_| {
+        if let Some(el) = toast_ref.get() {
+            let el: &web_sys::HtmlElement = el.unchecked_ref();
+            let _ = el.set_attribute("data-testid", &testid);
+        }
+    });
+
+    view! {
+        <Toast class="toast-root" open=true duration=MaybeProp::from(Some(1_000_000)) node_ref=toast_ref>
+            <ToastTitle attr:class="toast-title">
+                {format!("Multi toast {id}")}
+            </ToastTitle>
+            <ToastDescription attr:class="toast-description">
+                {format!("Description {id}")}
+            </ToastDescription>
+            <ToastAction alt_text=format!("Action for toast {id}") as_child=true>
+                <button data-testid=format!("multi-action-{id}")>
+                    {format!("Action {id}")}
+                </button>
+            </ToastAction>
+            <ToastClose as_child=true>
+                <button data-testid=format!("multi-close-{id}")>
+                    {format!("Close {id}")}
+                </button>
+            </ToastClose>
+        </Toast>
+    }
+}
+
+#[component]
+fn UncontrolledToast() -> impl IntoView {
+    view! {
+        <Toast class="toast-root" duration=MaybeProp::from(Some(1_000_000))>
+            <ToastTitle attr:class="toast-title">"Uncontrolled toast"</ToastTitle>
+            <ToastDescription attr:class="toast-description">
+                "This toast has no open prop"
+            </ToastDescription>
+            <ToastClose attr:class="toast-close" as_child=true>
+                <button data-testid="uncontrolled-close">"Close uncontrolled"</button>
+            </ToastClose>
+        </Toast>
     }
 }

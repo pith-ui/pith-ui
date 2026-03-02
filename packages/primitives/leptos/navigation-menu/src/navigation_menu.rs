@@ -2,10 +2,13 @@ use std::collections::HashMap;
 use std::fmt::{Display, Formatter};
 use std::marker::PhantomData;
 
+use std::sync::Arc;
+
 use leptos::{context::Provider, ev, html, prelude::*};
 use leptos_node_ref::AnyNodeRef;
 use radix_leptos_collection::{
-    CollectionItemSlot, CollectionProvider, CollectionSlot, use_collection,
+    CollectionItemSlot, CollectionProvider, CollectionSlot, provide_collection_scope,
+    use_collection, use_collection_scope,
 };
 use radix_leptos_compose_refs::use_composed_refs;
 use radix_leptos_direction::{Direction, use_direction};
@@ -647,12 +650,54 @@ pub fn NavigationMenuList(
 
     let context = expect_context::<NavigationMenuContextValue>();
 
-    // Use the <ul> itself as the indicator track (position: relative container).
-    // React wraps in a separate <Primitive.div>, but in Leptos that outer div would
-    // intercept user spread attributes (e.g. attr:class). By merging the track role
-    // into the <ul>, user attributes correctly land on the list element.
+    // React wraps the <ul> in a <div style="position: relative"> that serves as the
+    // indicator track. The indicator is portaled into this wrapper div (as a sibling
+    // of the <ul>), keeping it out of the <ul>'s flow. We mirror that structure here.
+    //
+    // User attrs (e.g. attr:class) land on the hidden capture span (the first DOM element),
+    // then are forwarded to the <ul> via an Effect — the same pattern used by
+    // NavigationMenuContent and NavigationMenuIndicator.
     let indicator_track_ref = AnyNodeRef::new();
-    let composed_refs = use_composed_refs(vec![node_ref, indicator_track_ref]);
+    let ul_ref = AnyNodeRef::new();
+    let composed_ul_refs = use_composed_refs(vec![node_ref, ul_ref]);
+
+    // Hidden span for capturing user attributes (e.g., attr:class="mainList")
+    let attr_capture_ref = AnyNodeRef::new();
+    let captured_attrs: StoredValue<Vec<(String, String)>> = StoredValue::new(vec![]);
+
+    // Capture user attrs from the hidden span
+    Effect::new(move |_| {
+        if let Some(el) = attr_capture_ref.get() {
+            let el: web_sys::Element = el.unchecked_into();
+            let attrs = el.attributes();
+            let mut user_attrs = vec![];
+            for i in 0..attrs.length() {
+                if let Some(attr) = attrs.item(i) {
+                    let name = attr.name();
+                    if matches!(name.as_str(), "style" | "hidden" | "aria-hidden") {
+                        continue;
+                    }
+                    user_attrs.push((name, attr.value()));
+                }
+            }
+            for (name, _) in &user_attrs {
+                el.remove_attribute(name).ok();
+            }
+            captured_attrs.set_value(user_attrs);
+        }
+    });
+
+    // Forward captured attrs to the <ul>
+    Effect::new(move |_| {
+        if let Some(el) = ul_ref.get() {
+            let el: web_sys::Element = el.unchecked_into();
+            captured_attrs.with_value(|attrs| {
+                for (name, value) in attrs {
+                    el.set_attribute(name, value).ok();
+                }
+            });
+        }
+    });
 
     // Store indicator track element when mounted
     Effect::new(move |_| {
@@ -667,8 +712,7 @@ pub fn NavigationMenuList(
             <Primitive
                 element=html::ul
                 as_child=as_child
-                node_ref=composed_refs
-                style:position="relative"
+                node_ref=composed_ul_refs
                 attr:data-orientation=move || context.orientation.get().to_string()
             >
                 {children.with_value(|children| children.as_ref().map(|children| children()))}
@@ -677,19 +721,22 @@ pub fn NavigationMenuList(
     });
 
     view! {
-        <CollectionSlot<NavigationMenuItemData> item_data_type=PhantomData>
-            {move || {
-                if context.is_root_menu {
-                    view! {
-                        <FocusGroup>
-                            {list.with_value(|l| l())}
-                        </FocusGroup>
-                    }.into_any()
-                } else {
-                    list.with_value(|l| l()).into_any()
-                }
-            }}
-        </CollectionSlot<NavigationMenuItemData>>
+        <span node_ref=attr_capture_ref hidden=true aria-hidden="true" style="display:none" />
+        <div style="position: relative" node_ref=indicator_track_ref>
+            <CollectionSlot<NavigationMenuItemData> item_data_type=PhantomData>
+                {move || {
+                    if context.is_root_menu {
+                        view! {
+                            <FocusGroup>
+                                {list.with_value(|l| l())}
+                            </FocusGroup>
+                        }.into_any()
+                    } else {
+                        list.with_value(|l| l()).into_any()
+                    }
+                }}
+            </CollectionSlot<NavigationMenuItemData>>
+        </div>
     }
 }
 
@@ -958,9 +1005,10 @@ pub fn NavigationMenuTrigger(
                         {""}
                     </VisuallyHidden>
 
-                    // Restructure a11y tree
+                    // Restructure a11y tree — the span must be out of flow so it
+                    // does not create a line box inside the <li> and grow the <ul>.
                     {if has_viewport {
-                        Some(view! { <span aria-owns=cid></span> })
+                        Some(view! { <span aria-owns=cid style="position: absolute;"></span> })
                     } else {
                         None
                     }}
@@ -1068,9 +1116,7 @@ pub fn NavigationMenuIndicator(
 
     let presence_ref = AnyNodeRef::new();
 
-    // Capture user attributes (e.g., data-testid) from a hidden span for forwarding.
-    // The indicator renders inside a reactive closure, and user attrs from add_any_attr
-    // are not reliably forwarded through reactive boundaries that change their output.
+    // Capture user attributes (e.g., data-testid, class) from a hidden span for forwarding.
     let indicator_attr_capture_ref = AnyNodeRef::new();
     let indicator_captured_attrs: StoredValue<Vec<(String, String)>> = StoredValue::new(vec![]);
 
@@ -1107,27 +1153,63 @@ pub fn NavigationMenuIndicator(
         }
     });
 
-    // Render into indicator track via Portal pattern (mount_to)
+    // Capture contexts before portal boundary so they can be re-provided inside mount_to.
+    let context_for_portal = context.clone();
+    let collection_scope = use_collection_scope::<NavigationMenuItemData>();
+
+    // Build the portal children as an Arc closure (same pattern as LeptosPortal).
+    let portal_children: Arc<dyn Fn() -> AnyView + Send + Sync> = Arc::new(move || {
+        view! {
+            <Presence present=present node_ref=presence_ref>
+                <NavigationMenuIndicatorImpl
+                    as_child=as_child
+                    node_ref=node_ref
+                    presence_ref=presence_ref
+                >
+                    {children.with_value(|children| children.as_ref().map(|children| children()))}
+                </NavigationMenuIndicatorImpl>
+            </Presence>
+        }
+        .into_any()
+    });
+
+    // Track the current mount target to handle changes.
+    let current_mount: RwSignal<Option<SendWrapper<web_sys::HtmlElement>>> = RwSignal::new(None);
+
+    Effect::new(move |_| {
+        let track = context.indicator_track.get();
+        if current_mount.get_untracked().as_deref() != track.as_deref() {
+            current_mount.set(track);
+        }
+    });
+
+    // Portal the indicator into the indicator track (wrapper div) via mount_to,
+    // matching React's ReactDOM.createPortal(…, context.indicatorTrack) pattern.
+    Effect::new(move |_| {
+        if let Some(mount) = current_mount.get() {
+            let ctx = context_for_portal.clone();
+            let scope = collection_scope;
+            let children_fn = Arc::clone(&portal_children);
+            let handle = SendWrapper::new(mount_to((*mount).clone().unchecked_into(), move || {
+                // Re-provide contexts across the portal boundary
+                provide_context(ctx);
+                if let Some(scope) = scope {
+                    provide_collection_scope(scope);
+                }
+                untrack(|| children_fn())
+            }));
+
+            Owner::on_cleanup(move || {
+                let handle = handle.take();
+                drop(handle);
+            });
+        }
+    });
+
+    // Only the hidden attr-capture span renders in the component tree.
+    // The actual indicator content is portaled into the indicator track wrapper div.
     view! {
         <span node_ref=indicator_attr_capture_ref hidden=true aria-hidden="true" style="display:none" />
-        {move || {
-            let track = context.indicator_track.get();
-            if track.is_some() {
-                Some(view! {
-                    <Presence present=present node_ref=presence_ref>
-                        <NavigationMenuIndicatorImpl
-                            as_child=as_child
-                            node_ref=node_ref
-                            presence_ref=presence_ref
-                        >
-                            {children.with_value(|children| children.as_ref().map(|children| children()))}
-                        </NavigationMenuIndicatorImpl>
-                    </Presence>
-                })
-            } else {
-                None
-            }
-        }}
     }
 }
 
@@ -1472,7 +1554,7 @@ fn NavigationMenuContentImpl(
                 on_root_content_close.run(());
                 if let Some(active) = document().active_element()
                     && content_el.contains(Some(active.unchecked_ref()))
-                    && let Some(trigger) = trigger_ref_clone.get()
+                    && let Some(trigger) = trigger_ref_clone.get_untracked()
                 {
                     let trigger: web_sys::HtmlElement = trigger.unchecked_into();
                     trigger.focus().ok();

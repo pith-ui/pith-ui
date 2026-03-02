@@ -381,7 +381,12 @@ fn EmbedApp() -> impl IntoView {
 
                     <Route path=path!("/toast/styled") view=toast::Styled />
                     <Route path=path!("/toast/controlled") view=toast::Controlled />
+                    <Route path=path!("/toast/from-dialog") view=toast::FromDialog />
+                    <Route path=path!("/toast/promise") view=toast::Promise />
+                    <Route path=path!("/toast/key-change") view=toast::KeyChange />
+                    <Route path=path!("/toast/pause-resume-props") view=toast::PauseResumeProps />
                     <Route path=path!("/toast/animated") view=toast::Animated />
+                    <Route path=path!("/toast/cypress") view=toast::Cypress />
                     <Route path=path!("/toast/chromatic") view=toast::Chromatic />
 
                     // <Route path="/slot/without-slottable" view=slot::WithoutSlottable />
@@ -632,10 +637,15 @@ fn ShellApp() -> impl IntoView {
                             ("/tabs/animated", "Animated"),
                             ("/tabs/chromatic", "Chromatic"),
                         ] />
-                        <NavSection title="Toast" tested=false stories=vec![
+                        <NavSection title="Toast" stories=vec![
                             ("/toast/styled", "Styled"),
                             ("/toast/controlled", "Controlled"),
+                            ("/toast/from-dialog", "From Dialog"),
+                            ("/toast/promise", "Promise"),
+                            ("/toast/key-change", "Key Change"),
+                            ("/toast/pause-resume-props", "Pause Resume Props"),
                             ("/toast/animated", "Animated"),
+                            ("/toast/cypress", "Cypress"),
                             ("/toast/chromatic", "Chromatic"),
                         ] />
                         <NavSection title="Toggle" stories=vec![
@@ -756,7 +766,9 @@ fn ShellApp() -> impl IntoView {
                 </ul>
             </nav>
             <main style="position: fixed; top: 0; bottom: 0; left: 16rem; right: 0;">
-                <StoryIframe />
+                <Routes fallback=|| "Not found.".into_view()>
+                    <Route path=path!("/*any") view=StoryIframe />
+                </Routes>
             </main>
         </Router>
     }
