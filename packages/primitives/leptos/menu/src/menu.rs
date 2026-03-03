@@ -11,14 +11,16 @@ use radix_leptos_collection::{
     CollectionItemSlot, CollectionProvider, CollectionSlot, use_collection,
 };
 use radix_leptos_compose_refs::use_composed_refs;
-use radix_leptos_direction::{Direction, use_direction};
+pub use radix_leptos_direction::Direction;
+use radix_leptos_direction::use_direction;
 use radix_leptos_dismissable_layer::DismissableLayer;
 use radix_leptos_focus_guards::use_focus_guards;
 use radix_leptos_focus_scope::FocusScope;
 use radix_leptos_id::use_id;
-use radix_leptos_popper::{
-    Align, Popper, PopperAnchor, PopperArrow, PopperContent, Side as PopperSide,
+pub use radix_leptos_popper::{
+    Align, ClientRectObject, PopperVirtualElement, Side as PopperSide, set_popper_virtual_ref,
 };
+use radix_leptos_popper::{Popper, PopperAnchor, PopperArrow, PopperContent};
 use radix_leptos_portal::Portal;
 use radix_leptos_presence::Presence;
 use radix_leptos_primitive::{Primitive, compose_callbacks};
@@ -26,6 +28,17 @@ use radix_leptos_roving_focus::{Orientation, RovingFocusGroup, RovingFocusGroupI
 use send_wrapper::SendWrapper;
 use wasm_bindgen::{JsCast, closure::Closure};
 use web_sys::{AddEventListenerOptions, CustomEvent, CustomEventInit, EventListenerOptions};
+
+/// Helper: wraps an `Option<Callback<T>>` into a concrete `Callback<T>` that
+/// conditionally calls the inner callback if present. This is needed because
+/// Leptos's `#[prop(into, optional)]` cannot pass `Option<Callback<T>>` through
+/// the view! macro to another component's `Option<Callback<T>>` prop directly.
+fn wrap_callback<T: 'static>(cb: Option<Callback<T>>) -> Callback<T> {
+    match cb {
+        Some(cb) => cb,
+        None => Callback::new(|_| {}),
+    }
+}
 
 const SELECTION_KEYS: [&str; 2] = ["Enter", " "];
 const FIRST_KEYS: [&str; 3] = ["ArrowDown", "PageUp", "Home"];
@@ -160,7 +173,7 @@ pub fn Menu(
             options.set_capture(true);
             options.set_once(true);
 
-            handle_pointer.with_value(|hp| {
+            let _ = handle_pointer.try_with_value(|hp| {
                 let cb: &wasm_bindgen::JsValue = hp.as_ref().unchecked_ref();
                 document()
                     .add_event_listener_with_callback_and_add_event_listener_options(
@@ -186,7 +199,7 @@ pub fn Menu(
 
         // Capture phase ensures we set the boolean before any side effects execute
         // in response to the key or pointer event as they might depend on this value.
-        handle_key_down.with_value(|hk| {
+        let _ = handle_key_down.try_with_value(|hk| {
             let cb: &wasm_bindgen::JsValue = hk.as_ref().unchecked_ref();
             document()
                 .add_event_listener_with_callback_and_add_event_listener_options(
@@ -202,7 +215,7 @@ pub fn Menu(
         let options = EventListenerOptions::new();
         options.set_capture(true);
 
-        handle_key_down.with_value(|hk| {
+        let _ = handle_key_down.try_with_value(|hk| {
             let cb: &wasm_bindgen::JsValue = hk.as_ref().unchecked_ref();
             document()
                 .remove_event_listener_with_callback_and_event_listener_options(
@@ -213,7 +226,7 @@ pub fn Menu(
                 .expect("Key down event listener should be removed.");
         });
 
-        handle_pointer.with_value(|hp| {
+        let _ = handle_pointer.try_with_value(|hp| {
             let cb: &wasm_bindgen::JsValue = hp.as_ref().unchecked_ref();
             document()
                 .remove_event_listener_with_callback_and_event_listener_options(
@@ -296,6 +309,32 @@ pub fn MenuContent(
     /// CSS class applied directly to the inner content element (same element as data-state).
     #[prop(into, optional)]
     class: MaybeProp<String>,
+    /// Event handler called when auto-focusing on close. Can be prevented.
+    #[prop(into, optional)]
+    on_close_auto_focus: Option<Callback<ev::Event>>,
+    #[prop(into, optional)] on_escape_key_down: Option<Callback<ev::KeyboardEvent>>,
+    #[prop(into, optional)] on_pointer_down_outside: Option<Callback<CustomEvent>>,
+    #[prop(into, optional)] on_focus_outside: Option<Callback<CustomEvent>>,
+    #[prop(into, optional)] on_interact_outside: Option<Callback<CustomEvent>>,
+    /// The preferred side of the trigger to render against when open.
+    #[prop(into, optional)]
+    side: MaybeProp<PopperSide>,
+    /// The distance in pixels from the trigger.
+    #[prop(into, optional)]
+    side_offset: MaybeProp<f64>,
+    /// The preferred alignment against the trigger.
+    #[prop(into, optional)]
+    align: MaybeProp<Align>,
+    /// The id of the content element.
+    #[prop(into, optional)]
+    id: MaybeProp<String>,
+    /// The id of the element that labels the content.
+    #[prop(into, optional)]
+    aria_labelledby: MaybeProp<String>,
+    /// Additional inline styles to apply to the content element. Used by wrapper components
+    /// (e.g., ContextMenuContent) to set CSS custom property aliases on the final rendered element.
+    #[prop(into, optional)]
+    content_style: MaybeProp<String>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
     children: ChildrenFn,
@@ -307,6 +346,13 @@ pub fn MenuContent(
 
     let present = Signal::derive(move || force_mount.get().unwrap_or(false) || context.open.get());
 
+    // Wrap Option<Callback<T>> → Callback<T> for forwarding through view! macro.
+    let on_close_auto_focus = wrap_callback(on_close_auto_focus);
+    let on_escape_key_down = wrap_callback(on_escape_key_down);
+    let on_pointer_down_outside = wrap_callback(on_pointer_down_outside);
+    let on_focus_outside = wrap_callback(on_focus_outside);
+    let on_interact_outside = wrap_callback(on_interact_outside);
+
     view! {
         <CollectionProvider item_data_type=ITEM_DATA_PHANTHOM>
             <Presence present=present node_ref=node_ref>
@@ -314,12 +360,42 @@ pub fn MenuContent(
                     <Show
                         when=move || root_context.modal.get()
                         fallback=move || view! {
-                            <MenuRootContentNonModal class=class as_child=as_child node_ref=node_ref>
+                            <MenuRootContentNonModal
+                                class=class
+                                content_style=content_style
+                                on_close_auto_focus=on_close_auto_focus
+                                on_escape_key_down=on_escape_key_down
+                                on_pointer_down_outside=on_pointer_down_outside
+                                on_focus_outside=on_focus_outside
+                                on_interact_outside=on_interact_outside
+                                side=side
+                                side_offset=side_offset
+                                align=align
+                                id=id
+                                aria_labelledby=aria_labelledby
+                                as_child=as_child
+                                node_ref=node_ref
+                            >
                                 {children.with_value(|children| children())}
                             </MenuRootContentNonModal>
                         }
                     >
-                        <MenuRootContentModal class=class as_child=as_child node_ref=node_ref>
+                        <MenuRootContentModal
+                            class=class
+                            content_style=content_style
+                            on_close_auto_focus=on_close_auto_focus
+                            on_escape_key_down=on_escape_key_down
+                            on_pointer_down_outside=on_pointer_down_outside
+                            on_focus_outside=on_focus_outside
+                            on_interact_outside=on_interact_outside
+                            side=side
+                            side_offset=side_offset
+                            align=align
+                            id=id
+                            aria_labelledby=aria_labelledby
+                            as_child=as_child
+                            node_ref=node_ref
+                        >
                             {children.with_value(|children| children())}
                         </MenuRootContentModal>
                     </Show>
@@ -331,8 +407,18 @@ pub fn MenuContent(
 
 #[component]
 fn MenuRootContentModal(
+    #[prop(into, optional)] on_close_auto_focus: Option<Callback<ev::Event>>,
+    #[prop(into, optional)] on_escape_key_down: Option<Callback<ev::KeyboardEvent>>,
+    #[prop(into, optional)] on_pointer_down_outside: Option<Callback<CustomEvent>>,
     #[prop(into, optional)] on_focus_outside: Option<Callback<CustomEvent>>,
+    #[prop(into, optional)] on_interact_outside: Option<Callback<CustomEvent>>,
+    #[prop(into, optional)] side: MaybeProp<PopperSide>,
+    #[prop(into, optional)] side_offset: MaybeProp<f64>,
+    #[prop(into, optional)] align: MaybeProp<Align>,
+    #[prop(into, optional)] id: MaybeProp<String>,
+    #[prop(into, optional)] aria_labelledby: MaybeProp<String>,
     #[prop(into, optional)] class: MaybeProp<String>,
+    #[prop(into, optional)] content_style: MaybeProp<String>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
     children: ChildrenFn,
@@ -349,6 +435,12 @@ fn MenuRootContentModal(
         }
     });
 
+    // Wrap for forwarding through view! macro.
+    let on_close_auto_focus = wrap_callback(on_close_auto_focus);
+    let on_escape_key_down = wrap_callback(on_escape_key_down);
+    let on_pointer_down_outside = wrap_callback(on_pointer_down_outside);
+    let on_interact_outside = wrap_callback(on_interact_outside);
+
     view! {
         <MenuContentImpl
             // We make sure we're not trapping once it's been closed (closed != unmounted when animating out).
@@ -360,8 +452,18 @@ fn MenuRootContentModal(
             on_focus_outside=compose_callbacks(on_focus_outside, Some(Callback::new(move |event: CustomEvent| {
                 event.prevent_default();
             })), Some(false))
+            on_close_auto_focus=on_close_auto_focus
+            on_escape_key_down=on_escape_key_down
+            on_pointer_down_outside=on_pointer_down_outside
+            on_interact_outside=on_interact_outside
             on_dismiss=move |_| context.on_open_change.run(false)
+            side=side
+            side_offset=side_offset
+            align=align
+            id=id
+            aria_labelledby=aria_labelledby
             class=class
+            content_style=content_style
             as_child=as_child
             node_ref=composed_refs
         >
@@ -372,20 +474,49 @@ fn MenuRootContentModal(
 
 #[component]
 fn MenuRootContentNonModal(
+    #[prop(into, optional)] on_close_auto_focus: Option<Callback<ev::Event>>,
+    #[prop(into, optional)] on_escape_key_down: Option<Callback<ev::KeyboardEvent>>,
+    #[prop(into, optional)] on_pointer_down_outside: Option<Callback<CustomEvent>>,
+    #[prop(into, optional)] on_focus_outside: Option<Callback<CustomEvent>>,
+    #[prop(into, optional)] on_interact_outside: Option<Callback<CustomEvent>>,
+    #[prop(into, optional)] side: MaybeProp<PopperSide>,
+    #[prop(into, optional)] side_offset: MaybeProp<f64>,
+    #[prop(into, optional)] align: MaybeProp<Align>,
+    #[prop(into, optional)] id: MaybeProp<String>,
+    #[prop(into, optional)] aria_labelledby: MaybeProp<String>,
     #[prop(into, optional)] class: MaybeProp<String>,
+    #[prop(into, optional)] content_style: MaybeProp<String>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
     children: ChildrenFn,
 ) -> impl IntoView {
     let context = expect_context::<MenuContextValue>();
 
+    // Wrap for forwarding through view! macro.
+    let on_close_auto_focus = wrap_callback(on_close_auto_focus);
+    let on_escape_key_down = wrap_callback(on_escape_key_down);
+    let on_pointer_down_outside = wrap_callback(on_pointer_down_outside);
+    let on_focus_outside = wrap_callback(on_focus_outside);
+    let on_interact_outside = wrap_callback(on_interact_outside);
+
     view! {
         <MenuContentImpl
             trap_focus=false
             disable_outside_pointer_events=false
             disable_outside_scroll=false
+            on_close_auto_focus=on_close_auto_focus
+            on_escape_key_down=on_escape_key_down
+            on_pointer_down_outside=on_pointer_down_outside
+            on_focus_outside=on_focus_outside
+            on_interact_outside=on_interact_outside
             on_dismiss=move |_| context.on_open_change.run(false)
+            side=side
+            side_offset=side_offset
+            align=align
+            id=id
+            aria_labelledby=aria_labelledby
             class=class
+            content_style=content_style
             as_child=as_child
             node_ref=node_ref
         >
@@ -424,6 +555,9 @@ fn MenuContentImpl(
     /// The preferred side of the trigger to render against when open. Forwarded to PopperContent.
     #[prop(into, optional)]
     side: MaybeProp<PopperSide>,
+    /// The distance in pixels from the trigger. Forwarded to PopperContent.
+    #[prop(into, optional)]
+    side_offset: MaybeProp<f64>,
     /// The preferred alignment against the trigger. Forwarded to PopperContent.
     #[prop(into, optional)]
     align: MaybeProp<Align>,
@@ -437,6 +571,9 @@ fn MenuContentImpl(
     /// Use this instead of `attr:class` for reliable reactive class updates.
     #[prop(into, optional)]
     class: MaybeProp<String>,
+    /// Additional inline styles for the content element (e.g., CSS custom property aliases).
+    #[prop(into, optional)]
+    content_style: MaybeProp<String>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
     children: ChildrenFn,
@@ -457,13 +594,13 @@ fn MenuContentImpl(
     let last_pointer_x = RwSignal::new(0);
 
     let clear_search = StoredValue::new(SendWrapper::new(Closure::<dyn Fn()>::new(move || {
-        search.set("".into());
-        window().clear_timeout_with_handle(timer.get_untracked());
+        let _ = search.try_set("".into());
+        window().clear_timeout_with_handle(timer.try_get_untracked().unwrap_or(0));
     })));
 
     let handle_typeahead_search = Callback::new(move |key: String| {
-        let search_value = search.get_untracked() + &key;
-        let items = get_items.with_value(|get_items| get_items());
+        let search_value = search.try_get_untracked().unwrap_or_default() + &key;
+        let items = get_items.try_with_value(|get_items| get_items()).unwrap_or_default();
         let items = items
             .iter()
             .filter(|item| !item.data.disabled)
@@ -496,13 +633,13 @@ fn MenuContentImpl(
             })
             .and_then(|item| item.r#ref.get_untracked());
 
-        search.set(search_value.clone());
-        window().clear_timeout_with_handle(timer.get_untracked());
+        let _ = search.try_set(search_value.clone());
+        window().clear_timeout_with_handle(timer.try_get_untracked().unwrap_or(0));
         if !search_value.is_empty() {
             // Reset search 1 second after it was last updated.
-            clear_search.with_value(|cs| {
+            let _ = clear_search.try_with_value(|cs| {
                 let cb: &wasm_bindgen::JsValue = cs.as_ref().unchecked_ref();
-                timer.set(
+                let _ = timer.try_set(
                     window()
                         .set_timeout_with_callback_and_timeout_and_arguments_0(
                             cb.unchecked_ref(),
@@ -525,23 +662,28 @@ fn MenuContentImpl(
     });
 
     on_cleanup(move || {
-        window().clear_timeout_with_handle(timer.get_untracked());
+        window().clear_timeout_with_handle(timer.try_get_untracked().unwrap_or(0));
     });
 
     // Make sure the whole tree has focus guards as our `MenuContent` may be the last element in the DOM (because of the `Portal`).
     use_focus_guards();
 
     let is_pointer_moving_to_submenu = move |event: &ev::PointerEvent| -> bool {
-        let is_moving_towards = Some(pointer_dir.get_untracked())
+        let Some(dir) = pointer_dir.try_get_untracked() else {
+            return false;
+        };
+        let is_moving_towards = Some(dir)
             == pointer_grace_intent
-                .get_untracked()
-                .map(|pointer_grace_intent| pointer_grace_intent.side);
+                .try_get_untracked()
+                .flatten()
+                .map(|intent| intent.side);
         is_moving_towards
             && is_pointer_in_grace_area(
                 event,
                 pointer_grace_intent
-                    .get_untracked()
-                    .map(|pointer_grace_intent| pointer_grace_intent.area),
+                    .try_get_untracked()
+                    .flatten()
+                    .map(|intent| intent.area),
             )
     };
 
@@ -558,9 +700,9 @@ fn MenuContentImpl(
             }
             if let Some(content) = content_ref.get_untracked() {
                 let content: web_sys::HtmlElement = content.unchecked_into();
-                content.focus().expect("Element should be focused.");
+                content.focus().ok();
             }
-            set_current_item_id.set(None);
+            let _ = set_current_item_id.try_set(None);
         }),
         on_trigger_leave: Callback::new(move |event| {
             if is_pointer_moving_to_submenu(&event) {
@@ -569,7 +711,7 @@ fn MenuContentImpl(
         }),
         pointer_grace_timer,
         on_pointer_grace_intent_change: Callback::new(move |intent| {
-            pointer_grace_intent.set(intent);
+            let _ = pointer_grace_intent.try_set(intent);
         }),
     };
 
@@ -635,7 +777,7 @@ fn MenuContentImpl(
 
                     event.prevent_default();
 
-                    let items = get_items.with_value(|get_items| get_items());
+                    let items = get_items.try_with_value(|get_items| get_items()).unwrap_or_default();
                     let items = items.iter().filter(|item| !item.data.disabled);
                     let mut candidate_nodes: Vec<web_sys::HtmlElement> = items
                         .filter_map(|item| {
@@ -664,8 +806,8 @@ fn MenuContentImpl(
                 .map(|current_target| current_target.unchecked_into::<web_sys::Node>())
                 .expect("Event should have current target.");
             if !current_target.contains(Some(&target)) {
-                window().clear_timeout_with_handle(timer.get_untracked());
-                search.set("".into());
+                window().clear_timeout_with_handle(timer.try_get_untracked().unwrap_or(0));
+                let _ = search.try_set("".into());
             }
         })),
         None,
@@ -681,16 +823,16 @@ fn MenuContentImpl(
                 .current_target()
                 .map(|current_target| current_target.unchecked_into::<web_sys::Node>())
                 .expect("Event should have current target.");
-            let pointer_x_has_changed = last_pointer_x.get_untracked() != event.client_x();
+            let pointer_x_has_changed = last_pointer_x.try_get_untracked().unwrap_or(0) != event.client_x();
 
             // We don't use `event.movementX` for this check because Safari will always return `0` on a pointer event.
             if current_target.contains(Some(&target)) && pointer_x_has_changed {
-                let new_dir = match event.client_x() > last_pointer_x.get_untracked() {
+                let new_dir = match event.client_x() > last_pointer_x.try_get_untracked().unwrap_or(0) {
                     true => Side::Right,
                     false => Side::Left,
                 };
-                pointer_dir.set(new_dir);
-                last_pointer_x.set(event.client_x());
+                let _ = pointer_dir.try_set(new_dir);
+                let _ = last_pointer_x.try_set(event.client_x());
             }
         })),
         None,
@@ -710,17 +852,17 @@ fn MenuContentImpl(
     Effect::new(move |_| {
         if let Some(node) = content_ref.get() {
             let el: web_sys::HtmlElement = node.unchecked_into();
-            keydown_closure.with_value(|c| {
+            let _ = keydown_closure.try_with_value(|c| {
                 let cb: &wasm_bindgen::JsValue = c.as_ref().unchecked_ref();
                 el.add_event_listener_with_callback("keydown", cb.unchecked_ref())
                     .ok();
             });
-            blur_closure.with_value(|c| {
+            let _ = blur_closure.try_with_value(|c| {
                 let cb: &wasm_bindgen::JsValue = c.as_ref().unchecked_ref();
                 el.add_event_listener_with_callback("blur", cb.unchecked_ref())
                     .ok();
             });
-            pointermove_closure.with_value(|c| {
+            let _ = pointermove_closure.try_with_value(|c| {
                 let cb: &wasm_bindgen::JsValue = c.as_ref().unchecked_ref();
                 el.add_event_listener_with_callback("pointermove", cb.unchecked_ref())
                     .ok();
@@ -731,17 +873,17 @@ fn MenuContentImpl(
     on_cleanup(move || {
         if let Some(node) = content_ref.get_untracked() {
             let el: web_sys::HtmlElement = node.unchecked_into();
-            keydown_closure.with_value(|c| {
+            let _ = keydown_closure.try_with_value(|c| {
                 let cb: &wasm_bindgen::JsValue = c.as_ref().unchecked_ref();
                 el.remove_event_listener_with_callback("keydown", cb.unchecked_ref())
                     .ok();
             });
-            blur_closure.with_value(|c| {
+            let _ = blur_closure.try_with_value(|c| {
                 let cb: &wasm_bindgen::JsValue = c.as_ref().unchecked_ref();
                 el.remove_event_listener_with_callback("blur", cb.unchecked_ref())
                     .ok();
             });
-            pointermove_closure.with_value(|c| {
+            let _ = pointermove_closure.try_with_value(|c| {
                 let cb: &wasm_bindgen::JsValue = c.as_ref().unchecked_ref();
                 el.remove_event_listener_with_callback("pointermove", cb.unchecked_ref())
                     .ok();
@@ -749,7 +891,27 @@ fn MenuContentImpl(
         }
     });
 
-    // TODO: ScrollLockWrapper
+    // Scroll lock: prevent scrolling outside the menu when disableOutsideScroll is true.
+    // React uses `react-remove-scroll`; we use a simple body overflow approach.
+    Effect::new(move |_| {
+        if disable_outside_scroll.get().unwrap_or(false)
+            && let Some(body) = document().body()
+        {
+            let style = body.style();
+            let prev_overflow = style.get_property_value("overflow").unwrap_or_default();
+            style.set_property("overflow", "hidden").ok();
+
+            let style = SendWrapper::new(style);
+            on_cleanup(move || {
+                if prev_overflow.is_empty() {
+                    style.remove_property("overflow").ok();
+                } else {
+                    style.set_property("overflow", &prev_overflow).ok();
+                }
+            });
+        }
+    });
+
     view! {
         <Provider value=content_context_value>
             <FocusScope
@@ -758,13 +920,45 @@ fn MenuContentImpl(
                 on_mount_auto_focus=compose_callbacks(
                     on_open_auto_focus,
                     Some(Callback::new(move |event: ev::Event| {
-                        // When opening, explicitly focus the content area only and leave `onEntryFocus` in  control of focusing first item.
+                        // Always prevent default to take control of focusing.
                         event.prevent_default();
 
-                        if let Some(content) = content_ref.get_untracked() {
-                            // TODO: focus with options doesn't exist in web-sys
-                            let content: web_sys::HtmlElement = content.unchecked_into();
-                            content.focus().expect("Element should be focused");
+                        if root_context.is_using_keyboard.get_untracked() {
+                            // For keyboard users, defer focus to a RAF so that collection items
+                            // have time to register (Leptos effects are async, unlike React's
+                            // synchronous useEffect). We focus the first menu item directly,
+                            // bypassing RovingFocusGroup's entry focus which depends on
+                            // collection items being registered.
+                            let content_ref = content_ref;
+                            let cb = Closure::once_into_js(move || {
+                                if let Some(content) = content_ref.get_untracked() {
+                                    let el: &web_sys::HtmlElement = content.unchecked_ref();
+                                    let selector = "[role=menuitem]:not([data-disabled]), \
+                                                     [role=menuitemcheckbox]:not([data-disabled]), \
+                                                     [role=menuitemradio]:not([data-disabled])";
+                                    if let Ok(Some(first_item)) = el.query_selector(selector) {
+                                        let first: web_sys::HtmlElement = first_item.unchecked_into();
+                                        first.focus().ok();
+                                    } else {
+                                        el.focus().ok();
+                                    }
+                                }
+                            });
+                            window().request_animation_frame(cb.unchecked_ref()).ok();
+                        } else {
+                            // For pointer users, focus the content element so DismissableLayer
+                            // works correctly. Don't focus a specific item.
+                            // Defer to RAF because PopperContent's attribute transfer Effect
+                            // (which moves tabindex from the wrapper div to the inner content
+                            // div) may not have run yet. Without tabindex, focus() is a no-op.
+                            let content_ref = content_ref;
+                            let cb = Closure::once_into_js(move || {
+                                if let Some(content) = content_ref.get_untracked() {
+                                    let content: web_sys::HtmlElement = content.unchecked_into();
+                                    content.focus().ok();
+                                }
+                            });
+                            window().request_animation_frame(cb.unchecked_ref()).ok();
                         }
                     })),
                     None,
@@ -787,7 +981,7 @@ fn MenuContentImpl(
                         r#loop=r#loop
                         current_tab_stop_id=current_tab_stop_id_signal
                         on_current_tab_stop_id_change=Callback::new(move |value: Option<String>| {
-                            set_current_item_id.set(value);
+                            let _ = set_current_item_id.try_set(value);
                         })
                         on_entry_focus=compose_callbacks(on_entry_focus, Some(Callback::new(move |event: ev::Event| {
                             if !root_context.is_using_keyboard.get_untracked() {
@@ -798,10 +992,19 @@ fn MenuContentImpl(
                     >
                         <PopperContent
                             side=Signal::derive(move || side.get().unwrap_or(PopperSide::Bottom))
+                            side_offset=Signal::derive(move || side_offset.get().unwrap_or(0.0))
                             align=Signal::derive(move || align.get().unwrap_or(Align::Center))
                             as_child=as_child
                             node_ref=composed_refs
                             attr:class=move || class.get().unwrap_or_default()
+                            attr:style=move || {
+                                let extra = content_style.get().unwrap_or_default();
+                                if extra.is_empty() {
+                                    "outline: none;".to_string()
+                                } else {
+                                    format!("outline: none; {extra}")
+                                }
+                            }
                             attr:role="menu"
                             attr:aria-orientation="vertical"
                             attr:data-state=move || get_open_state(context.open.get())
@@ -888,39 +1091,29 @@ pub fn MenuItem(
             return;
         }
 
-        if let Some(item) = item_ref.get_untracked() {
-            let item: web_sys::HtmlElement = item.unchecked_into();
+        if item_ref.get_untracked().is_none() {
+            return;
+        }
 
-            let closure: Closure<dyn Fn(ev::Event)> = Closure::new(move |event: ev::Event| {
-                if let Some(on_select) = on_select {
-                    on_select.run(event);
-                }
-            });
+        // React uses dispatchDiscreteCustomEvent (which wraps in flushSync) to
+        // dispatch a custom event and attach on_select as a one-time listener.
+        // In Leptos we don't need flushSync, so we call on_select directly with
+        // a cancelable CustomEvent — preserving the preventDefault() contract.
+        let init = CustomEventInit::new();
+        init.set_bubbles(true);
+        init.set_cancelable(true);
 
-            let init = CustomEventInit::new();
-            init.set_bubbles(true);
-            init.set_cancelable(true);
+        let item_select_event = CustomEvent::new_with_event_init_dict(ITEM_SELECT, &init)
+            .expect("Item select event should be instantiated.");
 
-            let item_select_event = CustomEvent::new_with_event_init_dict(ITEM_SELECT, &init)
-                .expect("Item select event should be instantiated.");
+        if let Some(on_select) = on_select {
+            on_select.run(item_select_event.clone().unchecked_into());
+        }
 
-            let options = AddEventListenerOptions::new();
-            options.set_once(true);
-
-            item.add_event_listener_with_callback_and_add_event_listener_options(
-                ITEM_SELECT,
-                closure.as_ref().unchecked_ref(),
-                &options,
-            )
-            .expect("Item select event listener should be added.");
-            item.dispatch_event(&item_select_event)
-                .expect("Item select event should be dispatched.");
-
-            if item_select_event.default_prevented() {
-                is_pointer_down.set(false);
-            } else {
-                root_context.on_close.run(());
-            }
+        if item_select_event.default_prevented() {
+            let _ = is_pointer_down.try_set(false);
+        } else {
+            root_context.on_close.run(());
         }
     });
 
@@ -936,20 +1129,20 @@ pub fn MenuItem(
                 if let Some(on_pointer_down) = on_pointer_down {
                     on_pointer_down.run(event);
                 }
-                is_pointer_down.set(true);
+                let _ = is_pointer_down.try_set(true);
             }
             on:pointerup=compose_callbacks(on_pointer_up, Some(Callback::new(move |event: ev::PointerEvent| {
                 // Pointer down can move to a different menu item which should activate it on pointer up.
                 // We dispatch a click for selection to allow composition with click based triggers and to
                 // prevent Firefox from getting stuck in text selection mode when the menu closes.
-                if !is_pointer_down.get_untracked()
+                if !is_pointer_down.try_get_untracked().unwrap_or(false)
                     && let Some(current_target) = event.current_target().map(|current_target| current_target.unchecked_into::<web_sys::HtmlElement>())
                 {
                     current_target.click();
                 }
             })), None)
             on:keydown=compose_callbacks(on_key_down, Some(Callback::new(move |event: ev::KeyboardEvent| {
-                let is_typing_ahead = !content_context.search.get_untracked().is_empty();
+                let is_typing_ahead = !content_context.search.try_get_untracked().unwrap_or_default().is_empty();
                 if disabled.get_untracked() || (is_typing_ahead && event.key() == " ") {
                     return;
                 }
@@ -1044,10 +1237,10 @@ fn MenuItemImpl(
                             content_context.on_item_leave.run(event);
                         })), None)
                         on:focus=compose_callbacks(on_focus, Some(Callback::new(move |_| {
-                            set_is_focused.set(true);
+                            let _ = set_is_focused.try_set(true);
                         })), None)
                         on:blur=compose_callbacks(on_blur, Some(Callback::new(move |_| {
-                            set_is_focused.set(false);
+                            let _ = set_is_focused.try_set(false);
                         })), None)
                         {..attrs}
                     >
@@ -1336,9 +1529,9 @@ pub fn MenuSubTrigger(
     let composed_refs = use_composed_refs(vec![node_ref, sub_context.trigger_ref]);
 
     let clear_open_timer = move || {
-        if let Some(timer_id) = open_timer.get_untracked() {
+        if let Some(timer_id) = open_timer.try_get_untracked().flatten() {
             window().clear_timeout_with_handle(timer_id);
-            open_timer.set(None);
+            let _ = open_timer.try_set(None);
         }
     };
 
@@ -1349,7 +1542,7 @@ pub fn MenuSubTrigger(
     // Clean up grace area on unmount.
     on_cleanup(move || {
         window()
-            .clear_timeout_with_handle(content_context.pointer_grace_timer.get_untracked() as i32);
+            .clear_timeout_with_handle(content_context.pointer_grace_timer.try_get_untracked().unwrap_or(0) as i32);
         content_context.on_pointer_grace_intent_change.run(None);
     });
 
@@ -1389,19 +1582,19 @@ pub fn MenuSubTrigger(
                     if event.default_prevented() {
                         return;
                     }
-                    if !disabled.get_untracked() && !context.open.get_untracked() && open_timer.get_untracked().is_none() {
+                    if !disabled.get_untracked() && !context.open.get_untracked() && open_timer.try_get_untracked().flatten().is_none() {
                         content_context.on_pointer_grace_intent_change.run(None);
                         let timer_id = window()
                             .set_timeout_with_callback_and_timeout_and_arguments_0(
                                 Closure::once_into_js(move || {
                                     context.on_open_change.run(true);
-                                    open_timer.set(None);
+                                    let _ = open_timer.try_set(None);
                                 })
                                 .unchecked_ref(),
                                 100,
                             )
                             .expect("Timeout should be set.");
-                        open_timer.set(Some(timer_id));
+                        let _ = open_timer.try_set(Some(timer_id));
                     }
                 })), None))
                 on_pointer_leave=Callback::new(compose_callbacks(on_pointer_leave, Some(when_mouse(move |event: ev::PointerEvent| {
@@ -1437,7 +1630,7 @@ pub fn MenuSubTrigger(
                             side: if right_side { Side::Right } else { Side::Left },
                         }));
 
-                        window().clear_timeout_with_handle(content_context.pointer_grace_timer.get_untracked() as i32);
+                        window().clear_timeout_with_handle(content_context.pointer_grace_timer.try_get_untracked().unwrap_or(0) as i32);
                         let timer_id = window()
                             .set_timeout_with_callback_and_timeout_and_arguments_0(
                                 Closure::once_into_js(move || {
@@ -1447,7 +1640,7 @@ pub fn MenuSubTrigger(
                                 300,
                             )
                             .expect("Timeout should be set.");
-                        content_context.pointer_grace_timer.set(timer_id as u64);
+                        let _ = content_context.pointer_grace_timer.try_set(timer_id as u64);
                     } else {
                         content_context.on_trigger_leave.run(event.clone());
                         if event.default_prevented() {
@@ -1458,7 +1651,7 @@ pub fn MenuSubTrigger(
                     }
                 })), None))
                 on:keydown=compose_callbacks(on_key_down, Some(Callback::new(move |event: ev::KeyboardEvent| {
-                    let is_typing_ahead = !content_context.search.get_untracked().is_empty();
+                    let is_typing_ahead = !content_context.search.try_get_untracked().unwrap_or_default().is_empty();
                     if disabled.get_untracked() || (is_typing_ahead && event.key() == " ") {
                         return;
                     }
@@ -1498,12 +1691,16 @@ pub fn MenuSubTrigger(
 #[component]
 pub fn MenuSubContent(
     #[prop(into, optional)] force_mount: MaybeProp<bool>,
+    #[prop(into, optional)] side_offset: MaybeProp<f64>,
     #[prop(into, optional)] on_escape_key_down: Option<Callback<ev::KeyboardEvent>>,
     #[prop(into, optional)] on_focus_outside: Option<Callback<CustomEvent>>,
     #[prop(into, optional)] on_key_down: Option<Callback<ev::KeyboardEvent>>,
     /// CSS class applied directly to the inner content element (same element as data-state).
     #[prop(into, optional)]
     class: MaybeProp<String>,
+    /// Additional inline styles for the content element (e.g., CSS custom property aliases).
+    #[prop(into, optional)]
+    content_style: MaybeProp<String>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
     children: ChildrenFn,
@@ -1532,11 +1729,13 @@ pub fn MenuSubContent(
                         id=Signal::derive(move || Some(sub_context.content_id.get()))
                         aria_labelledby=Signal::derive(move || Some(sub_context.trigger_id.get()))
                         side=sub_side
+                        side_offset=side_offset
                         align=Align::Start
                         disable_outside_pointer_events=false
                         disable_outside_scroll=false
                         trap_focus=false
                         class=class
+                        content_style=content_style
                         as_child=as_child
                         node_ref=composed_refs
                         on_open_auto_focus=Callback::new(move |event: ev::Event| {

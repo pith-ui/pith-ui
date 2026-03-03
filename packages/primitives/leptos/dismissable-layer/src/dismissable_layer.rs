@@ -490,7 +490,7 @@ pub fn DismissableLayer(
     // Pointer down outside detection
     let pointer_down_outside = use_pointer_down_outside(
         Some(Callback::new(move |event: PointerDownOutsideEvent| {
-            let _ = force_update.get_untracked();
+            let _ = force_update.try_get_untracked();
 
             let target = event
                 .detail()
@@ -591,7 +591,7 @@ pub fn DismissableLayer(
     // Escape key handling
     use_escape_keydown(
         Some(Callback::new(move |event: web_sys::KeyboardEvent| {
-            let _ = force_update.get_untracked();
+            let _ = force_update.try_get_untracked();
 
             let container_node = container_ref.get_untracked();
             let is_highest_layer = container_node.is_some_and(|node| {

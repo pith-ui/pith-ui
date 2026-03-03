@@ -177,7 +177,7 @@ fn RovingFocusGroupImpl(
     Effect::new(move |_| {
         if let Some(node) = group_ref.get() {
             let el: &web_sys::HtmlElement = node.deref().unchecked_ref();
-            handle_entry_focus.with_value(|closure| {
+            let _ = handle_entry_focus.try_with_value(|closure| {
                 el.add_event_listener_with_callback(ENTRY_FOCUS, closure.as_ref().unchecked_ref())
                     .expect("Entry focus event listener should be added.");
             });
@@ -187,7 +187,7 @@ fn RovingFocusGroupImpl(
     Owner::on_cleanup(move || {
         if let Some(node) = group_ref.get_untracked() {
             let el: &web_sys::HtmlElement = node.deref().unchecked_ref();
-            handle_entry_focus.with_value(|closure| {
+            let _ = handle_entry_focus.try_with_value(|closure| {
                 el.remove_event_listener_with_callback(
                     ENTRY_FOCUS,
                     closure.as_ref().unchecked_ref(),
@@ -205,14 +205,14 @@ fn RovingFocusGroupImpl(
         on_item_focus: Callback::new(move |tab_stop_id| {
             set_current_tab_stop_id.run(Some(tab_stop_id))
         }),
-        on_item_shift_tab: Callback::new(move |_| set_is_tabbing_back_out.set(true)),
+        on_item_shift_tab: Callback::new(move |_| { let _ = set_is_tabbing_back_out.try_set(true); }),
         on_focusable_item_add: Callback::new(move |_| {
-            items_initialized.set(true);
-            set_focusable_items_count.update(|focusable_items_count| *focusable_items_count += 1)
+            let _ = items_initialized.try_set(true);
+            let _ = set_focusable_items_count.try_update(|focusable_items_count| *focusable_items_count += 1);
         }),
         on_focusable_item_remove: Callback::new(move |_| {
-            items_initialized.set(true);
-            set_focusable_items_count.update(|focusable_items_count| *focusable_items_count -= 1)
+            let _ = items_initialized.try_set(true);
+            let _ = set_focusable_items_count.try_update(|focusable_items_count| *focusable_items_count -= 1);
         }),
     };
 
@@ -235,19 +235,19 @@ fn RovingFocusGroupImpl(
                     attr:data-orientation=move || orientation.get().map(|o| o.to_string())
                     attr:style="outline: none"
                     on:mousedown=compose_callbacks(on_mouse_down.flatten(), Some(Callback::new(move |_: ev::MouseEvent| {
-                        is_click_focus.set(true);
+                        let _ = is_click_focus.try_set(true);
                     })), None)
                     on:mouseup=move |_: ev::MouseEvent| {
-                        is_click_focus.set(false);
+                        let _ = is_click_focus.try_set(false);
                     }
                     on:focus=compose_callbacks(on_focus.flatten(), Some(Callback::new(move |event: ev::FocusEvent| {
                         // We normally wouldn't need this check, because we already check
                         // that the focus is on the current target and not bubbling to it.
                         // We do this because Safari doesn't focus buttons when clicked, and
                         // instead, the wrapper will get focused and not through a bubbling event.
-                        let is_keyboard_focus = !is_click_focus.get();
+                        let is_keyboard_focus = !is_click_focus.try_get().unwrap_or(false);
 
-                        if event.target() == event.current_target() && is_keyboard_focus && !is_tabbing_back_out.get() {
+                        if event.target() == event.current_target() && is_keyboard_focus && !is_tabbing_back_out.try_get().unwrap_or(false) {
                             let init = CustomEventInit::new();
                             init.set_bubbles(false);
                             init.set_cancelable(true);
@@ -256,7 +256,7 @@ fn RovingFocusGroupImpl(
                             event.current_target().expect("Event should have current target.").dispatch_event(&entry_focus_event).expect("Entry focus event should be dispatched.");
 
                             if !entry_focus_event.default_prevented() {
-                                let items = get_items.with_value(|get_items| get_items());
+                                let items = get_items.try_with_value(|get_items| get_items()).unwrap_or_default();
                                 let items: Vec<_> = items.iter().filter(|item| item.data.focusable).collect();
                                 let active_item = items.iter().find(|item| item.data.active);
                                 let current_item = items.iter().find(|item| current_tab_stop_id.get().is_some_and(|current_id| current_id == item.data.id));
@@ -278,10 +278,10 @@ fn RovingFocusGroupImpl(
                             }
                         }
 
-                        is_click_focus.set(false);
+                        let _ = is_click_focus.try_set(false);
                     })), None)
                     on:focusout=compose_callbacks(on_blur.flatten(), Some(Callback::new(move |_: ev::FocusEvent| {
-                        set_is_tabbing_back_out.set(false);
+                        let _ = set_is_tabbing_back_out.try_set(false);
                     })), None)
                     {..attrs}
                 >
@@ -333,7 +333,9 @@ pub fn RovingFocusGroupItem(
     });
     Owner::on_cleanup(move || {
         if focusable.get_untracked() {
-            context.on_focusable_item_remove.run(());
+            // Use try_run because the parent RovingFocusGroup's StoredValues
+            // may already be disposed during tree teardown.
+            context.on_focusable_item_remove.try_run(());
         }
     });
 
@@ -376,13 +378,18 @@ pub fn RovingFocusGroupItem(
                         // from the keydown handler, .focus() triggers this handler.
                         // Updating set_current_tab_stop_id synchronously would trigger
                         // reactive effects while the keydown closure is on the stack.
+                        //
+                        // Use try_run because the setTimeout may fire after the component
+                        // tree has been disposed (e.g., when a menu item click triggers
+                        // focus and close in the same interaction — the close disposes
+                        // components before the deferred callback runs).
                         let on_item_focus = context.on_item_focus;
                         let item_id = id.get();
                         let window = web_sys::window().expect("Window should exist.");
                         window
                             .set_timeout_with_callback_and_timeout_and_arguments_0(
                                 Closure::once_into_js(move || {
-                                    on_item_focus.run(item_id);
+                                    on_item_focus.try_run(item_id);
                                 })
                                 .unchecked_ref(),
                                 0,
@@ -407,7 +414,7 @@ pub fn RovingFocusGroupItem(
 
                             event.prevent_default();
 
-                            let items = get_items.with_value(|get_items| get_items());
+                            let items = get_items.try_with_value(|get_items| get_items()).unwrap_or_default();
                             let items = items.into_iter().filter(|item| item.data.focusable);
                             let mut candidate_nodes = items.filter_map(|item| {
                                 item.r#ref.get().map(|el| {

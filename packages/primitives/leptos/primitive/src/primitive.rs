@@ -80,13 +80,15 @@ where
 
     move |event: E| {
         if let Some(original) = &original_handler {
-            original.run(event.clone());
+            // Use try_run to avoid panicking if the callback's StoredValue
+            // has been disposed during synchronous unmount.
+            original.try_run(event.clone());
         }
 
         if (!check_default_prevented || !event.clone().into().default_prevented())
             && let Some(our) = &our_handler
         {
-            our.run(event);
+            our.try_run(event);
         }
     }
 }

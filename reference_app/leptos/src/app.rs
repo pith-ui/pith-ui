@@ -24,7 +24,9 @@ pub fn App() -> impl IntoView {
                     <Route path=path!("/avatar") view=pages::avatar::AvatarPage />
                     <Route path=path!("/checkbox") view=pages::checkbox::CheckboxPage />
                     <Route path=path!("/collapsible") view=pages::collapsible::CollapsiblePage />
+                    <Route path=path!("/context-menu") view=pages::context_menu::ContextMenuPage />
                     <Route path=path!("/dialog") view=pages::dialog::DialogPage />
+                    <Route path=path!("/dropdown-menu") view=pages::dropdown_menu::DropdownMenuPage />
                     <Route path=path!("/form") view=pages::form::FormPage />
                     <Route path=path!("/menu") view=pages::menu::MenuPage />
                     <Route path=path!("/hover-card") view=pages::hover_card::HoverCardPage />

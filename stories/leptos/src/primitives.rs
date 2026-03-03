@@ -7,6 +7,7 @@ pub mod avatar;
 pub mod checkbox;
 pub mod collapsible;
 pub mod collection;
+pub mod context_menu;
 pub mod dialog;
 pub mod dismissable_layer;
 pub mod focus_scope;

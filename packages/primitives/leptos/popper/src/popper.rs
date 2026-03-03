@@ -3,8 +3,10 @@ use floating_ui_leptos::{
     DetectOverflowOptions, Flip, FlipOptions, HIDE_NAME, Hide, HideData, HideOptions, HideStrategy,
     LimitShift, LimitShiftOptions, Middleware, MiddlewareReturn, MiddlewareState, MiddlewareVec,
     Offset, OffsetOptions, OffsetOptionsValues, Padding, Placement, Shift, ShiftOptions, Side,
-    Size, SizeOptions, Strategy, UseFloatingOptions, UseFloatingReturn, use_floating,
+    Size, SizeOptions, Strategy, UseFloatingOptions, UseFloatingReturn, VirtualElement,
+    VirtualElementOrNodeRef, use_floating,
 };
+pub use floating_ui_leptos::{ClientRectObject, VirtualElement as PopperVirtualElement};
 use leptos::{attribute_interceptor::AttributeInterceptor, context::Provider, html, prelude::*};
 use leptos_maybe_callback::MaybeCallback;
 use leptos_node_ref::AnyNodeRef;
@@ -57,6 +59,8 @@ pub enum UpdatePositionStrategy {
 #[derive(Clone, Copy)]
 struct PopperContextValue {
     pub anchor_ref: AnyNodeRef,
+    pub anchor_virtual:
+        RwSignal<Option<SendWrapper<Box<dyn VirtualElement<web_sys::Element>>>>>,
 }
 
 /// Opaque handle for re-providing Popper context through scope boundaries (e.g., portals).
@@ -87,14 +91,30 @@ pub fn provide_popper_scope(scope: PopperScope) {
 #[component]
 pub fn Popper(children: ChildrenFn) -> impl IntoView {
     let anchor_ref = AnyNodeRef::new();
+    let anchor_virtual = RwSignal::new(None);
 
-    let context_value = PopperContextValue { anchor_ref };
+    let context_value = PopperContextValue {
+        anchor_ref,
+        anchor_virtual,
+    };
 
     view! {
         <Provider value={context_value}>
             {children()}
         </Provider>
     }
+}
+
+/// Sets a virtual element as the Popper anchor, bypassing the need for a DOM-rendered
+/// `PopperAnchor`. The virtual element must implement `VirtualElement<web_sys::Element>`
+/// (i.e., provide `get_bounding_client_rect()`). Call from within a `<Popper>` scope.
+pub fn set_popper_virtual_ref(
+    virtual_el: Box<dyn VirtualElement<web_sys::Element>>,
+) {
+    let context: PopperContextValue = expect_context();
+    context
+        .anchor_virtual
+        .set(Some(SendWrapper::new(virtual_el)));
 }
 
 #[component]
@@ -175,6 +195,16 @@ pub fn PopperContent(
 
     let floating_ref = AnyNodeRef::new();
 
+    let anchor_virtual = context.anchor_virtual;
+    let anchor_node = context.anchor_ref;
+    let reference = Signal::derive(move || {
+        if let Some(virtual_el) = anchor_virtual.get() {
+            VirtualElementOrNodeRef::VirtualElement(virtual_el)
+        } else {
+            VirtualElementOrNodeRef::NodeRef(anchor_node)
+        }
+    });
+
     let UseFloatingReturn {
         floating_styles,
         placement,
@@ -183,7 +213,7 @@ pub fn PopperContent(
         update: update_floating_position,
         ..
     } = use_floating(
-        context.anchor_ref,
+        reference,
         floating_ref,
         UseFloatingOptions::default()
             .strategy(Strategy::Fixed)

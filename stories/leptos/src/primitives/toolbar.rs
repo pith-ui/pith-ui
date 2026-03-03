@@ -3,7 +3,11 @@ use radix_leptos_direction::DirectionProvider;
 use radix_leptos_toggle::Toggle;
 use radix_leptos_toolbar::*;
 
-stylance::import_crate_style!(classes, "src/primitives/toolbar.stories.module.css");
+stylance::import_crate_style!(
+    #[allow(dead_code)]
+    classes,
+    "src/primitives/toolbar.stories.module.css"
+);
 
 #[component]
 pub fn Styled() -> impl IntoView {

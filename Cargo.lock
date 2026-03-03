@@ -4103,6 +4103,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "radix-leptos-context-menu"
+version = "0.0.2"
+dependencies = [
+ "leptos",
+ "leptos-node-ref",
+ "radix-leptos-compose-refs",
+ "radix-leptos-menu",
+ "radix-leptos-primitive",
+ "radix-leptos-use-controllable-state",
+ "send_wrapper",
+ "wasm-bindgen",
+ "web-sys",
+]
+
+[[package]]
 name = "radix-leptos-dialog"
 version = "0.0.2"
 dependencies = [
@@ -4140,6 +4155,22 @@ dependencies = [
  "radix-leptos-primitive",
  "radix-leptos-use-escape-keydown",
  "send_wrapper",
+ "web-sys",
+]
+
+[[package]]
+name = "radix-leptos-dropdown-menu"
+version = "0.0.2"
+dependencies = [
+ "leptos",
+ "leptos-node-ref",
+ "radix-leptos-compose-refs",
+ "radix-leptos-id",
+ "radix-leptos-menu",
+ "radix-leptos-primitive",
+ "radix-leptos-use-controllable-state",
+ "send_wrapper",
+ "wasm-bindgen",
  "web-sys",
 ]
 
@@ -4413,7 +4444,9 @@ dependencies = [
  "radix-leptos-avatar",
  "radix-leptos-checkbox",
  "radix-leptos-collapsible",
+ "radix-leptos-context-menu",
  "radix-leptos-dialog",
+ "radix-leptos-dropdown-menu",
  "radix-leptos-form",
  "radix-leptos-hover-card",
  "radix-leptos-menu",
@@ -4538,6 +4571,7 @@ dependencies = [
  "radix-leptos-checkbox",
  "radix-leptos-collapsible",
  "radix-leptos-collection",
+ "radix-leptos-context-menu",
  "radix-leptos-dialog",
  "radix-leptos-direction",
  "radix-leptos-dismissable-layer",

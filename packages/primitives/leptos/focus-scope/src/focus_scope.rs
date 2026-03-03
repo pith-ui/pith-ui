@@ -50,7 +50,7 @@ pub fn FocusScope(
 
     let handle_focus_in: FocusEventClosure =
         Arc::new(SendWrapper::new(Closure::new(move |event: FocusEvent| {
-            if focus_scope.get_untracked().paused() {
+            if focus_scope.try_get_untracked().map(|s| s.paused()).unwrap_or(true) {
                 return;
             }
 
@@ -61,10 +61,10 @@ pub fn FocusScope(
                     .map(|target| target.unchecked_into::<web_sys::HtmlElement>());
 
                 if container.contains(target.as_ref().map(|e| e.unchecked_ref())) {
-                    last_focused_element.set(target.map(SendWrapper::new));
+                    let _ = last_focused_element.try_set(target.map(SendWrapper::new));
                 } else {
                     focus(
-                        last_focused_element.get_untracked().as_deref().cloned(),
+                        last_focused_element.try_get_untracked().flatten().as_deref().cloned(),
                         Some(FocusOptions { select: true }),
                     );
                 }
@@ -73,7 +73,7 @@ pub fn FocusScope(
 
     let handle_focus_out: FocusEventClosure =
         Arc::new(SendWrapper::new(Closure::new(move |event: FocusEvent| {
-            if focus_scope.get_untracked().paused() {
+            if focus_scope.try_get_untracked().map(|s| s.paused()).unwrap_or(true) {
                 return;
             }
 
@@ -101,7 +101,7 @@ pub fn FocusScope(
                 // that is outside the container, we move focus to the last valid focused element inside.
                 if !container.contains(related_target.as_ref().map(|e| e.unchecked_ref())) {
                     focus(
-                        last_focused_element.get_untracked().as_deref().cloned(),
+                        last_focused_element.try_get_untracked().flatten().as_deref().cloned(),
                         Some(FocusOptions { select: true }),
                     );
                 }
@@ -120,7 +120,7 @@ pub fn FocusScope(
     // cleans up on re-run (e.g. when trapped goes from true → false) and on unmount.
     Effect::new(move |_| {
         // Clean up previous effect run (equivalent to React useEffect cleanup on deps change)
-        trapped_cleanup.with_value(|f| {
+        let _ = trapped_cleanup.try_with_value(|f| {
             if let Some(cleanup) = f.borrow_mut().take() {
                 cleanup();
             }
@@ -176,7 +176,7 @@ pub fn FocusScope(
                     .observe_with_options(&container, &init)
                     .expect("Mutation observer should observe target.");
 
-                mutation_observer.with_value(|obs| {
+                let _ = mutation_observer.try_with_value(|obs| {
                     obs.borrow_mut().replace(new_observer);
                 });
             }
@@ -184,7 +184,7 @@ pub fn FocusScope(
             // Store cleanup for this effect run
             let cleanup_hi = hi;
             let cleanup_ho = ho;
-            trapped_cleanup.with_value(|f| {
+            let _ = trapped_cleanup.try_with_value(|f| {
                 f.borrow_mut().replace(Box::new(move || {
                     document()
                         .remove_event_listener_with_callback(
@@ -199,7 +199,7 @@ pub fn FocusScope(
                         )
                         .expect("Focus out event listener should be removed.");
 
-                    mutation_observer.with_value(|obs| {
+                    let _ = mutation_observer.try_with_value(|obs| {
                         if let Some(observer) = obs.borrow_mut().take() {
                             observer.disconnect();
                         }
@@ -214,7 +214,7 @@ pub fn FocusScope(
         StoredValue::new(SendWrapper::new(RefCell::new(None)));
 
     Effect::new(move |_| {
-        auto_focus_end.with_value(|end| {
+        let _ = auto_focus_end.try_with_value(|end| {
             if let Some(on_mount_auto_focus_cleanup) = end.borrow_mut().take() {
                 on_mount_auto_focus_cleanup();
             }
@@ -290,7 +290,7 @@ pub fn FocusScope(
                 }
 
                 let container_clone = container.clone();
-                auto_focus_end.with_value(|end| {
+                let _ = auto_focus_end.try_with_value(|end| {
                     end.borrow_mut().replace(Box::new(move || {
                         container_clone
                             .remove_event_listener_with_callback(
@@ -341,7 +341,9 @@ pub fn FocusScope(
                             let mut focus_scope_stack = FOCUS_SCOPE_STACK
                                 .lock()
                                 .expect("Focus scope stack mutex should lock.");
-                            focus_scope_stack.remove(&focus_scope.get_untracked());
+                            if let Some(scope) = focus_scope.try_get_untracked() {
+                                focus_scope_stack.remove(&scope);
+                            }
                         }
                     }));
                 });
@@ -350,13 +352,13 @@ pub fn FocusScope(
     });
 
     on_cleanup(move || {
-        trapped_cleanup.with_value(|f| {
+        let _ = trapped_cleanup.try_with_value(|f| {
             if let Some(cleanup) = f.borrow_mut().take() {
                 cleanup();
             }
         });
 
-        auto_focus_end.with_value(|end| {
+        let _ = auto_focus_end.try_with_value(|end| {
             if let Some(auto_focus_cleanup) = end.borrow_mut().take() {
                 auto_focus_cleanup();
             }

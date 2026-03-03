@@ -7,8 +7,8 @@ use leptos_router::{
 
 use crate::primitives::{
     accessible_icon, accordion, alert_dialog, arrow, aspect_ratio, avatar, checkbox, collapsible,
-    collection, dialog, dismissable_layer, focus_scope, form, hover_card, label, menu,
-    navigation_menu, one_time_password_field, password_toggle_field, popover, popper, portal,
+    collection, context_menu, dialog, dismissable_layer, focus_scope, form, hover_card, label,
+    menu, navigation_menu, one_time_password_field, password_toggle_field, popover, popper, portal,
     presence, progress, radio_group, roving_focus, scroll_area, select, separator, slider, switch,
     tabs, toast, toggle, toggle_group, toolbar, tooltip, visually_hidden,
 };
@@ -195,6 +195,15 @@ fn EmbedApp() -> impl IntoView {
                     <Route path=path!("/collapsible/animated") view=collapsible::Animated />
                     <Route path=path!("/collapsible/animated-horizontal") view=collapsible::AnimatedHorizontal />
                     <Route path=path!("/collapsible/chromatic") view=collapsible::Chromatic />
+
+                    <Route path=path!("/context-menu/styled") view=context_menu::Styled />
+                    <Route path=path!("/context-menu/modality") view=context_menu::Modality />
+                    <Route path=path!("/context-menu/submenus") view=context_menu::Submenus />
+                    <Route path=path!("/context-menu/with-labels") view=context_menu::WithLabels />
+                    <Route path=path!("/context-menu/checkbox-items") view=context_menu::CheckboxItems />
+                    <Route path=path!("/context-menu/radio-items") view=context_menu::RadioItems />
+                    <Route path=path!("/context-menu/prevent-closing") view=context_menu::PreventClosing />
+                    <Route path=path!("/context-menu/nested") view=context_menu::Nested />
 
                     <Route path=path!("/dialog/styled") view=dialog::Styled />
                     <Route path=path!("/dialog/non-modal") view=dialog::NonModal />
@@ -496,6 +505,16 @@ fn ShellApp() -> impl IntoView {
                             ("/collapsible/animated-horizontal", "Animated Horizontal"),
                             ("/collapsible/chromatic", "Chromatic"),
                         ] />
+                        <NavSection title="Context Menu" stories=vec![
+                            ("/context-menu/styled", "Styled"),
+                            ("/context-menu/modality", "Modality"),
+                            ("/context-menu/submenus", "Submenus"),
+                            ("/context-menu/with-labels", "With Labels"),
+                            ("/context-menu/checkbox-items", "Checkbox Items"),
+                            ("/context-menu/radio-items", "Radio Items"),
+                            ("/context-menu/prevent-closing", "Prevent Closing"),
+                            ("/context-menu/nested", "Nested"),
+                        ] />
                         <NavSection title="Dialog" stories=vec![
                             ("/dialog/styled", "Styled"),
                             ("/dialog/non-modal", "Non Modal"),
@@ -536,7 +555,7 @@ fn ShellApp() -> impl IntoView {
                             ("/label/with-control", "With Control"),
                             ("/label/with-input-number", "With Input Number"),
                         ] />
-                        <NavSection title="Navigation Menu" tested=false stories=vec![
+                        <NavSection title="Navigation Menu" stories=vec![
                             ("/navigation-menu/basic", "Basic"),
                             ("/navigation-menu/custom-durations", "Custom Durations"),
                             ("/navigation-menu/viewport", "Viewport"),

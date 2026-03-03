@@ -24,6 +24,7 @@ radix-leptos-arrow.workspace = true
 radix-leptos-aspect-ratio.workspace = true
 radix-leptos-collapsible.workspace = true
 radix-leptos-collection.workspace = true
+radix-leptos-context-menu.workspace = true
 radix-leptos-dialog.workspace = true
 radix-leptos-dismissable-layer.workspace = true
 radix-leptos-avatar.workspace = true

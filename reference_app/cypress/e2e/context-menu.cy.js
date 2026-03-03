@@ -94,6 +94,18 @@ describe('Context Menu', () => {
     // ── 3. Keyboard Navigation ──────────────────────────────
 
     describe('keyboard navigation', () => {
+        it('ArrowDown on freshly opened menu focuses first item', () => {
+            openMenu();
+            cy.realPress('ArrowDown');
+            cy.findByText('Item 1').should('have.attr', 'data-highlighted');
+        });
+
+        it('ArrowUp on freshly opened menu focuses last item', () => {
+            openMenu();
+            cy.realPress('ArrowUp');
+            cy.get('[role="menu"] > [role="menuitem"]').last().should('have.attr', 'data-highlighted');
+        });
+
         it('ArrowDown navigates to next item', () => {
             openMenu();
             cy.findByText('Item 1').realHover();
