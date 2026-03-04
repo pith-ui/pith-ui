@@ -16,6 +16,7 @@ radix-leptos-direction.workspace = true
 radix-leptos-presence.workspace = true
 radix-leptos-primitive.workspace = true
 radix-number.workspace = true
+radix-utils.workspace = true
 send_wrapper.workspace = true
 web-sys = { workspace = true, features = [
     "AddEventListenerOptions",

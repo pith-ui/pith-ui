@@ -21,6 +21,7 @@ radix-leptos-presence.workspace = true
 radix-leptos-primitive.workspace = true
 radix-leptos-use-controllable-state.workspace = true
 radix-leptos-visually-hidden.workspace = true
+radix-utils.workspace = true
 js-sys = "0.3"
 send_wrapper.workspace = true
 wasm-bindgen = "0.2"

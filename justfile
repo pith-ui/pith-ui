@@ -17,6 +17,9 @@ test_leptos_wasm:
         fi
     done
 
+# Run all leptos tests: unit, wasm, and e2e
+test_leptos_all: test_leptos_unit test_leptos_wasm test_leptos
+
 # Reference App — cross-framework E2E testing harness
 # ── Dev servers ──────────────────────────────────────────
 

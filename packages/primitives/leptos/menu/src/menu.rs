@@ -31,6 +31,7 @@ use radix_leptos_primitive::{
     wrap_callback,
 };
 use radix_leptos_roving_focus::{Orientation, RovingFocusGroup, RovingFocusGroupItem};
+use radix_utils::{Point, is_point_in_polygon, wrap_array};
 use send_wrapper::SendWrapper;
 use wasm_bindgen::{JsCast, closure::Closure};
 use web_sys::{AddEventListenerOptions, CustomEvent, CustomEventInit, EventListenerOptions};
@@ -1935,12 +1936,6 @@ fn focus_first(candidates: Vec<web_sys::HtmlElement>) {
     }
 }
 
-/// Wraps an array around itself at a given start index.
-fn wrap_array<T: Clone>(array: &mut [T], start_index: usize) -> &[T] {
-    array.rotate_left(start_index);
-    array
-}
-
 /// This is the "meat" of the typeahead matching logic. It takes in all the values,
 /// the search and the current match, and returns the next match (or `None`).
 ///
@@ -1994,12 +1989,6 @@ fn get_next_match(
     }
 }
 
-#[derive(Clone, Debug)]
-struct Point {
-    x: f64,
-    y: f64,
-}
-
 type Polygon = Vec<Point>;
 
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
@@ -2014,38 +2003,13 @@ struct GraceIntent {
     side: Side,
 }
 
-/// Determine if a point is inside of a polygon.
-fn is_point_in_polygon(point: Point, polygon: Polygon) -> bool {
-    let Point { x, y } = point;
-    let mut inside = false;
-
-    let mut i = 0;
-    let mut j = polygon.len() - 1;
-    while i < polygon.len() {
-        let xi = polygon[i].x;
-        let yi = polygon[i].y;
-        let xj = polygon[j].x;
-        let yj = polygon[j].y;
-
-        let intersect = ((yi > y) != (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
-        if intersect {
-            inside = !inside;
-        }
-
-        j = i;
-        i += 1;
-    }
-
-    inside
-}
-
 fn is_pointer_in_grace_area(event: &ev::PointerEvent, area: Option<Polygon>) -> bool {
     if let Some(area) = area {
         let cursor_pos = Point {
             x: event.client_x() as f64,
             y: event.client_y() as f64,
         };
-        is_point_in_polygon(cursor_pos, area)
+        is_point_in_polygon(&cursor_pos, &area)
     } else {
         false
     }
@@ -2122,7 +2086,10 @@ mod tests {
 
     #[test]
     fn checked_state_indeterminate() {
-        assert_eq!(get_checked_state(CheckedState::Indeterminate), "indeterminate");
+        assert_eq!(
+            get_checked_state(CheckedState::Indeterminate),
+            "indeterminate"
+        );
     }
 
     #[test]
@@ -2147,45 +2114,16 @@ mod tests {
         assert_eq!(CheckedState::from(false), CheckedState::False);
     }
 
-    // ── wrap_array ──────────────────────────────────────────
-
-    #[test]
-    fn wrap_array_basic() {
-        let mut arr = ['a', 'b', 'c', 'd'];
-        assert_eq!(wrap_array(&mut arr, 2), &['c', 'd', 'a', 'b']);
-    }
-
-    #[test]
-    fn wrap_array_at_zero() {
-        let mut arr = ['a', 'b', 'c'];
-        assert_eq!(wrap_array(&mut arr, 0), &['a', 'b', 'c']);
-    }
-
-    #[test]
-    fn wrap_array_at_end() {
-        let mut arr = ['a', 'b', 'c'];
-        assert_eq!(wrap_array(&mut arr, 2), &['c', 'a', 'b']);
-    }
-
-    #[test]
-    fn wrap_array_single_element() {
-        let mut arr = [42];
-        assert_eq!(wrap_array(&mut arr, 0), &[42]);
-    }
-
-    #[test]
-    fn wrap_array_empty() {
-        let mut arr: [i32; 0] = [];
-        assert_eq!(wrap_array(&mut arr, 0), &[] as &[i32]);
-    }
-
     // ── get_next_match ──────────────────────────────────────
 
     #[test]
     fn next_match_empty_search_matches_first() {
         // Empty string is a prefix of every value, so the first value matches.
         let values = vec!["Apple".into(), "Banana".into()];
-        assert_eq!(get_next_match(values, "".into(), None), Some("Apple".into()));
+        assert_eq!(
+            get_next_match(values, "".into(), None),
+            Some("Apple".into())
+        );
     }
 
     #[test]
@@ -2268,64 +2206,5 @@ mod tests {
         let values = vec!["Apple".into(), "Banana".into()];
         let result = get_next_match(values, "z".into(), None);
         assert_eq!(result, None);
-    }
-
-    // ── is_point_in_polygon ─────────────────────────────────
-
-    fn triangle() -> Polygon {
-        vec![
-            Point { x: 0.0, y: 0.0 },
-            Point { x: 10.0, y: 0.0 },
-            Point { x: 5.0, y: 10.0 },
-        ]
-    }
-
-    fn rectangle() -> Polygon {
-        vec![
-            Point { x: 0.0, y: 0.0 },
-            Point { x: 10.0, y: 0.0 },
-            Point { x: 10.0, y: 10.0 },
-            Point { x: 0.0, y: 10.0 },
-        ]
-    }
-
-    #[test]
-    fn point_inside_triangle() {
-        assert!(is_point_in_polygon(Point { x: 5.0, y: 3.0 }, triangle()));
-    }
-
-    #[test]
-    fn point_outside_triangle() {
-        assert!(!is_point_in_polygon(Point { x: 0.0, y: 10.0 }, triangle()));
-        assert!(!is_point_in_polygon(Point { x: 20.0, y: 5.0 }, triangle()));
-    }
-
-    #[test]
-    fn point_inside_rectangle() {
-        assert!(is_point_in_polygon(Point { x: 5.0, y: 5.0 }, rectangle()));
-        assert!(is_point_in_polygon(Point { x: 1.0, y: 1.0 }, rectangle()));
-        assert!(is_point_in_polygon(Point { x: 9.0, y: 9.0 }, rectangle()));
-    }
-
-    #[test]
-    fn point_outside_rectangle() {
-        assert!(!is_point_in_polygon(Point { x: -1.0, y: 5.0 }, rectangle()));
-        assert!(!is_point_in_polygon(Point { x: 11.0, y: 5.0 }, rectangle()));
-        assert!(!is_point_in_polygon(Point { x: 5.0, y: -1.0 }, rectangle()));
-        assert!(!is_point_in_polygon(Point { x: 5.0, y: 11.0 }, rectangle()));
-    }
-
-    #[test]
-    fn point_on_edge_of_rectangle() {
-        // Ray-casting algorithms are inconsistent on exact edges;
-        // the important contract is no panic. The result may be true or false.
-        let _ = is_point_in_polygon(Point { x: 0.0, y: 5.0 }, rectangle());
-        let _ = is_point_in_polygon(Point { x: 5.0, y: 0.0 }, rectangle());
-        let _ = is_point_in_polygon(Point { x: 10.0, y: 5.0 }, rectangle());
-    }
-
-    #[test]
-    fn point_in_empty_polygon() {
-        assert!(!is_point_in_polygon(Point { x: 0.0, y: 0.0 }, vec![]));
     }
 }

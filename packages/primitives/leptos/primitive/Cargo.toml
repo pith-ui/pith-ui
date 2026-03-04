@@ -11,3 +11,6 @@ version.workspace = true
 [dependencies]
 leptos.workspace = true
 leptos-node-ref.workspace = true
+
+[dev-dependencies]
+any_spawner = "0.3.0"

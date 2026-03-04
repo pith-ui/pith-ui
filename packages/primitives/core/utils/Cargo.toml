@@ -1,0 +1,9 @@
+[package]
+name = "radix-utils"
+description = "Shared pure-Rust utilities for Radix components."
+
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+version.workspace = true

@@ -82,3 +82,107 @@ pub fn get_active_element(node: Option<&Node>, active_descendant: bool) -> Optio
 pub fn is_frame(element: &Element) -> bool {
     element.tag_name() == "IFRAME"
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use wasm_bindgen_test::*;
+
+    wasm_bindgen_test_configure!(run_in_browser);
+
+    #[wasm_bindgen_test]
+    fn can_use_dom_returns_true() {
+        assert!(can_use_dom());
+    }
+
+    #[wasm_bindgen_test]
+    fn is_frame_with_iframe() {
+        let doc = web_sys::window().unwrap().document().unwrap();
+        let iframe = doc.create_element("iframe").unwrap();
+        assert!(is_frame(&iframe));
+    }
+
+    #[wasm_bindgen_test]
+    fn is_frame_with_div() {
+        let doc = web_sys::window().unwrap().document().unwrap();
+        let div = doc.create_element("div").unwrap();
+        assert!(!is_frame(&div));
+    }
+
+    #[wasm_bindgen_test]
+    fn get_owner_document_with_element() {
+        let doc = web_sys::window().unwrap().document().unwrap();
+        let div = doc.create_element("div").unwrap();
+        doc.body().unwrap().append_child(&div).unwrap();
+        let result = get_owner_document(Some(div.unchecked_ref()));
+        assert!(result.is_ok());
+        div.remove();
+    }
+
+    #[wasm_bindgen_test]
+    fn get_owner_document_with_none() {
+        let result = get_owner_document(None);
+        assert!(result.is_ok());
+    }
+
+    #[wasm_bindgen_test]
+    fn get_owner_window_with_element() {
+        let doc = web_sys::window().unwrap().document().unwrap();
+        let div = doc.create_element("div").unwrap();
+        doc.body().unwrap().append_child(&div).unwrap();
+        let result = get_owner_window(Some(div.unchecked_ref()));
+        assert!(result.is_ok());
+        div.remove();
+    }
+
+    #[wasm_bindgen_test]
+    fn get_owner_window_with_none() {
+        let result = get_owner_window(None);
+        assert!(result.is_ok());
+    }
+
+    thread_local! {
+        static ORIGINAL_CALLED: std::cell::Cell<bool> = const { std::cell::Cell::new(false) };
+        static OUR_CALLED: std::cell::Cell<bool> = const { std::cell::Cell::new(false) };
+    }
+
+    fn original_handler(_: Event) {
+        ORIGINAL_CALLED.with(|c| c.set(true));
+    }
+
+    fn our_handler(_: Event) {
+        OUR_CALLED.with(|c| c.set(true));
+    }
+
+    fn preventing_handler(e: Event) {
+        e.prevent_default();
+    }
+
+    #[wasm_bindgen_test]
+    fn compose_event_handlers_both_called() {
+        ORIGINAL_CALLED.with(|c| c.set(false));
+        OUR_CALLED.with(|c| c.set(false));
+
+        let handler = compose_event_handlers(Some(original_handler), Some(our_handler), None);
+
+        let event = Event::new("click").unwrap();
+        handler(event);
+
+        assert!(ORIGINAL_CALLED.with(|c| c.get()));
+        assert!(OUR_CALLED.with(|c| c.get()));
+    }
+
+    #[wasm_bindgen_test]
+    fn compose_event_handlers_default_prevented_skips_ours() {
+        OUR_CALLED.with(|c| c.set(false));
+
+        let handler = compose_event_handlers(Some(preventing_handler), Some(our_handler), None);
+
+        let mut init = web_sys::EventInit::new();
+        init.cancelable(true);
+        let event = Event::new_with_event_init_dict("click", &init).unwrap();
+        handler(event);
+
+        assert!(!OUR_CALLED.with(|c| c.get()));
+    }
+}

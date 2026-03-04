@@ -13,8 +13,12 @@ web-sys = { workspace = true, features = [
     "Document",
     "Element",
     "Event",
+    "EventInit",
     "HtmlElement",
     "HtmlIFrameElement",
     "Node",
     "Window",
 ] }
+
+[dev-dependencies]
+wasm-bindgen-test = "0.3"

@@ -165,7 +165,11 @@ fn compute_motion_attribute(
     if let (Some(idx), Some(prev_idx)) = (index, prev_index) {
         if idx != prev_idx {
             if is_selected && prev_idx != usize::MAX {
-                Some(if idx > prev_idx { "from-end" } else { "from-start" })
+                Some(if idx > prev_idx {
+                    "from-end"
+                } else {
+                    "from-start"
+                })
             } else if was_selected {
                 Some(if idx > prev_idx { "to-start" } else { "to-end" })
             } else {
@@ -2189,18 +2193,12 @@ mod tests {
     fn motion_none_when_same_index() {
         // current==previous → idx == prev_idx → None
         let items = vals(&["a", "b"]);
-        assert_eq!(
-            compute_motion_attribute(&items, "a", "a", "a", None),
-            None
-        );
+        assert_eq!(compute_motion_attribute(&items, "a", "a", "a", None), None);
     }
 
     #[test]
     fn motion_none_when_current_not_in_list() {
         let items = vals(&["a", "b"]);
-        assert_eq!(
-            compute_motion_attribute(&items, "z", "a", "z", None),
-            None
-        );
+        assert_eq!(compute_motion_attribute(&items, "z", "a", "z", None), None);
     }
 }

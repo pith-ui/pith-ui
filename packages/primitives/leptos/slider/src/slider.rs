@@ -12,6 +12,7 @@ use radix_leptos_use_controllable_state::{UseControllableStateParams, use_contro
 use radix_leptos_use_previous::use_previous;
 use radix_leptos_use_size::use_size;
 use radix_number::clamp;
+use radix_utils::linear_scale;
 use send_wrapper::SendWrapper;
 use web_sys::wasm_bindgen::JsCast;
 
@@ -1032,16 +1033,6 @@ fn has_min_steps_between_values(values: &[f64], min_steps_between_values: f64) -
     }
 }
 
-fn linear_scale(input: [f64; 2], output: [f64; 2]) -> impl Fn(f64) -> f64 {
-    move |value: f64| {
-        if input[0] == input[1] || output[0] == output[1] {
-            return output[0];
-        }
-        let ratio = (output[1] - output[0]) / (input[1] - input[0]);
-        output[0] + ratio * (value - input[0])
-    }
-}
-
 fn get_decimal_count(value: f64) -> u32 {
     let s = value.to_string();
     if let Some(dot_pos) = s.find('.') {
@@ -1098,52 +1089,6 @@ mod tests {
     #[test]
     fn back_keys_unknown_direction() {
         assert!(back_keys("unknown").is_empty());
-    }
-
-    // ── linear_scale ────────────────────────────────────────
-
-    #[test]
-    fn linear_scale_basic() {
-        let scale = linear_scale([0.0, 100.0], [0.0, 1.0]);
-        assert_eq!(scale(0.0), 0.0);
-        assert_eq!(scale(50.0), 0.5);
-        assert_eq!(scale(100.0), 1.0);
-    }
-
-    #[test]
-    fn linear_scale_inverted_output() {
-        let scale = linear_scale([0.0, 100.0], [1.0, 0.0]);
-        assert_eq!(scale(0.0), 1.0);
-        assert_eq!(scale(100.0), 0.0);
-        assert_eq!(scale(50.0), 0.5);
-    }
-
-    #[test]
-    fn linear_scale_non_zero_origin() {
-        let scale = linear_scale([10.0, 20.0], [100.0, 200.0]);
-        assert_eq!(scale(10.0), 100.0);
-        assert_eq!(scale(15.0), 150.0);
-        assert_eq!(scale(20.0), 200.0);
-    }
-
-    #[test]
-    fn linear_scale_degenerate_input_returns_first_output() {
-        let scale = linear_scale([5.0, 5.0], [10.0, 20.0]);
-        assert_eq!(scale(5.0), 10.0);
-        assert_eq!(scale(100.0), 10.0);
-    }
-
-    #[test]
-    fn linear_scale_degenerate_output_returns_first_output() {
-        let scale = linear_scale([0.0, 100.0], [7.0, 7.0]);
-        assert_eq!(scale(50.0), 7.0);
-    }
-
-    #[test]
-    fn linear_scale_extrapolates_beyond_range() {
-        let scale = linear_scale([0.0, 10.0], [0.0, 100.0]);
-        assert_eq!(scale(15.0), 150.0);
-        assert_eq!(scale(-5.0), -50.0);
     }
 
     // ── get_decimal_count ───────────────────────────────────
@@ -1280,13 +1225,19 @@ mod tests {
 
     #[test]
     fn next_sorted_basic_replace() {
-        assert_eq!(get_next_sorted_values(&[10.0, 50.0, 90.0], 60.0, 1), vec![10.0, 60.0, 90.0]);
+        assert_eq!(
+            get_next_sorted_values(&[10.0, 50.0, 90.0], 60.0, 1),
+            vec![10.0, 60.0, 90.0]
+        );
     }
 
     #[test]
     fn next_sorted_reorders_on_crossover() {
         // Moving thumb at index 0 past thumb at index 1
-        assert_eq!(get_next_sorted_values(&[10.0, 50.0], 70.0, 0), vec![50.0, 70.0]);
+        assert_eq!(
+            get_next_sorted_values(&[10.0, 50.0], 70.0, 0),
+            vec![50.0, 70.0]
+        );
     }
 
     #[test]
@@ -1296,7 +1247,10 @@ mod tests {
 
     #[test]
     fn next_sorted_index_out_of_bounds_no_change() {
-        assert_eq!(get_next_sorted_values(&[10.0, 20.0], 99.0, 5), vec![10.0, 20.0]);
+        assert_eq!(
+            get_next_sorted_values(&[10.0, 20.0], 99.0, 5),
+            vec![10.0, 20.0]
+        );
     }
 
     // ── get_steps_between_values ────────────────────────────

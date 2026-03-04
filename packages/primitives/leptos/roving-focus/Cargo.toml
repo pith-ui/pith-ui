@@ -17,5 +17,6 @@ radix-leptos-direction.workspace = true
 radix-leptos-id.workspace = true
 radix-leptos-primitive.workspace = true
 radix-leptos-use-controllable-state.workspace = true
+radix-utils.workspace = true
 send_wrapper.workspace = true
 web-sys = { workspace = true, features = ["CustomEvent", "CustomEventInit"] }

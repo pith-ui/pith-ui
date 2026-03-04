@@ -592,7 +592,10 @@ mod tests {
 
     #[test]
     fn single_value_empty() {
-        assert_eq!(single_value_to_vec(Some(String::new())), Vec::<String>::new());
+        assert_eq!(
+            single_value_to_vec(Some(String::new())),
+            Vec::<String>::new()
+        );
     }
 
     #[test]

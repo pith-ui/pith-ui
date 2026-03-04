@@ -17,6 +17,7 @@ use radix_leptos_presence::Presence;
 use radix_leptos_primitive::{Primitive, compose_callbacks, prop_or, prop_or_default};
 use radix_leptos_use_controllable_state::{UseControllableStateParams, use_controllable_state};
 use radix_leptos_visually_hidden::VisuallyHidden;
+use radix_utils::{Point, get_hull, is_point_in_polygon};
 use send_wrapper::SendWrapper;
 use wasm_bindgen::JsCast;
 use web_sys::wasm_bindgen::closure::Closure;
@@ -645,9 +646,9 @@ fn TooltipContentHoverable(
                             );
                             let padded_exit_points =
                                 get_padded_exit_points(&exit_point, &exit_side);
-                            let hover_target_points = get_points_from_rect(
-                                &Rect::from(&content_for_trigger.get_bounding_client_rect()),
-                            );
+                            let hover_target_points = get_points_from_rect(&Rect::from(
+                                &content_for_trigger.get_bounding_client_rect(),
+                            ));
                             let mut all_points = padded_exit_points;
                             all_points.extend(hover_target_points);
                             let grace_area = get_hull(&all_points);
@@ -682,8 +683,9 @@ fn TooltipContentHoverable(
                             );
                             let padded_exit_points =
                                 get_padded_exit_points(&exit_point, &exit_side);
-                            let hover_target_points =
-                                get_points_from_rect(&Rect::from(&trigger_clone.get_bounding_client_rect()));
+                            let hover_target_points = get_points_from_rect(&Rect::from(
+                                &trigger_clone.get_bounding_client_rect(),
+                            ));
                             let mut all_points = padded_exit_points;
                             all_points.extend(hover_target_points);
                             let grace_area = get_hull(&all_points);
@@ -1147,12 +1149,6 @@ pub fn TooltipArrow(
  * -----------------------------------------------------------------------------------------------*/
 
 #[derive(Clone, Debug)]
-struct Point {
-    x: f64,
-    y: f64,
-}
-
-#[derive(Clone, Debug)]
 struct Rect {
     top: f64,
     bottom: f64,
@@ -1257,88 +1253,6 @@ fn get_points_from_rect(rect: &Rect) -> Vec<Point> {
     ]
 }
 
-/// Determine if a point is inside of a polygon.
-/// Based on https://github.com/substack/point-in-polygon
-fn is_point_in_polygon(point: &Point, polygon: &[Point]) -> bool {
-    let (x, y) = (point.x, point.y);
-    let mut inside = false;
-    let len = polygon.len();
-    let mut j = len - 1;
-    for i in 0..len {
-        let xi = polygon[i].x;
-        let yi = polygon[i].y;
-        let xj = polygon[j].x;
-        let yj = polygon[j].y;
-
-        let intersect = ((yi > y) != (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
-        if intersect {
-            inside = !inside;
-        }
-        j = i;
-    }
-    inside
-}
-
-/// Returns a new array of points representing the convex hull of the given set of points.
-/// https://www.nayuki.io/page/convex-hull-algorithm
-fn get_hull(points: &[Point]) -> Vec<Point> {
-    let mut new_points: Vec<Point> = points.to_vec();
-    new_points.sort_by(|a, b| {
-        a.x.partial_cmp(&b.x)
-            .unwrap_or(std::cmp::Ordering::Equal)
-            .then_with(|| a.y.partial_cmp(&b.y).unwrap_or(std::cmp::Ordering::Equal))
-    });
-    get_hull_presorted(&new_points)
-}
-
-/// Returns the convex hull, assuming that each points[i] <= points[i + 1]. Runs in O(n) time.
-fn get_hull_presorted(points: &[Point]) -> Vec<Point> {
-    if points.len() <= 1 {
-        return points.to_vec();
-    }
-
-    let mut upper_hull: Vec<Point> = Vec::new();
-    for p in points {
-        while upper_hull.len() >= 2 {
-            let q = &upper_hull[upper_hull.len() - 1];
-            let r = &upper_hull[upper_hull.len() - 2];
-            if (q.x - r.x) * (p.y - r.y) >= (q.y - r.y) * (p.x - r.x) {
-                upper_hull.pop();
-            } else {
-                break;
-            }
-        }
-        upper_hull.push(p.clone());
-    }
-    upper_hull.pop();
-
-    let mut lower_hull: Vec<Point> = Vec::new();
-    for p in points.iter().rev() {
-        while lower_hull.len() >= 2 {
-            let q = &lower_hull[lower_hull.len() - 1];
-            let r = &lower_hull[lower_hull.len() - 2];
-            if (q.x - r.x) * (p.y - r.y) >= (q.y - r.y) * (p.x - r.x) {
-                lower_hull.pop();
-            } else {
-                break;
-            }
-        }
-        lower_hull.push(p.clone());
-    }
-    lower_hull.pop();
-
-    if upper_hull.len() == 1
-        && lower_hull.len() == 1
-        && (upper_hull[0].x - lower_hull[0].x).abs() < f64::EPSILON
-        && (upper_hull[0].y - lower_hull[0].y).abs() < f64::EPSILON
-    {
-        return upper_hull;
-    }
-
-    upper_hull.extend(lower_hull);
-    upper_hull
-}
-
 /* -------------------------------------------------------------------------------------------------
  * Utils
  * -----------------------------------------------------------------------------------------------*/
@@ -1381,170 +1295,6 @@ fn queue_microtask(f: impl FnOnce() + 'static) {
 #[cfg(test)]
 mod tests {
     use super::*;
-
-    // ── is_point_in_polygon ─────────────────────────────────
-
-    #[test]
-    fn point_inside_triangle() {
-        let triangle = vec![
-            Point { x: 0.0, y: 0.0 },
-            Point { x: 10.0, y: 0.0 },
-            Point { x: 5.0, y: 10.0 },
-        ];
-        assert!(is_point_in_polygon(&Point { x: 5.0, y: 5.0 }, &triangle));
-    }
-
-    #[test]
-    fn point_outside_triangle() {
-        let triangle = vec![
-            Point { x: 0.0, y: 0.0 },
-            Point { x: 10.0, y: 0.0 },
-            Point { x: 5.0, y: 10.0 },
-        ];
-        assert!(!is_point_in_polygon(
-            &Point { x: 20.0, y: 20.0 },
-            &triangle
-        ));
-    }
-
-    #[test]
-    fn point_inside_rectangle() {
-        let rect = vec![
-            Point { x: 0.0, y: 0.0 },
-            Point { x: 10.0, y: 0.0 },
-            Point { x: 10.0, y: 10.0 },
-            Point { x: 0.0, y: 10.0 },
-        ];
-        assert!(is_point_in_polygon(&Point { x: 5.0, y: 5.0 }, &rect));
-    }
-
-    #[test]
-    fn point_outside_rectangle() {
-        let rect = vec![
-            Point { x: 0.0, y: 0.0 },
-            Point { x: 10.0, y: 0.0 },
-            Point { x: 10.0, y: 10.0 },
-            Point { x: 0.0, y: 10.0 },
-        ];
-        assert!(!is_point_in_polygon(
-            &Point { x: -1.0, y: 5.0 },
-            &rect
-        ));
-    }
-
-    #[test]
-    fn point_in_empty_polygon() {
-        assert!(!is_point_in_polygon(&Point { x: 0.0, y: 0.0 }, &[]));
-    }
-
-    #[test]
-    fn point_in_single_vertex_polygon() {
-        let polygon = vec![Point { x: 5.0, y: 5.0 }];
-        assert!(!is_point_in_polygon(&Point { x: 5.0, y: 5.0 }, &polygon));
-    }
-
-    #[test]
-    fn point_far_outside_large_polygon() {
-        let pentagon = vec![
-            Point { x: 5.0, y: 0.0 },
-            Point { x: 10.0, y: 4.0 },
-            Point { x: 8.0, y: 10.0 },
-            Point { x: 2.0, y: 10.0 },
-            Point { x: 0.0, y: 4.0 },
-        ];
-        assert!(!is_point_in_polygon(
-            &Point { x: 100.0, y: 100.0 },
-            &pentagon
-        ));
-        assert!(is_point_in_polygon(&Point { x: 5.0, y: 5.0 }, &pentagon));
-    }
-
-    // ── get_hull / get_hull_presorted ───────────────────────
-
-    #[test]
-    fn hull_empty() {
-        let hull = get_hull(&[]);
-        assert!(hull.is_empty());
-    }
-
-    #[test]
-    fn hull_single_point() {
-        let points = vec![Point { x: 3.0, y: 4.0 }];
-        let hull = get_hull(&points);
-        assert_eq!(hull.len(), 1);
-        assert!((hull[0].x - 3.0).abs() < f64::EPSILON);
-        assert!((hull[0].y - 4.0).abs() < f64::EPSILON);
-    }
-
-    #[test]
-    fn hull_two_points() {
-        let points = vec![Point { x: 0.0, y: 0.0 }, Point { x: 5.0, y: 5.0 }];
-        let hull = get_hull(&points);
-        assert_eq!(hull.len(), 2);
-    }
-
-    #[test]
-    fn hull_triangle_already_convex() {
-        let points = vec![
-            Point { x: 0.0, y: 0.0 },
-            Point { x: 10.0, y: 0.0 },
-            Point { x: 5.0, y: 10.0 },
-        ];
-        let hull = get_hull(&points);
-        assert_eq!(hull.len(), 3);
-    }
-
-    #[test]
-    fn hull_square_with_interior_point() {
-        let points = vec![
-            Point { x: 0.0, y: 0.0 },
-            Point { x: 10.0, y: 0.0 },
-            Point { x: 10.0, y: 10.0 },
-            Point { x: 0.0, y: 10.0 },
-            Point { x: 5.0, y: 5.0 }, // interior — should be excluded
-        ];
-        let hull = get_hull(&points);
-        assert_eq!(hull.len(), 4);
-        // Interior point should not be in the hull
-        assert!(hull
-            .iter()
-            .all(|p| !((p.x - 5.0).abs() < f64::EPSILON && (p.y - 5.0).abs() < f64::EPSILON)));
-    }
-
-    #[test]
-    fn hull_collinear_points() {
-        let points = vec![
-            Point { x: 0.0, y: 0.0 },
-            Point { x: 5.0, y: 0.0 },
-            Point { x: 10.0, y: 0.0 },
-        ];
-        let hull = get_hull(&points);
-        // Collinear points reduce to endpoints
-        assert_eq!(hull.len(), 2);
-    }
-
-    #[test]
-    fn hull_duplicate_points() {
-        let points = vec![
-            Point { x: 1.0, y: 1.0 },
-            Point { x: 1.0, y: 1.0 },
-            Point { x: 1.0, y: 1.0 },
-        ];
-        let hull = get_hull(&points);
-        assert_eq!(hull.len(), 1);
-    }
-
-    #[test]
-    fn hull_presorted_identity() {
-        // Already sorted by x then y
-        let sorted = vec![
-            Point { x: 0.0, y: 0.0 },
-            Point { x: 5.0, y: 10.0 },
-            Point { x: 10.0, y: 0.0 },
-        ];
-        let hull = get_hull_presorted(&sorted);
-        assert_eq!(hull.len(), 3);
-    }
 
     // ── get_padded_exit_points ──────────────────────────────
 
@@ -1610,32 +1360,47 @@ mod tests {
     #[test]
     fn exit_side_closest_to_left() {
         let r = rect(0.0, 100.0, 100.0, 0.0);
-        assert_eq!(get_exit_side_from_rect(&Point { x: 1.0, y: 50.0 }, &r), Side::Left);
+        assert_eq!(
+            get_exit_side_from_rect(&Point { x: 1.0, y: 50.0 }, &r),
+            Side::Left
+        );
     }
 
     #[test]
     fn exit_side_closest_to_right() {
         let r = rect(0.0, 100.0, 100.0, 0.0);
-        assert_eq!(get_exit_side_from_rect(&Point { x: 99.0, y: 50.0 }, &r), Side::Right);
+        assert_eq!(
+            get_exit_side_from_rect(&Point { x: 99.0, y: 50.0 }, &r),
+            Side::Right
+        );
     }
 
     #[test]
     fn exit_side_closest_to_top() {
         let r = rect(0.0, 100.0, 100.0, 0.0);
-        assert_eq!(get_exit_side_from_rect(&Point { x: 50.0, y: 1.0 }, &r), Side::Top);
+        assert_eq!(
+            get_exit_side_from_rect(&Point { x: 50.0, y: 1.0 }, &r),
+            Side::Top
+        );
     }
 
     #[test]
     fn exit_side_closest_to_bottom() {
         let r = rect(0.0, 100.0, 100.0, 0.0);
-        assert_eq!(get_exit_side_from_rect(&Point { x: 50.0, y: 99.0 }, &r), Side::Bottom);
+        assert_eq!(
+            get_exit_side_from_rect(&Point { x: 50.0, y: 99.0 }, &r),
+            Side::Bottom
+        );
     }
 
     #[test]
     fn exit_side_corner_prefers_left() {
         // At top-left corner, left distance == top distance, left wins by priority
         let r = rect(0.0, 100.0, 100.0, 0.0);
-        assert_eq!(get_exit_side_from_rect(&Point { x: 0.0, y: 0.0 }, &r), Side::Left);
+        assert_eq!(
+            get_exit_side_from_rect(&Point { x: 0.0, y: 0.0 }, &r),
+            Side::Left
+        );
     }
 
     // ── get_points_from_rect ────────────────────────────────

@@ -164,17 +164,26 @@ mod tests {
 
     #[test]
     fn progress_state_none_is_indeterminate() {
-        assert_eq!(get_progress_state(None, 100.0), ProgressState::Indeterminate);
+        assert_eq!(
+            get_progress_state(None, 100.0),
+            ProgressState::Indeterminate
+        );
     }
 
     #[test]
     fn progress_state_value_equals_max_is_complete() {
-        assert_eq!(get_progress_state(Some(100.0), 100.0), ProgressState::Complete);
+        assert_eq!(
+            get_progress_state(Some(100.0), 100.0),
+            ProgressState::Complete
+        );
     }
 
     #[test]
     fn progress_state_value_less_than_max_is_loading() {
-        assert_eq!(get_progress_state(Some(50.0), 100.0), ProgressState::Loading);
+        assert_eq!(
+            get_progress_state(Some(50.0), 100.0),
+            ProgressState::Loading
+        );
     }
 
     #[test]
@@ -184,7 +193,10 @@ mod tests {
 
     #[test]
     fn progress_state_custom_max_complete() {
-        assert_eq!(get_progress_state(Some(50.0), 50.0), ProgressState::Complete);
+        assert_eq!(
+            get_progress_state(Some(50.0), 50.0),
+            ProgressState::Complete
+        );
     }
 
     #[test]

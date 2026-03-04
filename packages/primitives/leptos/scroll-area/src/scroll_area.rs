@@ -10,6 +10,7 @@ use radix_leptos_direction::{Direction, use_direction};
 use radix_leptos_presence::Presence;
 use radix_leptos_primitive::Primitive;
 use radix_number::clamp;
+use radix_utils::linear_scale;
 use send_wrapper::SendWrapper;
 use web_sys::wasm_bindgen::{JsCast, closure::Closure};
 
@@ -252,16 +253,6 @@ fn get_thumb_offset_from_scroll(scroll_pos: f64, sizes: &Sizes, dir: Direction) 
     let scroll_without_momentum = clamp(scroll_pos, scroll_clamp_range);
     let interpolate = linear_scale([0.0, max_scroll_pos], [0.0, max_thumb_pos]);
     interpolate(scroll_without_momentum)
-}
-
-fn linear_scale(input: [f64; 2], output: [f64; 2]) -> impl Fn(f64) -> f64 {
-    move |value: f64| {
-        if input[0] == input[1] || output[0] == output[1] {
-            return output[0];
-        }
-        let ratio = (output[1] - output[0]) / (input[1] - input[0]);
-        output[0] + ratio * (value - input[0])
-    }
 }
 
 fn is_scrolling_within_scrollbar_bounds(scroll_pos: f64, max_scroll_pos: f64) -> bool {
@@ -1925,52 +1916,6 @@ mod tests {
         assert_eq!(get_thumb_size(&sizes), 18.0);
     }
 
-    // ── linear_scale ────────────────────────────────────────
-
-    #[test]
-    fn linear_scale_basic() {
-        let scale = linear_scale([0.0, 100.0], [0.0, 1.0]);
-        assert_eq!(scale(0.0), 0.0);
-        assert_eq!(scale(50.0), 0.5);
-        assert_eq!(scale(100.0), 1.0);
-    }
-
-    #[test]
-    fn linear_scale_inverted_output() {
-        let scale = linear_scale([0.0, 100.0], [1.0, 0.0]);
-        assert_eq!(scale(0.0), 1.0);
-        assert_eq!(scale(100.0), 0.0);
-        assert_eq!(scale(50.0), 0.5);
-    }
-
-    #[test]
-    fn linear_scale_non_zero_origin() {
-        let scale = linear_scale([10.0, 20.0], [100.0, 200.0]);
-        assert_eq!(scale(10.0), 100.0);
-        assert_eq!(scale(15.0), 150.0);
-        assert_eq!(scale(20.0), 200.0);
-    }
-
-    #[test]
-    fn linear_scale_degenerate_input_returns_first_output() {
-        let scale = linear_scale([5.0, 5.0], [10.0, 20.0]);
-        assert_eq!(scale(5.0), 10.0);
-        assert_eq!(scale(100.0), 10.0);
-    }
-
-    #[test]
-    fn linear_scale_degenerate_output_returns_first_output() {
-        let scale = linear_scale([0.0, 100.0], [7.0, 7.0]);
-        assert_eq!(scale(50.0), 7.0);
-    }
-
-    #[test]
-    fn linear_scale_extrapolates_beyond_range() {
-        let scale = linear_scale([0.0, 10.0], [0.0, 100.0]);
-        assert_eq!(scale(15.0), 150.0);
-        assert_eq!(scale(-5.0), -50.0);
-    }
-
     // ── is_scrolling_within_scrollbar_bounds ─────────────────
 
     #[test]
@@ -2001,5 +1946,88 @@ mod tests {
     #[test]
     fn scrolling_within_bounds_just_below_max() {
         assert!(is_scrolling_within_scrollbar_bounds(99.999, 100.0));
+    }
+
+    // ── get_scroll_position_from_pointer ────────────────────
+
+    fn standard_sizes() -> Sizes {
+        Sizes {
+            content: 1000.0,
+            viewport: 500.0,
+            scrollbar: ScrollbarSizes {
+                size: 500.0,
+                padding_start: 0.0,
+                padding_end: 0.0,
+            },
+        }
+    }
+
+    #[test]
+    fn scroll_position_from_pointer_ltr_start() {
+        let sizes = standard_sizes();
+        // thumb_size = 500 * (500/1000) = 250, center = 125
+        // min_pointer = 0 + 125 = 125, max_pointer = 500 - 0 - 125 = 375
+        // scroll_range = [0, 500], interpolate(125) = 0
+        let pos = get_scroll_position_from_pointer(125.0, 0.0, &sizes, Direction::Ltr);
+        assert!((pos - 0.0).abs() < 0.01);
+    }
+
+    #[test]
+    fn scroll_position_from_pointer_ltr_middle() {
+        let sizes = standard_sizes();
+        // interpolate(250) = midpoint = 250
+        let pos = get_scroll_position_from_pointer(250.0, 0.0, &sizes, Direction::Ltr);
+        assert!((pos - 250.0).abs() < 0.01);
+    }
+
+    #[test]
+    fn scroll_position_from_pointer_ltr_end() {
+        let sizes = standard_sizes();
+        // interpolate(375) = 500
+        let pos = get_scroll_position_from_pointer(375.0, 0.0, &sizes, Direction::Ltr);
+        assert!((pos - 500.0).abs() < 0.01);
+    }
+
+    #[test]
+    fn scroll_position_from_pointer_rtl() {
+        let sizes = standard_sizes();
+        // RTL: scroll_range = [-500, 0]
+        // interpolate(125) = -500, interpolate(375) = 0
+        let pos = get_scroll_position_from_pointer(125.0, 0.0, &sizes, Direction::Rtl);
+        assert!((pos - (-500.0)).abs() < 0.01);
+    }
+
+    // ── get_thumb_offset_from_scroll ────────────────────────
+
+    #[test]
+    fn thumb_offset_at_zero_scroll() {
+        let sizes = standard_sizes();
+        let offset = get_thumb_offset_from_scroll(0.0, &sizes, Direction::Ltr);
+        assert!((offset - 0.0).abs() < 0.01);
+    }
+
+    #[test]
+    fn thumb_offset_at_middle_scroll() {
+        let sizes = standard_sizes();
+        // max_scroll = 500, max_thumb = 500 - 250 = 250
+        // interpolate(250) maps [0,500]->[0,250] = 125
+        let offset = get_thumb_offset_from_scroll(250.0, &sizes, Direction::Ltr);
+        assert!((offset - 125.0).abs() < 0.01);
+    }
+
+    #[test]
+    fn thumb_offset_at_max_scroll() {
+        let sizes = standard_sizes();
+        let offset = get_thumb_offset_from_scroll(500.0, &sizes, Direction::Ltr);
+        assert!((offset - 250.0).abs() < 0.01);
+    }
+
+    #[test]
+    fn thumb_offset_rtl_negative_scroll() {
+        let sizes = standard_sizes();
+        // RTL: clamp_range = [-500, 0], scroll_pos = -250 clamped to -250
+        // interpolate maps [0, 500] -> [0, 250], input = -250 → -125
+        let offset = get_thumb_offset_from_scroll(-250.0, &sizes, Direction::Rtl);
+        assert!((offset - (-125.0)).abs() < 0.01);
     }
 }

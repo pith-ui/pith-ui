@@ -1153,25 +1153,43 @@ mod tests {
 
     #[test]
     fn default_messages() {
-        assert_eq!(ValidityMatcher::BadInput.default_message(), DEFAULT_INVALID_MESSAGE);
+        assert_eq!(
+            ValidityMatcher::BadInput.default_message(),
+            DEFAULT_INVALID_MESSAGE
+        );
         assert_eq!(
             ValidityMatcher::PatternMismatch.default_message(),
             "This value does not match the required pattern"
         );
-        assert_eq!(ValidityMatcher::RangeOverflow.default_message(), "This value is too large");
-        assert_eq!(ValidityMatcher::RangeUnderflow.default_message(), "This value is too small");
+        assert_eq!(
+            ValidityMatcher::RangeOverflow.default_message(),
+            "This value is too large"
+        );
+        assert_eq!(
+            ValidityMatcher::RangeUnderflow.default_message(),
+            "This value is too small"
+        );
         assert_eq!(
             ValidityMatcher::StepMismatch.default_message(),
             "This value does not match the required step"
         );
-        assert_eq!(ValidityMatcher::TooLong.default_message(), "This value is too long");
-        assert_eq!(ValidityMatcher::TooShort.default_message(), "This value is too short");
+        assert_eq!(
+            ValidityMatcher::TooLong.default_message(),
+            "This value is too long"
+        );
+        assert_eq!(
+            ValidityMatcher::TooShort.default_message(),
+            "This value is too short"
+        );
         assert_eq!(
             ValidityMatcher::TypeMismatch.default_message(),
             "This value does not match the required type"
         );
         assert_eq!(ValidityMatcher::Valid.default_message(), "");
-        assert_eq!(ValidityMatcher::ValueMissing.default_message(), "This value is missing");
+        assert_eq!(
+            ValidityMatcher::ValueMissing.default_message(),
+            "This value is missing"
+        );
     }
 
     // ── has_built_in_error ──────────────────────────────────
@@ -1228,7 +1246,10 @@ mod tests {
 
     #[test]
     fn valid_attr_not_valid() {
-        assert_eq!(get_valid_attribute(&Some(validity_all_false()), false), None);
+        assert_eq!(
+            get_valid_attribute(&Some(validity_all_false()), false),
+            None
+        );
     }
 
     #[test]

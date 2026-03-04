@@ -734,4 +734,3 @@ pub fn DialogClose(
         </AttributeInterceptor>
     }
 }
-

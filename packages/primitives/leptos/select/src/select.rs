@@ -2301,11 +2301,7 @@ fn position_item_aligned(
         return;
     };
     let parse_px = |prop: &str| -> f64 {
-        parse_px_value(
-            &content_styles
-                .get_property_value(prop)
-                .unwrap_or_default(),
-        )
+        parse_px_value(&content_styles.get_property_value(prop).unwrap_or_default())
     };
     let content_border_top = parse_px("border-top-width");
     let content_padding_top = parse_px("padding-top");

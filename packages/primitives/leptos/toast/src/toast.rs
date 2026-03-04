@@ -1244,34 +1244,58 @@ mod tests {
 
     #[test]
     fn horizontal_swipe_right_above_threshold() {
-        assert!(is_delta_in_direction((20.0, 5.0), SwipeDirection::Right, 10.0));
+        assert!(is_delta_in_direction(
+            (20.0, 5.0),
+            SwipeDirection::Right,
+            10.0
+        ));
     }
 
     #[test]
     fn horizontal_swipe_left_above_threshold() {
         // Negative x delta, but abs is used — direction variant only checks axis
-        assert!(is_delta_in_direction((-20.0, 5.0), SwipeDirection::Left, 10.0));
+        assert!(is_delta_in_direction(
+            (-20.0, 5.0),
+            SwipeDirection::Left,
+            10.0
+        ));
     }
 
     #[test]
     fn horizontal_swipe_below_threshold() {
-        assert!(!is_delta_in_direction((5.0, 2.0), SwipeDirection::Right, 10.0));
+        assert!(!is_delta_in_direction(
+            (5.0, 2.0),
+            SwipeDirection::Right,
+            10.0
+        ));
     }
 
     #[test]
     fn horizontal_swipe_at_threshold_not_exceeded() {
         // delta_x == threshold, but we need > threshold
-        assert!(!is_delta_in_direction((10.0, 2.0), SwipeDirection::Right, 10.0));
+        assert!(!is_delta_in_direction(
+            (10.0, 2.0),
+            SwipeDirection::Right,
+            10.0
+        ));
     }
 
     #[test]
     fn vertical_swipe_down_above_threshold() {
-        assert!(is_delta_in_direction((5.0, 20.0), SwipeDirection::Down, 10.0));
+        assert!(is_delta_in_direction(
+            (5.0, 20.0),
+            SwipeDirection::Down,
+            10.0
+        ));
     }
 
     #[test]
     fn vertical_swipe_up_above_threshold() {
-        assert!(is_delta_in_direction((5.0, -20.0), SwipeDirection::Up, 10.0));
+        assert!(is_delta_in_direction(
+            (5.0, -20.0),
+            SwipeDirection::Up,
+            10.0
+        ));
     }
 
     #[test]
@@ -1282,27 +1306,47 @@ mod tests {
     #[test]
     fn diagonal_equal_is_not_horizontal() {
         // delta_x == delta_y → is_delta_x is false → horizontal direction fails
-        assert!(!is_delta_in_direction((15.0, 15.0), SwipeDirection::Right, 10.0));
+        assert!(!is_delta_in_direction(
+            (15.0, 15.0),
+            SwipeDirection::Right,
+            10.0
+        ));
     }
 
     #[test]
     fn diagonal_equal_is_not_vertical() {
         // delta_x == delta_y → is_delta_x is false, but !is_delta_x is true
         // however delta_y must > threshold
-        assert!(is_delta_in_direction((15.0, 15.0), SwipeDirection::Down, 10.0));
+        assert!(is_delta_in_direction(
+            (15.0, 15.0),
+            SwipeDirection::Down,
+            10.0
+        ));
     }
 
     #[test]
     fn wrong_axis_rejects() {
         // Mostly vertical movement, but asking about horizontal direction
-        assert!(!is_delta_in_direction((2.0, 50.0), SwipeDirection::Right, 10.0));
+        assert!(!is_delta_in_direction(
+            (2.0, 50.0),
+            SwipeDirection::Right,
+            10.0
+        ));
         // Mostly horizontal movement, but asking about vertical direction
-        assert!(!is_delta_in_direction((50.0, 2.0), SwipeDirection::Down, 10.0));
+        assert!(!is_delta_in_direction(
+            (50.0, 2.0),
+            SwipeDirection::Down,
+            10.0
+        ));
     }
 
     #[test]
     fn zero_delta() {
-        assert!(!is_delta_in_direction((0.0, 0.0), SwipeDirection::Right, 0.0));
+        assert!(!is_delta_in_direction(
+            (0.0, 0.0),
+            SwipeDirection::Right,
+            0.0
+        ));
         assert!(!is_delta_in_direction((0.0, 0.0), SwipeDirection::Up, 0.0));
     }
 }

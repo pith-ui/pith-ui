@@ -20,6 +20,7 @@ radix-leptos-use-controllable-state.workspace = true
 radix-leptos-use-previous.workspace = true
 radix-leptos-use-size.workspace = true
 radix-number.workspace = true
+radix-utils.workspace = true
 send_wrapper.workspace = true
 web-sys = { workspace = true, features = [
     "DomRect",

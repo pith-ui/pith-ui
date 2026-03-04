@@ -14,6 +14,7 @@ use radix_leptos_direction::{Direction, use_direction};
 use radix_leptos_id::use_id;
 use radix_leptos_primitive::{Primitive, compose_callbacks, prop_or, prop_or_default};
 use radix_leptos_use_controllable_state::{UseControllableStateParams, use_controllable_state};
+use radix_utils::wrap_array;
 use send_wrapper::SendWrapper;
 use web_sys::{
     CustomEvent, CustomEventInit,
@@ -377,28 +378,31 @@ pub fn RovingFocusGroupItem(
                         }
                     })), None)
                     on:focus=compose_callbacks(on_focus, Some(Callback::new(move |_: ev::FocusEvent| {
-                        // Defer the tab stop update to a macrotask to avoid WASM
+                        // Defer the tab stop update to a microtask to avoid WASM
                         // closure panics. When focus_first() is called synchronously
                         // from the keydown handler, .focus() triggers this handler.
                         // Updating set_current_tab_stop_id synchronously would trigger
                         // reactive effects while the keydown closure is on the stack.
                         //
-                        // Use try_run because the setTimeout may fire after the component
+                        // We use queueMicrotask rather than setTimeout(0) so the update
+                        // runs before the browser processes the next event. With
+                        // setTimeout(0), the tab stop id isn't set when Tab is pressed
+                        // shortly after focus, causing all items to have tabindex="-1"
+                        // and Tab to wrap back to the container instead of escaping.
+                        //
+                        // Use try_run because the callback may fire after the component
                         // tree has been disposed (e.g., when a menu item click triggers
                         // focus and close in the same interaction — the close disposes
                         // components before the deferred callback runs).
                         let on_item_focus = context.on_item_focus;
                         let item_id = id.get();
                         let window = web_sys::window().expect("Window should exist.");
-                        window
-                            .set_timeout_with_callback_and_timeout_and_arguments_0(
-                                Closure::once_into_js(move || {
-                                    on_item_focus.try_run(item_id);
-                                })
-                                .unchecked_ref(),
-                                0,
-                            )
-                            .expect("setTimeout should succeed.");
+                        window.queue_microtask(
+                            Closure::once_into_js(move || {
+                                on_item_focus.try_run(item_id);
+                            })
+                            .unchecked_ref(),
+                        );
                     })), None)
                     on:keydown=compose_callbacks(on_key_down, Some(Callback::new(move |event: ev::KeyboardEvent| {
                         if event.key() == "Tab" && event.shift_key() {
@@ -539,13 +543,6 @@ fn focus_first(candidates: Vec<web_sys::HtmlElement>, _prevent_scroll: Option<bo
     }
 }
 
-/// Wraps an array around itself at a given start index.
-/// Example: `wrap_array(['a', 'b', 'c', 'd'], 2) == ['c', 'd', 'a', 'b']`
-fn wrap_array<T: Clone>(array: &mut [T], start_index: usize) -> &[T] {
-    array.rotate_left(start_index);
-    array
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -566,7 +563,10 @@ mod tests {
 
     #[test]
     fn direction_aware_key_ltr_unchanged() {
-        assert_eq!(get_direction_aware_key("ArrowLeft".into(), None), "ArrowLeft");
+        assert_eq!(
+            get_direction_aware_key("ArrowLeft".into(), None),
+            "ArrowLeft"
+        );
         assert_eq!(
             get_direction_aware_key("ArrowLeft".into(), Some(Direction::Ltr)),
             "ArrowLeft"
@@ -617,18 +617,42 @@ mod tests {
 
     #[test]
     fn focus_intent_no_orientation() {
-        assert_eq!(focus_intent_for_key("ArrowLeft", None, None), Some(FocusIntent::Prev));
-        assert_eq!(focus_intent_for_key("ArrowUp", None, None), Some(FocusIntent::Prev));
-        assert_eq!(focus_intent_for_key("ArrowRight", None, None), Some(FocusIntent::Next));
-        assert_eq!(focus_intent_for_key("ArrowDown", None, None), Some(FocusIntent::Next));
+        assert_eq!(
+            focus_intent_for_key("ArrowLeft", None, None),
+            Some(FocusIntent::Prev)
+        );
+        assert_eq!(
+            focus_intent_for_key("ArrowUp", None, None),
+            Some(FocusIntent::Prev)
+        );
+        assert_eq!(
+            focus_intent_for_key("ArrowRight", None, None),
+            Some(FocusIntent::Next)
+        );
+        assert_eq!(
+            focus_intent_for_key("ArrowDown", None, None),
+            Some(FocusIntent::Next)
+        );
     }
 
     #[test]
     fn focus_intent_home_end_page_keys() {
-        assert_eq!(focus_intent_for_key("Home", None, None), Some(FocusIntent::First));
-        assert_eq!(focus_intent_for_key("PageUp", None, None), Some(FocusIntent::First));
-        assert_eq!(focus_intent_for_key("End", None, None), Some(FocusIntent::Last));
-        assert_eq!(focus_intent_for_key("PageDown", None, None), Some(FocusIntent::Last));
+        assert_eq!(
+            focus_intent_for_key("Home", None, None),
+            Some(FocusIntent::First)
+        );
+        assert_eq!(
+            focus_intent_for_key("PageUp", None, None),
+            Some(FocusIntent::First)
+        );
+        assert_eq!(
+            focus_intent_for_key("End", None, None),
+            Some(FocusIntent::Last)
+        );
+        assert_eq!(
+            focus_intent_for_key("PageDown", None, None),
+            Some(FocusIntent::Last)
+        );
     }
 
     #[test]
@@ -645,8 +669,14 @@ mod tests {
         assert_eq!(focus_intent_for_key("ArrowLeft", vert, None), None);
         assert_eq!(focus_intent_for_key("ArrowRight", vert, None), None);
         // Vertical arrows still work
-        assert_eq!(focus_intent_for_key("ArrowUp", vert, None), Some(FocusIntent::Prev));
-        assert_eq!(focus_intent_for_key("ArrowDown", vert, None), Some(FocusIntent::Next));
+        assert_eq!(
+            focus_intent_for_key("ArrowUp", vert, None),
+            Some(FocusIntent::Prev)
+        );
+        assert_eq!(
+            focus_intent_for_key("ArrowDown", vert, None),
+            Some(FocusIntent::Next)
+        );
     }
 
     #[test]
@@ -655,19 +685,37 @@ mod tests {
         assert_eq!(focus_intent_for_key("ArrowUp", horiz, None), None);
         assert_eq!(focus_intent_for_key("ArrowDown", horiz, None), None);
         // Horizontal arrows still work
-        assert_eq!(focus_intent_for_key("ArrowLeft", horiz, None), Some(FocusIntent::Prev));
-        assert_eq!(focus_intent_for_key("ArrowRight", horiz, None), Some(FocusIntent::Next));
+        assert_eq!(
+            focus_intent_for_key("ArrowLeft", horiz, None),
+            Some(FocusIntent::Prev)
+        );
+        assert_eq!(
+            focus_intent_for_key("ArrowRight", horiz, None),
+            Some(FocusIntent::Next)
+        );
     }
 
     #[test]
     fn focus_intent_rtl_flips_arrows() {
         let rtl = Some(Direction::Rtl);
         // In RTL, ArrowLeft becomes ArrowRight (Next), ArrowRight becomes ArrowLeft (Prev)
-        assert_eq!(focus_intent_for_key("ArrowLeft", None, rtl), Some(FocusIntent::Next));
-        assert_eq!(focus_intent_for_key("ArrowRight", None, rtl), Some(FocusIntent::Prev));
+        assert_eq!(
+            focus_intent_for_key("ArrowLeft", None, rtl),
+            Some(FocusIntent::Next)
+        );
+        assert_eq!(
+            focus_intent_for_key("ArrowRight", None, rtl),
+            Some(FocusIntent::Prev)
+        );
         // Vertical arrows are unaffected by RTL
-        assert_eq!(focus_intent_for_key("ArrowUp", None, rtl), Some(FocusIntent::Prev));
-        assert_eq!(focus_intent_for_key("ArrowDown", None, rtl), Some(FocusIntent::Next));
+        assert_eq!(
+            focus_intent_for_key("ArrowUp", None, rtl),
+            Some(FocusIntent::Prev)
+        );
+        assert_eq!(
+            focus_intent_for_key("ArrowDown", None, rtl),
+            Some(FocusIntent::Next)
+        );
     }
 
     #[test]
@@ -678,8 +726,14 @@ mod tests {
         assert_eq!(focus_intent_for_key("ArrowLeft", vert, rtl), None);
         assert_eq!(focus_intent_for_key("ArrowRight", vert, rtl), None);
         // Vertical arrows work normally
-        assert_eq!(focus_intent_for_key("ArrowUp", vert, rtl), Some(FocusIntent::Prev));
-        assert_eq!(focus_intent_for_key("ArrowDown", vert, rtl), Some(FocusIntent::Next));
+        assert_eq!(
+            focus_intent_for_key("ArrowUp", vert, rtl),
+            Some(FocusIntent::Prev)
+        );
+        assert_eq!(
+            focus_intent_for_key("ArrowDown", vert, rtl),
+            Some(FocusIntent::Next)
+        );
     }
 
     #[test]
@@ -687,8 +741,14 @@ mod tests {
         let rtl = Some(Direction::Rtl);
         let horiz = Some(Orientation::Horizontal);
         // RTL flips arrows, then horizontal orientation applies
-        assert_eq!(focus_intent_for_key("ArrowLeft", horiz, rtl), Some(FocusIntent::Next));
-        assert_eq!(focus_intent_for_key("ArrowRight", horiz, rtl), Some(FocusIntent::Prev));
+        assert_eq!(
+            focus_intent_for_key("ArrowLeft", horiz, rtl),
+            Some(FocusIntent::Next)
+        );
+        assert_eq!(
+            focus_intent_for_key("ArrowRight", horiz, rtl),
+            Some(FocusIntent::Prev)
+        );
         // Vertical arrows ignored by horizontal orientation
         assert_eq!(focus_intent_for_key("ArrowUp", horiz, rtl), None);
         assert_eq!(focus_intent_for_key("ArrowDown", horiz, rtl), None);
@@ -696,7 +756,11 @@ mod tests {
 
     #[test]
     fn focus_intent_home_end_unaffected_by_orientation_and_dir() {
-        for orientation in [None, Some(Orientation::Horizontal), Some(Orientation::Vertical)] {
+        for orientation in [
+            None,
+            Some(Orientation::Horizontal),
+            Some(Orientation::Vertical),
+        ] {
             for dir in [None, Some(Direction::Ltr), Some(Direction::Rtl)] {
                 assert_eq!(
                     focus_intent_for_key("Home", orientation, dir),
@@ -710,43 +774,5 @@ mod tests {
                 );
             }
         }
-    }
-
-    // ── wrap_array ───────────────────────────────────────────
-
-    #[test]
-    fn wrap_array_basic() {
-        let mut arr = ['a', 'b', 'c', 'd'];
-        assert_eq!(wrap_array(&mut arr, 2), &['c', 'd', 'a', 'b']);
-    }
-
-    #[test]
-    fn wrap_array_at_zero() {
-        let mut arr = ['a', 'b', 'c'];
-        assert_eq!(wrap_array(&mut arr, 0), &['a', 'b', 'c']);
-    }
-
-    #[test]
-    fn wrap_array_at_end() {
-        let mut arr = ['a', 'b', 'c'];
-        assert_eq!(wrap_array(&mut arr, 2), &['c', 'a', 'b']);
-    }
-
-    #[test]
-    fn wrap_array_single_element() {
-        let mut arr = [42];
-        assert_eq!(wrap_array(&mut arr, 0), &[42]);
-    }
-
-    #[test]
-    fn wrap_array_at_one() {
-        let mut arr = [1, 2, 3, 4, 5];
-        assert_eq!(wrap_array(&mut arr, 1), &[2, 3, 4, 5, 1]);
-    }
-
-    #[test]
-    fn wrap_array_empty() {
-        let mut arr: [i32; 0] = [];
-        assert_eq!(wrap_array(&mut arr, 0), &[] as &[i32]);
     }
 }

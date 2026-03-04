@@ -120,3 +120,115 @@ where
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    use any_spawner::Executor;
+    use leptos::reactive::owner::Owner;
+
+    struct NoopExecutor;
+
+    impl any_spawner::CustomExecutor for NoopExecutor {
+        fn spawn(&self, _fut: any_spawner::PinnedFuture<()>) {}
+        fn spawn_local(&self, _fut: any_spawner::PinnedLocalFuture<()>) {}
+        fn poll_local(&self) {}
+    }
+
+    fn with_owner<T>(f: impl FnOnce() -> T) -> T {
+        let _ = Executor::init_custom_executor(NoopExecutor);
+        let owner = Owner::new_root(None);
+        owner.with(f)
+    }
+
+    // ── open_closed_state ─────────────────────────────────
+
+    #[test]
+    fn open_closed_state_open() {
+        assert_eq!(open_closed_state(true), "open");
+    }
+
+    #[test]
+    fn open_closed_state_closed() {
+        assert_eq!(open_closed_state(false), "closed");
+    }
+
+    // ── wrap_callback ──────────────────────────────────────
+
+    #[test]
+    fn wrap_callback_some_returns_original() {
+        with_owner(|| {
+            let cb = Callback::new(|v: i32| assert_eq!(v, 42));
+            let wrapped = wrap_callback(Some(cb));
+            wrapped.run(42);
+        });
+    }
+
+    #[test]
+    fn wrap_callback_none_returns_noop() {
+        with_owner(|| {
+            let wrapped: Callback<i32> = wrap_callback(None);
+            // Should not panic
+            wrapped.run(0);
+        });
+    }
+
+    // ── prop_or ─────────────────────────────────────────────
+
+    #[test]
+    fn prop_or_uses_value_when_present() {
+        with_owner(|| {
+            let sig = prop_or(MaybeProp::<i32>::from(Some(10)), 99);
+            assert_eq!(sig.get_untracked(), 10);
+        });
+    }
+
+    #[test]
+    fn prop_or_uses_default_when_absent() {
+        with_owner(|| {
+            let none: MaybeProp<i32> = MaybeProp::from(None::<i32>);
+            let sig = prop_or(none, 99);
+            assert_eq!(sig.get_untracked(), 99);
+        });
+    }
+
+    // ── prop_or_default ─────────────────────────────────────
+
+    #[test]
+    fn prop_or_default_uses_value() {
+        with_owner(|| {
+            let sig = prop_or_default(MaybeProp::<i32>::from(Some(7)));
+            assert_eq!(sig.get_untracked(), 7);
+        });
+    }
+
+    #[test]
+    fn prop_or_default_uses_default() {
+        with_owner(|| {
+            let none: MaybeProp<i32> = MaybeProp::from(None::<i32>);
+            let sig = prop_or_default(none);
+            assert_eq!(sig.get_untracked(), 0);
+        });
+    }
+
+    // ── data_attr ──────────────────────────────────────────
+
+    #[test]
+    fn data_attr_true() {
+        with_owner(|| {
+            let sig = Signal::derive(|| true);
+            let f = data_attr(sig);
+            assert_eq!(f(), Some(""));
+        });
+    }
+
+    #[test]
+    fn data_attr_false() {
+        with_owner(|| {
+            let sig = Signal::derive(|| false);
+            let f = data_attr(sig);
+            assert_eq!(f(), None);
+        });
+    }
+}
