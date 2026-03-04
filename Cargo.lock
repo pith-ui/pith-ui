@@ -3999,6 +3999,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "radix-leptos-aria-hidden"
+version = "0.0.2"
+dependencies = [
+ "leptos",
+ "send_wrapper",
+ "web-sys",
+]
+
+[[package]]
 name = "radix-leptos-arrow"
 version = "0.0.2"
 dependencies = [
@@ -4124,6 +4133,7 @@ dependencies = [
  "js-sys",
  "leptos",
  "leptos-node-ref",
+ "radix-leptos-aria-hidden",
  "radix-leptos-compose-refs",
  "radix-leptos-dismissable-layer",
  "radix-leptos-focus-guards",
@@ -4132,6 +4142,7 @@ dependencies = [
  "radix-leptos-portal",
  "radix-leptos-presence",
  "radix-leptos-primitive",
+ "radix-leptos-scroll-lock",
  "radix-leptos-use-controllable-state",
  "send_wrapper",
  "web-sys",
@@ -4262,6 +4273,7 @@ version = "0.0.2"
 dependencies = [
  "leptos",
  "leptos-node-ref",
+ "radix-leptos-aria-hidden",
  "radix-leptos-collection",
  "radix-leptos-compose-refs",
  "radix-leptos-direction",
@@ -4357,6 +4369,7 @@ dependencies = [
  "js-sys",
  "leptos",
  "leptos-node-ref",
+ "radix-leptos-aria-hidden",
  "radix-leptos-compose-refs",
  "radix-leptos-dismissable-layer",
  "radix-leptos-focus-guards",
@@ -4366,6 +4379,7 @@ dependencies = [
  "radix-leptos-portal",
  "radix-leptos-presence",
  "radix-leptos-primitive",
+ "radix-leptos-scroll-lock",
  "radix-leptos-use-controllable-state",
  "send_wrapper",
  "wasm-bindgen",
@@ -4519,6 +4533,14 @@ dependencies = [
  "radix-leptos-primitive",
  "radix-number",
  "send_wrapper",
+ "web-sys",
+]
+
+[[package]]
+name = "radix-leptos-scroll-lock"
+version = "0.0.2"
+dependencies = [
+ "leptos",
  "web-sys",
 ]
 
@@ -4746,6 +4768,7 @@ dependencies = [
 name = "radix-leptos-use-controllable-state"
 version = "0.0.2"
 dependencies = [
+ "any_spawner",
  "leptos",
 ]
 

@@ -399,20 +399,22 @@ pub fn MenubarContent(
             on_focus_outside=compose_callbacks(
                 on_focus_outside,
                 Some(Callback::new(move |event: web_sys::CustomEvent| {
-                    let target: web_sys::Element = event.target().unwrap().unchecked_into();
-                    let is_menubar_trigger = get_items.with_value(|get_items| {
-                        get_items().iter().any(|item| {
-                            item.r#ref
-                                .get_untracked()
-                                .map(|el| {
-                                    let node: &web_sys::Node = (*el).unchecked_ref();
-                                    node.contains(Some(&target))
-                                })
-                                .unwrap_or(false)
-                        })
-                    });
-                    if is_menubar_trigger {
-                        event.prevent_default();
+                    if let Some(target) = event.target() {
+                        let target: web_sys::Element = target.unchecked_into();
+                        let is_menubar_trigger = get_items.with_value(|get_items| {
+                            get_items().iter().any(|item| {
+                                item.r#ref
+                                    .get_untracked()
+                                    .map(|el| {
+                                        let node: &web_sys::Node = (*el).unchecked_ref();
+                                        node.contains(Some(&target))
+                                    })
+                                    .unwrap_or(false)
+                            })
+                        });
+                        if is_menubar_trigger {
+                            event.prevent_default();
+                        }
                     }
                 })),
                 Some(false),
@@ -441,9 +443,11 @@ pub fn MenubarContent(
                     let menu_value = menu_value.clone();
                     move |event: ev::KeyboardEvent| {
                         if event.key() == "ArrowRight" || event.key() == "ArrowLeft" {
-                            let target: web_sys::Element = event.target().unwrap().unchecked_into();
+                            let Some(target) = event.target() else { return; };
+                            let target: web_sys::Element = target.unchecked_into();
                             let target_is_sub_trigger = target.has_attribute("data-radix-menubar-subtrigger");
-                            let current_target: web_sys::Element = event.current_target().unwrap().unchecked_into();
+                            let Some(current_target) = event.current_target() else { return; };
+                            let current_target: web_sys::Element = current_target.unchecked_into();
                             let is_key_down_inside_sub_menu = target
                                 .closest("[data-radix-menubar-content]")
                                 .ok()

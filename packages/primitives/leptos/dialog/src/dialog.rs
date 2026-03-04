@@ -2,6 +2,7 @@ use leptos::{
     attribute_interceptor::AttributeInterceptor, context::Provider, ev, html, prelude::*,
 };
 use leptos_node_ref::AnyNodeRef;
+use radix_leptos_aria_hidden::{hide_others, unhide_others};
 use radix_leptos_compose_refs::use_composed_refs;
 use radix_leptos_dismissable_layer::DismissableLayer;
 use radix_leptos_focus_guards::use_focus_guards;
@@ -12,6 +13,7 @@ use radix_leptos_presence::Presence;
 use radix_leptos_primitive::{
     Primitive, compose_callbacks, open_closed_state, prop_or, prop_or_default,
 };
+use radix_leptos_scroll_lock::use_body_scroll_lock;
 use radix_leptos_use_controllable_state::{UseControllableStateParams, use_controllable_state};
 use send_wrapper::SendWrapper;
 use web_sys::wasm_bindgen::{JsCast, closure::Closure};
@@ -733,89 +735,3 @@ pub fn DialogClose(
     }
 }
 
-/* -------------------------------------------------------------------------------------------------
- * use_body_scroll_lock
- * Simplified body scroll lock: sets `overflow: hidden` on body while mounted.
- * React uses `react-remove-scroll` which supports shards (allowing scroll on specific elements
- * like the content) and pinch-zoom. This simplified version just hides body overflow.
- * -----------------------------------------------------------------------------------------------*/
-
-fn use_body_scroll_lock() {
-    let original_overflow: RwSignal<Option<String>> = RwSignal::new(None);
-
-    Effect::new(move |_| {
-        let body = document().body().expect("Document should have body.");
-        let style = body.style();
-        let current = style.get_property_value("overflow").unwrap_or_default();
-        original_overflow.set(Some(current));
-        style
-            .set_property("overflow", "hidden")
-            .expect("Style should be set.");
-    });
-
-    on_cleanup(move || {
-        if let Some(original) = original_overflow.get_untracked()
-            && let Some(body) = document().body()
-        {
-            body.style()
-                .set_property("overflow", &original)
-                .expect("Style should be set.");
-        }
-    });
-}
-
-/* -------------------------------------------------------------------------------------------------
- * hide_others
- * Simplified `aria-hidden` implementation: sets `aria-hidden="true"` on body's direct children
- * that don't contain the dialog content element, and restores on cleanup.
- * React uses the `aria-hidden` library (`hideOthers`) which walks the tree more thoroughly.
- * This simplified version only hides body's direct children.
- * -----------------------------------------------------------------------------------------------*/
-
-/// Sets `aria-hidden="true"` on body's direct children that don't contain the dialog content,
-/// storing the affected elements in the provided signal for later cleanup.
-fn hide_others(
-    content: &web_sys::HtmlElement,
-    hidden_elements: RwSignal<Vec<SendWrapper<web_sys::Element>>>,
-) {
-    let body = document().body().expect("Document should have body.");
-    let children = body.children();
-    let mut hidden = Vec::new();
-
-    for i in 0..children.length() {
-        if let Some(child) = children.item(i) {
-            // Skip elements that contain the content or are already hidden
-            let contains_content = child.contains(Some(content));
-            let already_hidden = child
-                .get_attribute("aria-hidden")
-                .is_some_and(|v| v == "true");
-            let is_script = child.tag_name().eq_ignore_ascii_case("SCRIPT");
-
-            if !contains_content && !already_hidden && !is_script {
-                child
-                    .set_attribute("aria-hidden", "true")
-                    .expect("Attribute should be set.");
-                hidden.push(SendWrapper::new(child));
-            }
-        }
-    }
-
-    hidden_elements.set(hidden);
-}
-
-/// Removes `aria-hidden` from all elements previously hidden by `hide_others`.
-fn unhide_others(hidden_elements: RwSignal<Vec<SendWrapper<web_sys::Element>>>) {
-    for element in hidden_elements.get_untracked() {
-        element
-            .remove_attribute("aria-hidden")
-            .expect("Attribute should be removed.");
-    }
-    hidden_elements.set(Vec::new());
-}
-
-fn document() -> web_sys::Document {
-    web_sys::window()
-        .expect("Window should exist.")
-        .document()
-        .expect("Document should exist.")
-}

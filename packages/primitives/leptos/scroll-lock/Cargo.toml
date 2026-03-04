@@ -1,6 +1,6 @@
 [package]
-name = "radix-leptos-use-controllable-state"
-description = "Leptos port of Radix Use Controllable State."
+name = "radix-leptos-scroll-lock"
+description = "Leptos port of Radix Scroll Lock."
 
 authors.workspace = true
 edition.workspace = true
@@ -10,6 +10,7 @@ version.workspace = true
 
 [dependencies]
 leptos.workspace = true
-
-[dev-dependencies]
-any_spawner = "0.3.0"
+web-sys = { workspace = true, features = [
+    "CssStyleDeclaration",
+    "HtmlElement",
+] }

@@ -9,6 +9,7 @@ use leptos::{
     attribute_interceptor::AttributeInterceptor, context::Provider, ev, html, prelude::*,
 };
 use leptos_node_ref::AnyNodeRef;
+use radix_leptos_aria_hidden::{hide_others, unhide_others};
 use radix_leptos_collection::{
     CollectionItemSlot, CollectionProvider, CollectionSlot, use_collection,
 };
@@ -469,11 +470,17 @@ fn MenuRootContentModal(
     let composed_refs = use_composed_refs(vec![node_ref, content_ref]);
 
     // Hide everything from ARIA except the `MenuContent`.
+    let hidden_elements: RwSignal<Vec<SendWrapper<web_sys::Element>>> = RwSignal::new(Vec::new());
+
     Effect::new(move |_| {
-        if let Some(_content) = content_ref.get() {
-            // TODO: imported from `aria-hidden` in JS.
-            // hide_others(content);
+        if let Some(content) = content_ref.get() {
+            let content: web_sys::HtmlElement = content.unchecked_into();
+            hide_others(&content, hidden_elements);
         }
+    });
+
+    on_cleanup(move || {
+        unhide_others(hidden_elements);
     });
 
     // Wrap for forwarding through view! macro.

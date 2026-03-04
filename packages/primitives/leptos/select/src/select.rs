@@ -2285,7 +2285,9 @@ fn position_item_aligned(
     let available_height = inner_height - CONTENT_MARGIN * 2.0;
     let items_height = viewport.scroll_height() as f64;
 
-    let content_styles = window.get_computed_style(content).unwrap().unwrap();
+    let Some(content_styles) = window.get_computed_style(content).ok().flatten() else {
+        return;
+    };
     let parse_px = |prop: &str| -> f64 {
         content_styles
             .get_property_value(prop)
@@ -2306,7 +2308,9 @@ fn position_item_aligned(
         + content_border_bottom;
     let min_content_height = (selected_item.offset_height() as f64 * 5.0).min(full_content_height);
 
-    let viewport_styles = window.get_computed_style(viewport).unwrap().unwrap();
+    let Some(viewport_styles) = window.get_computed_style(viewport).ok().flatten() else {
+        return;
+    };
     let viewport_padding_top = viewport_styles
         .get_property_value("padding-top")
         .unwrap_or_default()

@@ -11,6 +11,7 @@ version.workspace = true
 [dependencies]
 leptos.workspace = true
 leptos-node-ref.workspace = true
+radix-leptos-aria-hidden.workspace = true
 radix-leptos-collection.workspace = true
 radix-leptos-compose-refs.workspace = true
 radix-leptos-direction.workspace = true

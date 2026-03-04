@@ -1433,18 +1433,20 @@ fn ScrollAreaScrollbarImpl(
                 on:pointerdown=move |event: ev::PointerEvent| {
                     let main_pointer = 0;
                     if event.button() == main_pointer {
-                        let element: web_sys::HtmlElement = event.target().unwrap().unchecked_into();
-                        element.set_pointer_capture(event.pointer_id()).ok();
+                        if let Some(target) = event.target() {
+                            let element: web_sys::HtmlElement = target.unchecked_into();
+                            element.set_pointer_capture(event.pointer_id()).ok();
+                        }
                         if let Some(sb) = scrollbar.get_untracked() {
                             rect.set_value(Some(SendWrapper::new(sb.get_bounding_client_rect())));
                         }
                         // Pointer capture doesn't prevent text selection in Safari
-                        let document = web_sys::window().unwrap().document().unwrap();
-                        let body = document.body().unwrap();
-                        prev_webkit_user_select.set_value(
-                            body.style().get_property_value("webkitUserSelect").unwrap_or_default()
-                        );
-                        body.style().set_property("webkitUserSelect", "none").ok();
+                        if let Some(body) = document().body() {
+                            prev_webkit_user_select.set_value(
+                                body.style().get_property_value("webkitUserSelect").unwrap_or_default()
+                            );
+                            body.style().set_property("webkitUserSelect", "none").ok();
+                        }
                         if let Some(viewport) = context.viewport.get_untracked() {
                             viewport.style().set_property("scroll-behavior", "auto").ok();
                         }
@@ -1464,13 +1466,15 @@ fn ScrollAreaScrollbarImpl(
                     }
                 }
                 on:pointerup=move |event: ev::PointerEvent| {
-                    let element: web_sys::HtmlElement = event.target().unwrap().unchecked_into();
-                    if element.has_pointer_capture(event.pointer_id()) {
-                        element.release_pointer_capture(event.pointer_id()).ok();
+                    if let Some(target) = event.target() {
+                        let element: web_sys::HtmlElement = target.unchecked_into();
+                        if element.has_pointer_capture(event.pointer_id()) {
+                            element.release_pointer_capture(event.pointer_id()).ok();
+                        }
                     }
-                    let document = web_sys::window().unwrap().document().unwrap();
-                    let body = document.body().unwrap();
-                    body.style().set_property("webkitUserSelect", &prev_webkit_user_select.get_value()).ok();
+                    if let Some(body) = document().body() {
+                        body.style().set_property("webkitUserSelect", &prev_webkit_user_select.get_value()).ok();
+                    }
                     if let Some(viewport) = context.viewport.get_untracked() {
                         viewport.style().set_property("scroll-behavior", "").ok();
                     }
@@ -1672,11 +1676,13 @@ fn ScrollAreaThumbImpl(
                 attr:data-state=move || if has_thumb.get() { "visible" } else { "hidden" }
                 attr:style="width: var(--radix-scroll-area-thumb-width); height: var(--radix-scroll-area-thumb-height);"
                 on:pointerdown=move |event: ev::PointerEvent| {
-                    let thumb: web_sys::HtmlElement = event.target().unwrap().unchecked_into();
-                    let thumb_rect = thumb.get_bounding_client_rect();
-                    let x = event.client_x() as f64 - thumb_rect.left();
-                    let y = event.client_y() as f64 - thumb_rect.top();
-                    on_thumb_pointer_down.run((x, y));
+                    if let Some(target) = event.target() {
+                        let thumb: web_sys::HtmlElement = target.unchecked_into();
+                        let thumb_rect = thumb.get_bounding_client_rect();
+                        let x = event.client_x() as f64 - thumb_rect.left();
+                        let y = event.client_y() as f64 - thumb_rect.top();
+                        on_thumb_pointer_down.run((x, y));
+                    }
                 }
                 on:pointerup=move |_: ev::PointerEvent| {
                     on_thumb_pointer_up.run(());
