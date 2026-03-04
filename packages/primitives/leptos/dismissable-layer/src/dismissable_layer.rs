@@ -283,10 +283,7 @@ fn use_pointer_down_outside(
 
         if let Some(prev_closure) = handle_click_ref.borrow().as_ref() {
             cleanup_owner_doc
-                .remove_event_listener_with_callback(
-                    "click",
-                    prev_closure.as_ref().unchecked_ref(),
-                )
+                .remove_event_listener_with_callback("click", prev_closure.as_ref().unchecked_ref())
                 .ok();
         }
     });
@@ -342,10 +339,7 @@ fn use_focus_outside(
     on_cleanup(move || {
         if let Some(closure) = handle_focus.borrow().as_ref() {
             owner_doc_for_cleanup
-                .remove_event_listener_with_callback(
-                    "focusin",
-                    closure.as_ref().unchecked_ref(),
-                )
+                .remove_event_listener_with_callback("focusin", closure.as_ref().unchecked_ref())
                 .ok();
         }
     });
@@ -786,11 +780,10 @@ pub fn DismissableLayer(
                 let mut new_closures: Vec<(&'static str, EventClosure)> = Vec::new();
 
                 // pointerdown capture
-                let pdc_closure: EventClosure =
-                    Closure::new(move |_event: web_sys::Event| {
-                        // Use try_with_value: StoredValue may be disposed during teardown
-                        let _ = pointer_down_capture.try_with_value(|f| f());
-                    });
+                let pdc_closure: EventClosure = Closure::new(move |_event: web_sys::Event| {
+                    // Use try_with_value: StoredValue may be disposed during teardown
+                    let _ = pointer_down_capture.try_with_value(|f| f());
+                });
                 let options = AddEventListenerOptions::new();
                 options.set_capture(true);
                 node.add_event_listener_with_callback_and_add_event_listener_options(
@@ -802,10 +795,9 @@ pub fn DismissableLayer(
                 new_closures.push(("pointerdown", pdc_closure));
 
                 // focus capture
-                let fc_closure: EventClosure =
-                    Closure::new(move |_event: web_sys::Event| {
-                        let _ = focus_capture.try_with_value(|f| f());
-                    });
+                let fc_closure: EventClosure = Closure::new(move |_event: web_sys::Event| {
+                    let _ = focus_capture.try_with_value(|f| f());
+                });
                 let options = AddEventListenerOptions::new();
                 options.set_capture(true);
                 node.add_event_listener_with_callback_and_add_event_listener_options(
@@ -817,10 +809,9 @@ pub fn DismissableLayer(
                 new_closures.push(("focusin", fc_closure));
 
                 // blur capture
-                let bc_closure: EventClosure =
-                    Closure::new(move |_event: web_sys::Event| {
-                        let _ = blur_capture.try_with_value(|f| f());
-                    });
+                let bc_closure: EventClosure = Closure::new(move |_event: web_sys::Event| {
+                    let _ = blur_capture.try_with_value(|f| f());
+                });
                 let options = AddEventListenerOptions::new();
                 options.set_capture(true);
                 node.add_event_listener_with_callback_and_add_event_listener_options(

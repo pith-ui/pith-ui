@@ -205,14 +205,18 @@ fn RovingFocusGroupImpl(
         on_item_focus: Callback::new(move |tab_stop_id| {
             set_current_tab_stop_id.run(Some(tab_stop_id))
         }),
-        on_item_shift_tab: Callback::new(move |_| { let _ = set_is_tabbing_back_out.try_set(true); }),
+        on_item_shift_tab: Callback::new(move |_| {
+            let _ = set_is_tabbing_back_out.try_set(true);
+        }),
         on_focusable_item_add: Callback::new(move |_| {
             let _ = items_initialized.try_set(true);
-            let _ = set_focusable_items_count.try_update(|focusable_items_count| *focusable_items_count += 1);
+            let _ = set_focusable_items_count
+                .try_update(|focusable_items_count| *focusable_items_count += 1);
         }),
         on_focusable_item_remove: Callback::new(move |_| {
             let _ = items_initialized.try_set(true);
-            let _ = set_focusable_items_count.try_update(|focusable_items_count| *focusable_items_count -= 1);
+            let _ = set_focusable_items_count
+                .try_update(|focusable_items_count| *focusable_items_count -= 1);
         }),
     };
 

@@ -10,7 +10,13 @@ pub fn MenubarPage() -> impl IntoView {
     let (zoom, set_zoom) = signal("normal".to_string());
     let (disabled, set_disabled) = signal(false);
     let (rtl, set_rtl) = signal(false);
-    let dir = Signal::derive(move || if rtl.get() { Direction::Rtl } else { Direction::Ltr });
+    let dir = Signal::derive(move || {
+        if rtl.get() {
+            Direction::Rtl
+        } else {
+            Direction::Ltr
+        }
+    });
 
     view! {
         <DirectionProvider direction=dir>

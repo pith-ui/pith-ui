@@ -2,18 +2,8 @@ use leptos::{context::Provider, ev, prelude::*};
 use leptos_node_ref::AnyNodeRef;
 use radix_leptos_compose_refs::use_composed_refs;
 use radix_leptos_dialog::*;
+use radix_leptos_primitive::wrap_callback;
 use send_wrapper::SendWrapper;
-
-/// Helper: wraps an `Option<Callback<T>>` into a concrete `Callback<T>` that
-/// conditionally calls the inner callback if present. This is needed because
-/// Leptos's `#[prop(into, optional)]` cannot pass `Option<Callback<T>>` through
-/// the view! macro to another component's `Option<Callback<T>>` prop directly.
-fn wrap_callback<T: 'static>(cb: Option<Callback<T>>) -> Callback<T> {
-    match cb {
-        Some(cb) => cb,
-        None => Callback::new(|_| {}),
-    }
-}
 
 /* -------------------------------------------------------------------------------------------------
  * AlertDialog

@@ -5,7 +5,7 @@ use leptos_node_ref::AnyNodeRef;
 use radix_leptos_compose_refs::use_composed_refs;
 use radix_leptos_id::use_id;
 use radix_leptos_presence::use_presence;
-use radix_leptos_primitive::{Primitive, compose_callbacks};
+use radix_leptos_primitive::{Primitive, compose_callbacks, open_closed_state};
 use radix_leptos_use_controllable_state::{UseControllableStateParams, use_controllable_state};
 use send_wrapper::SendWrapper;
 use web_sys::wasm_bindgen::{JsCast, closure::Closure};
@@ -66,7 +66,7 @@ pub fn Collapsible(
                     element=html::div
                     as_child=as_child
                     node_ref=node_ref
-                    attr:data-state=move || get_state(open.get())
+                    attr:data-state=move || open_closed_state(open.get())
                     attr:data-disabled=move || disabled.get().then_some("")
                     {..attrs}
                 >
@@ -101,7 +101,7 @@ pub fn CollapsibleTrigger(
                 attr:r#type="button"
                 attr:aria-controls=move || context.content_id.get()
                 attr:aria-expanded=move || context.open.get().to_string()
-                attr:data-state=move || get_state(context.open.get())
+                attr:data-state=move || open_closed_state(context.open.get())
                 attr:data-disabled=move || context.disabled.get().then_some("")
                 attr:disabled=move || context.disabled.get().then_some("")
                 on:click=compose_callbacks(
@@ -288,7 +288,7 @@ fn CollapsibleContentImpl(
                 element=html::div
                 as_child=as_child
                 node_ref=composed_ref
-                attr:data-state=move || get_state(context.open.get())
+                attr:data-state=move || open_closed_state(context.open.get())
                 attr:data-disabled=move || context.disabled.get().then_some("")
                 attr:id=move || context.content_id.get()
                 attr:hidden=move || (!is_open.get()).then_some("")
@@ -299,16 +299,5 @@ fn CollapsibleContentImpl(
                 </Show>
             </Primitive>
         </AttributeInterceptor>
-    }
-}
-
-/* -------------------------------------------------------------------------------------------------
- * Utils
- * -----------------------------------------------------------------------------------------------*/
-
-fn get_state(open: bool) -> &'static str {
-    match open {
-        true => "open",
-        false => "closed",
     }
 }

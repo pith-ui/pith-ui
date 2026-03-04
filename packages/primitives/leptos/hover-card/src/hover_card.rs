@@ -10,7 +10,7 @@ use radix_leptos_popper::{
 };
 use radix_leptos_portal::Portal;
 use radix_leptos_presence::Presence;
-use radix_leptos_primitive::{Primitive, compose_callbacks};
+use radix_leptos_primitive::{Primitive, compose_callbacks, open_closed_state};
 use radix_leptos_use_controllable_state::{UseControllableStateParams, use_controllable_state};
 use send_wrapper::SendWrapper;
 use wasm_bindgen::JsCast;
@@ -183,7 +183,7 @@ pub fn HoverCardTrigger(
                     element=html::a
                     as_child=as_child
                     node_ref=node_ref
-                    attr:data-state=move || get_state(context.open.get())
+                    attr:data-state=move || open_closed_state(context.open.get())
                     on:pointerenter=compose_callbacks(
                         on_pointer_enter,
                         Some(Callback::new(move |event: ev::PointerEvent| {
@@ -636,7 +636,7 @@ fn HoverCardContentImpl(
                 update_position_strategy=update_position_strategy
                 as_child=as_child
                 node_ref=composed_refs
-                attr:data-state=move || get_state(context.open.get())
+                attr:data-state=move || open_closed_state(context.open.get())
                 on:pointerenter=move |event: ev::PointerEvent| {
                     on_pointer_enter.run(event);
                 }
@@ -690,17 +690,6 @@ pub fn HoverCardArrow(
                 {children.with_value(|children| children.as_ref().map(|children| children()))}
             </PopperArrow>
         </AttributeInterceptor>
-    }
-}
-
-/* -------------------------------------------------------------------------------------------------
- * Utils
- * -----------------------------------------------------------------------------------------------*/
-
-fn get_state(open: bool) -> &'static str {
-    match open {
-        true => "open",
-        false => "closed",
     }
 }
 

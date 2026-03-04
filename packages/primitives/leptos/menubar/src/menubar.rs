@@ -12,20 +12,11 @@ use radix_leptos_direction::{Direction, use_direction};
 use radix_leptos_id::use_id;
 pub use radix_leptos_menu::CheckedState;
 use radix_leptos_menu::*;
-use radix_leptos_primitive::{Primitive, compose_callbacks};
+use radix_leptos_primitive::{Primitive, compose_callbacks, wrap_callback};
 use radix_leptos_roving_focus::{Orientation, RovingFocusGroup, RovingFocusGroupItem};
 use radix_leptos_use_controllable_state::{UseControllableStateParams, use_controllable_state};
 use send_wrapper::SendWrapper;
 use web_sys::wasm_bindgen::JsCast;
-
-/// Helper: wraps an `Option<Callback<T>>` into a concrete `Callback<T>` that
-/// conditionally calls the inner callback if present.
-fn wrap_callback<T: 'static>(cb: Option<Callback<T>>) -> Callback<T> {
-    match cb {
-        Some(cb) => cb,
-        None => Callback::new(|_| {}),
-    }
-}
 
 /* -------------------------------------------------------------------------------------------------
  * Menubar

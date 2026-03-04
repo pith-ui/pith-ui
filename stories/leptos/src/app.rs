@@ -7,10 +7,11 @@ use leptos_router::{
 
 use crate::primitives::{
     accessible_icon, accordion, alert_dialog, arrow, aspect_ratio, avatar, checkbox, collapsible,
-    collection, context_menu, dialog, dismissable_layer, dropdown_menu, focus_scope, form, hover_card, label,
-    menu, menubar, navigation_menu, one_time_password_field, password_toggle_field, popover, popper, portal,
-    presence, progress, radio_group, roving_focus, scroll_area, select, separator, slider, switch,
-    tabs, toast, toggle, toggle_group, toolbar, tooltip, visually_hidden,
+    collection, context_menu, dialog, dismissable_layer, dropdown_menu, focus_scope, form,
+    hover_card, label, menu, menubar, navigation_menu, one_time_password_field,
+    password_toggle_field, popover, popper, portal, presence, progress, radio_group, roving_focus,
+    scroll_area, select, separator, slider, switch, tabs, toast, toggle, toggle_group, toolbar,
+    tooltip, visually_hidden,
 };
 
 #[component]

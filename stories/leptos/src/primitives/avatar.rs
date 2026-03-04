@@ -1,6 +1,6 @@
 use leptos::prelude::*;
 use radix_leptos_avatar::*;
-use web_sys::wasm_bindgen::{closure::Closure, JsCast};
+use web_sys::wasm_bindgen::{JsCast, closure::Closure};
 
 stylance::import_crate_style!(classes, "src/primitives/avatar.stories.module.css");
 

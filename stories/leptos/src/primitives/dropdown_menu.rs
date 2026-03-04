@@ -608,7 +608,10 @@ pub fn SingleItemAsDialogTrigger() -> impl IntoView {
     let close_auto_focus_modal = {
         let dropdown_trigger_ref = dropdown_trigger_ref;
         Callback::new(move |event: web_sys::Event| {
-            if let Some(trigger) = dropdown_trigger_ref.try_read_untracked().and_then(|guard| (*guard).clone()) {
+            if let Some(trigger) = dropdown_trigger_ref
+                .try_read_untracked()
+                .and_then(|guard| (*guard).clone())
+            {
                 let el: web_sys::HtmlElement = trigger.unchecked_into();
                 el.focus().ok();
             }
@@ -636,7 +639,10 @@ pub fn SingleItemAsDialogTrigger() -> impl IntoView {
         let dropdown_trigger_ref2 = dropdown_trigger_ref2;
         let is_dialog_open_ref = is_dialog_open_ref;
         Callback::new(move |event: web_sys::Event| {
-            if let Some(trigger) = dropdown_trigger_ref2.try_read_untracked().and_then(|guard| (*guard).clone()) {
+            if let Some(trigger) = dropdown_trigger_ref2
+                .try_read_untracked()
+                .and_then(|guard| (*guard).clone())
+            {
                 let el: web_sys::HtmlElement = trigger.unchecked_into();
                 el.focus().ok();
             }

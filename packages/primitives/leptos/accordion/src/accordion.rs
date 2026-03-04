@@ -12,7 +12,7 @@ use radix_leptos_collection::{
 use radix_leptos_compose_refs::use_composed_refs;
 use radix_leptos_direction::{Direction, use_direction};
 use radix_leptos_id::use_id;
-use radix_leptos_primitive::Primitive;
+use radix_leptos_primitive::{Primitive, open_closed_state};
 use radix_leptos_use_controllable_state::{UseControllableStateParams, use_controllable_state};
 use web_sys::wasm_bindgen::JsCast;
 
@@ -494,7 +494,7 @@ pub fn AccordionHeader(
             element=html::h3
             as_child=as_child
             node_ref=node_ref
-            attr:data-state=move || get_state(item_context.open.get())
+            attr:data-state=move || open_closed_state(item_context.open.get())
             attr:data-orientation=move || accordion_context.orientation.get().to_string()
             attr:data-disabled=move || item_context.disabled.get().then_some("")
         >
@@ -568,16 +568,5 @@ pub fn AccordionContent(
                 {children.with_value(|children| children.as_ref().map(|children| children()))}
             </CollapsibleContent>
         </AttributeInterceptor>
-    }
-}
-
-/* -------------------------------------------------------------------------------------------------
- * Utils
- * -----------------------------------------------------------------------------------------------*/
-
-fn get_state(open: bool) -> &'static str {
-    match open {
-        true => "open",
-        false => "closed",
     }
 }

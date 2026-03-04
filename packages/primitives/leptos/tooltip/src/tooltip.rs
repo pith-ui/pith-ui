@@ -753,51 +753,53 @@ fn TooltipContentHoverable(
             }
             *pointermove_closure.borrow_mut() = None;
 
-        if let Some(grace_area) = grace_area {
-            let trigger_el = context.trigger.get_untracked();
-            let content_el: Option<web_sys::HtmlElement> =
-                content_ref.get_untracked().map(|n| n.unchecked_into());
+            if let Some(grace_area) = grace_area {
+                let trigger_el = context.trigger.get_untracked();
+                let content_el: Option<web_sys::HtmlElement> =
+                    content_ref.get_untracked().map(|n| n.unchecked_into());
 
-            let closure = Closure::<dyn Fn(web_sys::PointerEvent)>::new(
-                move |event: web_sys::PointerEvent| {
-                    let target: Option<web_sys::Node> = event.target().map(|t| t.unchecked_into());
-                    let pointer_position = Point {
-                        x: event.client_x() as f64,
-                        y: event.client_y() as f64,
-                    };
+                let closure = Closure::<dyn Fn(web_sys::PointerEvent)>::new(
+                    move |event: web_sys::PointerEvent| {
+                        let target: Option<web_sys::Node> =
+                            event.target().map(|t| t.unchecked_into());
+                        let pointer_position = Point {
+                            x: event.client_x() as f64,
+                            y: event.client_y() as f64,
+                        };
 
-                    let has_entered_target = target.as_ref().is_some_and(|target| {
-                        trigger_el
-                            .as_ref()
-                            .is_some_and(|t| t.contains(Some(target)))
-                            || content_el
+                        let has_entered_target = target.as_ref().is_some_and(|target| {
+                            trigger_el
                                 .as_ref()
-                                .is_some_and(|c| c.contains(Some(target)))
-                    });
+                                .is_some_and(|t| t.contains(Some(target)))
+                                || content_el
+                                    .as_ref()
+                                    .is_some_and(|c| c.contains(Some(target)))
+                        });
 
-                    let is_pointer_outside_grace_area =
-                        !is_point_in_polygon(&pointer_position, &grace_area);
+                        let is_pointer_outside_grace_area =
+                            !is_point_in_polygon(&pointer_position, &grace_area);
 
-                    if has_entered_target {
-                        handle_remove_grace_area.run(());
-                    } else if is_pointer_outside_grace_area {
-                        handle_remove_grace_area.run(());
-                        on_close.run(());
-                    }
-                },
-            );
+                        if has_entered_target {
+                            handle_remove_grace_area.run(());
+                        } else if is_pointer_outside_grace_area {
+                            handle_remove_grace_area.run(());
+                            on_close.run(());
+                        }
+                    },
+                );
 
-            if let Some(document) = web_sys::window().and_then(|w| w.document()) {
-                document
-                    .add_event_listener_with_callback(
-                        "pointermove",
-                        closure.as_ref().unchecked_ref(),
-                    )
-                    .ok();
+                if let Some(document) = web_sys::window().and_then(|w| w.document()) {
+                    document
+                        .add_event_listener_with_callback(
+                            "pointermove",
+                            closure.as_ref().unchecked_ref(),
+                        )
+                        .ok();
+                }
+                *pointermove_closure.borrow_mut() = Some(closure);
             }
-            *pointermove_closure.borrow_mut() = Some(closure);
         }
-    }});
+    });
 
     on_cleanup(move || {
         // Clean up grace area listeners

@@ -68,6 +68,20 @@ where
     }
 }
 
+pub fn wrap_callback<T: 'static>(cb: Option<Callback<T>>) -> Callback<T> {
+    match cb {
+        Some(cb) => cb,
+        None => Callback::new(|_| {}),
+    }
+}
+
+pub fn open_closed_state(open: bool) -> &'static str {
+    match open {
+        true => "open",
+        false => "closed",
+    }
+}
+
 pub fn compose_callbacks<E>(
     original_handler: Option<Callback<E>>,
     our_handler: Option<Callback<E>>,

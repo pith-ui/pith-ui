@@ -5,7 +5,7 @@ use radix_leptos_dialog::{
     DialogTrigger,
 };
 use radix_leptos_toast::*;
-use web_sys::wasm_bindgen::{closure::Closure, JsCast};
+use web_sys::wasm_bindgen::{JsCast, closure::Closure};
 
 stylance::import_crate_style!(classes, "src/primitives/toast.stories.module.css");
 
@@ -295,11 +295,9 @@ pub fn Animated() -> impl IntoView {
         std::mem::forget(callback);
     };
 
-    let swipe_threshold = Signal::derive(move || {
-        match swipe_direction.get() {
-            SwipeDirection::Up | SwipeDirection::Down => 25.0,
-            _ => 50.0,
-        }
+    let swipe_threshold = Signal::derive(move || match swipe_direction.get() {
+        SwipeDirection::Up | SwipeDirection::Down => 25.0,
+        _ => 50.0,
     });
 
     view! {

@@ -25,22 +25,11 @@ pub use radix_leptos_popper::{
 use radix_leptos_popper::{Popper, PopperAnchor, PopperArrow, PopperContent};
 use radix_leptos_portal::Portal;
 use radix_leptos_presence::Presence;
-use radix_leptos_primitive::{Primitive, compose_callbacks};
+use radix_leptos_primitive::{Primitive, compose_callbacks, open_closed_state, wrap_callback};
 use radix_leptos_roving_focus::{Orientation, RovingFocusGroup, RovingFocusGroupItem};
 use send_wrapper::SendWrapper;
 use wasm_bindgen::{JsCast, closure::Closure};
 use web_sys::{AddEventListenerOptions, CustomEvent, CustomEventInit, EventListenerOptions};
-
-/// Helper: wraps an `Option<Callback<T>>` into a concrete `Callback<T>` that
-/// conditionally calls the inner callback if present. This is needed because
-/// Leptos's `#[prop(into, optional)]` cannot pass `Option<Callback<T>>` through
-/// the view! macro to another component's `Option<Callback<T>>` prop directly.
-fn wrap_callback<T: 'static>(cb: Option<Callback<T>>) -> Callback<T> {
-    match cb {
-        Some(cb) => cb,
-        None => Callback::new(|_| {}),
-    }
-}
 
 const SELECTION_KEYS: [&str; 2] = ["Enter", " "];
 const FIRST_KEYS: [&str; 3] = ["ArrowDown", "PageUp", "Home"];
@@ -169,41 +158,41 @@ pub fn Menu(
     };
 
     let handle_pointer: SendWrapper<Rc<RefCell<Option<Closure<dyn Fn(ev::PointerEvent)>>>>> =
-        SendWrapper::new(Rc::new(RefCell::new(Some(
-            Closure::<dyn Fn(ev::PointerEvent)>::new(move |_| {
-                is_using_keyboard.set(false);
-            }),
-        ))));
+        SendWrapper::new(Rc::new(RefCell::new(Some(Closure::<
+            dyn Fn(ev::PointerEvent),
+        >::new(move |_| {
+            is_using_keyboard.set(false);
+        })))));
 
     let handle_key_down: SendWrapper<Rc<RefCell<Option<Closure<dyn Fn(ev::KeyboardEvent)>>>>> = {
         let handle_pointer = handle_pointer.clone();
-        SendWrapper::new(Rc::new(RefCell::new(Some(
-            Closure::<dyn Fn(ev::KeyboardEvent)>::new(move |_| {
-                is_using_keyboard.set(true);
+        SendWrapper::new(Rc::new(RefCell::new(Some(Closure::<
+            dyn Fn(ev::KeyboardEvent),
+        >::new(move |_| {
+            is_using_keyboard.set(true);
 
-                let options = AddEventListenerOptions::new();
-                options.set_capture(true);
-                options.set_once(true);
+            let options = AddEventListenerOptions::new();
+            options.set_capture(true);
+            options.set_once(true);
 
-                if let Some(hp) = handle_pointer.borrow().as_ref() {
-                    let cb: &wasm_bindgen::JsValue = hp.as_ref().unchecked_ref();
-                    document()
-                        .add_event_listener_with_callback_and_add_event_listener_options(
-                            "pointerdown",
-                            cb.unchecked_ref(),
-                            &options,
-                        )
-                        .expect("Pointer down event listener should be added.");
-                    document()
-                        .add_event_listener_with_callback_and_add_event_listener_options(
-                            "pointermove",
-                            cb.unchecked_ref(),
-                            &options,
-                        )
-                        .expect("Pointer move event listener should be added.");
-                }
-            }),
-        ))))
+            if let Some(hp) = handle_pointer.borrow().as_ref() {
+                let cb: &wasm_bindgen::JsValue = hp.as_ref().unchecked_ref();
+                document()
+                    .add_event_listener_with_callback_and_add_event_listener_options(
+                        "pointerdown",
+                        cb.unchecked_ref(),
+                        &options,
+                    )
+                    .expect("Pointer down event listener should be added.");
+                document()
+                    .add_event_listener_with_callback_and_add_event_listener_options(
+                        "pointermove",
+                        cb.unchecked_ref(),
+                        &options,
+                    )
+                    .expect("Pointer move event listener should be added.");
+            }
+        })))))
     };
 
     Effect::new({
@@ -671,7 +660,9 @@ fn MenuContentImpl(
 
     let handle_typeahead_search = Callback::new(move |key: String| {
         let search_value = search.try_get_untracked().unwrap_or_default() + &key;
-        let items = get_items.try_with_value(|get_items| get_items()).unwrap_or_default();
+        let items = get_items
+            .try_with_value(|get_items| get_items())
+            .unwrap_or_default();
         let items = items
             .iter()
             .filter(|item| !item.data.disabled)
@@ -848,7 +839,9 @@ fn MenuContentImpl(
 
                     event.prevent_default();
 
-                    let items = get_items.try_with_value(|get_items| get_items()).unwrap_or_default();
+                    let items = get_items
+                        .try_with_value(|get_items| get_items())
+                        .unwrap_or_default();
                     let items = items.iter().filter(|item| !item.data.disabled);
                     let mut candidate_nodes: Vec<web_sys::HtmlElement> = items
                         .filter_map(|item| {
@@ -894,14 +887,16 @@ fn MenuContentImpl(
                 .current_target()
                 .map(|current_target| current_target.unchecked_into::<web_sys::Node>())
                 .expect("Event should have current target.");
-            let pointer_x_has_changed = last_pointer_x.try_get_untracked().unwrap_or(0) != event.client_x();
+            let pointer_x_has_changed =
+                last_pointer_x.try_get_untracked().unwrap_or(0) != event.client_x();
 
             // We don't use `event.movementX` for this check because Safari will always return `0` on a pointer event.
             if current_target.contains(Some(&target)) && pointer_x_has_changed {
-                let new_dir = match event.client_x() > last_pointer_x.try_get_untracked().unwrap_or(0) {
-                    true => Side::Right,
-                    false => Side::Left,
-                };
+                let new_dir =
+                    match event.client_x() > last_pointer_x.try_get_untracked().unwrap_or(0) {
+                        true => Side::Right,
+                        false => Side::Left,
+                    };
                 let _ = pointer_dir.try_set(new_dir);
                 let _ = last_pointer_x.try_set(event.client_x());
             }
@@ -910,17 +905,19 @@ fn MenuContentImpl(
     );
 
     let keydown_closure: SendWrapper<Rc<RefCell<Option<Closure<dyn Fn(ev::KeyboardEvent)>>>>> =
-        SendWrapper::new(Rc::new(RefCell::new(Some(
-            Closure::<dyn Fn(ev::KeyboardEvent)>::new(keydown_handler),
-        ))));
+        SendWrapper::new(Rc::new(RefCell::new(Some(Closure::<
+            dyn Fn(ev::KeyboardEvent),
+        >::new(keydown_handler)))));
     let blur_closure: SendWrapper<Rc<RefCell<Option<Closure<dyn Fn(ev::FocusEvent)>>>>> =
         SendWrapper::new(Rc::new(RefCell::new(Some(
             Closure::<dyn Fn(ev::FocusEvent)>::new(blur_handler),
         ))));
     let pointermove_closure: SendWrapper<Rc<RefCell<Option<Closure<dyn Fn(ev::PointerEvent)>>>>> =
-        SendWrapper::new(Rc::new(RefCell::new(Some(
-            Closure::<dyn Fn(ev::PointerEvent)>::new(pointermove_handler),
-        ))));
+        SendWrapper::new(Rc::new(RefCell::new(Some(Closure::<
+            dyn Fn(ev::PointerEvent),
+        >::new(
+            pointermove_handler
+        )))));
 
     // Attach event handlers to the content element after mount.
     Effect::new({
@@ -931,22 +928,16 @@ fn MenuContentImpl(
             if let Some(node) = content_ref.get() {
                 let el: web_sys::HtmlElement = node.unchecked_into();
                 if let Some(c) = keydown_closure.borrow().as_ref() {
-                    el.add_event_listener_with_callback(
-                        "keydown",
-                        c.as_ref().unchecked_ref(),
-                    )
-                    .ok();
+                    el.add_event_listener_with_callback("keydown", c.as_ref().unchecked_ref())
+                        .ok();
                 }
                 if let Some(c) = blur_closure.borrow().as_ref() {
                     el.add_event_listener_with_callback("blur", c.as_ref().unchecked_ref())
                         .ok();
                 }
                 if let Some(c) = pointermove_closure.borrow().as_ref() {
-                    el.add_event_listener_with_callback(
-                        "pointermove",
-                        c.as_ref().unchecked_ref(),
-                    )
-                    .ok();
+                    el.add_event_listener_with_callback("pointermove", c.as_ref().unchecked_ref())
+                        .ok();
                 }
             }
         }
@@ -956,22 +947,16 @@ fn MenuContentImpl(
         if let Some(node) = content_ref.get_untracked() {
             let el: web_sys::HtmlElement = node.unchecked_into();
             if let Some(c) = keydown_closure.borrow().as_ref() {
-                el.remove_event_listener_with_callback(
-                    "keydown",
-                    c.as_ref().unchecked_ref(),
-                )
-                .ok();
+                el.remove_event_listener_with_callback("keydown", c.as_ref().unchecked_ref())
+                    .ok();
             }
             if let Some(c) = blur_closure.borrow().as_ref() {
                 el.remove_event_listener_with_callback("blur", c.as_ref().unchecked_ref())
                     .ok();
             }
             if let Some(c) = pointermove_closure.borrow().as_ref() {
-                el.remove_event_listener_with_callback(
-                    "pointermove",
-                    c.as_ref().unchecked_ref(),
-                )
-                .ok();
+                el.remove_event_listener_with_callback("pointermove", c.as_ref().unchecked_ref())
+                    .ok();
             }
         }
     });
@@ -1105,7 +1090,7 @@ fn MenuContentImpl(
                             }
                             attr:role="menu"
                             attr:aria-orientation="vertical"
-                            attr:data-state=move || get_open_state(context.open.get())
+                            attr:data-state=move || open_closed_state(context.open.get())
                             attr:data-radix-menu-content=""
                             attr:dir=move || root_context.dir.get()
                             attr:id=move || id.get()
@@ -1643,8 +1628,12 @@ pub fn MenuSubTrigger(
 
     // Clean up grace area on unmount.
     on_cleanup(move || {
-        window()
-            .clear_timeout_with_handle(content_context.pointer_grace_timer.try_get_untracked().unwrap_or(0) as i32);
+        window().clear_timeout_with_handle(
+            content_context
+                .pointer_grace_timer
+                .try_get_untracked()
+                .unwrap_or(0) as i32,
+        );
         content_context.on_pointer_grace_intent_change.run(None);
     });
 
@@ -1659,7 +1648,7 @@ pub fn MenuSubTrigger(
                 attr:aria-haspopup="menu"
                 attr:aria-expanded=move || context.open.get().to_string()
                 attr:aria-controls=move || sub_context.content_id.get()
-                attr:data-state=move || get_open_state(context.open.get())
+                attr:data-state=move || open_closed_state(context.open.get())
                 on:click=compose_callbacks(on_click, Some(Callback::new(move |event: ev::MouseEvent| {
                     if disabled.get_untracked() || event.default_prevented() {
                         return;
@@ -1919,13 +1908,6 @@ pub fn MenuSubContent(
                 </CollectionSlot>
             </Presence>
         </CollectionProvider>
-    }
-}
-
-fn get_open_state(open: bool) -> String {
-    match open {
-        true => "open".into(),
-        false => "closed".into(),
     }
 }
 

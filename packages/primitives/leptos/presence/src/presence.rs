@@ -127,7 +127,8 @@ pub fn use_presence(present: Signal<bool>, node_ref: AnyNodeRef) -> Signal<bool>
     // make sure we only trigger ANIMATION_END for the currently active animation.
     let handle_animation_end: SendWrapper<Closure<dyn Fn(web_sys::AnimationEvent)>> =
         SendWrapper::new(Closure::new(move |event: web_sys::AnimationEvent| {
-            let current_animation_name = get_animation_name(styles.try_get_untracked().flatten().as_deref());
+            let current_animation_name =
+                get_animation_name(styles.try_get_untracked().flatten().as_deref());
             let is_current_animation = current_animation_name.contains(&event.animation_name());
             if is_current_animation
                 && event.target().as_ref()
@@ -150,7 +151,9 @@ pub fn use_presence(present: Signal<bool>, node_ref: AnyNodeRef) -> Signal<bool>
                     .map(|node| node.unchecked_ref::<web_sys::EventTarget>())
             {
                 // If animation occurred, store its name as the previous animation.
-                let _ = prev_animation_name.try_set(get_animation_name(styles.try_get_untracked().flatten().as_deref()));
+                let _ = prev_animation_name.try_set(get_animation_name(
+                    styles.try_get_untracked().flatten().as_deref(),
+                ));
             }
         }));
     let handle_animation_start = StoredValue::new(handle_animation_start);

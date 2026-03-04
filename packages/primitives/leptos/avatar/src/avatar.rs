@@ -2,8 +2,8 @@ use leptos::{context::Provider, html, prelude::*};
 use leptos_node_ref::AnyNodeRef;
 use radix_leptos_primitive::{Primitive, VoidPrimitive};
 use web_sys::{
-    wasm_bindgen::{closure::Closure, JsCast},
     HtmlImageElement,
+    wasm_bindgen::{JsCast, closure::Closure},
 };
 
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]

@@ -50,7 +50,11 @@ pub fn FocusScope(
 
     let handle_focus_in: FocusEventClosure =
         Arc::new(SendWrapper::new(Closure::new(move |event: FocusEvent| {
-            if focus_scope.try_get_untracked().map(|s| s.paused()).unwrap_or(true) {
+            if focus_scope
+                .try_get_untracked()
+                .map(|s| s.paused())
+                .unwrap_or(true)
+            {
                 return;
             }
 
@@ -64,7 +68,11 @@ pub fn FocusScope(
                     let _ = last_focused_element.try_set(target.map(SendWrapper::new));
                 } else {
                     focus(
-                        last_focused_element.try_get_untracked().flatten().as_deref().cloned(),
+                        last_focused_element
+                            .try_get_untracked()
+                            .flatten()
+                            .as_deref()
+                            .cloned(),
                         Some(FocusOptions { select: true }),
                     );
                 }
@@ -73,7 +81,11 @@ pub fn FocusScope(
 
     let handle_focus_out: FocusEventClosure =
         Arc::new(SendWrapper::new(Closure::new(move |event: FocusEvent| {
-            if focus_scope.try_get_untracked().map(|s| s.paused()).unwrap_or(true) {
+            if focus_scope
+                .try_get_untracked()
+                .map(|s| s.paused())
+                .unwrap_or(true)
+            {
                 return;
             }
 
@@ -101,7 +113,11 @@ pub fn FocusScope(
                 // that is outside the container, we move focus to the last valid focused element inside.
                 if !container.contains(related_target.as_ref().map(|e| e.unchecked_ref())) {
                     focus(
-                        last_focused_element.try_get_untracked().flatten().as_deref().cloned(),
+                        last_focused_element
+                            .try_get_untracked()
+                            .flatten()
+                            .as_deref()
+                            .cloned(),
                         Some(FocusOptions { select: true }),
                     );
                 }
@@ -125,70 +141,70 @@ pub fn FocusScope(
     Effect::new({
         let trapped_cleanup = trapped_cleanup.clone();
         move |_| {
-        // Clean up previous effect run (equivalent to React useEffect cleanup on deps change)
-        if let Some(cleanup) = trapped_cleanup.borrow_mut().take() {
-            cleanup();
-        }
-
-        if trapped.get() {
-            let hi = handle_focus_in.clone();
-            let ho = handle_focus_out.clone();
-
-            document()
-                .add_event_listener_with_callback("focusin", (*hi).as_ref().unchecked_ref())
-                .expect("Focus in event listener should be added.");
-            document()
-                .add_event_listener_with_callback("focusout", (*ho).as_ref().unchecked_ref())
-                .expect("Focus out event listener should be added.");
-
-            // When the focused element gets removed from the DOM, browsers move focus
-            // back to the document.body. In this case, we move focus to the container
-            // to keep focus trapped correctly.
-            if let Some(container) = container_ref.get() {
-                let container: web_sys::HtmlElement = container.unchecked_into();
-
-                let handle_mutations: Closure<dyn Fn(Vec<MutationRecord>)> =
-                    Closure::new(move |mutations: Vec<MutationRecord>| {
-                        let focused_element = document()
-                            .active_element()
-                            .map(|element| element.unchecked_into::<web_sys::HtmlElement>());
-                        if focused_element != document().body() {
-                            return;
-                        }
-
-                        for mutation in mutations {
-                            if mutation.removed_nodes().length() > 0 {
-                                focus(
-                                    container_ref
-                                        .get_untracked()
-                                        .map(|el| el.unchecked_into::<web_sys::HtmlElement>()),
-                                    None,
-                                );
-                            }
-                        }
-                    });
-
-                let new_observer =
-                    MutationObserver::new(handle_mutations.into_js_value().unchecked_ref())
-                        .expect("Mutation observer should be created.");
-
-                let init = MutationObserverInit::new();
-                init.set_child_list(true);
-                init.set_subtree(true);
-
-                new_observer
-                    .observe_with_options(&container, &init)
-                    .expect("Mutation observer should observe target.");
-
-                let _ = mutation_observer.try_with_value(|obs| {
-                    obs.borrow_mut().replace(new_observer);
-                });
+            // Clean up previous effect run (equivalent to React useEffect cleanup on deps change)
+            if let Some(cleanup) = trapped_cleanup.borrow_mut().take() {
+                cleanup();
             }
 
-            // Store cleanup for this effect run
-            let cleanup_hi = hi;
-            let cleanup_ho = ho;
-            *trapped_cleanup.borrow_mut() = Some(Box::new(move || {
+            if trapped.get() {
+                let hi = handle_focus_in.clone();
+                let ho = handle_focus_out.clone();
+
+                document()
+                    .add_event_listener_with_callback("focusin", (*hi).as_ref().unchecked_ref())
+                    .expect("Focus in event listener should be added.");
+                document()
+                    .add_event_listener_with_callback("focusout", (*ho).as_ref().unchecked_ref())
+                    .expect("Focus out event listener should be added.");
+
+                // When the focused element gets removed from the DOM, browsers move focus
+                // back to the document.body. In this case, we move focus to the container
+                // to keep focus trapped correctly.
+                if let Some(container) = container_ref.get() {
+                    let container: web_sys::HtmlElement = container.unchecked_into();
+
+                    let handle_mutations: Closure<dyn Fn(Vec<MutationRecord>)> =
+                        Closure::new(move |mutations: Vec<MutationRecord>| {
+                            let focused_element = document()
+                                .active_element()
+                                .map(|element| element.unchecked_into::<web_sys::HtmlElement>());
+                            if focused_element != document().body() {
+                                return;
+                            }
+
+                            for mutation in mutations {
+                                if mutation.removed_nodes().length() > 0 {
+                                    focus(
+                                        container_ref
+                                            .get_untracked()
+                                            .map(|el| el.unchecked_into::<web_sys::HtmlElement>()),
+                                        None,
+                                    );
+                                }
+                            }
+                        });
+
+                    let new_observer =
+                        MutationObserver::new(handle_mutations.into_js_value().unchecked_ref())
+                            .expect("Mutation observer should be created.");
+
+                    let init = MutationObserverInit::new();
+                    init.set_child_list(true);
+                    init.set_subtree(true);
+
+                    new_observer
+                        .observe_with_options(&container, &init)
+                        .expect("Mutation observer should observe target.");
+
+                    let _ = mutation_observer.try_with_value(|obs| {
+                        obs.borrow_mut().replace(new_observer);
+                    });
+                }
+
+                // Store cleanup for this effect run
+                let cleanup_hi = hi;
+                let cleanup_ho = ho;
+                *trapped_cleanup.borrow_mut() = Some(Box::new(move || {
                     document()
                         .remove_event_listener_with_callback(
                             "focusin",
@@ -208,8 +224,9 @@ pub fn FocusScope(
                         }
                     });
                 }));
+            }
         }
-    }});
+    });
 
     // Ensure document listeners are removed on unmount. The Effect above stores
     // the cleanup function but only runs it on re-execution (deps change). Without

@@ -59,8 +59,7 @@ pub enum UpdatePositionStrategy {
 #[derive(Clone, Copy)]
 struct PopperContextValue {
     pub anchor_ref: AnyNodeRef,
-    pub anchor_virtual:
-        RwSignal<Option<SendWrapper<Box<dyn VirtualElement<web_sys::Element>>>>>,
+    pub anchor_virtual: RwSignal<Option<SendWrapper<Box<dyn VirtualElement<web_sys::Element>>>>>,
 }
 
 /// Opaque handle for re-providing Popper context through scope boundaries (e.g., portals).
@@ -116,9 +115,7 @@ pub fn Popper(
 /// Sets a virtual element as the Popper anchor, bypassing the need for a DOM-rendered
 /// `PopperAnchor`. The virtual element must implement `VirtualElement<web_sys::Element>`
 /// (i.e., provide `get_bounding_client_rect()`). Call from within a `<Popper>` scope.
-pub fn set_popper_virtual_ref(
-    virtual_el: Box<dyn VirtualElement<web_sys::Element>>,
-) {
+pub fn set_popper_virtual_ref(virtual_el: Box<dyn VirtualElement<web_sys::Element>>) {
     let context: PopperContextValue = expect_context();
     context
         .anchor_virtual

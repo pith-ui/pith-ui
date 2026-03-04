@@ -13,7 +13,7 @@ use radix_leptos_popper::{
 };
 use radix_leptos_portal::Portal;
 use radix_leptos_presence::Presence;
-use radix_leptos_primitive::{Primitive, compose_callbacks};
+use radix_leptos_primitive::{Primitive, compose_callbacks, open_closed_state};
 use radix_leptos_use_controllable_state::{UseControllableStateParams, use_controllable_state};
 use send_wrapper::SendWrapper;
 use wasm_bindgen::JsCast;
@@ -189,7 +189,7 @@ fn PopoverTriggerInner(
                 attr:aria-haspopup="dialog"
                 attr:aria-expanded=move || context.open.get().to_string()
                 attr:aria-controls=move || context.content_id.get()
-                attr:data-state=move || get_state(context.open.get())
+                attr:data-state=move || open_closed_state(context.open.get())
                 on:click=move |event: ev::MouseEvent| {
                     on_click.run(event);
                 }
@@ -778,7 +778,7 @@ fn PopoverContentImpl(
                     update_position_strategy=update_position_strategy
                     as_child=as_child
                     node_ref=composed_refs
-                    attr:data-state=move || get_state(context.open.get())
+                    attr:data-state=move || open_closed_state(context.open.get())
                     attr:role="dialog"
                     attr:id=move || context.content_id.get()
                 >
@@ -852,17 +852,6 @@ pub fn PopoverArrow(
                 {children.with_value(|children| children.as_ref().map(|children| children()))}
             </PopperArrow>
         </AttributeInterceptor>
-    }
-}
-
-/* -------------------------------------------------------------------------------------------------
- * Utils
- * -----------------------------------------------------------------------------------------------*/
-
-fn get_state(open: bool) -> &'static str {
-    match open {
-        true => "open",
-        false => "closed",
     }
 }
 
