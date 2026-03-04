@@ -9,7 +9,9 @@ use radix_leptos_focus_scope::FocusScope;
 use radix_leptos_id::use_id;
 use radix_leptos_portal::Portal;
 use radix_leptos_presence::Presence;
-use radix_leptos_primitive::{Primitive, compose_callbacks, open_closed_state};
+use radix_leptos_primitive::{
+    Primitive, compose_callbacks, open_closed_state, prop_or, prop_or_default,
+};
 use radix_leptos_use_controllable_state::{UseControllableStateParams, use_controllable_state};
 use send_wrapper::SendWrapper;
 use web_sys::wasm_bindgen::{JsCast, closure::Closure};
@@ -56,7 +58,7 @@ pub fn Dialog(
         }),
     });
     let open = Signal::derive(move || open_signal.get().unwrap_or(false));
-    let modal = Signal::derive(move || modal.get().unwrap_or(true));
+    let modal = prop_or(modal, true);
 
     let content_id = use_id(None);
     let title_id = use_id(None);
@@ -146,7 +148,7 @@ pub fn DialogPortal(
 ) -> impl IntoView {
     let children = StoredValue::new(children);
 
-    let force_mount_signal = Signal::derive(move || force_mount.get().unwrap_or(false));
+    let force_mount_signal = prop_or_default(force_mount);
 
     let portal_context = PortalContextValue {
         force_mount: force_mount_signal,
@@ -627,9 +629,8 @@ fn DialogContentImpl(
     // the last element in the DOM (because of the `Portal`)
     use_focus_guards();
 
-    let trapped = Signal::derive(move || trap_focus.get().unwrap_or(false));
-    let disable_outside =
-        Signal::derive(move || disable_outside_pointer_events.get().unwrap_or(false));
+    let trapped = prop_or_default(trap_focus);
+    let disable_outside = prop_or_default(disable_outside_pointer_events);
 
     view! {
         <FocusScope

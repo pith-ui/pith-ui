@@ -8,7 +8,7 @@ use leptos::{attribute_interceptor::AttributeInterceptor, html, prelude::*};
 use leptos_node_ref::AnyNodeRef;
 use once_cell::sync::Lazy;
 use radix_leptos_compose_refs::use_composed_refs;
-use radix_leptos_primitive::Primitive;
+use radix_leptos_primitive::{Primitive, prop_or_default};
 use send_wrapper::SendWrapper;
 use wasm_bindgen::JsValue;
 use web_sys::{
@@ -39,8 +39,8 @@ pub fn FocusScope(
 ) -> impl IntoView {
     let children = StoredValue::new(children);
 
-    let r#loop = Signal::derive(move || r#loop.get().unwrap_or(false));
-    let trapped = Signal::derive(move || trapped.get().unwrap_or(false));
+    let r#loop = prop_or_default(r#loop);
+    let trapped = prop_or_default(trapped);
 
     let container_ref: AnyNodeRef = AnyNodeRef::new();
     let composed_refs = use_composed_refs(vec![node_ref, container_ref]);

@@ -12,7 +12,7 @@ use radix_leptos_collection::{
 use radix_leptos_compose_refs::use_composed_refs;
 use radix_leptos_direction::{Direction, use_direction};
 use radix_leptos_id::use_id;
-use radix_leptos_primitive::{Primitive, open_closed_state};
+use radix_leptos_primitive::{Primitive, data_attr, open_closed_state, prop_or_default};
 use radix_leptos_use_controllable_state::{UseControllableStateParams, use_controllable_state};
 use web_sys::wasm_bindgen::JsCast;
 
@@ -140,7 +140,7 @@ fn create_single_contexts(
     on_value_change: Option<Callback<String>>,
     collapsible: MaybeProp<bool>,
 ) -> (AccordionValueContextValue, AccordionCollapsibleContextValue) {
-    let collapsible_flag = Signal::derive(move || collapsible.get().unwrap_or(false));
+    let collapsible_flag = prop_or_default(collapsible);
 
     let (value_signal, set_value) = use_controllable_state(UseControllableStateParams {
         prop: value,
@@ -265,8 +265,8 @@ fn AccordionImpl(
 ) -> impl IntoView {
     let children = StoredValue::new(children);
 
-    let disabled = Signal::derive(move || disabled.get().unwrap_or(false));
-    let orientation = Signal::derive(move || orientation.get().unwrap_or_default());
+    let disabled = prop_or_default(disabled);
+    let orientation = prop_or_default(orientation);
     let direction = use_direction(dir);
 
     let accordion_ref = AnyNodeRef::new();
@@ -496,7 +496,7 @@ pub fn AccordionHeader(
             node_ref=node_ref
             attr:data-state=move || open_closed_state(item_context.open.get())
             attr:data-orientation=move || accordion_context.orientation.get().to_string()
-            attr:data-disabled=move || item_context.disabled.get().then_some("")
+            attr:data-disabled=data_attr(item_context.disabled)
         >
             {children.with_value(|children| children())}
         </Primitive>

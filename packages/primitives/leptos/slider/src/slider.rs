@@ -7,7 +7,7 @@ use radix_leptos_collection::{
 };
 use radix_leptos_compose_refs::use_composed_refs;
 use radix_leptos_direction::{Direction, use_direction};
-use radix_leptos_primitive::{Primitive, compose_callbacks};
+use radix_leptos_primitive::{Primitive, compose_callbacks, data_attr, prop_or, prop_or_default};
 use radix_leptos_use_controllable_state::{UseControllableStateParams, use_controllable_state};
 use radix_leptos_use_previous::use_previous;
 use radix_leptos_use_size::use_size;
@@ -94,15 +94,13 @@ pub fn Slider(
 ) -> impl IntoView {
     let children = StoredValue::new(children);
 
-    let min_signal = Signal::derive(move || min.get().unwrap_or(0.0));
-    let max_signal = Signal::derive(move || max.get().unwrap_or(100.0));
-    let step_signal = Signal::derive(move || step.get().unwrap_or(1.0));
-    let disabled_signal = Signal::derive(move || disabled.get().unwrap_or(false));
-    let orientation_signal =
-        Signal::derive(move || orientation.get().unwrap_or(Orientation::Horizontal));
-    let min_steps_between_thumbs_signal =
-        Signal::derive(move || min_steps_between_thumbs.get().unwrap_or(0.0));
-    let inverted_signal = Signal::derive(move || inverted.get().unwrap_or(false));
+    let min_signal = prop_or(min, 0.0);
+    let max_signal = prop_or(max, 100.0);
+    let step_signal = prop_or(step, 1.0);
+    let disabled_signal = prop_or_default(disabled);
+    let orientation_signal = prop_or_default(orientation);
+    let min_steps_between_thumbs_signal = prop_or(min_steps_between_thumbs, 0.0);
+    let inverted_signal = prop_or_default(inverted);
 
     let thumbs: RwSignal<Vec<SendWrapper<web_sys::HtmlElement>>> = RwSignal::new(Vec::new());
     let value_index_to_change: RwSignal<usize> = RwSignal::new(0);
@@ -113,19 +111,18 @@ pub fn Slider(
             let default = default_value.get();
             Some(default.unwrap_or_else(|| vec![min_signal.get()]))
         }),
-        on_change: on_value_change.map(|on_value_change| {
-            Callback::new(move |value: Option<Vec<f64>>| {
-                if let Some(value) = value {
-                    // Focus the thumb that changed
-                    let thumbs_snapshot = thumbs.get();
-                    let idx = value_index_to_change.get_untracked();
-                    if let Some(thumb) = thumbs_snapshot.get(idx) {
-                        let _ = thumb.focus();
-                    }
+        on_change: Some(Callback::new(move |value: Option<Vec<f64>>| {
+            if let Some(value) = value {
+                let thumbs_snapshot = thumbs.get();
+                let idx = value_index_to_change.get_untracked();
+                if let Some(thumb) = thumbs_snapshot.get(idx) {
+                    let _ = thumb.focus();
+                }
+                if let Some(on_value_change) = on_value_change {
                     on_value_change.run(value);
                 }
-            })
-        }),
+            }
+        })),
     });
 
     let values = Signal::derive(move || current_values.get().unwrap_or_default());
@@ -547,7 +544,7 @@ fn SliderImpl(
             as_child=as_child
             node_ref=node_ref
             attr:aria-disabled=move || disabled.get().then_some("true")
-            attr:data-disabled=move || disabled.get().then_some("")
+            attr:data-disabled=data_attr(disabled)
             attr:data-orientation=data_orientation
             attr:dir=move || dir.get().map(|d| d.to_string())
             style:--radix-slider-thumb-transform=thumb_transform
@@ -628,7 +625,7 @@ pub fn SliderTrack(
             element=html::span
             as_child=as_child
             node_ref=node_ref
-            attr:data-disabled=move || context.disabled.get().then_some("")
+            attr:data-disabled=data_attr(context.disabled)
             attr:data-orientation=move || context.orientation.get().to_string()
         >
             {children.with_value(|children| children())}
@@ -681,7 +678,7 @@ pub fn SliderRange(
             as_child=as_child
             node_ref=node_ref
             attr:data-orientation=move || context.orientation.get().to_string()
-            attr:data-disabled=move || context.disabled.get().then_some("")
+            attr:data-disabled=data_attr(context.disabled)
             attr:style=move || {
                 let orient = orientation.get();
                 format!(
@@ -886,7 +883,7 @@ fn SliderThumbImpl(
                 attr:aria-valuemax=move || context.max.get()
                 attr:aria-orientation=move || context.orientation.get().to_string()
                 attr:data-orientation=move || context.orientation.get().to_string()
-                attr:data-disabled=move || context.disabled.get().then_some("")
+                attr:data-disabled=data_attr(context.disabled)
                 attr:tabindex=move || if context.disabled.get() { None } else { Some("0") }
                 attr:style=move || {
                     let orient = orientation.get();

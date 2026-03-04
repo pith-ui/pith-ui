@@ -5,7 +5,9 @@ use leptos_node_ref::AnyNodeRef;
 use radix_leptos_compose_refs::use_composed_refs;
 use radix_leptos_id::use_id;
 use radix_leptos_presence::use_presence;
-use radix_leptos_primitive::{Primitive, compose_callbacks, open_closed_state};
+use radix_leptos_primitive::{
+    Primitive, compose_callbacks, data_attr, open_closed_state, prop_or_default,
+};
 use radix_leptos_use_controllable_state::{UseControllableStateParams, use_controllable_state};
 use send_wrapper::SendWrapper;
 use web_sys::wasm_bindgen::{JsCast, closure::Closure};
@@ -34,7 +36,7 @@ pub fn Collapsible(
 ) -> impl IntoView {
     let children = StoredValue::new(children);
 
-    let disabled = Signal::derive(move || disabled.get().unwrap_or(false));
+    let disabled = prop_or_default(disabled);
 
     let (open_signal, set_open) = use_controllable_state(UseControllableStateParams {
         prop: open,
@@ -67,7 +69,7 @@ pub fn Collapsible(
                     as_child=as_child
                     node_ref=node_ref
                     attr:data-state=move || open_closed_state(open.get())
-                    attr:data-disabled=move || disabled.get().then_some("")
+                    attr:data-disabled=data_attr(disabled)
                     {..attrs}
                 >
                     {children.with_value(|children| children())}
@@ -102,8 +104,8 @@ pub fn CollapsibleTrigger(
                 attr:aria-controls=move || context.content_id.get()
                 attr:aria-expanded=move || context.open.get().to_string()
                 attr:data-state=move || open_closed_state(context.open.get())
-                attr:data-disabled=move || context.disabled.get().then_some("")
-                attr:disabled=move || context.disabled.get().then_some("")
+                attr:data-disabled=data_attr(context.disabled)
+                attr:disabled=data_attr(context.disabled)
                 on:click=compose_callbacks(
                     on_click,
                     Some(Callback::new(move |_: ev::MouseEvent| {
@@ -289,7 +291,7 @@ fn CollapsibleContentImpl(
                 as_child=as_child
                 node_ref=composed_ref
                 attr:data-state=move || open_closed_state(context.open.get())
-                attr:data-disabled=move || context.disabled.get().then_some("")
+                attr:data-disabled=data_attr(context.disabled)
                 attr:id=move || context.content_id.get()
                 attr:hidden=move || (!is_open.get()).then_some("")
                 {..attrs}

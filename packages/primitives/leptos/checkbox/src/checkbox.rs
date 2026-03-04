@@ -6,7 +6,7 @@ use leptos::{
 use leptos_node_ref::AnyNodeRef;
 use radix_leptos_compose_refs::use_composed_refs;
 use radix_leptos_presence::Presence;
-use radix_leptos_primitive::{Primitive, compose_callbacks};
+use radix_leptos_primitive::{Primitive, compose_callbacks, data_attr, prop_or};
 use radix_leptos_use_controllable_state::{UseControllableStateParams, use_controllable_state};
 use radix_leptos_use_previous::use_previous;
 use radix_leptos_use_size::use_size;
@@ -58,9 +58,9 @@ pub fn Checkbox(
     let children = StoredValue::new(children);
 
     let name = Signal::derive(move || name.get());
-    let required = Signal::derive(move || required.get().unwrap_or(false));
-    let disabled = Signal::derive(move || disabled.get().unwrap_or(false));
-    let value = Signal::derive(move || value.get().unwrap_or("on".into()));
+    let required = prop_or(required, false);
+    let disabled = prop_or(disabled, false);
+    let value = prop_or(value, "on".into());
 
     let button_ref = AnyNodeRef::new();
     let composed_refs = use_composed_refs(vec![node_ref, button_ref]);
@@ -78,7 +78,7 @@ pub fn Checkbox(
     let (checked, set_checked) = use_controllable_state(UseControllableStateParams {
         prop: checked,
         on_change: on_checked_change.map(|on_checked_change| {
-            Callback::new(move |value| {
+            Callback::new(move |value: Option<CheckedState>| {
                 if let Some(value) = value {
                     on_checked_change.run(value);
                 }
@@ -151,8 +151,8 @@ pub fn Checkbox(
                         false => "false",
                     }
                     attr:data-state=move || get_state(checked.get())
-                    attr:data-disabled=move || disabled.get().then_some("")
-                    attr:disabled=move || disabled.get().then_some("")
+                    attr:data-disabled=data_attr(disabled)
+                    attr:disabled=data_attr(disabled)
                     attr:value=move || value.get()
                     on:keydown=compose_callbacks(on_keydown, Some(Callback::new(move |event: ev::KeyboardEvent| {
                         // According to WAI ARIA, checkboxes don't activate on enter keypress.
@@ -205,7 +205,7 @@ pub fn CheckboxIndicator(
     #[prop(into, optional)] node_ref: AnyNodeRef,
     #[prop(optional)] children: Option<ChildrenFn>,
 ) -> impl IntoView {
-    let force_mount = Signal::derive(move || force_mount.get().unwrap_or(false));
+    let force_mount = prop_or(force_mount, false);
 
     let context = expect_context::<CheckboxContextValue>();
 
@@ -224,7 +224,7 @@ pub fn CheckboxIndicator(
                 as_child=as_child
                 node_ref=node_ref
                 attr:data-state=move || get_state(context.state.get())
-                attr:data-disabled=move || context.disabled.get().then_some("")
+                attr:data-disabled=data_attr(context.disabled)
                 attr:style="pointer-events: none;"
             >
                 {children.with_value(|children| children.as_ref().map(|children| children()))}

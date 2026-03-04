@@ -15,7 +15,7 @@ use radix_leptos_direction::{Direction, use_direction};
 use radix_leptos_dismissable_layer::DismissableLayer;
 use radix_leptos_id::use_id;
 use radix_leptos_presence::Presence;
-use radix_leptos_primitive::{Primitive, compose_callbacks};
+use radix_leptos_primitive::{Primitive, compose_callbacks, prop_or};
 use radix_leptos_use_controllable_state::{UseControllableStateParams, use_controllable_state};
 use radix_leptos_use_previous::use_previous;
 use radix_leptos_visually_hidden::VisuallyHidden;
@@ -344,8 +344,7 @@ pub fn NavigationMenu(
     let children = StoredValue::new(children);
 
     let direction = use_direction(dir);
-    let orientation_signal =
-        Signal::derive(move || orientation.get().unwrap_or(Orientation::Horizontal));
+    let orientation_signal = prop_or(orientation, Orientation::Horizontal);
 
     let open_timer_ref: StoredValue<Option<i32>> = StoredValue::new(None);
     let close_timer_ref: StoredValue<Option<i32>> = StoredValue::new(None);
@@ -506,16 +505,15 @@ pub fn NavigationMenuSub(
     let children = StoredValue::new(children);
 
     let context = expect_context::<NavigationMenuContextValue>();
-    let orientation_signal =
-        Signal::derive(move || orientation.get().unwrap_or(Orientation::Horizontal));
+    let orientation_signal = prop_or(orientation, Orientation::Horizontal);
 
     let (value_signal, set_value) = use_controllable_state(UseControllableStateParams {
         prop: value,
         default_prop: MaybeProp::derive(move || Some(default_value.get().unwrap_or_default())),
-        on_change: on_value_change.map(|cb| {
-            Callback::new(move |val: Option<String>| {
-                if let Some(val) = val {
-                    cb.run(val);
+        on_change: on_value_change.map(|on_value_change| {
+            Callback::new(move |value: Option<String>| {
+                if let Some(value) = value {
+                    on_value_change.run(value);
                 }
             })
         }),

@@ -13,7 +13,7 @@ use radix_leptos_popper::{
 };
 use radix_leptos_portal::Portal;
 use radix_leptos_presence::Presence;
-use radix_leptos_primitive::{Primitive, compose_callbacks, open_closed_state};
+use radix_leptos_primitive::{Primitive, compose_callbacks, open_closed_state, prop_or_default};
 use radix_leptos_use_controllable_state::{UseControllableStateParams, use_controllable_state};
 use send_wrapper::SendWrapper;
 use wasm_bindgen::JsCast;
@@ -58,7 +58,7 @@ pub fn Popover(
         }),
     });
     let open = Signal::derive(move || open_signal.get().unwrap_or(false));
-    let modal = Signal::derive(move || modal.get().unwrap_or(false));
+    let modal = prop_or_default(modal);
 
     let has_custom_anchor = RwSignal::new(false);
     let content_id = use_id(None);
@@ -219,10 +219,8 @@ pub fn PopoverPortal(
 ) -> impl IntoView {
     let children = StoredValue::new(children);
 
-    let force_mount_signal = Signal::derive(move || force_mount.get().unwrap_or(false));
-
     let portal_context = PopoverPortalContextValue {
-        force_mount: force_mount_signal,
+        force_mount: prop_or_default(force_mount),
     };
 
     // Capture contexts before the portal boundary for re-provision inside mount_to.
@@ -708,9 +706,8 @@ fn PopoverContentImpl(
     // the last element in the DOM (because of the `Portal`)
     use_focus_guards();
 
-    let trapped = Signal::derive(move || trap_focus.get().unwrap_or(false));
-    let disable_outside =
-        Signal::derive(move || disable_outside_pointer_events.get().unwrap_or(false));
+    let trapped = prop_or_default(trap_focus);
+    let disable_outside = prop_or_default(disable_outside_pointer_events);
 
     // Apply custom CSS properties via Effect rather than attr:style.
     // Caller attributes (including attr:style from stories) are forwarded through the

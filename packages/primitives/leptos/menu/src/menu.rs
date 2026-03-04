@@ -25,7 +25,10 @@ pub use radix_leptos_popper::{
 use radix_leptos_popper::{Popper, PopperAnchor, PopperArrow, PopperContent};
 use radix_leptos_portal::Portal;
 use radix_leptos_presence::Presence;
-use radix_leptos_primitive::{Primitive, compose_callbacks, open_closed_state, wrap_callback};
+use radix_leptos_primitive::{
+    Primitive, compose_callbacks, data_attr, open_closed_state, prop_or, prop_or_default,
+    wrap_callback,
+};
 use radix_leptos_roving_focus::{Orientation, RovingFocusGroup, RovingFocusGroupItem};
 use send_wrapper::SendWrapper;
 use wasm_bindgen::{JsCast, closure::Closure};
@@ -135,8 +138,8 @@ pub fn Menu(
 ) -> impl IntoView {
     let children = StoredValue::new(children);
 
-    let open = Signal::derive(move || open.get().unwrap_or(false));
-    let modal = Signal::derive(move || modal.get().unwrap_or(true));
+    let open = prop_or_default(open);
+    let modal = prop_or(modal, true);
     let on_open_change = on_open_change.unwrap_or(Callback::new(|_| {}));
 
     let content_ref = AnyNodeRef::new();
@@ -638,7 +641,7 @@ fn MenuContentImpl(
     #[prop(into, optional)] node_ref: AnyNodeRef,
     children: ChildrenFn,
 ) -> impl IntoView {
-    let r#loop = Signal::derive(move || r#loop.get().unwrap_or(false));
+    let r#loop = prop_or_default(r#loop);
 
     let context = expect_context::<MenuContextValue>();
     let root_context = expect_context::<MenuRootContextValue>();
@@ -777,10 +780,9 @@ fn MenuContentImpl(
         }),
     };
 
-    let disable_outside =
-        Signal::derive(move || disable_outside_pointer_events.get().unwrap_or(false));
+    let disable_outside = prop_or_default(disable_outside_pointer_events);
 
-    let trapped = Signal::derive(move || trap_focus.get().unwrap_or(false));
+    let trapped = prop_or_default(trap_focus);
 
     let current_tab_stop_id_signal =
         Signal::derive(move || current_item_id.get().unwrap_or_default());
@@ -1161,7 +1163,7 @@ pub fn MenuItem(
     #[prop(into, optional)] node_ref: AnyNodeRef,
     children: ChildrenFn,
 ) -> impl IntoView {
-    let disabled = Signal::derive(move || disabled.get().unwrap_or(false));
+    let disabled = prop_or_default(disabled);
 
     let item_ref = AnyNodeRef::new();
     let composed_refs = use_composed_refs(vec![node_ref, item_ref]);
@@ -1258,7 +1260,7 @@ fn MenuItemImpl(
     #[prop(into, optional)] node_ref: AnyNodeRef,
     children: ChildrenFn,
 ) -> impl IntoView {
-    let disabled = Signal::derive(move || disabled.get().unwrap_or(false));
+    let disabled = prop_or_default(disabled);
 
     let content_context = expect_context::<MenuContentContextValue>();
     let item_ref = AnyNodeRef::new();
@@ -1290,9 +1292,9 @@ fn MenuItemImpl(
                         as_child=as_child
                         node_ref=composed_ref
                         attr:role=move || role.get().unwrap_or("menuitem".into())
-                        attr:data-highlighted=move || is_focused.get().then_some("")
+                        attr:data-highlighted=data_attr(is_focused.into())
                         attr:aria-disabled=move || disabled.get().then_some("true")
-                        attr:data-disabled=move || disabled.get().then_some("")
+                        attr:data-disabled=data_attr(disabled)
                         /*
                         * We focus items on `pointermove` to achieve the following:
                         *
@@ -1346,7 +1348,7 @@ pub fn MenuCheckboxItem(
     #[prop(into, optional)] node_ref: AnyNodeRef,
     children: ChildrenFn,
 ) -> impl IntoView {
-    let checked = Signal::derive(move || checked.get().unwrap_or(CheckedState::False));
+    let checked = prop_or(checked, CheckedState::False);
 
     let indicator_context = ItemIndicatorContextValue { checked };
 
@@ -1547,7 +1549,7 @@ pub fn MenuSub(
 
     let parent_context = expect_context::<MenuContextValue>();
     let on_open_change = on_open_change.unwrap_or(Callback::new(|_| {}));
-    let open = Signal::derive(move || open.get().unwrap_or(false));
+    let open = prop_or_default(open);
 
     let content_ref = AnyNodeRef::new();
     let trigger_ref = AnyNodeRef::new();
@@ -1611,7 +1613,7 @@ pub fn MenuSubTrigger(
     let sub_context = expect_context::<MenuSubContextValue>();
     let content_context = expect_context::<MenuContentContextValue>();
     let open_timer: RwSignal<Option<i32>> = RwSignal::new(None);
-    let disabled = Signal::derive(move || disabled.get().unwrap_or(false));
+    let disabled = prop_or_default(disabled);
 
     let composed_refs = use_composed_refs(vec![node_ref, sub_context.trigger_ref]);
 

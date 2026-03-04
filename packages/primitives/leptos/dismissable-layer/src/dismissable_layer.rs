@@ -6,7 +6,7 @@ use leptos::{attribute_interceptor::AttributeInterceptor, html, prelude::*};
 use leptos_node_ref::AnyNodeRef;
 use once_cell::sync::Lazy;
 use radix_leptos_compose_refs::use_composed_refs;
-use radix_leptos_primitive::Primitive;
+use radix_leptos_primitive::{Primitive, prop_or_default};
 use radix_leptos_use_escape_keydown::use_escape_keydown;
 use send_wrapper::SendWrapper;
 use web_sys::{
@@ -430,8 +430,7 @@ pub fn DismissableLayer(
 ) -> impl IntoView {
     let children = StoredValue::new(children);
 
-    let disable_outside_pointer_events =
-        Signal::derive(move || disable_outside_pointer_events.get().unwrap_or(false));
+    let disable_outside_pointer_events = prop_or_default(disable_outside_pointer_events);
 
     let container_ref: AnyNodeRef = AnyNodeRef::new();
     let composed_refs = use_composed_refs(vec![node_ref, container_ref]);

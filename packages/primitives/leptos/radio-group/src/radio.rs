@@ -2,7 +2,7 @@ use leptos::{html, prelude::*};
 use leptos_node_ref::AnyNodeRef;
 use radix_leptos_compose_refs::use_composed_refs;
 use radix_leptos_presence::Presence;
-use radix_leptos_primitive::Primitive;
+use radix_leptos_primitive::{Primitive, data_attr, prop_or_default};
 use radix_leptos_use_previous::use_previous;
 use radix_leptos_use_size::use_size;
 use web_sys::wasm_bindgen::JsCast;
@@ -33,7 +33,7 @@ pub(crate) fn RadioIndicator(
 ) -> impl IntoView {
     let children = StoredValue::new(children);
 
-    let force_mount = Signal::derive(move || force_mount.get().unwrap_or(false));
+    let force_mount = prop_or_default(force_mount);
     let context = expect_context::<RadioContextValue>();
 
     let present = Signal::derive(move || force_mount.get() || context.checked.get());
@@ -50,7 +50,7 @@ pub(crate) fn RadioIndicator(
                 as_child=as_child
                 node_ref=composed_ref
                 attr:data-state=move || get_state(context.checked.get())
-                attr:data-disabled=move || context.disabled.get().then_some("")
+                attr:data-disabled=data_attr(context.disabled)
             >
                 {children.with_value(|children| children.as_ref().map(|children| children()))}
             </Primitive>
@@ -113,9 +113,9 @@ pub(crate) fn RadioBubbleInput(
             node_ref=input_ref
             type="radio"
             aria-hidden="true"
-            checked=move || checked.get().then_some("")
-            required=move || required.get().then_some("")
-            disabled=move || disabled.get().then_some("")
+            checked=data_attr(checked)
+            required=data_attr(required)
+            disabled=data_attr(disabled)
             name=move || name.get()
             value=move || value.get()
             tabindex="-1"

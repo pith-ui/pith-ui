@@ -2,7 +2,9 @@ use leptos::{context::Provider, ev, html, prelude::*};
 use leptos_node_ref::AnyNodeRef;
 pub use radix_leptos_menu::CheckedState;
 use radix_leptos_menu::*;
-use radix_leptos_primitive::{Primitive, compose_callbacks, wrap_callback};
+use radix_leptos_primitive::{
+    Primitive, compose_callbacks, data_attr, prop_or, prop_or_default, wrap_callback,
+};
 use radix_leptos_use_controllable_state::{UseControllableStateParams, use_controllable_state};
 use send_wrapper::SendWrapper;
 use wasm_bindgen::{JsCast, closure::Closure};
@@ -27,7 +29,7 @@ pub fn ContextMenu(
 ) -> impl IntoView {
     let children = StoredValue::new(children);
 
-    let modal = Signal::derive(move || modal.get().unwrap_or(true));
+    let modal = prop_or(modal, true);
     let (open, set_open) = signal(false);
     let open_signal = Signal::derive(move || open.get());
 
@@ -109,7 +111,7 @@ pub fn ContextMenuTrigger(
 ) -> impl IntoView {
     let children = StoredValue::new(children);
     let context = expect_context::<ContextMenuContextValue>();
-    let disabled = Signal::derive(move || disabled.get().unwrap_or(false));
+    let disabled = prop_or_default(disabled);
     let point = RwSignal::new(Point::default());
     let long_press_timer = RwSignal::new(0i32);
 
@@ -146,7 +148,7 @@ pub fn ContextMenuTrigger(
             as_child=as_child
             node_ref=node_ref
             attr:data-state=move || if context.open.get() { "open" } else { "closed" }
-            attr:data-disabled=move || disabled.get().then_some("")
+            attr:data-disabled=data_attr(disabled)
             attr:style="-webkit-touch-callout: none;"
             on:contextmenu=move |event: ev::MouseEvent| {
                 if disabled.get_untracked() {
@@ -519,10 +521,10 @@ pub fn ContextMenuSub(
     let (open_state, set_open_state) = use_controllable_state(UseControllableStateParams {
         prop: open,
         default_prop: default_open,
-        on_change: on_open_change.map(|cb| {
+        on_change: on_open_change.map(|on_open_change| {
             Callback::new(move |value: Option<bool>| {
                 if let Some(value) = value {
-                    cb.run(value);
+                    on_open_change.run(value);
                 }
             })
         }),

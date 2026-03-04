@@ -14,7 +14,7 @@ use radix_leptos_popper::{
 };
 use radix_leptos_portal::Portal;
 use radix_leptos_presence::Presence;
-use radix_leptos_primitive::{Primitive, compose_callbacks};
+use radix_leptos_primitive::{Primitive, compose_callbacks, prop_or, prop_or_default};
 use radix_leptos_use_controllable_state::{UseControllableStateParams, use_controllable_state};
 use radix_leptos_visually_hidden::VisuallyHidden;
 use send_wrapper::SendWrapper;
@@ -69,10 +69,8 @@ pub fn TooltipProvider(
     let is_pointer_in_transit = RwSignal::new(false);
     let skip_delay_timer_ref: StoredValue<Option<i32>> = StoredValue::new(None);
 
-    let delay_duration_signal =
-        Signal::derive(move || delay_duration.get().unwrap_or(DEFAULT_DELAY_DURATION));
-    let disable_hoverable_content_signal =
-        Signal::derive(move || disable_hoverable_content.get().unwrap_or(false));
+    let delay_duration_signal = prop_or(delay_duration, DEFAULT_DELAY_DURATION);
+    let disable_hoverable_content_signal = prop_or_default(disable_hoverable_content);
 
     let on_open = Callback::new(move |_: ()| {
         clear_timeout(skip_delay_timer_ref);
@@ -444,7 +442,7 @@ pub fn TooltipPortal(
 ) -> impl IntoView {
     let children = StoredValue::new(children);
 
-    let force_mount_signal = Signal::derive(move || force_mount.get().unwrap_or(false));
+    let force_mount_signal = prop_or_default(force_mount);
 
     let portal_context = TooltipPortalContextValue {
         force_mount: force_mount_signal,

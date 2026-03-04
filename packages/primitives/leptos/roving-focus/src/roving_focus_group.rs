@@ -12,7 +12,7 @@ use radix_leptos_collection::{
 use radix_leptos_compose_refs::use_composed_refs;
 use radix_leptos_direction::{Direction, use_direction};
 use radix_leptos_id::use_id;
-use radix_leptos_primitive::{Primitive, compose_callbacks};
+use radix_leptos_primitive::{Primitive, compose_callbacks, prop_or, prop_or_default};
 use radix_leptos_use_controllable_state::{UseControllableStateParams, use_controllable_state};
 use send_wrapper::SendWrapper;
 use web_sys::{
@@ -142,7 +142,7 @@ fn RovingFocusGroupImpl(
     let children = StoredValue::new(children);
 
     let orientation = Signal::derive(move || orientation.get());
-    let r#loop = Signal::derive(move || r#loop.get().unwrap_or(false));
+    let r#loop = prop_or_default(r#loop);
 
     let group_ref = AnyNodeRef::new();
     let composed_refs = use_composed_refs(vec![node_ref, group_ref]);
@@ -311,8 +311,8 @@ pub fn RovingFocusGroupItem(
 ) -> impl IntoView {
     let children = StoredValue::new(children);
 
-    let focusable = Signal::derive(move || focusable.get().unwrap_or(true));
-    let active = Signal::derive(move || active.get().unwrap_or(false));
+    let focusable = prop_or(focusable, true);
+    let active = prop_or_default(active);
 
     let auto_id = use_id(None);
     let id = Signal::derive(move || tab_stop_id.get().unwrap_or(auto_id.get()));

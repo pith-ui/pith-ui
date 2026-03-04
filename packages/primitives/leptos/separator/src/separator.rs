@@ -2,7 +2,7 @@ use std::fmt::{Display, Formatter};
 
 use leptos::{html, prelude::*};
 use leptos_node_ref::AnyNodeRef;
-use radix_leptos_primitive::Primitive;
+use radix_leptos_primitive::{Primitive, prop_or_default};
 
 #[derive(Clone, Copy, Debug, Default, Eq, Hash, PartialEq)]
 pub enum Orientation {
@@ -34,8 +34,8 @@ pub fn Separator(
 ) -> impl IntoView {
     let children = StoredValue::new(children);
 
-    let orientation = Signal::derive(move || orientation.get().unwrap_or_default());
-    let decorative = Signal::derive(move || decorative.get().unwrap_or_default());
+    let orientation = prop_or_default(orientation);
+    let decorative = prop_or_default(decorative);
 
     view! {
         <Primitive

@@ -7,7 +7,7 @@ use leptos::{context::Provider, html, prelude::*};
 use leptos_node_ref::AnyNodeRef;
 use radix_leptos_compose_refs::use_composed_refs;
 use radix_leptos_id::use_id;
-use radix_leptos_primitive::{Primitive, VoidPrimitive};
+use radix_leptos_primitive::{Primitive, VoidPrimitive, prop_or_default};
 use send_wrapper::SendWrapper;
 use web_sys::wasm_bindgen::JsCast;
 use web_sys::wasm_bindgen::closure::Closure;
@@ -410,7 +410,7 @@ pub fn FormField(
     let id = use_id(None);
 
     let field_name = name.clone();
-    let server_invalid_signal = Signal::derive(move || server_invalid.get().unwrap_or(false));
+    let server_invalid_signal = prop_or_default(server_invalid);
 
     let field_context = FormFieldContextValue {
         id: id.get_untracked(),

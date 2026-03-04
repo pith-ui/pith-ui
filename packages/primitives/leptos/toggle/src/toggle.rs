@@ -1,6 +1,6 @@
 use leptos::{attribute_interceptor::AttributeInterceptor, ev, html, prelude::*};
 use leptos_node_ref::AnyNodeRef;
-use radix_leptos_primitive::{Primitive, compose_callbacks};
+use radix_leptos_primitive::{Primitive, compose_callbacks, data_attr, prop_or_default};
 use radix_leptos_use_controllable_state::{UseControllableStateParams, use_controllable_state};
 
 /* -------------------------------------------------------------------------------------------------
@@ -26,7 +26,7 @@ pub fn Toggle(
 ) -> impl IntoView {
     let children = StoredValue::new(children);
 
-    let disabled = Signal::derive(move || disabled.get().unwrap_or(false));
+    let disabled = prop_or_default(disabled);
 
     let (pressed, set_pressed) = use_controllable_state(UseControllableStateParams {
         prop: pressed,
@@ -53,8 +53,8 @@ pub fn Toggle(
                     true => "on",
                     false => "off",
                 }
-                attr:data-disabled=move || disabled.get().then_some("")
-                attr:disabled=move || disabled.get().then_some("")
+                attr:data-disabled=data_attr(disabled)
+                attr:disabled=data_attr(disabled)
                 on:click=compose_callbacks(
                     on_click,
                     Some(Callback::new(move |_: ev::MouseEvent| {

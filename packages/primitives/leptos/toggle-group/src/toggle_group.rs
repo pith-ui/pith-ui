@@ -3,7 +3,7 @@ use leptos::{
 };
 use leptos_node_ref::AnyNodeRef;
 use radix_leptos_direction::{Direction, use_direction};
-use radix_leptos_primitive::{Primitive, compose_callbacks};
+use radix_leptos_primitive::{Primitive, compose_callbacks, data_attr, prop_or, prop_or_default};
 use radix_leptos_roving_focus::{Orientation, RovingFocusGroup, RovingFocusGroupItem};
 use radix_leptos_use_controllable_state::{UseControllableStateParams, use_controllable_state};
 
@@ -108,8 +108,8 @@ pub fn ToggleGroup(
         on_item_deactivate,
     };
 
-    let disabled_signal = Signal::derive(move || disabled.get().unwrap_or(false));
-    let roving_focus_signal = Signal::derive(move || roving_focus.get().unwrap_or(true));
+    let disabled_signal = prop_or_default(disabled);
+    let roving_focus_signal = prop_or(roving_focus, true);
 
     let group_context = ToggleGroupContextValue {
         roving_focus: roving_focus_signal,
@@ -125,7 +125,7 @@ pub fn ToggleGroup(
                     roving_focus=roving_focus_signal
                     orientation=orientation
                     direction=direction
-                    r#loop=Signal::derive(move || r#loop.get().unwrap_or(true))
+                    r#loop=prop_or(r#loop, true)
                     as_child=as_child
                     node_ref=node_ref
                 >
@@ -302,8 +302,8 @@ fn ToggleGroupItemImpl(
                     true => "on",
                     false => "off",
                 }
-                attr:data-disabled=move || disabled.get().then_some("")
-                attr:disabled=move || disabled.get().then_some("")
+                attr:data-disabled=data_attr(disabled)
+                attr:disabled=data_attr(disabled)
                 on:click=compose_callbacks(
                     on_click.flatten(),
                     Some(Callback::new(move |_: ev::MouseEvent| {

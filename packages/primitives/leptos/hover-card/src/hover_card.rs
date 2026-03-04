@@ -10,7 +10,7 @@ use radix_leptos_popper::{
 };
 use radix_leptos_portal::Portal;
 use radix_leptos_presence::Presence;
-use radix_leptos_primitive::{Primitive, compose_callbacks, open_closed_state};
+use radix_leptos_primitive::{Primitive, compose_callbacks, open_closed_state, prop_or_default};
 use radix_leptos_use_controllable_state::{UseControllableStateParams, use_controllable_state};
 use send_wrapper::SendWrapper;
 use wasm_bindgen::JsCast;
@@ -251,10 +251,8 @@ pub fn HoverCardPortal(
 ) -> impl IntoView {
     let children = StoredValue::new(children);
 
-    let force_mount_signal = Signal::derive(move || force_mount.get().unwrap_or(false));
-
     let portal_context = HoverCardPortalContextValue {
-        force_mount: force_mount_signal,
+        force_mount: prop_or_default(force_mount),
     };
 
     // Capture contexts before the portal boundary for re-provision inside mount_to.

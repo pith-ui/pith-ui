@@ -8,7 +8,9 @@ use radix_leptos_collection::{
 };
 use radix_leptos_compose_refs::use_composed_refs;
 use radix_leptos_direction::{Direction, use_direction};
-use radix_leptos_primitive::{Primitive, VoidPrimitive, compose_callbacks};
+use radix_leptos_primitive::{
+    Primitive, VoidPrimitive, compose_callbacks, data_attr, prop_or, prop_or_default,
+};
 use radix_leptos_roving_focus::{
     Orientation, RovingFocusGroup, RovingFocusGroupContext, RovingFocusGroupItem,
     RovingFocusGroupItemContext,
@@ -335,18 +337,17 @@ fn OneTimePasswordFieldImpl(
     let children = StoredValue::new(children);
 
     let direction = use_direction(dir);
-    let disabled_sig = Signal::derive(move || disabled.get().unwrap_or(false));
-    let read_only_sig = Signal::derive(move || read_only.get().unwrap_or(false));
-    let auto_complete_sig = Signal::derive(move || auto_complete.get().unwrap_or_default());
-    let auto_focus_sig = Signal::derive(move || auto_focus.get().unwrap_or(false));
+    let disabled_sig = prop_or_default(disabled);
+    let read_only_sig = prop_or_default(read_only);
+    let auto_complete_sig = prop_or_default(auto_complete);
+    let auto_focus_sig = prop_or_default(auto_focus);
     let form_sig = Signal::derive(move || form.get());
     let name_sig = Signal::derive(move || name.get());
     let placeholder_sig = Signal::derive(move || placeholder.get());
-    let type_sig = Signal::derive(move || r#type.get().unwrap_or_default());
-    let orientation_sig =
-        Signal::derive(move || orientation.get().unwrap_or(Orientation::Horizontal));
-    let validation_type_sig = Signal::derive(move || validation_type.get().unwrap_or_default());
-    let auto_submit_sig = Signal::derive(move || auto_submit.get().unwrap_or(false));
+    let type_sig = prop_or_default(r#type);
+    let orientation_sig = prop_or(orientation, Orientation::Horizontal);
+    let validation_type_sig = prop_or_default(validation_type);
+    let auto_submit_sig = prop_or_default(auto_submit);
 
     let sanitize_value_fn: StoredValue<SendWrapper<Box<dyn Fn(String) -> Vec<String>>>> =
         StoredValue::new(SendWrapper::new(Box::new(move |input: String| {
@@ -377,7 +378,9 @@ fn OneTimePasswordFieldImpl(
 
     let on_vec_change: Option<Callback<Option<Vec<String>>>> = on_value_change.map(|cb| {
         Callback::new(move |v: Option<Vec<String>>| {
-            cb.run(v.map(|v| v.join("")).unwrap_or_default());
+            if let Some(v) = v {
+                cb.run(v.join(""));
+            }
         })
     });
 
@@ -876,7 +879,7 @@ fn OneTimePasswordFieldInputInner(
             as_child=as_child
             node_ref=composed_input_ref
             attr:r#type=move || context.r#type.get().as_str()
-            attr:disabled=move || context.disabled.get().then_some("")
+            attr:disabled=data_attr(context.disabled)
             attr:aria-label=move || aria_label.get()
             attr:autocomplete=move || auto_complete_attr.get()
             attr:data-1p-ignore=move || pw_manager_ignore.get()
@@ -886,7 +889,7 @@ fn OneTimePasswordFieldInputInner(
             attr:inputmode=move || input_mode_attr.get()
             attr:maxlength=move || max_length_attr.get().to_string()
             attr:pattern=move || pattern_attr.get()
-            attr:readonly=move || context.read_only.get().then_some("")
+            attr:readonly=data_attr(context.read_only)
             attr:value=move || char_value.get()
             attr:placeholder=move || placeholder_value.get()
             attr:data-radix-otp-input=""

@@ -7,7 +7,9 @@ use radix_leptos_compose_refs::use_composed_refs;
 use radix_leptos_id::use_id;
 pub use radix_leptos_menu::CheckedState;
 use radix_leptos_menu::*;
-use radix_leptos_primitive::{Primitive, compose_callbacks, wrap_callback};
+use radix_leptos_primitive::{
+    Primitive, compose_callbacks, data_attr, prop_or, prop_or_default, wrap_callback,
+};
 use radix_leptos_use_controllable_state::{UseControllableStateParams, use_controllable_state};
 use send_wrapper::SendWrapper;
 use web_sys::wasm_bindgen::JsCast;
@@ -38,16 +40,16 @@ pub fn DropdownMenu(
 ) -> impl IntoView {
     let children = StoredValue::new(children);
 
-    let modal = Signal::derive(move || modal.get().unwrap_or(true));
+    let modal = prop_or(modal, true);
     let trigger_ref = AnyNodeRef::new();
 
     let (open_state, set_open_state) = use_controllable_state(UseControllableStateParams {
         prop: open,
         default_prop: default_open,
-        on_change: on_open_change.map(|cb| {
+        on_change: on_open_change.map(|on_open_change| {
             Callback::new(move |value: Option<bool>| {
                 if let Some(value) = value {
-                    cb.run(value);
+                    on_open_change.run(value);
                 }
             })
         }),
@@ -102,7 +104,7 @@ pub fn DropdownMenuTrigger(
     let children = StoredValue::new(children);
     let context = expect_context::<DropdownMenuContextValue>();
     let composed_refs = use_composed_refs(vec![node_ref, context.trigger_ref]);
-    let disabled = Signal::derive(move || disabled.get().unwrap_or(false));
+    let disabled = prop_or_default(disabled);
 
     view! {
         <MenuAnchor as_child=true>
@@ -116,8 +118,8 @@ pub fn DropdownMenuTrigger(
                 attr:aria-expanded=move || context.open.get().to_string()
                 attr:aria-controls=move || context.open.get().then(|| context.content_id.get())
                 attr:data-state=move || if context.open.get() { "open" } else { "closed" }
-                attr:data-disabled=move || disabled.get().then_some("")
-                attr:disabled=move || disabled.get().then_some("")
+                attr:data-disabled=data_attr(disabled)
+                attr:disabled=data_attr(disabled)
                 on:pointerdown=move |event: ev::PointerEvent| {
                     // Only call handler if it's the left button (mousedown gets triggered by all mouse buttons)
                     // but not when the control key is pressed (avoiding MacOS right click).
@@ -491,10 +493,10 @@ pub fn DropdownMenuSub(
     let (open_state, set_open_state) = use_controllable_state(UseControllableStateParams {
         prop: open,
         default_prop: default_open,
-        on_change: on_open_change.map(|cb| {
+        on_change: on_open_change.map(|on_open_change| {
             Callback::new(move |value: Option<bool>| {
                 if let Some(value) = value {
-                    cb.run(value);
+                    on_open_change.run(value);
                 }
             })
         }),

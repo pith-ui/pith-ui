@@ -6,7 +6,7 @@ use leptos::{
 use leptos_node_ref::AnyNodeRef;
 use radix_leptos_compose_refs::use_composed_refs;
 use radix_leptos_direction::{Direction, use_direction};
-use radix_leptos_primitive::{Primitive, compose_callbacks};
+use radix_leptos_primitive::{Primitive, compose_callbacks, data_attr, prop_or, prop_or_default};
 use radix_leptos_roving_focus::{Orientation, RovingFocusGroup, RovingFocusGroupItem};
 use radix_leptos_use_controllable_state::{UseControllableStateParams, use_controllable_state};
 use send_wrapper::SendWrapper;
@@ -46,9 +46,9 @@ pub fn RadioGroup(
 ) -> impl IntoView {
     let children = StoredValue::new(children);
 
-    let required = Signal::derive(move || required.get().unwrap_or(false));
-    let disabled = Signal::derive(move || disabled.get().unwrap_or(false));
-    let loop_signal = Signal::derive(move || r#loop.get().unwrap_or(true));
+    let required = prop_or_default(required);
+    let disabled = prop_or_default(disabled);
+    let loop_signal = prop_or(r#loop, true);
 
     let direction = use_direction(dir);
 
@@ -93,7 +93,7 @@ pub fn RadioGroup(
                     attr:role="radiogroup"
                     attr:aria-required=move || required.get().then_some("true")
                     attr:aria-orientation=move || orientation.get().map(|o| o.to_string())
-                    attr:data-disabled=move || disabled.get().then_some("")
+                    attr:data-disabled=data_attr(disabled)
                     attr:dir=move || direction.get().to_string()
                 >
                     {children.with_value(|children| children())}
@@ -314,8 +314,8 @@ fn RadioButton(
                 attr:role="radio"
                 attr:aria-checked=move || checked.get().to_string()
                 attr:data-state=move || get_state(checked.get())
-                attr:data-disabled=move || disabled.get().then_some("")
-                attr:disabled=move || disabled.get().then_some("")
+                attr:data-disabled=data_attr(disabled)
+                attr:disabled=data_attr(disabled)
                 on:click=compose_callbacks(
                     on_click,
                     Some(Callback::new(move |event: ev::MouseEvent| {

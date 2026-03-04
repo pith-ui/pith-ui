@@ -1,7 +1,7 @@
 use leptos::{context::Provider, ev, html, prelude::*};
 use leptos_node_ref::AnyNodeRef;
 use radix_leptos_direction::{Direction, use_direction};
-use radix_leptos_primitive::{Primitive, compose_callbacks};
+use radix_leptos_primitive::{Primitive, compose_callbacks, data_attr, prop_or, prop_or_default};
 use radix_leptos_roving_focus::{Orientation, RovingFocusGroup, RovingFocusGroupItem};
 use radix_leptos_separator::Separator;
 use radix_leptos_toggle_group::{ToggleGroup, ToggleGroupItem, ToggleGroupType};
@@ -46,7 +46,7 @@ pub fn Toolbar(
                 as_child=true
                 orientation=orientation
                 dir=direction
-                r#loop=Signal::derive(move || r#loop.get().unwrap_or(true))
+                r#loop=prop_or(r#loop, true)
             >
                 <Primitive
                     element=html::div
@@ -114,17 +114,19 @@ pub fn ToolbarButton(
 ) -> impl IntoView {
     let children = StoredValue::new(children);
 
+    let disabled = prop_or_default(disabled);
+
     view! {
         <RovingFocusGroupItem
             as_child=true
-            focusable=Signal::derive(move || !disabled.get().unwrap_or(false))
+            focusable=Signal::derive(move || !disabled.get())
         >
             <Primitive
                 element=html::button
                 as_child=as_child
                 node_ref=node_ref
                 attr:r#type="button"
-                attr:disabled=move || disabled.get().unwrap_or(false).then_some("")
+                attr:disabled=data_attr(disabled)
             >
                 {children.with_value(|children| children())}
             </Primitive>

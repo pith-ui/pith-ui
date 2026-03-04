@@ -21,7 +21,7 @@ use radix_leptos_popper::{
     UpdatePositionStrategy, provide_popper_scope, use_popper_scope,
 };
 use radix_leptos_portal::Portal;
-use radix_leptos_primitive::{Primitive, compose_callbacks};
+use radix_leptos_primitive::{Primitive, compose_callbacks, data_attr, prop_or_default};
 use radix_leptos_use_controllable_state::{UseControllableStateParams, use_controllable_state};
 use send_wrapper::SendWrapper;
 use wasm_bindgen::JsCast;
@@ -137,10 +137,10 @@ pub fn Select(
     let (open_signal, set_open) = use_controllable_state(UseControllableStateParams {
         prop: open,
         default_prop: default_open,
-        on_change: on_open_change.map(|cb| {
+        on_change: on_open_change.map(|on_open_change| {
             Callback::new(move |value: Option<bool>| {
                 if let Some(value) = value {
-                    cb.run(value);
+                    on_open_change.run(value);
                 }
             })
         }),
@@ -150,10 +150,10 @@ pub fn Select(
     let (value_signal, set_value) = use_controllable_state(UseControllableStateParams {
         prop: MaybeProp::derive(move || value.get()),
         default_prop: default_value,
-        on_change: on_value_change.map(|cb| {
+        on_change: on_value_change.map(|on_value_change| {
             Callback::new(move |value: Option<String>| {
                 if let Some(value) = value {
-                    cb.run(value);
+                    on_value_change.run(value);
                 }
             })
         }),
@@ -163,8 +163,8 @@ pub fn Select(
     let trigger_pointer_down_pos_ref: StoredValue<Option<(f64, f64)>> = StoredValue::new(None);
 
     let content_id = use_id(None);
-    let disabled_state = Signal::derive(move || disabled.get().unwrap_or(false));
-    let required_state = Signal::derive(move || required.get().unwrap_or(false));
+    let disabled_state = prop_or_default(disabled);
+    let required_state = prop_or_default(required);
 
     let context = SelectContextValue {
         trigger_ref,
@@ -285,8 +285,8 @@ pub fn SelectTrigger(
                     attr:aria-autocomplete="none"
                     attr:dir=move || context.dir.get().to_string()
                     attr:data-state=move || if context.open.get() { "open" } else { "closed" }
-                    attr:disabled=move || is_disabled.get().then_some("")
-                    attr:data-disabled=move || is_disabled.get().then_some("")
+                    attr:disabled=data_attr(is_disabled)
+                    attr:data-disabled=data_attr(is_disabled)
                     attr:data-placeholder=move || should_show_placeholder(&context.value.get()).then_some("")
                     on:click=compose_callbacks(
                         on_click_stored.get_value(),
@@ -438,7 +438,7 @@ pub fn SelectPortal(
 ) -> impl IntoView {
     let children = StoredValue::new(children);
 
-    let force_mount_signal = Signal::derive(move || force_mount.get().unwrap_or(false));
+    let force_mount_signal = prop_or_default(force_mount);
 
     let portal_context = SelectPortalContextValue {
         force_mount: force_mount_signal,
@@ -1401,7 +1401,7 @@ pub fn SelectItem(
     let item_ref_callback =
         expect_context::<Callback<(Option<SendWrapper<web_sys::HtmlElement>>, String, bool)>>();
 
-    let disabled = Signal::derive(move || disabled.get().unwrap_or(false));
+    let disabled = prop_or_default(disabled);
     let value = StoredValue::new(value);
     let is_selected = Signal::derive(move || {
         value
@@ -1496,7 +1496,7 @@ pub fn SelectItem(
                         attr:aria-selected=move || if is_selected.get() && is_focused.get() { Some("true".to_string()) } else { None }
                         attr:data-state=move || if is_selected.get() { "checked" } else { "unchecked" }
                         attr:aria-disabled=move || disabled.get().then_some("true".to_string())
-                        attr:data-disabled=move || disabled.get().then_some("")
+                        attr:data-disabled=data_attr(disabled)
                         attr:tabindex=move || if disabled.get() { None } else { Some("-1".to_string()) }
                         // Event handlers are inlined rather than using compose_callbacks
                         // with Callback::new(...) because Callback::new creates a StoredValue

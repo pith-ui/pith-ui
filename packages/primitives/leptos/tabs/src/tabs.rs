@@ -3,7 +3,7 @@ use leptos_node_ref::AnyNodeRef;
 use radix_leptos_direction::{Direction, use_direction};
 use radix_leptos_id::use_id;
 use radix_leptos_presence::Presence;
-use radix_leptos_primitive::{Primitive, compose_callbacks};
+use radix_leptos_primitive::{Primitive, compose_callbacks, data_attr, prop_or, prop_or_default};
 use radix_leptos_roving_focus::{RovingFocusGroup, RovingFocusGroupItem};
 use radix_leptos_use_controllable_state::{UseControllableStateParams, use_controllable_state};
 use send_wrapper::SendWrapper;
@@ -60,8 +60,8 @@ pub fn Tabs(
     let children = StoredValue::new(children);
 
     let direction = use_direction(dir);
-    let orientation = Signal::derive(move || orientation.get().unwrap_or(Orientation::Horizontal));
-    let activation_mode = Signal::derive(move || activation_mode.get().unwrap_or_default());
+    let orientation = prop_or(orientation, Orientation::Horizontal);
+    let activation_mode = prop_or_default(activation_mode);
     let base_id = use_id(None);
 
     let (value_signal, set_value) = use_controllable_state(UseControllableStateParams {
@@ -128,7 +128,7 @@ pub fn TabsList(
             as_child=true
             orientation=Signal::derive(move || Some(orientation.get()))
             dir=context.dir
-            r#loop=Signal::derive(move || r#loop.get().unwrap_or(true))
+            r#loop=prop_or(r#loop, true)
         >
             <Primitive
                 element=html::div
@@ -163,7 +163,7 @@ pub fn TabsTrigger(
 
     let context = expect_context::<TabsContextValue>();
     let trigger_value = StoredValue::new(value);
-    let disabled = Signal::derive(move || disabled.get().unwrap_or(false));
+    let disabled = prop_or_default(disabled);
 
     let trigger_id =
         Signal::derive(move || make_trigger_id(&context.base_id.get(), &trigger_value.get_value()));
@@ -227,8 +227,8 @@ pub fn TabsTrigger(
                 attr:aria-selected=move || is_selected.get().to_string()
                 attr:aria-controls=move || content_id.get()
                 attr:data-state=move || if is_selected.get() { "active" } else { "inactive" }
-                attr:data-disabled=move || disabled.get().then_some("")
-                attr:disabled=move || disabled.get().then_some("")
+                attr:data-disabled=data_attr(disabled)
+                attr:disabled=data_attr(disabled)
                 attr:id=move || trigger_id.get()
                 on:mousedown=compose_callbacks(on_mouse_down, Some(Callback::new(move |event: ev::MouseEvent| {
                     // Only call handler if it's the left button (mousedown gets triggered by all mouse buttons)

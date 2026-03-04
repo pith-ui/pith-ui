@@ -600,10 +600,10 @@ pub fn Toast(
             Some(_) => default_open,
             None => MaybeProp::from(Some(true)),
         },
-        on_change: on_open_change.map(|cb| {
+        on_change: on_open_change.map(|on_open_change| {
             Callback::new(move |value: Option<bool>| {
                 if let Some(value) = value {
-                    cb.run(value);
+                    on_open_change.run(value);
                 }
             })
         }),

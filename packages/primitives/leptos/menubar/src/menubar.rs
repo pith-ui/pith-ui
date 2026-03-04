@@ -12,7 +12,9 @@ use radix_leptos_direction::{Direction, use_direction};
 use radix_leptos_id::use_id;
 pub use radix_leptos_menu::CheckedState;
 use radix_leptos_menu::*;
-use radix_leptos_primitive::{Primitive, compose_callbacks, wrap_callback};
+use radix_leptos_primitive::{
+    Primitive, compose_callbacks, data_attr, prop_or, prop_or_default, wrap_callback,
+};
 use radix_leptos_roving_focus::{Orientation, RovingFocusGroup, RovingFocusGroupItem};
 use radix_leptos_use_controllable_state::{UseControllableStateParams, use_controllable_state};
 use send_wrapper::SendWrapper;
@@ -53,15 +55,15 @@ pub fn Menubar(
 ) -> impl IntoView {
     let children = StoredValue::new(children);
     let direction = use_direction(dir);
-    let r#loop = Signal::derive(move || r#loop.get().unwrap_or(true));
+    let r#loop = prop_or(r#loop, true);
 
     let (value_state, set_value_state) = use_controllable_state(UseControllableStateParams {
         prop: value,
         default_prop: default_value,
-        on_change: on_value_change.map(|cb| {
+        on_change: on_value_change.map(|on_value_change| {
             Callback::new(move |value: Option<String>| {
                 if let Some(value) = value {
-                    cb.run(value);
+                    on_value_change.run(value);
                 }
             })
         }),
@@ -216,7 +218,7 @@ pub fn MenubarTrigger(
     let trigger_ref = AnyNodeRef::new();
     let composed_refs = use_composed_refs(vec![node_ref, trigger_ref, menu_context.trigger_ref]);
 
-    let disabled = Signal::derive(move || disabled.get().unwrap_or(false));
+    let disabled = prop_or_default(disabled);
     let is_focused = RwSignal::new(false);
 
     let value = StoredValue::new(menu_context.value.clone());
@@ -245,10 +247,10 @@ pub fn MenubarTrigger(
                         attr:aria-haspopup="menu"
                         attr:aria-expanded=move || open.get().to_string()
                         attr:aria-controls=move || open.get().then(|| menu_context.content_id.get())
-                        attr:data-highlighted=move || is_focused.get().then_some("")
+                        attr:data-highlighted=data_attr(is_focused.into())
                         attr:data-state=move || if open.get() { "open" } else { "closed" }
-                        attr:data-disabled=move || disabled.get().then_some("")
-                        attr:disabled=move || disabled.get().then_some("")
+                        attr:data-disabled=data_attr(disabled)
+                        attr:disabled=data_attr(disabled)
                         on:pointerdown=move |event: ev::PointerEvent| {
                             // only call handler if it's the left button (mousedown gets triggered by all mouse buttons)
                             // but not when the control key is pressed (avoiding MacOS right click)
@@ -349,7 +351,7 @@ pub fn MenubarContent(
 
     let has_interacted_outside_ref = SendWrapper::new(Rc::new(Cell::new(false)));
 
-    let align = Signal::derive(move || align.get().unwrap_or(Align::Start));
+    let align = prop_or(align, Align::Start);
 
     // Wrap pass-through callbacks for view! macro forwarding.
     let on_escape_key_down = wrap_callback(on_escape_key_down);
@@ -729,10 +731,10 @@ pub fn MenubarSub(
     let (open_state, set_open_state) = use_controllable_state(UseControllableStateParams {
         prop: open,
         default_prop: default_open,
-        on_change: on_open_change.map(|cb| {
+        on_change: on_open_change.map(|on_open_change| {
             Callback::new(move |value: Option<bool>| {
                 if let Some(value) = value {
-                    cb.run(value);
+                    on_open_change.run(value);
                 }
             })
         }),

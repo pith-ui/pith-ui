@@ -82,6 +82,20 @@ pub fn open_closed_state(open: bool) -> &'static str {
     }
 }
 
+pub fn prop_or<T: Clone + Send + Sync + 'static>(prop: MaybeProp<T>, default: T) -> Signal<T> {
+    Signal::derive(move || prop.get().unwrap_or(default.clone()))
+}
+
+pub fn prop_or_default<T: Clone + Default + Send + Sync + 'static>(
+    prop: MaybeProp<T>,
+) -> Signal<T> {
+    Signal::derive(move || prop.get().unwrap_or_default())
+}
+
+pub fn data_attr(signal: Signal<bool>) -> impl Fn() -> Option<&'static str> + Send + Sync {
+    move || signal.get().then_some("")
+}
+
 pub fn compose_callbacks<E>(
     original_handler: Option<Callback<E>>,
     our_handler: Option<Callback<E>>,
