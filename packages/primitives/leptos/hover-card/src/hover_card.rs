@@ -8,9 +8,9 @@ use radix_leptos_popper::{
     Align, Padding, Popper, PopperAnchor, PopperArrow, PopperContent, Side, Sticky,
     UpdatePositionStrategy, provide_popper_scope, use_popper_scope,
 };
-use radix_leptos_portal::Portal;
+use radix_leptos_portal::{ScopedPortal, resolve_force_mount};
 use radix_leptos_presence::Presence;
-use radix_leptos_primitive::{Primitive, compose_callbacks, open_closed_state, prop_or_default};
+use radix_leptos_primitive::{Primitive, compose_callbacks, open_closed_state};
 use radix_leptos_use_controllable_state::{UseControllableStateParams, use_controllable_state};
 use send_wrapper::SendWrapper;
 use wasm_bindgen::JsCast;
@@ -237,11 +237,6 @@ pub fn HoverCardTrigger(
  * HoverCardPortal
  * -----------------------------------------------------------------------------------------------*/
 
-#[derive(Clone)]
-struct HoverCardPortalContextValue {
-    force_mount: Signal<bool>,
-}
-
 #[component]
 pub fn HoverCardPortal(
     #[prop(into, optional)] container: MaybeProp<SendWrapper<web_sys::Element>>,
@@ -250,10 +245,6 @@ pub fn HoverCardPortal(
     children: ChildrenFn,
 ) -> impl IntoView {
     let children = StoredValue::new(children);
-
-    let portal_context = HoverCardPortalContextValue {
-        force_mount: prop_or_default(force_mount),
-    };
 
     // Capture contexts before the portal boundary for re-provision inside mount_to.
     // React uses createContextScope with scope composition to automatically isolate
@@ -267,18 +258,16 @@ pub fn HoverCardPortal(
     // A portal-level Presence would have no node_ref to observe, causing it to unmount
     // immediately before exit animations can complete (same pattern as DialogPortal).
     view! {
-        <Provider value=portal_context>
-            <Portal container=container container_ref=container_ref as_child=true>
-                <Provider value=hover_card_context>
-                    {
-                        if let Some(scope) = popper_scope {
-                            provide_popper_scope(scope);
-                        }
-                        children.with_value(|children| children())
+        <ScopedPortal container=container container_ref=container_ref force_mount=force_mount>
+            <Provider value=hover_card_context>
+                {
+                    if let Some(scope) = popper_scope {
+                        provide_popper_scope(scope);
                     }
-                </Provider>
-            </Portal>
-        </Provider>
+                    children.with_value(|children| children())
+                }
+            </Provider>
+        </ScopedPortal>
     }
 }
 
@@ -317,14 +306,8 @@ pub fn HoverCardContent(
     let children = StoredValue::new(children);
 
     let context = expect_context::<HoverCardContextValue>();
-    let portal_context = use_context::<HoverCardPortalContextValue>();
 
-    let force_mount = Signal::derive(move || {
-        force_mount
-            .get()
-            .or_else(|| portal_context.as_ref().map(|pc| pc.force_mount.get()))
-            .unwrap_or(false)
-    });
+    let force_mount = resolve_force_mount(force_mount);
 
     let present = Signal::derive(move || force_mount.get() || context.open.get());
 

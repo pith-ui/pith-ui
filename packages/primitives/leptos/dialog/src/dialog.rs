@@ -7,7 +7,7 @@ use radix_leptos_dismissable_layer::DismissableLayer;
 use radix_leptos_focus_guards::use_focus_guards;
 use radix_leptos_focus_scope::FocusScope;
 use radix_leptos_id::use_id;
-use radix_leptos_portal::Portal;
+use radix_leptos_portal::{ScopedPortal, resolve_force_mount};
 use radix_leptos_presence::Presence;
 use radix_leptos_primitive::{
     Primitive, compose_callbacks, open_closed_state, prop_or, prop_or_default,
@@ -134,11 +134,6 @@ pub fn DialogTrigger(
  * DialogPortal
  * -----------------------------------------------------------------------------------------------*/
 
-#[derive(Clone)]
-struct PortalContextValue {
-    force_mount: Signal<bool>,
-}
-
 #[component]
 pub fn DialogPortal(
     #[prop(into, optional)] container: MaybeProp<SendWrapper<web_sys::Element>>,
@@ -148,12 +143,6 @@ pub fn DialogPortal(
 ) -> impl IntoView {
     let children = StoredValue::new(children);
 
-    let force_mount_signal = prop_or_default(force_mount);
-
-    let portal_context = PortalContextValue {
-        force_mount: force_mount_signal,
-    };
-
     // React wraps each child individually in <Presence><Portal>, allowing each child
     // to observe its own animation events. We cannot map over children the same way,
     // so we always render the Portal and let each child (DialogOverlay, DialogContent)
@@ -161,11 +150,9 @@ pub fn DialogPortal(
     // Presence (which has no node_ref to observe) from prematurely unmounting children
     // before their exit animations complete.
     view! {
-        <Provider value=portal_context>
-            <Portal container=container container_ref=container_ref as_child=true>
-                {children.with_value(|children| children())}
-            </Portal>
-        </Provider>
+        <ScopedPortal container=container container_ref=container_ref force_mount=force_mount>
+            {children.with_value(|children| children())}
+        </ScopedPortal>
     }
 }
 
@@ -183,14 +170,8 @@ pub fn DialogOverlay(
     let children = StoredValue::new(children);
 
     let context = expect_context::<DialogContextValue>();
-    let portal_context = use_context::<PortalContextValue>();
 
-    let force_mount = Signal::derive(move || {
-        force_mount
-            .get()
-            .or_else(|| portal_context.as_ref().map(|pc| pc.force_mount.get()))
-            .unwrap_or(false)
-    });
+    let force_mount = resolve_force_mount(force_mount);
 
     let present = Signal::derive(move || force_mount.get() || context.open.get());
     let is_modal = context.modal;
@@ -287,14 +268,8 @@ pub fn DialogContent(
     let children = StoredValue::new(children);
 
     let context = expect_context::<DialogContextValue>();
-    let portal_context = use_context::<PortalContextValue>();
 
-    let force_mount = Signal::derive(move || {
-        force_mount
-            .get()
-            .or_else(|| portal_context.as_ref().map(|pc| pc.force_mount.get()))
-            .unwrap_or(false)
-    });
+    let force_mount = resolve_force_mount(force_mount);
 
     let present = Signal::derive(move || force_mount.get() || context.open.get());
     let is_modal = context.modal;

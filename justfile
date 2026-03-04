@@ -61,3 +61,19 @@ test_react_component component: free_port
 [working-directory('reference_app')]
 test_leptos_component component: kill_trunk free_port
     pnpm start-server-and-test leptos:dev http://localhost:3000 'cypress run --headless --spec "cypress/e2e/{{ component }}.cy.js"' 2>&1
+
+# Start React server, test multiple components sequentially, then shut down
+# Usage: just test_react_components dialog popover hover-card
+[working-directory('reference_app')]
+test_react_components +components: free_port
+    #!/usr/bin/env bash
+    specs=$(echo "{{ components }}" | tr ' ' '\n' | sed 's|.*|cypress/e2e/&.cy.js|' | paste -sd, -)
+    pnpm start-server-and-test react:dev http://localhost:3000 "cypress run --headless --spec \"$specs\"" 2>&1
+
+# Start Leptos server, test multiple components sequentially, then shut down
+# Usage: just test_leptos_components dialog popover hover-card
+[working-directory('reference_app')]
+test_leptos_components +components: kill_trunk free_port
+    #!/usr/bin/env bash
+    specs=$(echo "{{ components }}" | tr ' ' '\n' | sed 's|.*|cypress/e2e/&.cy.js|' | paste -sd, -)
+    pnpm start-server-and-test leptos:dev http://localhost:3000 "cypress run --headless --spec \"$specs\"" 2>&1

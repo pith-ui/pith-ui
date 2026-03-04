@@ -20,7 +20,7 @@ use radix_leptos_popper::{
     Align, Padding, Popper, PopperAnchor, PopperArrow, PopperContent, Side, Sticky,
     UpdatePositionStrategy, provide_popper_scope, use_popper_scope,
 };
-use radix_leptos_portal::Portal;
+use radix_leptos_portal::ScopedPortal;
 use radix_leptos_primitive::{Primitive, compose_callbacks, data_attr, prop_or_default};
 use radix_leptos_use_controllable_state::{UseControllableStateParams, use_controllable_state};
 use send_wrapper::SendWrapper;
@@ -98,12 +98,6 @@ struct SelectItemContextValue {
 #[derive(Clone, Copy)]
 struct SelectGroupContextValue {
     id: ReadSignal<String>,
-}
-
-#[derive(Clone, Copy)]
-struct SelectPortalContextValue {
-    #[allow(dead_code)]
-    force_mount: Signal<bool>,
 }
 
 /* -------------------------------------------------------------------------------------------------
@@ -438,33 +432,25 @@ pub fn SelectPortal(
 ) -> impl IntoView {
     let children = StoredValue::new(children);
 
-    let force_mount_signal = prop_or_default(force_mount);
-
-    let portal_context = SelectPortalContextValue {
-        force_mount: force_mount_signal,
-    };
-
     // Capture contexts for re-provision inside the portal boundary
     let select_context = expect_context::<SelectContextValue>();
     let popper_scope = use_popper_scope();
     let collection_scope = use_collection_scope::<SelectItemData>();
 
     view! {
-        <Provider value=portal_context>
-            <Portal container=container container_ref=container_ref as_child=true>
-                <Provider value=select_context>
-                    {
-                        if let Some(scope) = popper_scope {
-                            provide_popper_scope(scope);
-                        }
-                        if let Some(scope) = collection_scope {
-                            provide_collection_scope(scope);
-                        }
-                        children.try_with_value(|children| children())
+        <ScopedPortal container=container container_ref=container_ref force_mount=force_mount>
+            <Provider value=select_context>
+                {
+                    if let Some(scope) = popper_scope {
+                        provide_popper_scope(scope);
                     }
-                </Provider>
-            </Portal>
-        </Provider>
+                    if let Some(scope) = collection_scope {
+                        provide_collection_scope(scope);
+                    }
+                    children.try_with_value(|children| children())
+                }
+            </Provider>
+        </ScopedPortal>
     }
 }
 

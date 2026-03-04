@@ -1,8 +1,50 @@
-use leptos::{html, prelude::*};
+use leptos::{context::Provider, html, prelude::*};
 use leptos_node_ref::AnyNodeRef;
 use leptos_portal::LeptosPortal;
-use radix_leptos_primitive::Primitive;
+use radix_leptos_primitive::{Primitive, prop_or_default};
 use send_wrapper::SendWrapper;
+
+/// Shared context provided by all `ScopedPortal` instances.
+/// Component-specific portals wrap `ScopedPortal` and add their own context re-provision.
+#[derive(Clone, Copy)]
+pub struct PortalContextValue {
+    pub force_mount: Signal<bool>,
+}
+
+/// Portal wrapper that provides a shared [`PortalContextValue`] with `force_mount`.
+/// Component-specific portals wrap this and add their own context re-provision.
+#[component]
+pub fn ScopedPortal(
+    #[prop(into, optional)] container: MaybeProp<SendWrapper<web_sys::Element>>,
+    #[prop(optional)] container_ref: AnyNodeRef,
+    #[prop(into, optional)] force_mount: MaybeProp<bool>,
+    children: ChildrenFn,
+) -> impl IntoView {
+    let children = StoredValue::new(children);
+
+    let portal_context = PortalContextValue {
+        force_mount: prop_or_default(force_mount),
+    };
+
+    view! {
+        <Provider value=portal_context>
+            <Portal container=container container_ref=container_ref as_child=true>
+                {children.with_value(|children| children())}
+            </Portal>
+        </Provider>
+    }
+}
+
+/// Resolves `force_mount` from a component's own prop OR the portal context.
+/// Extracts the repeated 5-line pattern from every Content component.
+pub fn resolve_force_mount(prop: MaybeProp<bool>) -> Signal<bool> {
+    let portal_context = use_context::<PortalContextValue>();
+    Signal::derive(move || {
+        prop.get()
+            .or_else(|| portal_context.as_ref().map(|pc| pc.force_mount.get()))
+            .unwrap_or(false)
+    })
+}
 
 #[component]
 pub fn Portal(

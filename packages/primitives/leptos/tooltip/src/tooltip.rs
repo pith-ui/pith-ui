@@ -12,7 +12,7 @@ use radix_leptos_popper::{
     Align, Padding, Popper, PopperAnchor, PopperArrow, PopperContent, Side, Sticky,
     UpdatePositionStrategy, provide_popper_scope, use_popper_scope,
 };
-use radix_leptos_portal::Portal;
+use radix_leptos_portal::{ScopedPortal, resolve_force_mount};
 use radix_leptos_presence::Presence;
 use radix_leptos_primitive::{Primitive, compose_callbacks, prop_or, prop_or_default};
 use radix_leptos_use_controllable_state::{UseControllableStateParams, use_controllable_state};
@@ -428,11 +428,6 @@ pub fn TooltipTrigger(
  * TooltipPortal
  * -----------------------------------------------------------------------------------------------*/
 
-#[derive(Clone)]
-struct TooltipPortalContextValue {
-    force_mount: Signal<bool>,
-}
-
 #[component]
 pub fn TooltipPortal(
     #[prop(into, optional)] container: MaybeProp<SendWrapper<web_sys::Element>>,
@@ -442,12 +437,6 @@ pub fn TooltipPortal(
 ) -> impl IntoView {
     let children = StoredValue::new(children);
 
-    let force_mount_signal = prop_or_default(force_mount);
-
-    let portal_context = TooltipPortalContextValue {
-        force_mount: force_mount_signal,
-    };
-
     // Capture contexts before the portal boundary for re-provision inside mount_to.
     let tooltip_context = expect_context::<TooltipContextValue>();
     let provider_context = expect_context::<TooltipProviderContextValue>();
@@ -455,20 +444,18 @@ pub fn TooltipPortal(
 
     // Always render the Portal and let TooltipContent handle its own Presence wrapper.
     view! {
-        <Provider value=portal_context>
-            <Portal container=container container_ref=container_ref as_child=true>
-                <Provider value=tooltip_context>
-                    <Provider value=provider_context>
-                        {
-                            if let Some(scope) = popper_scope {
-                                provide_popper_scope(scope);
-                            }
-                            children.with_value(|children| children())
+        <ScopedPortal container=container container_ref=container_ref force_mount=force_mount>
+            <Provider value=tooltip_context>
+                <Provider value=provider_context>
+                    {
+                        if let Some(scope) = popper_scope {
+                            provide_popper_scope(scope);
                         }
-                    </Provider>
+                        children.with_value(|children| children())
+                    }
                 </Provider>
-            </Portal>
-        </Provider>
+            </Provider>
+        </ScopedPortal>
     }
 }
 
@@ -504,14 +491,8 @@ pub fn TooltipContent(
     let children = StoredValue::new(children);
 
     let context = expect_context::<TooltipContextValue>();
-    let portal_context = use_context::<TooltipPortalContextValue>();
 
-    let force_mount = Signal::derive(move || {
-        force_mount
-            .get()
-            .or_else(|| portal_context.as_ref().map(|pc| pc.force_mount.get()))
-            .unwrap_or(false)
-    });
+    let force_mount = resolve_force_mount(force_mount);
 
     let present = Signal::derive(move || force_mount.get() || context.open.get());
 

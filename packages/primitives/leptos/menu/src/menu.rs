@@ -1,5 +1,5 @@
 // TODO: remove
-#![expect(dead_code, unused_variables)]
+#![expect(dead_code)]
 
 use std::cell::RefCell;
 use std::marker::PhantomData;
@@ -23,7 +23,7 @@ pub use radix_leptos_popper::{
     Align, ClientRectObject, PopperVirtualElement, Side as PopperSide, set_popper_virtual_ref,
 };
 use radix_leptos_popper::{Popper, PopperAnchor, PopperArrow, PopperContent};
-use radix_leptos_portal::Portal;
+use radix_leptos_portal::ScopedPortal;
 use radix_leptos_presence::Presence;
 use radix_leptos_primitive::{
     Primitive, compose_callbacks, data_attr, open_closed_state, prop_or, prop_or_default,
@@ -300,9 +300,9 @@ pub fn MenuPortal(
     let children = StoredValue::new(children);
 
     view! {
-        <Portal container=container container_ref=container_ref as_child=true>
+        <ScopedPortal container=container container_ref=container_ref force_mount=force_mount>
             {children.with_value(|children| children())}
-        </Portal>
+        </ScopedPortal>
     }
 }
 

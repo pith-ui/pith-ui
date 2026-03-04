@@ -11,7 +11,7 @@ use radix_leptos_popper::{
     Align, Padding, Popper, PopperAnchor, PopperArrow, PopperContent, Side, Sticky,
     UpdatePositionStrategy, provide_popper_scope, use_popper_scope,
 };
-use radix_leptos_portal::Portal;
+use radix_leptos_portal::{ScopedPortal, resolve_force_mount};
 use radix_leptos_presence::Presence;
 use radix_leptos_primitive::{Primitive, compose_callbacks, open_closed_state, prop_or_default};
 use radix_leptos_use_controllable_state::{UseControllableStateParams, use_controllable_state};
@@ -205,11 +205,6 @@ fn PopoverTriggerInner(
  * PopoverPortal
  * -----------------------------------------------------------------------------------------------*/
 
-#[derive(Clone, Copy)]
-struct PopoverPortalContextValue {
-    force_mount: Signal<bool>,
-}
-
 #[component]
 pub fn PopoverPortal(
     #[prop(into, optional)] container: MaybeProp<SendWrapper<web_sys::Element>>,
@@ -219,10 +214,6 @@ pub fn PopoverPortal(
 ) -> impl IntoView {
     let children = StoredValue::new(children);
 
-    let portal_context = PopoverPortalContextValue {
-        force_mount: prop_or_default(force_mount),
-    };
-
     // Capture contexts before the portal boundary for re-provision inside mount_to.
     let popover_context = expect_context::<PopoverContextValue>();
     let popper_scope = use_popper_scope();
@@ -231,18 +222,16 @@ pub fn PopoverPortal(
     // A portal-level Presence would have no node_ref to observe, causing it to unmount
     // immediately before exit animations can complete (same pattern as DialogPortal).
     view! {
-        <Provider value=portal_context>
-            <Portal container=container container_ref=container_ref as_child=true>
-                <Provider value=popover_context>
-                    {
-                        if let Some(scope) = popper_scope {
-                            provide_popper_scope(scope);
-                        }
-                        children.with_value(|children| children())
+        <ScopedPortal container=container container_ref=container_ref force_mount=force_mount>
+            <Provider value=popover_context>
+                {
+                    if let Some(scope) = popper_scope {
+                        provide_popper_scope(scope);
                     }
-                </Provider>
-            </Portal>
-        </Provider>
+                    children.with_value(|children| children())
+                }
+            </Provider>
+        </ScopedPortal>
     }
 }
 
@@ -293,14 +282,8 @@ pub fn PopoverContent(
     let children = StoredValue::new(children);
 
     let context = expect_context::<PopoverContextValue>();
-    let portal_context = use_context::<PopoverPortalContextValue>();
 
-    let force_mount = Signal::derive(move || {
-        force_mount
-            .get()
-            .or_else(|| portal_context.as_ref().map(|pc| pc.force_mount.get()))
-            .unwrap_or(false)
-    });
+    let force_mount = resolve_force_mount(force_mount);
 
     let present = Signal::derive(move || force_mount.get() || context.open.get());
     let is_modal = context.modal;
