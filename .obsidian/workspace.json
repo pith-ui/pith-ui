@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "notes/leptos-context-menu.md",
+                "file": "notes/leptos-menubar.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -28,7 +28,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "leptos-context-menu"
+              "title": "leptos-menubar"
             }
           }
         ]
@@ -193,28 +193,31 @@
   },
   "active": "8c5a22cb96fe50b9",
   "lastOpenFiles": [
-    "stories/leptos/dist/radix-leptos-stories-529da6837483f6f1_bg.wasm",
-    "stories/leptos/dist/radix-leptos-stories-529da6837483f6f1.js",
-    "target/wasm32-unknown-unknown/debug/deps/radix_leptos_stories-a55f538fc019e64b.wasm",
+    "stories/leptos/dist/radix-leptos-stories-e242d7a8f6701b35.js",
+    "stories/leptos/dist/radix-leptos-stories-e242d7a8f6701b35_bg.wasm",
+    "target/wasm32-unknown-unknown/debug/deps/radix_leptos_stories-9c2afb8445a944cf.wasm",
+    "target/wasm32-unknown-unknown/debug/deps/radix_leptos_stories-9c2afb8445a944cf.wasm.tmp1afaa53",
+    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-2i6wraep7lhnj/s-hgbzur3ha5-0f0igkl-79ctqgaty80sn9mpa5q20q3f2/work-products.bin",
+    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-2i6wraep7lhnj/s-hgbzur3ha5-0f0igkl-79ctqgaty80sn9mpa5q20q3f2/query-cache.bin",
+    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-2i6wraep7lhnj/s-hgbzur3ha5-0f0igkl-79ctqgaty80sn9mpa5q20q3f2/f2mcozi59nwlgswqey4u9d0vc.o",
+    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-2i6wraep7lhnj/s-hgbzur3ha5-0f0igkl-79ctqgaty80sn9mpa5q20q3f2/f26701zl3fx5mz5h4fqs50vut.o",
+    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-2i6wraep7lhnj/s-hgbzur3ha5-0f0igkl-79ctqgaty80sn9mpa5q20q3f2/f15cyr58bwqzhs0gi9l98msmh.o",
+    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-2i6wraep7lhnj/s-hgbzur3ha5-0f0igkl-79ctqgaty80sn9mpa5q20q3f2/ezz6uzaqasvkpej5qfq6vg40w.o",
+    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-2i6wraep7lhnj/s-hgbzur3ha5-0f0igkl-79ctqgaty80sn9mpa5q20q3f2/exmsrgu0a4802z6ey0o3d7i2q.o",
+    "reference_app/cypress/screenshots/popper.cy.js/Popper -- RTL start alignment -- content right edge aligns with anchor right edge (portalled) (failed).png",
+    "reference_app/cypress/screenshots/popper.cy.js/Popper -- LTR start alignment -- content left edge aligns with anchor left edge (portalled) (failed).png",
+    "notes/leptos-dropdown-menu.md",
+    "reference_app/cypress/screenshots/menubar.cy.js/Menubar -- RTL -- content right edge aligns with trigger right edge in RTL (failed).png",
+    "reference_app/cypress/screenshots/menubar.cy.js/Menubar -- submenus -- hover on SubTrigger opens submenu (failed).png",
+    "reference_app/cypress/screenshots/menubar.cy.js/Menubar -- radio group -- data-state reflects selection (failed).png",
+    "reference_app/cypress/screenshots/menubar.cy.js/Menubar -- radio group -- only one radio can be checked at a time (failed).png",
+    "reference_app/cypress/screenshots/menubar.cy.js/Menubar -- inter-menu navigation -- click trigger while another is open switches to that menu (failed).png",
+    "reference_app/cypress/screenshots/menubar.cy.js/Menubar -- data attributes -- RadioItem data-state reflects selection (failed).png",
+    "notes/roadmap.md",
+    "notes/leptos-context-menu.md",
+    "reference_app/cypress/screenshots/dropdown-menu.cy.js/Dropdown Menu -- with tooltip -- menu content is positioned near trigger (not at 0,0) (failed).png",
     "notes/leptos-navigation-menu.md",
-    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-0vboujv2cwqb4/s-hgavxd5z4o-0ys23tb-cpvp9qlud4jutum1ojioh1leh/work-products.bin",
-    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-0vboujv2cwqb4/s-hgavxd5z4o-0ys23tb-cpvp9qlud4jutum1ojioh1leh/query-cache.bin",
-    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-0vboujv2cwqb4/s-hgavxd5z4o-0ys23tb-cpvp9qlud4jutum1ojioh1leh/f2imbwpciwki03h5zuj7gwvlw.o",
-    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-0vboujv2cwqb4/s-hgavxd5z4o-0ys23tb-cpvp9qlud4jutum1ojioh1leh/f1vn0x4w3c2t7vbnaqzxv32mw.o",
-    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-0vboujv2cwqb4/s-hgavxd5z4o-0ys23tb-cpvp9qlud4jutum1ojioh1leh/ezhf9bmxyy3vgl5gkpz83e3ox.o",
-    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-0vboujv2cwqb4/s-hgavxd5z4o-0ys23tb-cpvp9qlud4jutum1ojioh1leh/eyjxh6tyfde9ddsrti3kzbsv5.o",
-    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-0vboujv2cwqb4/s-hgavxd5z4o-0ys23tb-cpvp9qlud4jutum1ojioh1leh/emkwf8o2jlwsu3y91euiohk8t.o",
-    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_stories-0vboujv2cwqb4/s-hgavxd5z4o-0ys23tb-cpvp9qlud4jutum1ojioh1leh/eljq4y8saf27a43xpas5heiit.o",
     "reference_app/cypress/screenshots/context-menu.cy.js/Context Menu -- submenu -- clicking sub item activates and closes entire menu (failed).png",
-    "reference_app/cypress/screenshots/context-menu.cy.js/Context Menu -- radio group -- only one radio can be checked at a time (failed).png",
-    "reference_app/cypress/screenshots/context-menu.cy.js/Context Menu -- radio group -- click selects radio item (failed).png",
-    "reference_app/cypress/screenshots/context-menu.cy.js/Context Menu -- checkbox item -- click toggles checked state (failed).png",
-    "reference_app/cypress/screenshots/context-menu.cy.js/Context Menu -- pointer interaction -- click item activates and closes (failed).png",
-    "reference_app/cypress/screenshots/context-menu.cy.js/Context Menu -- data attributes -- RadioItem data-state reflects selection (failed).png",
-    "reference_app/cypress/screenshots/context-menu.cy.js/Context Menu -- data attributes -- CheckboxItem data-state toggles checkedunchecked (failed).png",
-    "target/doc/static.files/rust-logo-9a9549ea.svg",
-    "target/doc/static.files/favicon-32x32-eab170b8.png",
-    "target/doc/static.files/favicon-044be391.svg",
     "target/doc/static.files/SourceSerif4-LICENSE-a2cfd9d5.md",
     "notes/leptos-toast.md",
     "notes/leptos-avatar.md",
@@ -236,9 +239,6 @@
     "notes/leptos-collection.md",
     "node_modules/lodash/README.md",
     "node_modules/dayjs/README.md",
-    "node_modules/dayjs/CHANGELOG.md",
-    "node_modules/common-tags/readme.md",
-    "node_modules/common-tags/license.md",
     "Untitled.canvas"
   ]
 }

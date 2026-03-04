@@ -1,4 +1,5 @@
-use std::sync::Arc;
+use std::cell::RefCell;
+use std::rc::Rc;
 
 use leptos::{ev::KeyboardEvent, prelude::*};
 use send_wrapper::SendWrapper;
@@ -12,48 +13,59 @@ pub fn use_escape_keydown(
     on_escape_key_down: Option<Callback<KeyboardEvent>>,
     owner_document: Option<Document>,
 ) {
-    let owner_document = StoredValue::new(SendWrapper::new(owner_document.unwrap_or(document())));
+    // Store the document in an Rc<RefCell> instead of StoredValue so it
+    // survives scope disposal. The on_cleanup callback MUST be able to
+    // access the document to remove the listener; StoredValue may be
+    // dropped before on_cleanup runs.
+    let owner_document = SendWrapper::new(Rc::new(owner_document.unwrap_or(document())));
 
     type HandleKeyDown = dyn Fn(KeyboardEvent);
-    let handle_key_down: Arc<SendWrapper<Closure<HandleKeyDown>>> = Arc::new(SendWrapper::new(
-        Closure::new(move |event: KeyboardEvent| {
-            if event.key() == "Escape"
-                && let Some(on_escape_key_down) = on_escape_key_down
-            {
-                on_escape_key_down.run(event);
-            }
-        }),
-    ));
+    // Use Rc<RefCell<Option<Closure>>> so both the Effect and on_cleanup
+    // hold references. The Closure stays alive until on_cleanup removes
+    // the listener and drops its Rc clone.
+    let handle_key_down: SendWrapper<Rc<RefCell<Option<Closure<HandleKeyDown>>>>> =
+        SendWrapper::new(Rc::new(RefCell::new(Some(Closure::new(
+            move |event: KeyboardEvent| {
+                if event.key() == "Escape"
+                    && let Some(on_escape_key_down) = on_escape_key_down
+                {
+                    on_escape_key_down.run(event);
+                }
+            },
+        )))));
 
     Effect::new({
         let handle_key_down = handle_key_down.clone();
+        let owner_document = owner_document.clone();
 
         move |_| {
-            if let Some(doc) = owner_document.try_get_value() {
+            if let Some(closure) = handle_key_down.borrow().as_ref() {
                 let options = AddEventListenerOptions::new();
                 options.set_capture(true);
 
-                doc.add_event_listener_with_callback_and_add_event_listener_options(
-                    "keydown",
-                    (*handle_key_down).as_ref().unchecked_ref(),
-                    &options,
-                )
-                .expect("Key down event listener should be added.");
+                owner_document
+                    .add_event_listener_with_callback_and_add_event_listener_options(
+                        "keydown",
+                        closure.as_ref().unchecked_ref(),
+                        &options,
+                    )
+                    .expect("Key down event listener should be added.");
             }
         }
     });
 
     on_cleanup(move || {
-        if let Some(doc) = owner_document.try_get_value() {
+        if let Some(closure) = handle_key_down.borrow().as_ref() {
             let options = EventListenerOptions::new();
             options.set_capture(true);
 
-            doc.remove_event_listener_with_callback_and_event_listener_options(
-                "keydown",
-                (*handle_key_down).as_ref().unchecked_ref(),
-                &options,
-            )
-            .expect("Key down event listener should be removed.");
+            owner_document
+                .remove_event_listener_with_callback_and_event_listener_options(
+                    "keydown",
+                    closure.as_ref().unchecked_ref(),
+                    &options,
+                )
+                .expect("Key down event listener should be removed.");
         }
     });
 }

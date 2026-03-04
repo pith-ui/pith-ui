@@ -378,4 +378,94 @@ describe('Dropdown Menu', () => {
             cy.focused().should('have.text', 'Item 3');
         });
     });
+
+    // ── 10. With Tooltip ──────────────────────────────────────
+
+    describe('with tooltip', () => {
+        beforeEach(() => {
+            cy.visit('/dropdown-menu/with-tooltip');
+        });
+
+        it('click opens menu without errors', () => {
+            cy.get('.dropdown-trigger').click();
+            cy.findByRole('menu').should('exist');
+        });
+
+        it('menu content is positioned near trigger (not at 0,0)', () => {
+            cy.get('.dropdown-trigger').click();
+            cy.findByRole('menu').should('exist');
+            cy.findByRole('menu').then(($menu) => {
+                const rect = $menu[0].getBoundingClientRect();
+                // Content should not be at top-left corner (0,0) — that indicates
+                // a positioning failure (e.g., due to popper anchor not being set).
+                expect(rect.top).to.be.greaterThan(10);
+            });
+        });
+
+        it('keyboard open and close works without errors', () => {
+            cy.get('.dropdown-trigger').focus();
+            cy.realPress('ArrowDown');
+            cy.findByRole('menu').should('exist');
+            cy.realPress('Escape');
+            cy.findByRole('menu').should('not.exist');
+            cy.get('.dropdown-trigger').should('be.focused');
+        });
+
+        it('can interact with menu items after opening', () => {
+            cy.get('.dropdown-trigger').click();
+            cy.findByRole('menu').should('exist');
+            cy.findByText('Item 1').click();
+            cy.findByRole('menu').should('not.exist');
+        });
+
+        it('reopen after close works without errors', () => {
+            // First open/close cycle
+            cy.get('.dropdown-trigger').click();
+            cy.findByRole('menu').should('exist');
+            cy.realPress('Escape');
+            cy.findByRole('menu').should('not.exist');
+            // Second open/close cycle — this catches "closure dropped" errors
+            // that occur when the tooltip's pointerup listener outlives its scope.
+            cy.get('.dropdown-trigger').click();
+            cy.findByRole('menu').should('exist');
+            cy.findByText('Item 1').click();
+            cy.findByRole('menu').should('not.exist');
+        });
+
+        it('hover to show tooltip then click to open menu works without errors', () => {
+            // Hover to trigger tooltip
+            cy.get('.dropdown-trigger').realHover();
+            // Wait for tooltip to appear (default delay is 700ms)
+            cy.wait(800);
+            // Click to open dropdown — tooltip content unmounts, which previously
+            // caused "closure invoked after being dropped" because the tooltip's
+            // document-level listeners (pointermove, TOOLTIP_OPEN, scroll)
+            // referenced Closures stored in StoredValue that got dropped during
+            // scope disposal before on_cleanup could remove the listeners.
+            cy.get('.dropdown-trigger').click();
+            cy.findByRole('menu').should('exist');
+            // Interact with an item to verify menu works normally
+            cy.findByText('Item 1').click();
+            cy.findByRole('menu').should('not.exist');
+        });
+
+        it('second open after hover+click cycle works without errors', () => {
+            // First cycle: hover → tooltip → click → menu → close
+            cy.get('.dropdown-trigger').realHover();
+            cy.wait(800);
+            cy.get('.dropdown-trigger').click();
+            cy.findByRole('menu').should('exist');
+            cy.realPress('Escape');
+            cy.findByRole('menu').should('not.exist');
+            // Second cycle: the DismissableLayer's document-level pointerdown/focusin
+            // listeners from the first menu instance were stored in StoredValue.
+            // If they weren't properly cleaned up, opening again causes a panic.
+            cy.get('.dropdown-trigger').realHover();
+            cy.wait(800);
+            cy.get('.dropdown-trigger').click();
+            cy.findByRole('menu').should('exist');
+            cy.findByText('Item 2').click();
+            cy.findByRole('menu').should('not.exist');
+        });
+    });
 });

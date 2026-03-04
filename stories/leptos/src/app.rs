@@ -7,8 +7,8 @@ use leptos_router::{
 
 use crate::primitives::{
     accessible_icon, accordion, alert_dialog, arrow, aspect_ratio, avatar, checkbox, collapsible,
-    collection, context_menu, dialog, dismissable_layer, focus_scope, form, hover_card, label,
-    menu, navigation_menu, one_time_password_field, password_toggle_field, popover, popper, portal,
+    collection, context_menu, dialog, dismissable_layer, dropdown_menu, focus_scope, form, hover_card, label,
+    menu, menubar, navigation_menu, one_time_password_field, password_toggle_field, popover, popper, portal,
     presence, progress, radio_group, roving_focus, scroll_area, select, separator, slider, switch,
     tabs, toast, toggle, toggle_group, toolbar, tooltip, visually_hidden,
 };
@@ -205,6 +205,18 @@ fn EmbedApp() -> impl IntoView {
                     <Route path=path!("/context-menu/prevent-closing") view=context_menu::PreventClosing />
                     <Route path=path!("/context-menu/nested") view=context_menu::Nested />
 
+                    <Route path=path!("/dropdown-menu/styled") view=dropdown_menu::Styled />
+                    <Route path=path!("/dropdown-menu/modality") view=dropdown_menu::Modality />
+                    <Route path=path!("/dropdown-menu/submenus") view=dropdown_menu::Submenus />
+                    <Route path=path!("/dropdown-menu/with-labels") view=dropdown_menu::WithLabels />
+                    <Route path=path!("/dropdown-menu/checkbox-items") view=dropdown_menu::CheckboxItems />
+                    <Route path=path!("/dropdown-menu/radio-items") view=dropdown_menu::RadioItems />
+                    <Route path=path!("/dropdown-menu/prevent-closing") view=dropdown_menu::PreventClosing />
+                    <Route path=path!("/dropdown-menu/with-tooltip") view=dropdown_menu::WithTooltip />
+                    <Route path=path!("/dropdown-menu/nested-composition") view=dropdown_menu::NestedComposition />
+                    <Route path=path!("/dropdown-menu/single-item-as-dialog-trigger") view=dropdown_menu::SingleItemAsDialogTrigger />
+                    <Route path=path!("/dropdown-menu/multiple-items-as-dialog-triggers") view=dropdown_menu::MultipleItemsAsDialogTriggers />
+
                     <Route path=path!("/dialog/styled") view=dialog::Styled />
                     <Route path=path!("/dialog/non-modal") view=dialog::NonModal />
                     <Route path=path!("/dialog/controlled") view=dialog::Controlled />
@@ -285,6 +297,10 @@ fn EmbedApp() -> impl IntoView {
                     <Route path=path!("/menu/checkbox-items") view=menu::CheckboxItems />
                     <Route path=path!("/menu/radio-items") view=menu::RadioItems />
                     <Route path=path!("/menu/animated") view=menu::Animated />
+
+                    <Route path=path!("/menubar/styled") view=menubar::Styled />
+                    <Route path=path!("/menubar/cypress") view=menubar::Cypress />
+                    <Route path=path!("/menubar/chromatic") view=menubar::Chromatic />
 
                     <Route path=path!("/one-time-password-field/uncontrolled") view=one_time_password_field::Uncontrolled />
                     <Route path=path!("/one-time-password-field/controlled") view=one_time_password_field::Controlled />
@@ -515,6 +531,19 @@ fn ShellApp() -> impl IntoView {
                             ("/context-menu/prevent-closing", "Prevent Closing"),
                             ("/context-menu/nested", "Nested"),
                         ] />
+                        <NavSection title="Dropdown Menu" stories=vec![
+                            ("/dropdown-menu/styled", "Styled"),
+                            ("/dropdown-menu/modality", "Modality"),
+                            ("/dropdown-menu/submenus", "Submenus"),
+                            ("/dropdown-menu/with-labels", "With Labels"),
+                            ("/dropdown-menu/checkbox-items", "Checkbox Items"),
+                            ("/dropdown-menu/radio-items", "Radio Items"),
+                            ("/dropdown-menu/prevent-closing", "Prevent Closing"),
+                            ("/dropdown-menu/with-tooltip", "With Tooltip"),
+                            ("/dropdown-menu/nested-composition", "Nested Composition"),
+                            ("/dropdown-menu/single-item-as-dialog-trigger", "Single Item As Dialog Trigger"),
+                            ("/dropdown-menu/multiple-items-as-dialog-triggers", "Multiple Items As Dialog Triggers"),
+                        ] />
                         <NavSection title="Dialog" stories=vec![
                             ("/dialog/styled", "Styled"),
                             ("/dialog/non-modal", "Non Modal"),
@@ -554,6 +583,11 @@ fn ShellApp() -> impl IntoView {
                             ("/label/styled", "Styled"),
                             ("/label/with-control", "With Control"),
                             ("/label/with-input-number", "With Input Number"),
+                        ] />
+                        <NavSection title="Menubar" stories=vec![
+                            ("/menubar/styled", "Styled"),
+                            ("/menubar/cypress", "Cypress"),
+                            ("/menubar/chromatic", "Chromatic"),
                         ] />
                         <NavSection title="Navigation Menu" stories=vec![
                             ("/navigation-menu/basic", "Basic"),

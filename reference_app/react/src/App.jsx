@@ -7,11 +7,14 @@ import Collapsible from './pages/Collapsible';
 import ContextMenu from './pages/ContextMenu';
 import Dialog from './pages/Dialog';
 import DropdownMenu from './pages/DropdownMenu';
+import DropdownMenuWithTooltip from './pages/DropdownMenuWithTooltip';
 import Form from './pages/Form';
 import Menu from './pages/Menu';
+import Menubar from './pages/Menubar';
 import HoverCard from './pages/HoverCard';
 import NavigationMenu from './pages/NavigationMenu';
 import Popover from './pages/Popover';
+import Popper from './pages/Popper';
 import Progress from './pages/Progress';
 import RadioGroup from './pages/RadioGroup';
 import ScrollArea from './pages/ScrollArea';
@@ -67,7 +70,13 @@ function Index() {
                         <Link to="/menu">Menu</Link>
                     </li>
                     <li>
+                        <Link to="/menubar">Menubar</Link>
+                    </li>
+                    <li>
                         <Link to="/navigation-menu">Navigation Menu</Link>
+                    </li>
+                    <li>
+                        <Link to="/popper">Popper</Link>
                     </li>
                     <li>
                         <Link to="/popover">Popover</Link>
@@ -129,10 +138,13 @@ export default function App() {
             <Route path="/context-menu" element={<ContextMenu />} />
             <Route path="/dialog" element={<Dialog />} />
             <Route path="/dropdown-menu" element={<DropdownMenu />} />
+            <Route path="/dropdown-menu/with-tooltip" element={<DropdownMenuWithTooltip />} />
             <Route path="/form" element={<Form />} />
             <Route path="/menu" element={<Menu />} />
+            <Route path="/menubar" element={<Menubar />} />
             <Route path="/hover-card" element={<HoverCard />} />
             <Route path="/navigation-menu" element={<NavigationMenu />} />
+            <Route path="/popper" element={<Popper />} />
             <Route path="/popover" element={<Popover />} />
             <Route path="/progress" element={<Progress />} />
             <Route path="/radio-group" element={<RadioGroup />} />

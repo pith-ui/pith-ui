@@ -1,0 +1,36 @@
+use leptos::prelude::*;
+use radix_leptos_dropdown_menu::*;
+use radix_leptos_tooltip::*;
+
+#[component]
+pub fn DropdownMenuWithTooltipPage() -> impl IntoView {
+    view! {
+        <DropdownMenu>
+            <TooltipProvider>
+                <Tooltip>
+                    <TooltipTrigger as_child=true>
+                        <DropdownMenuTrigger attr:class="dropdown-trigger">"open"</DropdownMenuTrigger>
+                    </TooltipTrigger>
+                    <TooltipContent>"Tooltip content"</TooltipContent>
+                </Tooltip>
+            </TooltipProvider>
+            <DropdownMenuPortal>
+                <DropdownMenuContent attr:class="dropdown-content" side_offset=5.0>
+                    <DropdownMenuItem attr:class="dropdown-item" on_select=Callback::new(move |_: web_sys::Event| {})>
+                        "Item 1"
+                    </DropdownMenuItem>
+                    <DropdownMenuItem attr:class="dropdown-item" on_select=Callback::new(move |_: web_sys::Event| {})>
+                        "Item 2"
+                    </DropdownMenuItem>
+                    <DropdownMenuItem attr:class="dropdown-item" on_select=Callback::new(move |_: web_sys::Event| {})>
+                        "Item 3"
+                    </DropdownMenuItem>
+                </DropdownMenuContent>
+            </DropdownMenuPortal>
+        </DropdownMenu>
+
+        <br />
+        <br />
+        <button data-testid="outside-button">"outside"</button>
+    }
+}

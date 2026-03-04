@@ -1,7 +1,9 @@
 // TODO: remove
 #![expect(dead_code, unused_variables)]
 
+use std::cell::RefCell;
 use std::marker::PhantomData;
+use std::rc::Rc;
 
 use leptos::{
     attribute_interceptor::AttributeInterceptor, context::Provider, ev, html, prelude::*,
@@ -119,6 +121,11 @@ struct MenuContextValue {
     open: Signal<bool>,
     content_ref: AnyNodeRef,
     on_open_change: Callback<bool>,
+    /// Direct reference to the Menu's own Popper anchor ref, so that
+    /// `MenuAnchor` can set it without relying on `expect_context::<PopperContextValue>()`.
+    /// This avoids context shadowing when another Popper (e.g., Tooltip) is nested
+    /// between the Menu's Popper and the MenuAnchor.
+    popper_anchor_ref: AnyNodeRef,
 }
 
 #[derive(Clone, Copy)]
@@ -147,10 +154,12 @@ pub fn Menu(
     let is_using_keyboard = RwSignal::new(false);
     let direction = use_direction(dir);
 
+    let popper_anchor_ref = AnyNodeRef::new();
     let context_value = MenuContextValue {
         open,
         content_ref,
         on_open_change,
+        popper_anchor_ref,
     };
     let root_context_value = MenuRootContextValue {
         is_using_keyboard: is_using_keyboard.into(),
@@ -159,63 +168,70 @@ pub fn Menu(
         on_close: Callback::new(move |_| on_open_change.run(false)),
     };
 
-    let handle_pointer = StoredValue::new(SendWrapper::new(
-        Closure::<dyn Fn(ev::PointerEvent)>::new(move |_| {
-            is_using_keyboard.set(false);
-        }),
-    ));
+    let handle_pointer: SendWrapper<Rc<RefCell<Option<Closure<dyn Fn(ev::PointerEvent)>>>>> =
+        SendWrapper::new(Rc::new(RefCell::new(Some(
+            Closure::<dyn Fn(ev::PointerEvent)>::new(move |_| {
+                is_using_keyboard.set(false);
+            }),
+        ))));
 
-    let handle_key_down = StoredValue::new(SendWrapper::new(
-        Closure::<dyn Fn(ev::KeyboardEvent)>::new(move |_| {
-            is_using_keyboard.set(true);
+    let handle_key_down: SendWrapper<Rc<RefCell<Option<Closure<dyn Fn(ev::KeyboardEvent)>>>>> = {
+        let handle_pointer = handle_pointer.clone();
+        SendWrapper::new(Rc::new(RefCell::new(Some(
+            Closure::<dyn Fn(ev::KeyboardEvent)>::new(move |_| {
+                is_using_keyboard.set(true);
 
+                let options = AddEventListenerOptions::new();
+                options.set_capture(true);
+                options.set_once(true);
+
+                if let Some(hp) = handle_pointer.borrow().as_ref() {
+                    let cb: &wasm_bindgen::JsValue = hp.as_ref().unchecked_ref();
+                    document()
+                        .add_event_listener_with_callback_and_add_event_listener_options(
+                            "pointerdown",
+                            cb.unchecked_ref(),
+                            &options,
+                        )
+                        .expect("Pointer down event listener should be added.");
+                    document()
+                        .add_event_listener_with_callback_and_add_event_listener_options(
+                            "pointermove",
+                            cb.unchecked_ref(),
+                            &options,
+                        )
+                        .expect("Pointer move event listener should be added.");
+                }
+            }),
+        ))))
+    };
+
+    Effect::new({
+        let handle_key_down = handle_key_down.clone();
+        move |_| {
             let options = AddEventListenerOptions::new();
             options.set_capture(true);
-            options.set_once(true);
 
-            let _ = handle_pointer.try_with_value(|hp| {
-                let cb: &wasm_bindgen::JsValue = hp.as_ref().unchecked_ref();
+            // Capture phase ensures we set the boolean before any side effects execute
+            // in response to the key or pointer event as they might depend on this value.
+            if let Some(hk) = handle_key_down.borrow().as_ref() {
+                let cb: &wasm_bindgen::JsValue = hk.as_ref().unchecked_ref();
                 document()
                     .add_event_listener_with_callback_and_add_event_listener_options(
-                        "pointerdown",
+                        "keydown",
                         cb.unchecked_ref(),
                         &options,
                     )
-                    .expect("Pointer down event listener should be added.");
-                document()
-                    .add_event_listener_with_callback_and_add_event_listener_options(
-                        "pointermove",
-                        cb.unchecked_ref(),
-                        &options,
-                    )
-                    .expect("Pointer move event listener should be added.");
-            });
-        }),
-    ));
-
-    Effect::new(move |_| {
-        let options = AddEventListenerOptions::new();
-        options.set_capture(true);
-
-        // Capture phase ensures we set the boolean before any side effects execute
-        // in response to the key or pointer event as they might depend on this value.
-        let _ = handle_key_down.try_with_value(|hk| {
-            let cb: &wasm_bindgen::JsValue = hk.as_ref().unchecked_ref();
-            document()
-                .add_event_listener_with_callback_and_add_event_listener_options(
-                    "keydown",
-                    cb.unchecked_ref(),
-                    &options,
-                )
-                .expect("Key down event listener should be added.");
-        });
+                    .expect("Key down event listener should be added.");
+            }
+        }
     });
 
     on_cleanup(move || {
         let options = EventListenerOptions::new();
         options.set_capture(true);
 
-        let _ = handle_key_down.try_with_value(|hk| {
+        if let Some(hk) = handle_key_down.borrow().as_ref() {
             let cb: &wasm_bindgen::JsValue = hk.as_ref().unchecked_ref();
             document()
                 .remove_event_listener_with_callback_and_event_listener_options(
@@ -224,9 +240,9 @@ pub fn Menu(
                     &options,
                 )
                 .expect("Key down event listener should be removed.");
-        });
+        }
 
-        let _ = handle_pointer.try_with_value(|hp| {
+        if let Some(hp) = handle_pointer.borrow().as_ref() {
             let cb: &wasm_bindgen::JsValue = hp.as_ref().unchecked_ref();
             document()
                 .remove_event_listener_with_callback_and_event_listener_options(
@@ -242,11 +258,11 @@ pub fn Menu(
                     &options,
                 )
                 .expect("Pointer move event listener should be removed.");
-        });
+        }
     });
 
     view! {
-        <Popper>
+        <Popper anchor_ref=popper_anchor_ref>
             <Provider value=context_value>
                 <Provider value=root_context_value>
                     {children.with_value(|children| children())}
@@ -262,8 +278,15 @@ pub fn MenuAnchor(
     #[prop(into, optional)] node_ref: AnyNodeRef,
     children: ChildrenFn,
 ) -> impl IntoView {
+    let menu_context = expect_context::<MenuContextValue>();
+    // Compose the user-provided node_ref with the Menu's own popper anchor ref.
+    // This ensures the Menu's Popper context gets the anchor element directly,
+    // even when a closer Popper context (e.g., from a Tooltip wrapping the trigger)
+    // would shadow it during PopperAnchor's normal expect_context lookup.
+    let composed_refs = use_composed_refs(vec![node_ref, menu_context.popper_anchor_ref]);
+
     view! {
-        <PopperAnchor as_child=as_child node_ref=node_ref>
+        <PopperAnchor as_child=as_child node_ref=composed_refs>
             {children()}
         </PopperAnchor>
     }
@@ -316,6 +339,12 @@ pub fn MenuContent(
     #[prop(into, optional)] on_pointer_down_outside: Option<Callback<CustomEvent>>,
     #[prop(into, optional)] on_focus_outside: Option<Callback<CustomEvent>>,
     #[prop(into, optional)] on_interact_outside: Option<Callback<CustomEvent>>,
+    /// Event handler called when the content receives initial focus. Can be prevented.
+    #[prop(into, optional)]
+    on_entry_focus: Option<Callback<ev::Event>>,
+    /// Event handler called on keydown events on the content element.
+    #[prop(into, optional)]
+    on_key_down: Option<Callback<ev::KeyboardEvent>>,
     /// The preferred side of the trigger to render against when open.
     #[prop(into, optional)]
     side: MaybeProp<PopperSide>,
@@ -325,6 +354,12 @@ pub fn MenuContent(
     /// The preferred alignment against the trigger.
     #[prop(into, optional)]
     align: MaybeProp<Align>,
+    /// An offset in pixels from the "start" or "end" alignment options.
+    #[prop(into, optional)]
+    align_offset: MaybeProp<f64>,
+    /// When `true`, overrides the `side` and `align` preferences to prevent collisions with boundary edges.
+    #[prop(into, optional)]
+    avoid_collisions: MaybeProp<bool>,
     /// The id of the content element.
     #[prop(into, optional)]
     id: MaybeProp<String>,
@@ -352,6 +387,8 @@ pub fn MenuContent(
     let on_pointer_down_outside = wrap_callback(on_pointer_down_outside);
     let on_focus_outside = wrap_callback(on_focus_outside);
     let on_interact_outside = wrap_callback(on_interact_outside);
+    let on_entry_focus = wrap_callback(on_entry_focus);
+    let on_key_down = wrap_callback(on_key_down);
 
     view! {
         <CollectionProvider item_data_type=ITEM_DATA_PHANTHOM>
@@ -368,9 +405,13 @@ pub fn MenuContent(
                                 on_pointer_down_outside=on_pointer_down_outside
                                 on_focus_outside=on_focus_outside
                                 on_interact_outside=on_interact_outside
+                                on_entry_focus=on_entry_focus
+                                on_key_down=on_key_down
                                 side=side
                                 side_offset=side_offset
                                 align=align
+                                align_offset=align_offset
+                                avoid_collisions=avoid_collisions
                                 id=id
                                 aria_labelledby=aria_labelledby
                                 as_child=as_child
@@ -388,9 +429,13 @@ pub fn MenuContent(
                             on_pointer_down_outside=on_pointer_down_outside
                             on_focus_outside=on_focus_outside
                             on_interact_outside=on_interact_outside
+                            on_entry_focus=on_entry_focus
+                            on_key_down=on_key_down
                             side=side
                             side_offset=side_offset
                             align=align
+                            align_offset=align_offset
+                            avoid_collisions=avoid_collisions
                             id=id
                             aria_labelledby=aria_labelledby
                             as_child=as_child
@@ -412,9 +457,13 @@ fn MenuRootContentModal(
     #[prop(into, optional)] on_pointer_down_outside: Option<Callback<CustomEvent>>,
     #[prop(into, optional)] on_focus_outside: Option<Callback<CustomEvent>>,
     #[prop(into, optional)] on_interact_outside: Option<Callback<CustomEvent>>,
+    #[prop(into, optional)] on_entry_focus: Option<Callback<ev::Event>>,
+    #[prop(into, optional)] on_key_down: Option<Callback<ev::KeyboardEvent>>,
     #[prop(into, optional)] side: MaybeProp<PopperSide>,
     #[prop(into, optional)] side_offset: MaybeProp<f64>,
     #[prop(into, optional)] align: MaybeProp<Align>,
+    #[prop(into, optional)] align_offset: MaybeProp<f64>,
+    #[prop(into, optional)] avoid_collisions: MaybeProp<bool>,
     #[prop(into, optional)] id: MaybeProp<String>,
     #[prop(into, optional)] aria_labelledby: MaybeProp<String>,
     #[prop(into, optional)] class: MaybeProp<String>,
@@ -440,6 +489,8 @@ fn MenuRootContentModal(
     let on_escape_key_down = wrap_callback(on_escape_key_down);
     let on_pointer_down_outside = wrap_callback(on_pointer_down_outside);
     let on_interact_outside = wrap_callback(on_interact_outside);
+    let on_entry_focus = wrap_callback(on_entry_focus);
+    let on_key_down = wrap_callback(on_key_down);
 
     view! {
         <MenuContentImpl
@@ -456,10 +507,14 @@ fn MenuRootContentModal(
             on_escape_key_down=on_escape_key_down
             on_pointer_down_outside=on_pointer_down_outside
             on_interact_outside=on_interact_outside
+            on_entry_focus=on_entry_focus
+            on_key_down=on_key_down
             on_dismiss=move |_| context.on_open_change.run(false)
             side=side
             side_offset=side_offset
             align=align
+            align_offset=align_offset
+            avoid_collisions=avoid_collisions
             id=id
             aria_labelledby=aria_labelledby
             class=class
@@ -479,9 +534,13 @@ fn MenuRootContentNonModal(
     #[prop(into, optional)] on_pointer_down_outside: Option<Callback<CustomEvent>>,
     #[prop(into, optional)] on_focus_outside: Option<Callback<CustomEvent>>,
     #[prop(into, optional)] on_interact_outside: Option<Callback<CustomEvent>>,
+    #[prop(into, optional)] on_entry_focus: Option<Callback<ev::Event>>,
+    #[prop(into, optional)] on_key_down: Option<Callback<ev::KeyboardEvent>>,
     #[prop(into, optional)] side: MaybeProp<PopperSide>,
     #[prop(into, optional)] side_offset: MaybeProp<f64>,
     #[prop(into, optional)] align: MaybeProp<Align>,
+    #[prop(into, optional)] align_offset: MaybeProp<f64>,
+    #[prop(into, optional)] avoid_collisions: MaybeProp<bool>,
     #[prop(into, optional)] id: MaybeProp<String>,
     #[prop(into, optional)] aria_labelledby: MaybeProp<String>,
     #[prop(into, optional)] class: MaybeProp<String>,
@@ -498,6 +557,8 @@ fn MenuRootContentNonModal(
     let on_pointer_down_outside = wrap_callback(on_pointer_down_outside);
     let on_focus_outside = wrap_callback(on_focus_outside);
     let on_interact_outside = wrap_callback(on_interact_outside);
+    let on_entry_focus = wrap_callback(on_entry_focus);
+    let on_key_down = wrap_callback(on_key_down);
 
     view! {
         <MenuContentImpl
@@ -509,10 +570,14 @@ fn MenuRootContentNonModal(
             on_pointer_down_outside=on_pointer_down_outside
             on_focus_outside=on_focus_outside
             on_interact_outside=on_interact_outside
+            on_entry_focus=on_entry_focus
+            on_key_down=on_key_down
             on_dismiss=move |_| context.on_open_change.run(false)
             side=side
             side_offset=side_offset
             align=align
+            align_offset=align_offset
+            avoid_collisions=avoid_collisions
             id=id
             aria_labelledby=aria_labelledby
             class=class
@@ -561,6 +626,12 @@ fn MenuContentImpl(
     /// The preferred alignment against the trigger. Forwarded to PopperContent.
     #[prop(into, optional)]
     align: MaybeProp<Align>,
+    /// An offset in pixels from the "start" or "end" alignment options. Forwarded to PopperContent.
+    #[prop(into, optional)]
+    align_offset: MaybeProp<f64>,
+    /// When `true`, overrides the `side` and `align` preferences to prevent collisions with boundary edges.
+    #[prop(into, optional)]
+    avoid_collisions: MaybeProp<bool>,
     /// The id of the content element.
     #[prop(into, optional)]
     id: MaybeProp<String>,
@@ -838,56 +909,70 @@ fn MenuContentImpl(
         None,
     );
 
-    let keydown_closure = StoredValue::new(SendWrapper::new(
-        Closure::<dyn Fn(ev::KeyboardEvent)>::new(keydown_handler),
-    ));
-    let blur_closure = StoredValue::new(SendWrapper::new(Closure::<dyn Fn(ev::FocusEvent)>::new(
-        blur_handler,
-    )));
-    let pointermove_closure = StoredValue::new(SendWrapper::new(
-        Closure::<dyn Fn(ev::PointerEvent)>::new(pointermove_handler),
-    ));
+    let keydown_closure: SendWrapper<Rc<RefCell<Option<Closure<dyn Fn(ev::KeyboardEvent)>>>>> =
+        SendWrapper::new(Rc::new(RefCell::new(Some(
+            Closure::<dyn Fn(ev::KeyboardEvent)>::new(keydown_handler),
+        ))));
+    let blur_closure: SendWrapper<Rc<RefCell<Option<Closure<dyn Fn(ev::FocusEvent)>>>>> =
+        SendWrapper::new(Rc::new(RefCell::new(Some(
+            Closure::<dyn Fn(ev::FocusEvent)>::new(blur_handler),
+        ))));
+    let pointermove_closure: SendWrapper<Rc<RefCell<Option<Closure<dyn Fn(ev::PointerEvent)>>>>> =
+        SendWrapper::new(Rc::new(RefCell::new(Some(
+            Closure::<dyn Fn(ev::PointerEvent)>::new(pointermove_handler),
+        ))));
 
     // Attach event handlers to the content element after mount.
-    Effect::new(move |_| {
-        if let Some(node) = content_ref.get() {
-            let el: web_sys::HtmlElement = node.unchecked_into();
-            let _ = keydown_closure.try_with_value(|c| {
-                let cb: &wasm_bindgen::JsValue = c.as_ref().unchecked_ref();
-                el.add_event_listener_with_callback("keydown", cb.unchecked_ref())
+    Effect::new({
+        let keydown_closure = keydown_closure.clone();
+        let blur_closure = blur_closure.clone();
+        let pointermove_closure = pointermove_closure.clone();
+        move |_| {
+            if let Some(node) = content_ref.get() {
+                let el: web_sys::HtmlElement = node.unchecked_into();
+                if let Some(c) = keydown_closure.borrow().as_ref() {
+                    el.add_event_listener_with_callback(
+                        "keydown",
+                        c.as_ref().unchecked_ref(),
+                    )
                     .ok();
-            });
-            let _ = blur_closure.try_with_value(|c| {
-                let cb: &wasm_bindgen::JsValue = c.as_ref().unchecked_ref();
-                el.add_event_listener_with_callback("blur", cb.unchecked_ref())
+                }
+                if let Some(c) = blur_closure.borrow().as_ref() {
+                    el.add_event_listener_with_callback("blur", c.as_ref().unchecked_ref())
+                        .ok();
+                }
+                if let Some(c) = pointermove_closure.borrow().as_ref() {
+                    el.add_event_listener_with_callback(
+                        "pointermove",
+                        c.as_ref().unchecked_ref(),
+                    )
                     .ok();
-            });
-            let _ = pointermove_closure.try_with_value(|c| {
-                let cb: &wasm_bindgen::JsValue = c.as_ref().unchecked_ref();
-                el.add_event_listener_with_callback("pointermove", cb.unchecked_ref())
-                    .ok();
-            });
+                }
+            }
         }
     });
 
     on_cleanup(move || {
         if let Some(node) = content_ref.get_untracked() {
             let el: web_sys::HtmlElement = node.unchecked_into();
-            let _ = keydown_closure.try_with_value(|c| {
-                let cb: &wasm_bindgen::JsValue = c.as_ref().unchecked_ref();
-                el.remove_event_listener_with_callback("keydown", cb.unchecked_ref())
+            if let Some(c) = keydown_closure.borrow().as_ref() {
+                el.remove_event_listener_with_callback(
+                    "keydown",
+                    c.as_ref().unchecked_ref(),
+                )
+                .ok();
+            }
+            if let Some(c) = blur_closure.borrow().as_ref() {
+                el.remove_event_listener_with_callback("blur", c.as_ref().unchecked_ref())
                     .ok();
-            });
-            let _ = blur_closure.try_with_value(|c| {
-                let cb: &wasm_bindgen::JsValue = c.as_ref().unchecked_ref();
-                el.remove_event_listener_with_callback("blur", cb.unchecked_ref())
-                    .ok();
-            });
-            let _ = pointermove_closure.try_with_value(|c| {
-                let cb: &wasm_bindgen::JsValue = c.as_ref().unchecked_ref();
-                el.remove_event_listener_with_callback("pointermove", cb.unchecked_ref())
-                    .ok();
-            });
+            }
+            if let Some(c) = pointermove_closure.borrow().as_ref() {
+                el.remove_event_listener_with_callback(
+                    "pointermove",
+                    c.as_ref().unchecked_ref(),
+                )
+                .ok();
+            }
         }
     });
 
@@ -931,16 +1016,21 @@ fn MenuContentImpl(
                             // collection items being registered.
                             let content_ref = content_ref;
                             let cb = Closure::once_into_js(move || {
-                                if let Some(content) = content_ref.get_untracked() {
-                                    let el: &web_sys::HtmlElement = content.unchecked_ref();
-                                    let selector = "[role=menuitem]:not([data-disabled]), \
-                                                     [role=menuitemcheckbox]:not([data-disabled]), \
-                                                     [role=menuitemradio]:not([data-disabled])";
-                                    if let Ok(Some(first_item)) = el.query_selector(selector) {
-                                        let first: web_sys::HtmlElement = first_item.unchecked_into();
-                                        first.focus().ok();
-                                    } else {
-                                        el.focus().ok();
+                                // Use try_read_untracked to avoid panicking if the
+                                // reactive scope has already been disposed by the time
+                                // this RAF callback fires.
+                                if let Some(guard) = content_ref.try_read_untracked() {
+                                    if let Some(ref content) = *guard {
+                                        let el: &web_sys::HtmlElement = content.unchecked_ref();
+                                        let selector = "[role=menuitem]:not([data-disabled]), \
+                                                         [role=menuitemcheckbox]:not([data-disabled]), \
+                                                         [role=menuitemradio]:not([data-disabled])";
+                                        if let Ok(Some(first_item)) = el.query_selector(selector) {
+                                            let first: web_sys::HtmlElement = first_item.unchecked_into();
+                                            first.focus().ok();
+                                        } else {
+                                            el.focus().ok();
+                                        }
                                     }
                                 }
                             });
@@ -953,9 +1043,14 @@ fn MenuContentImpl(
                             // div) may not have run yet. Without tabindex, focus() is a no-op.
                             let content_ref = content_ref;
                             let cb = Closure::once_into_js(move || {
-                                if let Some(content) = content_ref.get_untracked() {
-                                    let content: web_sys::HtmlElement = content.unchecked_into();
-                                    content.focus().ok();
+                                // Use try_read_untracked to avoid panicking if the
+                                // reactive scope has already been disposed by the time
+                                // this RAF callback fires.
+                                if let Some(guard) = content_ref.try_read_untracked() {
+                                    if let Some(ref content) = *guard {
+                                        let content: web_sys::HtmlElement = content.clone().unchecked_into();
+                                        content.focus().ok();
+                                    }
                                 }
                             });
                             window().request_animation_frame(cb.unchecked_ref()).ok();
@@ -994,6 +1089,9 @@ fn MenuContentImpl(
                             side=Signal::derive(move || side.get().unwrap_or(PopperSide::Bottom))
                             side_offset=Signal::derive(move || side_offset.get().unwrap_or(0.0))
                             align=Signal::derive(move || align.get().unwrap_or(Align::Center))
+                            align_offset=Signal::derive(move || align_offset.get().unwrap_or(0.0))
+                            avoid_collisions=Signal::derive(move || avoid_collisions.get().unwrap_or(true))
+                            dir=Signal::derive(move || Some(root_context.dir.get().to_string()))
                             as_child=as_child
                             node_ref=composed_refs
                             attr:class=move || class.get().unwrap_or_default()
@@ -1475,6 +1573,10 @@ pub fn MenuSub(
         open,
         content_ref,
         on_open_change,
+        // Sub-menus don't have their own Popper (they use the parent's), but
+        // MenuAnchor still expects this field. Use an independent ref for the
+        // sub-trigger anchor.
+        popper_anchor_ref: AnyNodeRef::new(),
     };
 
     let sub_context = MenuSubContextValue {
@@ -1692,6 +1794,8 @@ pub fn MenuSubTrigger(
 pub fn MenuSubContent(
     #[prop(into, optional)] force_mount: MaybeProp<bool>,
     #[prop(into, optional)] side_offset: MaybeProp<f64>,
+    #[prop(into, optional)] align_offset: MaybeProp<f64>,
+    #[prop(into, optional)] avoid_collisions: MaybeProp<bool>,
     #[prop(into, optional)] on_escape_key_down: Option<Callback<ev::KeyboardEvent>>,
     #[prop(into, optional)] on_focus_outside: Option<Callback<CustomEvent>>,
     #[prop(into, optional)] on_key_down: Option<Callback<ev::KeyboardEvent>>,
@@ -1731,6 +1835,8 @@ pub fn MenuSubContent(
                         side=sub_side
                         side_offset=side_offset
                         align=Align::Start
+                        align_offset=align_offset
+                        avoid_collisions=avoid_collisions
                         disable_outside_pointer_events=false
                         disable_outside_scroll=false
                         trap_focus=false

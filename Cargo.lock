@@ -4280,6 +4280,25 @@ dependencies = [
 ]
 
 [[package]]
+name = "radix-leptos-menubar"
+version = "0.0.2"
+dependencies = [
+ "leptos",
+ "leptos-node-ref",
+ "radix-leptos-collection",
+ "radix-leptos-compose-refs",
+ "radix-leptos-direction",
+ "radix-leptos-id",
+ "radix-leptos-menu",
+ "radix-leptos-primitive",
+ "radix-leptos-roving-focus",
+ "radix-leptos-use-controllable-state",
+ "send_wrapper",
+ "wasm-bindgen",
+ "web-sys",
+]
+
+[[package]]
 name = "radix-leptos-navigation-menu"
 version = "0.0.2"
 dependencies = [
@@ -4446,12 +4465,15 @@ dependencies = [
  "radix-leptos-collapsible",
  "radix-leptos-context-menu",
  "radix-leptos-dialog",
+ "radix-leptos-direction",
  "radix-leptos-dropdown-menu",
  "radix-leptos-form",
  "radix-leptos-hover-card",
  "radix-leptos-menu",
+ "radix-leptos-menubar",
  "radix-leptos-navigation-menu",
  "radix-leptos-popover",
+ "radix-leptos-popper",
  "radix-leptos-progress",
  "radix-leptos-radio-group",
  "radix-leptos-roving-focus",
@@ -4575,12 +4597,14 @@ dependencies = [
  "radix-leptos-dialog",
  "radix-leptos-direction",
  "radix-leptos-dismissable-layer",
+ "radix-leptos-dropdown-menu",
  "radix-leptos-focus-guards",
  "radix-leptos-focus-scope",
  "radix-leptos-form",
  "radix-leptos-hover-card",
  "radix-leptos-label",
  "radix-leptos-menu",
+ "radix-leptos-menubar",
  "radix-leptos-navigation-menu",
  "radix-leptos-one-time-password-field",
  "radix-leptos-password-toggle-field",

@@ -112,19 +112,23 @@ pub fn FocusScope(
         StoredValue::new(SendWrapper::new(RefCell::new(None)));
 
     type TrappedCleanupFn = Box<dyn Fn()>;
-    let trapped_cleanup: StoredValue<SendWrapper<RefCell<Option<TrappedCleanupFn>>>> =
-        StoredValue::new(SendWrapper::new(RefCell::new(None)));
+    // Use Rc<RefCell> instead of StoredValue so this survives scope disposal.
+    // The on_cleanup callback holds a clone of the Rc, ensuring the cleanup
+    // function (which removes document listeners) is always callable even if
+    // StoredValue contents would have been dropped first.
+    let trapped_cleanup: SendWrapper<std::rc::Rc<RefCell<Option<TrappedCleanupFn>>>> =
+        SendWrapper::new(std::rc::Rc::new(RefCell::new(None)));
 
     // Takes care of trapping focus if focus is moved outside programmatically for example.
     // Mirrors the React useEffect with [trapped, container, focusScope.paused] deps:
     // cleans up on re-run (e.g. when trapped goes from true → false) and on unmount.
-    Effect::new(move |_| {
+    Effect::new({
+        let trapped_cleanup = trapped_cleanup.clone();
+        move |_| {
         // Clean up previous effect run (equivalent to React useEffect cleanup on deps change)
-        let _ = trapped_cleanup.try_with_value(|f| {
-            if let Some(cleanup) = f.borrow_mut().take() {
-                cleanup();
-            }
-        });
+        if let Some(cleanup) = trapped_cleanup.borrow_mut().take() {
+            cleanup();
+        }
 
         if trapped.get() {
             let hi = handle_focus_in.clone();
@@ -184,8 +188,7 @@ pub fn FocusScope(
             // Store cleanup for this effect run
             let cleanup_hi = hi;
             let cleanup_ho = ho;
-            let _ = trapped_cleanup.try_with_value(|f| {
-                f.borrow_mut().replace(Box::new(move || {
+            *trapped_cleanup.borrow_mut() = Some(Box::new(move || {
                     document()
                         .remove_event_listener_with_callback(
                             "focusin",
@@ -205,7 +208,19 @@ pub fn FocusScope(
                         }
                     });
                 }));
-            });
+        }
+    }});
+
+    // Ensure document listeners are removed on unmount. The Effect above stores
+    // the cleanup function but only runs it on re-execution (deps change). Without
+    // this on_cleanup, if the component unmounts without the Effect re-running,
+    // the document focusin/focusout listeners would remain with dropped closures.
+    on_cleanup({
+        let trapped_cleanup = trapped_cleanup.clone();
+        move || {
+            if let Some(cleanup) = trapped_cleanup.borrow_mut().take() {
+                cleanup();
+            }
         }
     });
 
@@ -352,11 +367,9 @@ pub fn FocusScope(
     });
 
     on_cleanup(move || {
-        let _ = trapped_cleanup.try_with_value(|f| {
-            if let Some(cleanup) = f.borrow_mut().take() {
-                cleanup();
-            }
-        });
+        if let Some(cleanup) = trapped_cleanup.borrow_mut().take() {
+            cleanup();
+        }
 
         let _ = auto_focus_end.try_with_value(|end| {
             if let Some(auto_focus_cleanup) = end.borrow_mut().take() {

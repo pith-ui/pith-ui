@@ -27,10 +27,13 @@ pub fn App() -> impl IntoView {
                     <Route path=path!("/context-menu") view=pages::context_menu::ContextMenuPage />
                     <Route path=path!("/dialog") view=pages::dialog::DialogPage />
                     <Route path=path!("/dropdown-menu") view=pages::dropdown_menu::DropdownMenuPage />
+                    <Route path=path!("/dropdown-menu/with-tooltip") view=pages::dropdown_menu_with_tooltip::DropdownMenuWithTooltipPage />
                     <Route path=path!("/form") view=pages::form::FormPage />
                     <Route path=path!("/menu") view=pages::menu::MenuPage />
+                    <Route path=path!("/menubar") view=pages::menubar::MenubarPage />
                     <Route path=path!("/hover-card") view=pages::hover_card::HoverCardPage />
                     <Route path=path!("/navigation-menu") view=pages::navigation_menu::NavigationMenuPage />
+                    <Route path=path!("/popper") view=pages::popper::PopperPage />
                     <Route path=path!("/popover") view=pages::popover::PopoverPage />
                     <Route path=path!("/progress") view=pages::progress::ProgressPage />
                     <Route path=path!("/radio-group") view=pages::radio_group::RadioGroupPage />

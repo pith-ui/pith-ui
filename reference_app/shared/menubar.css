@@ -1,0 +1,84 @@
+.menubar-root {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 3px;
+    gap: 2px;
+}
+
+.menubar-trigger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    background: transparent;
+    cursor: pointer;
+    font-size: 14px;
+    outline: none;
+    user-select: none;
+}
+
+.menubar-trigger[data-highlighted] {
+    background: #e8e8e8;
+}
+
+.menubar-trigger[data-state='open'] {
+    background: #e0e0e0;
+}
+
+.menubar-content {
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    min-width: 180px;
+}
+
+.menubar-item {
+    display: flex;
+    align-items: center;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: default;
+    outline: none;
+    user-select: none;
+    font-size: 14px;
+}
+
+.menubar-item[data-highlighted] {
+    background: #4a90d9;
+    color: white;
+}
+
+.menubar-item[data-disabled] {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.menubar-label {
+    padding: 6px 12px;
+    font-size: 12px;
+    color: #888;
+}
+
+.menubar-separator {
+    height: 1px;
+    background: #eee;
+    margin: 4px 0;
+}
+
+.menubar-indicator {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    margin-right: 4px;
+}
+
+.menubar-sub-trigger {
+    justify-content: space-between;
+}

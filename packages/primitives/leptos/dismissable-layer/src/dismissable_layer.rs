@@ -1,3 +1,5 @@
+use std::cell::RefCell;
+use std::rc::Rc;
 use std::sync::Mutex;
 
 use leptos::{attribute_interceptor::AttributeInterceptor, html, prelude::*};
@@ -11,6 +13,10 @@ use web_sys::{
     AddEventListenerOptions, CustomEvent, CustomEventInit,
     wasm_bindgen::{JsCast, JsValue, closure::Closure},
 };
+
+/// Shared closure storage that outlives StoredValue disposal.
+/// See tooltip.rs for detailed rationale.
+type ClosureCell<T> = SendWrapper<Rc<RefCell<Option<Closure<T>>>>>;
 
 const CONTEXT_UPDATE: &str = "dismissableLayer.update";
 const POINTER_DOWN_OUTSIDE: &str = "dismissableLayer.pointerDownOutside";
@@ -137,50 +143,87 @@ fn use_pointer_down_outside(
     on_pointer_down_outside: Option<Callback<PointerDownOutsideEvent>>,
     owner_document: web_sys::Document,
 ) -> PointerDownOutsideReturn {
-    type ClickClosure = Closure<dyn Fn(web_sys::Event)>;
-
     let is_pointer_inside_tree = StoredValue::new(false);
-    let handle_click_ref: StoredValue<SendWrapper<Option<ClickClosure>>> =
-        StoredValue::new(SendWrapper::new(None));
+    let handle_click_ref: ClosureCell<dyn Fn(web_sys::Event)> =
+        SendWrapper::new(Rc::new(RefCell::new(None)));
 
     let owner_doc = SendWrapper::new(owner_document.clone());
     let owner_doc_for_cleanup = SendWrapper::new(owner_document);
 
-    type PointerDownClosure = Closure<dyn Fn(web_sys::PointerEvent)>;
-    let handle_pointer_down: StoredValue<Option<SendWrapper<PointerDownClosure>>> =
-        StoredValue::new(None);
+    let handle_pointer_down: ClosureCell<dyn Fn(web_sys::PointerEvent)> =
+        SendWrapper::new(Rc::new(RefCell::new(None)));
+    // Store the setTimeout timer ID so we can cancel it on cleanup if it hasn't fired yet.
+    let delayed_timer_id: SendWrapper<Rc<std::cell::Cell<i32>>> =
+        SendWrapper::new(Rc::new(std::cell::Cell::new(0)));
 
     let setup_owner_doc = owner_doc.clone();
     let cleanup_owner_doc = owner_doc_for_cleanup.clone();
 
-    Effect::new(move |_| {
-        let owner_doc = setup_owner_doc.clone();
-        let owner_doc2 = setup_owner_doc.clone();
+    Effect::new({
+        let handle_pointer_down = handle_pointer_down.clone();
+        let handle_click_ref = handle_click_ref.clone();
+        let delayed_timer_id = delayed_timer_id.clone();
+        move |_| {
+            let owner_doc = setup_owner_doc.clone();
+            let owner_doc2 = setup_owner_doc.clone();
+            let handle_click_ref2 = handle_click_ref.clone();
+            let handle_click_ref3 = handle_click_ref.clone();
 
-        let closure: PointerDownClosure = Closure::new(move |event: web_sys::PointerEvent| {
-            let has_target = event.target().is_some();
-            let is_inside = is_pointer_inside_tree.try_get_value().unwrap_or(true);
+            let closure: Closure<dyn Fn(web_sys::PointerEvent)> =
+                Closure::new(move |event: web_sys::PointerEvent| {
+                    let has_target = event.target().is_some();
+                    let is_inside = is_pointer_inside_tree.try_get_value().unwrap_or(true);
 
-            if has_target && !is_inside {
-                let event_detail = event.clone();
+                    if has_target && !is_inside {
+                        let event_detail = event.clone();
 
-                let dispatch_fn = {
-                    let event_detail = event_detail.clone();
-                    let on_pointer_down_outside = on_pointer_down_outside;
-                    move || {
-                        handle_and_dispatch_custom_event(
-                            POINTER_DOWN_OUTSIDE,
-                            on_pointer_down_outside,
-                            &event_detail,
-                        );
-                    }
-                };
+                        let dispatch_fn = {
+                            let event_detail = event_detail.clone();
+                            let on_pointer_down_outside = on_pointer_down_outside;
+                            move || {
+                                handle_and_dispatch_custom_event(
+                                    POINTER_DOWN_OUTSIDE,
+                                    on_pointer_down_outside,
+                                    &event_detail,
+                                );
+                            }
+                        };
 
-                // On touch devices, wait for the click event.
-                if event.pointer_type() == "touch" {
-                    // Remove any previous click handler
-                    let _ = handle_click_ref.try_with_value(|prev| {
-                        if let Some(prev_closure) = prev.as_ref() {
+                        // On touch devices, wait for the click event.
+                        if event.pointer_type() == "touch" {
+                            // Remove any previous click handler
+                            if let Some(prev_closure) = handle_click_ref2.borrow().as_ref() {
+                                owner_doc
+                                    .remove_event_listener_with_callback(
+                                        "click",
+                                        prev_closure.as_ref().unchecked_ref(),
+                                    )
+                                    .ok();
+                            }
+
+                            let click_closure: Closure<dyn Fn(web_sys::Event)> =
+                                Closure::new(move |_event: web_sys::Event| {
+                                    dispatch_fn();
+                                });
+
+                            let options = AddEventListenerOptions::new();
+                            options.set_once(true);
+
+                            owner_doc
+                                .add_event_listener_with_callback_and_add_event_listener_options(
+                                    "click",
+                                    click_closure.as_ref().unchecked_ref(),
+                                    &options,
+                                )
+                                .expect("Click event listener should be added.");
+
+                            *handle_click_ref2.borrow_mut() = Some(click_closure);
+                        } else {
+                            dispatch_fn();
+                        }
+                    } else {
+                        // Remove the click listener if pointer was inside (cancellation).
+                        if let Some(prev_closure) = handle_click_ref3.borrow().as_ref() {
                             owner_doc
                                 .remove_event_listener_with_callback(
                                     "click",
@@ -188,92 +231,64 @@ fn use_pointer_down_outside(
                                 )
                                 .ok();
                         }
-                    });
-
-                    let click_closure: Closure<dyn Fn(web_sys::Event)> =
-                        Closure::new(move |_event: web_sys::Event| {
-                            dispatch_fn();
-                        });
-
-                    let options = AddEventListenerOptions::new();
-                    options.set_once(true);
-
-                    owner_doc
-                        .add_event_listener_with_callback_and_add_event_listener_options(
-                            "click",
-                            click_closure.as_ref().unchecked_ref(),
-                            &options,
-                        )
-                        .expect("Click event listener should be added.");
-
-                    handle_click_ref.set_value(SendWrapper::new(Some(click_closure)));
-                } else {
-                    dispatch_fn();
-                }
-            } else {
-                // Remove the click listener if pointer was inside (cancellation).
-                let _ = handle_click_ref.try_with_value(|prev| {
-                    if let Some(prev_closure) = prev.as_ref() {
-                        owner_doc
-                            .remove_event_listener_with_callback(
-                                "click",
-                                prev_closure.as_ref().unchecked_ref(),
-                            )
-                            .ok();
                     }
+                    is_pointer_inside_tree.set_value(false);
                 });
-            }
-            is_pointer_inside_tree.set_value(false);
-        });
 
-        // Delay listener registration to avoid catching the mount event.
-        let closure_ref: &JsValue = closure.as_ref();
-        let closure_ref_js: web_sys::js_sys::Function = closure_ref.clone().unchecked_into();
-        let owner_doc_for_timeout = owner_doc2.clone();
-        let timeout_closure: Closure<dyn Fn()> = Closure::new(move || {
-            owner_doc_for_timeout
-                .add_event_listener_with_callback("pointerdown", &closure_ref_js)
-                .expect("Pointer down event listener should be added.");
-        });
-        let window = web_sys::window().expect("Window should exist.");
-        let timer_id = window
-            .set_timeout_with_callback(timeout_closure.as_ref().unchecked_ref())
-            .expect("setTimeout should succeed.");
+            // Delay listener registration to avoid catching the mount event.
+            // We store the timer ID so on_cleanup can cancel it if the component
+            // unmounts before the timer fires — otherwise the timer would register
+            // the (now-dropped) closure's JS function on the document.
+            let closure_ref: &JsValue = closure.as_ref();
+            let closure_ref_js: web_sys::js_sys::Function = closure_ref.clone().unchecked_into();
+            let owner_doc_for_timeout = owner_doc2.clone();
+            let timeout_closure: Closure<dyn Fn()> = Closure::new(move || {
+                owner_doc_for_timeout
+                    .add_event_listener_with_callback("pointerdown", &closure_ref_js)
+                    .expect("Pointer down event listener should be added.");
+            });
+            let window = web_sys::window().expect("Window should exist.");
+            let timer_id = window
+                .set_timeout_with_callback(timeout_closure.as_ref().unchecked_ref())
+                .expect("setTimeout should succeed.");
+            delayed_timer_id.set(timer_id);
 
-        // Store the closure so we can remove the listener on cleanup
-        handle_pointer_down.set_value(Some(SendWrapper::new(closure)));
+            // Store the closure so we can remove the listener on cleanup
+            *handle_pointer_down.borrow_mut() = Some(closure);
 
-        // Prevent timeout_closure from being dropped while the timer is pending
-        // by leaking it (it will only fire once).
-        timeout_closure.forget();
-
-        // Store timer_id for cleanup
-        // We can't easily return from Effect, so we use on_cleanup below
-        let _ = timer_id;
+            // Prevent timeout_closure from being dropped while the timer is pending
+            // by leaking it (it will only fire once).
+            timeout_closure.forget();
+        }
     });
 
     on_cleanup(move || {
-        let _ = handle_pointer_down.try_with_value(|closure_opt| {
-            if let Some(closure) = closure_opt.as_ref() {
-                cleanup_owner_doc
-                    .remove_event_listener_with_callback(
-                        "pointerdown",
-                        (**closure).as_ref().unchecked_ref(),
-                    )
-                    .ok();
+        // Cancel the delayed registration timer. If it hasn't fired yet, this
+        // prevents registering a dropped closure's JS function on the document.
+        let timer = delayed_timer_id.get();
+        if timer != 0 {
+            if let Some(window) = web_sys::window() {
+                window.clear_timeout_with_handle(timer);
             }
-        });
+        }
 
-        let _ = handle_click_ref.try_with_value(|prev| {
-            if let Some(prev_closure) = prev.as_ref() {
-                cleanup_owner_doc
-                    .remove_event_listener_with_callback(
-                        "click",
-                        prev_closure.as_ref().unchecked_ref(),
-                    )
-                    .ok();
-            }
-        });
+        if let Some(closure) = handle_pointer_down.borrow().as_ref() {
+            cleanup_owner_doc
+                .remove_event_listener_with_callback(
+                    "pointerdown",
+                    closure.as_ref().unchecked_ref(),
+                )
+                .ok();
+        }
+
+        if let Some(prev_closure) = handle_click_ref.borrow().as_ref() {
+            cleanup_owner_doc
+                .remove_event_listener_with_callback(
+                    "click",
+                    prev_closure.as_ref().unchecked_ref(),
+                )
+                .ok();
+        }
     });
 
     PointerDownOutsideReturn {
@@ -296,42 +311,43 @@ fn use_focus_outside(
 ) -> FocusOutsideReturn {
     let is_focus_inside_tree = StoredValue::new(false);
 
-    let owner_doc = SendWrapper::new(owner_document.clone());
-    let owner_doc_for_cleanup = SendWrapper::new(owner_document);
+    let owner_doc_for_cleanup = SendWrapper::new(owner_document.clone());
+    let setup_owner_doc = SendWrapper::new(owner_document);
 
-    type FocusInClosure = Closure<dyn Fn(web_sys::FocusEvent)>;
-    let handle_focus: StoredValue<Option<SendWrapper<FocusInClosure>>> = StoredValue::new(None);
+    let handle_focus: ClosureCell<dyn Fn(web_sys::FocusEvent)> =
+        SendWrapper::new(Rc::new(RefCell::new(None)));
 
-    let setup_owner_doc = owner_doc.clone();
+    Effect::new({
+        let handle_focus = handle_focus.clone();
+        let setup_owner_doc = setup_owner_doc.clone();
+        move |_| {
+            let closure: Closure<dyn Fn(web_sys::FocusEvent)> =
+                Closure::new(move |event: web_sys::FocusEvent| {
+                    let has_target = event.target().is_some();
+                    let is_inside = is_focus_inside_tree.try_get_value().unwrap_or(true);
 
-    Effect::new(move |_| {
-        let closure: FocusInClosure = Closure::new(move |event: web_sys::FocusEvent| {
-            let has_target = event.target().is_some();
-            let is_inside = is_focus_inside_tree.try_get_value().unwrap_or(true);
+                    if has_target && !is_inside {
+                        handle_and_dispatch_custom_event(FOCUS_OUTSIDE, on_focus_outside, &event);
+                    }
+                });
 
-            if has_target && !is_inside {
-                handle_and_dispatch_custom_event(FOCUS_OUTSIDE, on_focus_outside, &event);
-            }
-        });
+            setup_owner_doc
+                .add_event_listener_with_callback("focusin", closure.as_ref().unchecked_ref())
+                .expect("Focusin event listener should be added.");
 
-        setup_owner_doc
-            .add_event_listener_with_callback("focusin", closure.as_ref().unchecked_ref())
-            .expect("Focusin event listener should be added.");
-
-        handle_focus.set_value(Some(SendWrapper::new(closure)));
+            *handle_focus.borrow_mut() = Some(closure);
+        }
     });
 
     on_cleanup(move || {
-        let _ = handle_focus.try_with_value(|closure_opt| {
-            if let Some(closure) = closure_opt.as_ref() {
-                owner_doc_for_cleanup
-                    .remove_event_listener_with_callback(
-                        "focusin",
-                        (**closure).as_ref().unchecked_ref(),
-                    )
-                    .ok();
-            }
-        });
+        if let Some(closure) = handle_focus.borrow().as_ref() {
+            owner_doc_for_cleanup
+                .remove_event_listener_with_callback(
+                    "focusin",
+                    closure.as_ref().unchecked_ref(),
+                )
+                .ok();
+        }
     });
 
     FocusOutsideReturn {
@@ -747,11 +763,9 @@ pub fn DismissableLayer(
 
     // Capture-phase event handlers: we need to attach them manually because
     // Leptos `on:` bindings don't support capture phase.
-    type EventClosure = SendWrapper<Closure<dyn Fn(web_sys::Event)>>;
-    type CaptureClosures =
-        StoredValue<SendWrapper<std::cell::RefCell<Vec<(&'static str, EventClosure)>>>>;
-    let capture_closures: CaptureClosures =
-        StoredValue::new(SendWrapper::new(std::cell::RefCell::new(Vec::new())));
+    type EventClosure = Closure<dyn Fn(web_sys::Event)>;
+    let capture_closures: SendWrapper<Rc<RefCell<Vec<(&'static str, EventClosure)>>>> =
+        SendWrapper::new(Rc::new(RefCell::new(Vec::new())));
 
     let pointer_down_capture: StoredValue<SendWrapper<Box<dyn Fn()>>> = StoredValue::new(
         SendWrapper::new(pointer_down_outside.on_pointer_down_capture),
@@ -761,84 +775,81 @@ pub fn DismissableLayer(
     let blur_capture: StoredValue<SendWrapper<Box<dyn Fn()>>> =
         StoredValue::new(SendWrapper::new(focus_outside.on_blur_capture));
 
-    Effect::new(move |_| {
-        // Clean up previous capture listeners
-        let _ = capture_closures.try_with_value(|closures| {
-            closures.borrow_mut().clear();
-        });
+    Effect::new({
+        let capture_closures = capture_closures.clone();
+        move |_| {
+            // Clean up previous capture listeners
+            capture_closures.borrow_mut().clear();
 
-        if let Some(node) = container_ref.get() {
-            let node: web_sys::EventTarget = node.unchecked_into();
-            let mut new_closures: Vec<(&'static str, EventClosure)> = Vec::new();
+            if let Some(node) = container_ref.get() {
+                let node: web_sys::EventTarget = node.unchecked_into();
+                let mut new_closures: Vec<(&'static str, EventClosure)> = Vec::new();
 
-            // pointerdown capture
-            let pdc_closure: Closure<dyn Fn(web_sys::Event)> =
-                Closure::new(move |_event: web_sys::Event| {
-                    // Use try_with_value: StoredValue may be disposed during teardown
-                    let _ = pointer_down_capture.try_with_value(|f| f());
-                });
-            let options = AddEventListenerOptions::new();
-            options.set_capture(true);
-            node.add_event_listener_with_callback_and_add_event_listener_options(
-                "pointerdown",
-                pdc_closure.as_ref().unchecked_ref(),
-                &options,
-            )
-            .expect("Pointer down capture listener should be added.");
-            new_closures.push(("pointerdown", SendWrapper::new(pdc_closure)));
+                // pointerdown capture
+                let pdc_closure: EventClosure =
+                    Closure::new(move |_event: web_sys::Event| {
+                        // Use try_with_value: StoredValue may be disposed during teardown
+                        let _ = pointer_down_capture.try_with_value(|f| f());
+                    });
+                let options = AddEventListenerOptions::new();
+                options.set_capture(true);
+                node.add_event_listener_with_callback_and_add_event_listener_options(
+                    "pointerdown",
+                    pdc_closure.as_ref().unchecked_ref(),
+                    &options,
+                )
+                .expect("Pointer down capture listener should be added.");
+                new_closures.push(("pointerdown", pdc_closure));
 
-            // focus capture
-            let fc_closure: Closure<dyn Fn(web_sys::Event)> =
-                Closure::new(move |_event: web_sys::Event| {
-                    let _ = focus_capture.try_with_value(|f| f());
-                });
-            let options = AddEventListenerOptions::new();
-            options.set_capture(true);
-            node.add_event_listener_with_callback_and_add_event_listener_options(
-                "focusin",
-                fc_closure.as_ref().unchecked_ref(),
-                &options,
-            )
-            .expect("Focus capture listener should be added.");
-            new_closures.push(("focusin", SendWrapper::new(fc_closure)));
+                // focus capture
+                let fc_closure: EventClosure =
+                    Closure::new(move |_event: web_sys::Event| {
+                        let _ = focus_capture.try_with_value(|f| f());
+                    });
+                let options = AddEventListenerOptions::new();
+                options.set_capture(true);
+                node.add_event_listener_with_callback_and_add_event_listener_options(
+                    "focusin",
+                    fc_closure.as_ref().unchecked_ref(),
+                    &options,
+                )
+                .expect("Focus capture listener should be added.");
+                new_closures.push(("focusin", fc_closure));
 
-            // blur capture
-            let bc_closure: Closure<dyn Fn(web_sys::Event)> =
-                Closure::new(move |_event: web_sys::Event| {
-                    let _ = blur_capture.try_with_value(|f| f());
-                });
-            let options = AddEventListenerOptions::new();
-            options.set_capture(true);
-            node.add_event_listener_with_callback_and_add_event_listener_options(
-                "blur",
-                bc_closure.as_ref().unchecked_ref(),
-                &options,
-            )
-            .expect("Blur capture listener should be added.");
-            new_closures.push(("blur", SendWrapper::new(bc_closure)));
+                // blur capture
+                let bc_closure: EventClosure =
+                    Closure::new(move |_event: web_sys::Event| {
+                        let _ = blur_capture.try_with_value(|f| f());
+                    });
+                let options = AddEventListenerOptions::new();
+                options.set_capture(true);
+                node.add_event_listener_with_callback_and_add_event_listener_options(
+                    "blur",
+                    bc_closure.as_ref().unchecked_ref(),
+                    &options,
+                )
+                .expect("Blur capture listener should be added.");
+                new_closures.push(("blur", bc_closure));
 
-            let _ = capture_closures.try_with_value(|closures| {
-                *closures.borrow_mut() = new_closures;
-            });
+                *capture_closures.borrow_mut() = new_closures;
+            }
         }
     });
 
     on_cleanup(move || {
         if let Some(node) = container_ref.get_untracked() {
             let node: web_sys::EventTarget = node.unchecked_into();
-            let _ = capture_closures.try_with_value(|closures| {
-                let closures = closures.borrow();
-                for (event_name, closure) in closures.iter() {
-                    let options = web_sys::EventListenerOptions::new();
-                    options.set_capture(true);
-                    node.remove_event_listener_with_callback_and_event_listener_options(
-                        event_name,
-                        closure.as_ref().unchecked_ref(),
-                        &options,
-                    )
-                    .ok();
-                }
-            });
+            let closures = capture_closures.borrow();
+            for (event_name, closure) in closures.iter() {
+                let options = web_sys::EventListenerOptions::new();
+                options.set_capture(true);
+                node.remove_event_listener_with_callback_and_event_listener_options(
+                    event_name,
+                    closure.as_ref().unchecked_ref(),
+                    &options,
+                )
+                .ok();
+            }
         }
     });
 

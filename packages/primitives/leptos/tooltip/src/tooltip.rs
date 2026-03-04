@@ -1,3 +1,6 @@
+use std::cell::RefCell;
+use std::rc::Rc;
+
 use leptos::{
     attribute_interceptor::AttributeInterceptor, context::Provider, ev, html, prelude::*,
 };
@@ -17,6 +20,22 @@ use radix_leptos_visually_hidden::VisuallyHidden;
 use send_wrapper::SendWrapper;
 use wasm_bindgen::JsCast;
 use web_sys::wasm_bindgen::closure::Closure;
+
+/// Shared closure storage that outlives StoredValue disposal.
+///
+/// During Leptos scope disposal, `StoredValue` contents may be dropped before
+/// `on_cleanup` callbacks run. If a `Closure` is dropped while a DOM listener
+/// still references it, wasm_bindgen throws "closure invoked after being dropped".
+///
+/// By storing closures in `Rc<RefCell<...>>` (wrapped in SendWrapper for Send+Sync),
+/// both the setup code and the cleanup callback hold Rc clones. Even if one clone is
+/// dropped during disposal, the other keeps the Closure alive until cleanup removes
+/// the listener.
+type ClosureCell<T> = SendWrapper<Rc<RefCell<Option<Closure<T>>>>>;
+
+fn closure_cell<T: ?Sized>() -> ClosureCell<T> {
+    SendWrapper::new(Rc::new(RefCell::new(None)))
+}
 
 const DEFAULT_DELAY_DURATION: f64 = 700.0;
 const TOOLTIP_OPEN: &str = "tooltip.open";
@@ -289,25 +308,12 @@ pub fn TooltipTrigger(
         }
     });
 
-    // pointerup listener to track pointer state
-    #[allow(clippy::type_complexity)]
-    let pointerup_closure: StoredValue<Option<SendWrapper<Closure<dyn Fn(web_sys::Event)>>>> =
-        StoredValue::new(None);
-
-    on_cleanup(move || {
-        pointerup_closure.with_value(|existing| {
-            if let Some(closure) = existing
-                && let Some(document) = web_sys::window().and_then(|w| w.document())
-            {
-                document
-                    .remove_event_listener_with_callback(
-                        "pointerup",
-                        closure.as_ref().unchecked_ref(),
-                    )
-                    .ok();
-            }
-        });
-    });
+    // We use Closure::once_into_js for the document-level pointerup listener because:
+    // 1. The listener uses { once: true } so the browser auto-removes it after firing.
+    // 2. once_into_js leaks the closure to JS, preventing premature Rust-side drops.
+    // This avoids "closure invoked after being dropped" errors that occur when a
+    // StoredValue holding the Closure is disposed during reactive scope cleanup
+    // while the document listener still references it.
 
     view! {
         <PopperAnchor as_child=true>
@@ -350,41 +356,41 @@ pub fn TooltipTrigger(
                     on:pointerdown=compose_callbacks(
                         on_pointer_down,
                         Some(Callback::new(move |_: ev::PointerEvent| {
+                            // Defer the close to a microtask to avoid synchronous DOM mutations
+                            // during Leptos's delegated event dispatch. Unlike React 18+ which
+                            // batches state updates during event handlers, Leptos signal updates
+                            // trigger immediate re-renders. If the tooltip content unmounts
+                            // synchronously during a pointerdown handler while the delegated
+                            // event walk is still in progress, closures stored on DOM elements
+                            // can be invalidated, causing "closure invoked after being dropped".
                             if context.open.get_untracked() {
-                                context.on_close.run(());
+                                let on_close = context.on_close;
+                                queue_microtask(move || {
+                                    on_close.run(());
+                                });
                             }
                             is_pointer_down_ref.set_value(true);
 
-                            // Register a one-time pointerup handler on document
-                            pointerup_closure.with_value(|existing| {
-                                if let Some(closure) = existing
-                                    && let Some(document) = web_sys::window().and_then(|w| w.document()) {
-                                        document
-                                            .remove_event_listener_with_callback(
-                                                "pointerup",
-                                                closure.as_ref().unchecked_ref(),
-                                            )
-                                            .ok();
-                                    }
+                            // Register a one-time pointerup handler on document.
+                            // Using once_into_js so the closure is leaked to JS and won't
+                            // be dropped when Leptos disposes the reactive scope. The
+                            // { once: true } option ensures the browser removes the listener
+                            // after it fires. We use try_set_value so that if the scope has
+                            // been disposed by the time pointerup fires, it's a no-op.
+                            let cb = Closure::once_into_js(move || {
+                                let _ = is_pointer_down_ref.try_set_value(false);
                             });
-
-                            let closure = Closure::<dyn Fn(web_sys::Event)>::new(
-                                move |_: web_sys::Event| {
-                                    is_pointer_down_ref.set_value(false);
-                                },
-                            );
                             if let Some(document) = web_sys::window().and_then(|w| w.document()) {
                                 let opts = web_sys::AddEventListenerOptions::new();
                                 opts.set_once(true);
                                 document
                                     .add_event_listener_with_callback_and_add_event_listener_options(
                                         "pointerup",
-                                        closure.as_ref().unchecked_ref(),
+                                        cb.unchecked_ref(),
                                         &opts,
                                     )
                                     .ok();
                             }
-                            pointerup_closure.set_value(Some(SendWrapper::new(closure)));
                         })),
                         None,
                     )
@@ -624,128 +630,128 @@ fn TooltipContentHoverable(
     });
 
     // Set up pointerleave listeners on trigger and content to create grace areas
-    #[allow(clippy::type_complexity)]
-    let trigger_leave_closure: StoredValue<
-        Option<SendWrapper<Closure<dyn Fn(web_sys::PointerEvent)>>>,
-    > = StoredValue::new(None);
-    #[allow(clippy::type_complexity)]
-    let content_leave_closure: StoredValue<
-        Option<SendWrapper<Closure<dyn Fn(web_sys::PointerEvent)>>>,
-    > = StoredValue::new(None);
+    let trigger_leave_closure: ClosureCell<dyn Fn(web_sys::PointerEvent)> = closure_cell();
+    let content_leave_closure: ClosureCell<dyn Fn(web_sys::PointerEvent)> = closure_cell();
 
-    Effect::new(move |_| {
-        let trigger_el = context.trigger.get();
-        let content_el = content_ref.get();
+    Effect::new({
+        let trigger_leave_closure = trigger_leave_closure.clone();
+        let content_leave_closure = content_leave_closure.clone();
+        move |_| {
+            let trigger_el = context.trigger.get();
+            let content_el = content_ref.get();
 
-        // Clean up previous listeners
-        {
-            let content_html: Option<web_sys::HtmlElement> =
-                content_el.as_ref().map(|n| (*n).clone().unchecked_into());
-            cleanup_grace_area_listeners(
-                &trigger_el,
-                &content_html,
-                &trigger_leave_closure,
-                &content_leave_closure,
-            );
-        }
+            // Clean up previous listeners
+            {
+                let content_html: Option<web_sys::HtmlElement> =
+                    content_el.as_ref().map(|n| (*n).clone().unchecked_into());
+                cleanup_grace_area_listeners(
+                    &trigger_el,
+                    &content_html,
+                    &trigger_leave_closure,
+                    &content_leave_closure,
+                );
+            }
 
-        if let (Some(trigger_sw), Some(content_node)) = (trigger_el.as_ref(), content_el) {
-            let trigger: &web_sys::HtmlElement = trigger_sw;
-            let content: web_sys::HtmlElement = content_node.unchecked_into();
+            if let (Some(trigger_sw), Some(content_node)) = (trigger_el.as_ref(), content_el) {
+                let trigger: &web_sys::HtmlElement = trigger_sw;
+                let content: web_sys::HtmlElement = content_node.unchecked_into();
 
-            // When pointer leaves trigger, create grace area toward content
-            let content_for_trigger = content.clone();
-            let trigger_leave = Closure::<dyn Fn(web_sys::PointerEvent)>::new(
-                move |event: web_sys::PointerEvent| {
-                    let current_target = event.current_target();
-                    if let Some(current_target) = current_target {
-                        let current_target: web_sys::HtmlElement = current_target.unchecked_into();
-                        let exit_point = Point {
-                            x: event.client_x() as f64,
-                            y: event.client_y() as f64,
-                        };
-                        let exit_side = get_exit_side_from_rect(
-                            &exit_point,
-                            &current_target.get_bounding_client_rect(),
-                        );
-                        let padded_exit_points = get_padded_exit_points(&exit_point, &exit_side);
-                        let hover_target_points =
-                            get_points_from_rect(&content_for_trigger.get_bounding_client_rect());
-                        let mut all_points = padded_exit_points;
-                        all_points.extend(hover_target_points);
-                        let grace_area = get_hull(&all_points);
-                        pointer_grace_area.set(Some(grace_area));
-                        on_pointer_in_transit_change.run(true);
-                    }
-                },
-            );
-            trigger
-                .add_event_listener_with_callback(
-                    "pointerleave",
-                    trigger_leave.as_ref().unchecked_ref(),
-                )
-                .ok();
-            trigger_leave_closure.set_value(Some(SendWrapper::new(trigger_leave)));
+                // When pointer leaves trigger, create grace area toward content
+                let content_for_trigger = content.clone();
+                let trigger_leave = Closure::<dyn Fn(web_sys::PointerEvent)>::new(
+                    move |event: web_sys::PointerEvent| {
+                        let current_target = event.current_target();
+                        if let Some(current_target) = current_target {
+                            let current_target: web_sys::HtmlElement =
+                                current_target.unchecked_into();
+                            let exit_point = Point {
+                                x: event.client_x() as f64,
+                                y: event.client_y() as f64,
+                            };
+                            let exit_side = get_exit_side_from_rect(
+                                &exit_point,
+                                &current_target.get_bounding_client_rect(),
+                            );
+                            let padded_exit_points =
+                                get_padded_exit_points(&exit_point, &exit_side);
+                            let hover_target_points = get_points_from_rect(
+                                &content_for_trigger.get_bounding_client_rect(),
+                            );
+                            let mut all_points = padded_exit_points;
+                            all_points.extend(hover_target_points);
+                            let grace_area = get_hull(&all_points);
+                            pointer_grace_area.set(Some(grace_area));
+                            on_pointer_in_transit_change.run(true);
+                        }
+                    },
+                );
+                trigger
+                    .add_event_listener_with_callback(
+                        "pointerleave",
+                        trigger_leave.as_ref().unchecked_ref(),
+                    )
+                    .ok();
+                *trigger_leave_closure.borrow_mut() = Some(trigger_leave);
 
-            // When pointer leaves content, create grace area toward trigger
-            let trigger_clone: web_sys::HtmlElement = trigger.clone();
-            let content_leave = Closure::<dyn Fn(web_sys::PointerEvent)>::new(
-                move |event: web_sys::PointerEvent| {
-                    let current_target = event.current_target();
-                    if let Some(current_target) = current_target {
-                        let current_target: web_sys::HtmlElement = current_target.unchecked_into();
-                        let exit_point = Point {
-                            x: event.client_x() as f64,
-                            y: event.client_y() as f64,
-                        };
-                        let exit_side = get_exit_side_from_rect(
-                            &exit_point,
-                            &current_target.get_bounding_client_rect(),
-                        );
-                        let padded_exit_points = get_padded_exit_points(&exit_point, &exit_side);
-                        let hover_target_points =
-                            get_points_from_rect(&trigger_clone.get_bounding_client_rect());
-                        let mut all_points = padded_exit_points;
-                        all_points.extend(hover_target_points);
-                        let grace_area = get_hull(&all_points);
-                        pointer_grace_area.set(Some(grace_area));
-                        on_pointer_in_transit_change.run(true);
-                    }
-                },
-            );
-            content
-                .add_event_listener_with_callback(
-                    "pointerleave",
-                    content_leave.as_ref().unchecked_ref(),
-                )
-                .ok();
-            content_leave_closure.set_value(Some(SendWrapper::new(content_leave)));
+                // When pointer leaves content, create grace area toward trigger
+                let trigger_clone: web_sys::HtmlElement = trigger.clone();
+                let content_leave = Closure::<dyn Fn(web_sys::PointerEvent)>::new(
+                    move |event: web_sys::PointerEvent| {
+                        let current_target = event.current_target();
+                        if let Some(current_target) = current_target {
+                            let current_target: web_sys::HtmlElement =
+                                current_target.unchecked_into();
+                            let exit_point = Point {
+                                x: event.client_x() as f64,
+                                y: event.client_y() as f64,
+                            };
+                            let exit_side = get_exit_side_from_rect(
+                                &exit_point,
+                                &current_target.get_bounding_client_rect(),
+                            );
+                            let padded_exit_points =
+                                get_padded_exit_points(&exit_point, &exit_side);
+                            let hover_target_points =
+                                get_points_from_rect(&trigger_clone.get_bounding_client_rect());
+                            let mut all_points = padded_exit_points;
+                            all_points.extend(hover_target_points);
+                            let grace_area = get_hull(&all_points);
+                            pointer_grace_area.set(Some(grace_area));
+                            on_pointer_in_transit_change.run(true);
+                        }
+                    },
+                );
+                content
+                    .add_event_listener_with_callback(
+                        "pointerleave",
+                        content_leave.as_ref().unchecked_ref(),
+                    )
+                    .ok();
+                *content_leave_closure.borrow_mut() = Some(content_leave);
+            }
         }
     });
 
     // Track pointer movement to check if pointer is within grace area
-    #[allow(clippy::type_complexity)]
-    let pointermove_closure: StoredValue<
-        Option<SendWrapper<Closure<dyn Fn(web_sys::PointerEvent)>>>,
-    > = StoredValue::new(None);
+    let pointermove_closure: ClosureCell<dyn Fn(web_sys::PointerEvent)> = closure_cell();
 
-    Effect::new(move |_| {
-        let grace_area = pointer_grace_area.get();
+    Effect::new({
+        let pointermove_closure = pointermove_closure.clone();
+        move |_| {
+            let grace_area = pointer_grace_area.get();
 
-        // Remove previous listener
-        pointermove_closure.with_value(|existing| {
-            if let Some(closure) = existing
-                && let Some(document) = web_sys::window().and_then(|w| w.document())
-            {
-                document
-                    .remove_event_listener_with_callback(
-                        "pointermove",
-                        closure.as_ref().unchecked_ref(),
-                    )
-                    .ok();
+            // Remove previous listener
+            if let Some(closure) = pointermove_closure.borrow().as_ref() {
+                if let Some(document) = web_sys::window().and_then(|w| w.document()) {
+                    document
+                        .remove_event_listener_with_callback(
+                            "pointermove",
+                            closure.as_ref().unchecked_ref(),
+                        )
+                        .ok();
+                }
             }
-        });
-        pointermove_closure.set_value(None);
+            *pointermove_closure.borrow_mut() = None;
 
         if let Some(grace_area) = grace_area {
             let trigger_el = context.trigger.get_untracked();
@@ -789,9 +795,9 @@ fn TooltipContentHoverable(
                     )
                     .ok();
             }
-            pointermove_closure.set_value(Some(SendWrapper::new(closure)));
+            *pointermove_closure.borrow_mut() = Some(closure);
         }
-    });
+    }});
 
     on_cleanup(move || {
         // Clean up grace area listeners
@@ -806,10 +812,8 @@ fn TooltipContentHoverable(
         );
 
         // Clean up pointermove listener
-        pointermove_closure.with_value(|existing| {
-            if let Some(closure) = existing
-                && let Some(document) = web_sys::window().and_then(|w| w.document())
-            {
+        if let Some(closure) = pointermove_closure.borrow().as_ref() {
+            if let Some(document) = web_sys::window().and_then(|w| w.document()) {
                 document
                     .remove_event_listener_with_callback(
                         "pointermove",
@@ -817,7 +821,7 @@ fn TooltipContentHoverable(
                     )
                     .ok();
             }
-        });
+        }
     });
 
     view! {
@@ -844,21 +848,14 @@ fn TooltipContentHoverable(
     }
 }
 
-#[allow(clippy::type_complexity)]
 fn cleanup_grace_area_listeners(
     trigger_el: &Option<SendWrapper<web_sys::HtmlElement>>,
     content_el: &Option<web_sys::HtmlElement>,
-    trigger_leave_closure: &StoredValue<
-        Option<SendWrapper<Closure<dyn Fn(web_sys::PointerEvent)>>>,
-    >,
-    content_leave_closure: &StoredValue<
-        Option<SendWrapper<Closure<dyn Fn(web_sys::PointerEvent)>>>,
-    >,
+    trigger_leave_closure: &ClosureCell<dyn Fn(web_sys::PointerEvent)>,
+    content_leave_closure: &ClosureCell<dyn Fn(web_sys::PointerEvent)>,
 ) {
-    trigger_leave_closure.with_value(|existing| {
-        if let Some(closure) = existing
-            && let Some(trigger) = trigger_el.as_ref()
-        {
+    if let Some(closure) = trigger_leave_closure.borrow().as_ref() {
+        if let Some(trigger) = trigger_el.as_ref() {
             trigger
                 .remove_event_listener_with_callback(
                     "pointerleave",
@@ -866,11 +863,9 @@ fn cleanup_grace_area_listeners(
                 )
                 .ok();
         }
-    });
-    content_leave_closure.with_value(|existing| {
-        if let Some(closure) = existing
-            && let Some(content) = content_el.as_ref()
-        {
+    }
+    if let Some(closure) = content_leave_closure.borrow().as_ref() {
+        if let Some(content) = content_el.as_ref() {
             content
                 .remove_event_listener_with_callback(
                     "pointerleave",
@@ -878,7 +873,7 @@ fn cleanup_grace_area_listeners(
                 )
                 .ok();
         }
-    });
+    }
 }
 
 /* -------------------------------------------------------------------------------------------------
@@ -936,94 +931,93 @@ fn TooltipContentImpl(
     let on_close = context.on_close;
 
     // Close this tooltip if another one opens
-    #[allow(clippy::type_complexity)]
-    let tooltip_open_closure: StoredValue<
-        Option<SendWrapper<Closure<dyn Fn(web_sys::Event)>>>,
-    > = StoredValue::new(None);
+    let tooltip_open_closure: ClosureCell<dyn Fn(web_sys::Event)> = closure_cell();
 
-    Effect::new(move |_| {
-        // Clean up previous listener
-        tooltip_open_closure.with_value(|existing| {
-            if let Some(closure) = existing
-                && let Some(document) = web_sys::window().and_then(|w| w.document())
-            {
+    Effect::new({
+        let tooltip_open_closure = tooltip_open_closure.clone();
+        move |_| {
+            // Clean up previous listener
+            if let Some(closure) = tooltip_open_closure.borrow().as_ref() {
+                if let Some(document) = web_sys::window().and_then(|w| w.document()) {
+                    document
+                        .remove_event_listener_with_callback(
+                            TOOLTIP_OPEN,
+                            closure.as_ref().unchecked_ref(),
+                        )
+                        .ok();
+                }
+            }
+
+            let closure = Closure::<dyn Fn(web_sys::Event)>::new(move |_: web_sys::Event| {
+                on_close.run(());
+            });
+
+            if let Some(document) = web_sys::window().and_then(|w| w.document()) {
                 document
-                    .remove_event_listener_with_callback(
+                    .add_event_listener_with_callback(
                         TOOLTIP_OPEN,
                         closure.as_ref().unchecked_ref(),
                     )
                     .ok();
             }
-        });
-
-        let closure = Closure::<dyn Fn(web_sys::Event)>::new(move |_: web_sys::Event| {
-            on_close.run(());
-        });
-
-        if let Some(document) = web_sys::window().and_then(|w| w.document()) {
-            document
-                .add_event_listener_with_callback(TOOLTIP_OPEN, closure.as_ref().unchecked_ref())
-                .ok();
+            *tooltip_open_closure.borrow_mut() = Some(closure);
         }
-        tooltip_open_closure.set_value(Some(SendWrapper::new(closure)));
     });
 
     // Close the tooltip if the trigger is scrolled
-    #[allow(clippy::type_complexity)]
-    let scroll_closure: StoredValue<Option<SendWrapper<Closure<dyn Fn(web_sys::Event)>>>> =
-        StoredValue::new(None);
+    let scroll_closure: ClosureCell<dyn Fn(web_sys::Event)> = closure_cell();
 
-    Effect::new(move |_| {
-        let trigger = context.trigger.get();
+    Effect::new({
+        let scroll_closure = scroll_closure.clone();
+        move |_| {
+            let trigger = context.trigger.get();
 
-        // Clean up previous listener
-        scroll_closure.with_value(|existing| {
-            if let Some(closure) = existing
-                && let Some(window) = web_sys::window()
-            {
-                let opts = web_sys::EventListenerOptions::new();
-                opts.set_capture(true);
-                window
-                    .remove_event_listener_with_callback_and_event_listener_options(
-                        "scroll",
-                        closure.as_ref().unchecked_ref(),
-                        &opts,
-                    )
-                    .ok();
-            }
-        });
-        scroll_closure.set_value(None);
-
-        if let Some(trigger_el) = trigger {
-            let closure = Closure::<dyn Fn(web_sys::Event)>::new(move |event: web_sys::Event| {
-                if let Some(target) = event.target() {
-                    let target: web_sys::HtmlElement = target.unchecked_into();
-                    if target.contains(Some(&trigger_el)) {
-                        on_close.run(());
-                    }
+            // Clean up previous listener
+            if let Some(closure) = scroll_closure.borrow().as_ref() {
+                if let Some(window) = web_sys::window() {
+                    let opts = web_sys::EventListenerOptions::new();
+                    opts.set_capture(true);
+                    window
+                        .remove_event_listener_with_callback_and_event_listener_options(
+                            "scroll",
+                            closure.as_ref().unchecked_ref(),
+                            &opts,
+                        )
+                        .ok();
                 }
-            });
-
-            if let Some(window) = web_sys::window() {
-                let opts = web_sys::AddEventListenerOptions::new();
-                opts.set_capture(true);
-                window
-                    .add_event_listener_with_callback_and_add_event_listener_options(
-                        "scroll",
-                        closure.as_ref().unchecked_ref(),
-                        &opts,
-                    )
-                    .ok();
             }
-            scroll_closure.set_value(Some(SendWrapper::new(closure)));
+            *scroll_closure.borrow_mut() = None;
+
+            if let Some(trigger_el) = trigger {
+                let closure =
+                    Closure::<dyn Fn(web_sys::Event)>::new(move |event: web_sys::Event| {
+                        if let Some(target) = event.target() {
+                            let target: web_sys::HtmlElement = target.unchecked_into();
+                            if target.contains(Some(&trigger_el)) {
+                                on_close.run(());
+                            }
+                        }
+                    });
+
+                if let Some(window) = web_sys::window() {
+                    let opts = web_sys::AddEventListenerOptions::new();
+                    opts.set_capture(true);
+                    window
+                        .add_event_listener_with_callback_and_add_event_listener_options(
+                            "scroll",
+                            closure.as_ref().unchecked_ref(),
+                            &opts,
+                        )
+                        .ok();
+                }
+                *scroll_closure.borrow_mut() = Some(closure);
+            }
         }
     });
 
     on_cleanup(move || {
-        tooltip_open_closure.with_value(|existing| {
-            if let Some(closure) = existing
-                && let Some(document) = web_sys::window().and_then(|w| w.document())
-            {
+        if let Some(closure) = tooltip_open_closure.borrow().as_ref() {
+            if let Some(document) = web_sys::window().and_then(|w| w.document()) {
                 document
                     .remove_event_listener_with_callback(
                         TOOLTIP_OPEN,
@@ -1031,11 +1025,9 @@ fn TooltipContentImpl(
                     )
                     .ok();
             }
-        });
-        scroll_closure.with_value(|existing| {
-            if let Some(closure) = existing
-                && let Some(window) = web_sys::window()
-            {
+        }
+        if let Some(closure) = scroll_closure.borrow().as_ref() {
+            if let Some(window) = web_sys::window() {
                 let opts = web_sys::EventListenerOptions::new();
                 opts.set_capture(true);
                 window
@@ -1046,7 +1038,7 @@ fn TooltipContentImpl(
                     )
                     .ok();
             }
-        });
+        }
     });
 
     // Apply custom CSS properties via Effect
@@ -1374,4 +1366,14 @@ fn clear_timeout(handle: StoredValue<Option<i32>>) {
             .clear_timeout_with_handle(id);
         handle.set_value(None);
     }
+}
+
+/// Schedules a closure to run in a microtask (after the current synchronous execution).
+/// This is used to defer state updates that would cause synchronous DOM mutations during
+/// Leptos's delegated event dispatch, matching React 18+'s automatic batching behavior.
+fn queue_microtask(f: impl FnOnce() + 'static) {
+    let cb = Closure::once_into_js(f);
+    web_sys::window()
+        .expect("Window should exist.")
+        .queue_microtask(cb.unchecked_ref());
 }

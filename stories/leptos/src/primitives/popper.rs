@@ -463,7 +463,7 @@ pub fn Chromatic() -> impl IntoView {
                 <h1>Logical "start" alignment (RTL)</h1>
                 <Popper>
                     <PopperAnchor attr:class=small_anchor>13</PopperAnchor>
-                    <PopperContent attr:class=small_content attr:dir="rtl" align=Align::Start side_offset=5.0>
+                    <PopperContent attr:class=small_content dir="rtl".to_string() align=Align::Start side_offset=5.0>
                         <PopperArrow attr:class=classes::arrow width=10.0 height=5.0 />
                         13
                     </PopperContent>
@@ -472,7 +472,7 @@ pub fn Chromatic() -> impl IntoView {
                 <Popper>
                     <PopperAnchor attr:class=small_anchor>14</PopperAnchor>
                     <Portal as_child=true>
-                        <PopperContent attr:class=small_content attr:dir="rtl" align=Align::Start side_offset=5.0>
+                        <PopperContent attr:class=small_content dir="rtl".to_string() align=Align::Start side_offset=5.0>
                             <PopperArrow attr:class=classes::arrow width=10.0 height=5.0 />
                             14 (portalled)
                         </PopperContent>

@@ -89,8 +89,16 @@ pub fn provide_popper_scope(scope: PopperScope) {
 }
 
 #[component]
-pub fn Popper(children: ChildrenFn) -> impl IntoView {
-    let anchor_ref = AnyNodeRef::new();
+pub fn Popper(
+    /// Optional externally-managed anchor ref. When provided, Popper uses this
+    /// ref instead of creating its own. This lets parent components (like Menu)
+    /// set the anchor ref directly, avoiding context-shadowing issues when
+    /// another Popper (e.g., Tooltip) is nested between the Popper and its anchor.
+    #[prop(optional)]
+    anchor_ref: Option<AnyNodeRef>,
+    children: ChildrenFn,
+) -> impl IntoView {
+    let anchor_ref = anchor_ref.unwrap_or_else(AnyNodeRef::new);
     let anchor_virtual = RwSignal::new(None);
 
     let context_value = PopperContextValue {
