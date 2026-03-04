@@ -936,12 +936,12 @@ fn ScrollAreaScrollbarVisible(
                     });
 
                 let on_thumb_position_change = Callback::new(move |()| {
-                    if let Some(viewport) = context.viewport.get()
-                        && let Some(thumb) = thumb_ref.get()
+                    if let Some(viewport) = context.viewport.get_untracked()
+                        && let Some(thumb) = thumb_ref.get_untracked()
                     {
                         let scroll_pos = viewport.scroll_left() as f64;
                         let offset =
-                            get_thumb_offset_from_scroll(scroll_pos, &sizes.get(), context.dir.get());
+                            get_thumb_offset_from_scroll(scroll_pos, &sizes.get_untracked(), context.dir.get_untracked());
                         thumb
                             .style()
                             .set_property("transform", &format!("translate3d({}px, 0, 0)", offset))
@@ -950,13 +950,13 @@ fn ScrollAreaScrollbarVisible(
                 });
 
                 let on_wheel_scroll = Callback::new(move |scroll_pos: f64| {
-                    if let Some(viewport) = context.viewport.get() {
+                    if let Some(viewport) = context.viewport.get_untracked() {
                         viewport.set_scroll_left(scroll_pos as i32);
                     }
                 });
 
                 let on_drag_scroll = Callback::new(move |pointer_pos: f64| {
-                    if let Some(viewport) = context.viewport.get() {
+                    if let Some(viewport) = context.viewport.get_untracked() {
                         let scroll_pos = get_scroll_position_from_pointer(
                             pointer_pos,
                             pointer_offset.get_untracked(),
@@ -992,12 +992,12 @@ fn ScrollAreaScrollbarVisible(
                 });
 
                 let on_thumb_position_change = Callback::new(move |()| {
-                    if let Some(viewport) = context.viewport.get()
-                        && let Some(thumb) = thumb_ref.get()
+                    if let Some(viewport) = context.viewport.get_untracked()
+                        && let Some(thumb) = thumb_ref.get_untracked()
                     {
                         let scroll_pos = viewport.scroll_top() as f64;
                         let offset =
-                            get_thumb_offset_from_scroll(scroll_pos, &sizes.get(), Direction::Ltr);
+                            get_thumb_offset_from_scroll(scroll_pos, &sizes.get_untracked(), Direction::Ltr);
                         thumb
                             .style()
                             .set_property("transform", &format!("translate3d(0, {}px, 0)", offset))
@@ -1006,13 +1006,13 @@ fn ScrollAreaScrollbarVisible(
                 });
 
                 let on_wheel_scroll = Callback::new(move |scroll_pos: f64| {
-                    if let Some(viewport) = context.viewport.get() {
+                    if let Some(viewport) = context.viewport.get_untracked() {
                         viewport.set_scroll_top(scroll_pos as i32);
                     }
                 });
 
                 let on_drag_scroll = Callback::new(move |pointer_pos: f64| {
-                    if let Some(viewport) = context.viewport.get() {
+                    if let Some(viewport) = context.viewport.get_untracked() {
                         let scroll_pos = get_scroll_position_from_pointer(
                             pointer_pos,
                             pointer_offset.get_untracked(),
@@ -1096,9 +1096,9 @@ fn ScrollAreaScrollbarX(
     });
 
     let on_resize = Callback::new(move |()| {
-        if let Some(node) = scrollbar_ref.get()
-            && let Some(viewport) = context.viewport.get()
-            && let Some(cs) = computed_style.get()
+        if let Some(node) = scrollbar_ref.get_untracked()
+            && let Some(viewport) = context.viewport.get_untracked()
+            && let Some(cs) = computed_style.get_untracked()
         {
             let scrollbar_el: &web_sys::HtmlElement = node.unchecked_ref();
             sizes.set(Sizes {
@@ -1119,7 +1119,7 @@ fn ScrollAreaScrollbarX(
 
     let on_wheel_scroll_impl = Callback::new(
         move |(event, max_scroll_pos): (SendWrapper<web_sys::WheelEvent>, f64)| {
-            if let Some(viewport) = context.viewport.get() {
+            if let Some(viewport) = context.viewport.get_untracked() {
                 let scroll_pos = viewport.scroll_left() as f64 + event.delta_x();
                 on_wheel_scroll.run(scroll_pos);
                 if is_scrolling_within_scrollbar_bounds(scroll_pos, max_scroll_pos) {
@@ -1218,9 +1218,9 @@ fn ScrollAreaScrollbarY(
     });
 
     let on_resize = Callback::new(move |()| {
-        if let Some(node) = scrollbar_ref.get()
-            && let Some(viewport) = context.viewport.get()
-            && let Some(cs) = computed_style.get()
+        if let Some(node) = scrollbar_ref.get_untracked()
+            && let Some(viewport) = context.viewport.get_untracked()
+            && let Some(cs) = computed_style.get_untracked()
         {
             let scrollbar_el: &web_sys::HtmlElement = node.unchecked_ref();
             sizes.set(Sizes {
@@ -1241,7 +1241,7 @@ fn ScrollAreaScrollbarY(
 
     let on_wheel_scroll_impl = Callback::new(
         move |(event, max_scroll_pos): (SendWrapper<web_sys::WheelEvent>, f64)| {
-            if let Some(viewport) = context.viewport.get() {
+            if let Some(viewport) = context.viewport.get_untracked() {
                 let scroll_pos = viewport.scroll_top() as f64 + event.delta_y();
                 on_wheel_scroll.run(scroll_pos);
                 if is_scrolling_within_scrollbar_bounds(scroll_pos, max_scroll_pos) {
@@ -1760,7 +1760,7 @@ fn ScrollAreaCornerImpl(
     use_resize_observer(
         Signal::derive(move || context.scrollbar_x.get()),
         move || {
-            if let Some(scrollbar_x) = context.scrollbar_x.get() {
+            if let Some(scrollbar_x) = context.scrollbar_x.get_untracked() {
                 let h = scrollbar_x.offset_height() as f64;
                 context.corner_height.set(h);
                 height.set(h);
@@ -1771,7 +1771,7 @@ fn ScrollAreaCornerImpl(
     use_resize_observer(
         Signal::derive(move || context.scrollbar_y.get()),
         move || {
-            if let Some(scrollbar_y) = context.scrollbar_y.get() {
+            if let Some(scrollbar_y) = context.scrollbar_y.get_untracked() {
                 let w = scrollbar_y.offset_width() as f64;
                 context.corner_width.set(w);
                 width.set(w);
