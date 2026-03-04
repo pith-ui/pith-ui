@@ -155,12 +155,7 @@ fn create_single_contexts(
     });
 
     // Wrap single value in a Vec for the shared AccordionValue context.
-    let value_as_vec = Signal::derive(move || {
-        value_signal
-            .get()
-            .map(|v| if v.is_empty() { vec![] } else { vec![v] })
-            .unwrap_or_default()
-    });
+    let value_as_vec = Signal::derive(move || single_value_to_vec(value_signal.get()));
 
     let on_item_open = Callback::new(move |item_value: String| {
         set_value.run(Some(item_value));
@@ -210,9 +205,10 @@ fn create_multiple_contexts(
     });
 
     let on_item_close = Callback::new(move |item_value: String| {
-        let current = value_signal.get().unwrap_or_default();
-        let filtered: Vec<String> = current.into_iter().filter(|v| *v != item_value).collect();
-        set_value.run(Some(filtered));
+        set_value.run(Some(remove_item(
+            value_signal.get().unwrap_or_default(),
+            &item_value,
+        )));
     });
 
     (
@@ -568,5 +564,71 @@ pub fn AccordionContent(
                 {children.with_value(|children| children.as_ref().map(|children| children()))}
             </CollapsibleContent>
         </AttributeInterceptor>
+    }
+}
+
+fn single_value_to_vec(value: Option<String>) -> Vec<String> {
+    match value {
+        None => vec![],
+        Some(v) if v.is_empty() => vec![],
+        Some(v) => vec![v],
+    }
+}
+
+fn remove_item(values: Vec<String>, item: &str) -> Vec<String> {
+    values.into_iter().filter(|v| v != item).collect()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    // ── single_value_to_vec ─────────────────────────────────
+
+    #[test]
+    fn single_value_none() {
+        assert_eq!(single_value_to_vec(None), Vec::<String>::new());
+    }
+
+    #[test]
+    fn single_value_empty() {
+        assert_eq!(single_value_to_vec(Some(String::new())), Vec::<String>::new());
+    }
+
+    #[test]
+    fn single_value_present() {
+        assert_eq!(single_value_to_vec(Some("item-1".into())), vec!["item-1"]);
+    }
+
+    // ── remove_item ─────────────────────────────────────────
+
+    #[test]
+    fn remove_existing_item() {
+        let result = remove_item(vec!["a".into(), "b".into(), "c".into()], "b");
+        assert_eq!(result, vec!["a", "c"]);
+    }
+
+    #[test]
+    fn remove_nonexistent_item() {
+        let result = remove_item(vec!["a".into(), "b".into()], "z");
+        assert_eq!(result, vec!["a", "b"]);
+    }
+
+    #[test]
+    fn remove_from_empty() {
+        let result = remove_item(vec![], "a");
+        assert!(result.is_empty());
+    }
+
+    #[test]
+    fn remove_last_item() {
+        let result = remove_item(vec!["a".into()], "a");
+        assert!(result.is_empty());
+    }
+
+    #[test]
+    fn remove_duplicate_items() {
+        let result = remove_item(vec!["a".into(), "b".into(), "a".into()], "a");
+        assert_eq!(result, vec!["b"]);
     }
 }

@@ -379,3 +379,28 @@ fn make_trigger_id(base_id: &str, value: &str) -> String {
 fn make_content_id(base_id: &str, value: &str) -> String {
     format!("{base_id}-content-{value}")
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn trigger_id_format() {
+        assert_eq!(make_trigger_id("tabs-1", "tab1"), "tabs-1-trigger-tab1");
+    }
+
+    #[test]
+    fn content_id_format() {
+        assert_eq!(make_content_id("tabs-1", "tab1"), "tabs-1-content-tab1");
+    }
+
+    #[test]
+    fn trigger_id_empty_values() {
+        assert_eq!(make_trigger_id("", ""), "-trigger-");
+    }
+
+    #[test]
+    fn content_id_empty_values() {
+        assert_eq!(make_content_id("", ""), "-content-");
+    }
+}

@@ -954,3 +954,184 @@ fn is_text_input(element: &web_sys::Element) -> bool {
         .get_attribute("contenteditable")
         .is_some_and(|v| v == "true" || v.is_empty())
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use wasm_bindgen_test::*;
+
+    wasm_bindgen_test_configure!(run_in_browser);
+
+    fn create_element(tag: &str) -> web_sys::Element {
+        web_sys::window()
+            .unwrap()
+            .document()
+            .unwrap()
+            .create_element(tag)
+            .unwrap()
+    }
+
+    fn create_input_with_type(type_attr: &str) -> web_sys::Element {
+        let el = create_element("input");
+        el.set_attribute("type", type_attr).unwrap();
+        el
+    }
+
+    // ── Textarea ──────────────────────────────────────────────
+
+    #[wasm_bindgen_test]
+    fn textarea_is_text_input() {
+        let el = create_element("textarea");
+        assert!(is_text_input(&el));
+    }
+
+    // ── Input types that ARE text inputs ──────────────────────
+
+    #[wasm_bindgen_test]
+    fn input_no_type_defaults_to_text_input() {
+        let el = create_element("input");
+        assert!(is_text_input(&el));
+    }
+
+    #[wasm_bindgen_test]
+    fn input_type_text_is_text_input() {
+        assert!(is_text_input(&create_input_with_type("text")));
+    }
+
+    #[wasm_bindgen_test]
+    fn input_type_email_is_text_input() {
+        assert!(is_text_input(&create_input_with_type("email")));
+    }
+
+    #[wasm_bindgen_test]
+    fn input_type_number_is_text_input() {
+        assert!(is_text_input(&create_input_with_type("number")));
+    }
+
+    #[wasm_bindgen_test]
+    fn input_type_password_is_text_input() {
+        assert!(is_text_input(&create_input_with_type("password")));
+    }
+
+    #[wasm_bindgen_test]
+    fn input_type_search_is_text_input() {
+        assert!(is_text_input(&create_input_with_type("search")));
+    }
+
+    #[wasm_bindgen_test]
+    fn input_type_tel_is_text_input() {
+        assert!(is_text_input(&create_input_with_type("tel")));
+    }
+
+    #[wasm_bindgen_test]
+    fn input_type_url_is_text_input() {
+        assert!(is_text_input(&create_input_with_type("url")));
+    }
+
+    #[wasm_bindgen_test]
+    fn input_type_date_is_text_input() {
+        assert!(is_text_input(&create_input_with_type("date")));
+    }
+
+    #[wasm_bindgen_test]
+    fn input_type_datetime_local_is_text_input() {
+        assert!(is_text_input(&create_input_with_type("datetime-local")));
+    }
+
+    #[wasm_bindgen_test]
+    fn input_type_month_is_text_input() {
+        assert!(is_text_input(&create_input_with_type("month")));
+    }
+
+    #[wasm_bindgen_test]
+    fn input_type_time_is_text_input() {
+        assert!(is_text_input(&create_input_with_type("time")));
+    }
+
+    #[wasm_bindgen_test]
+    fn input_type_week_is_text_input() {
+        assert!(is_text_input(&create_input_with_type("week")));
+    }
+
+    // ── Input types that are NOT text inputs ──────────────────
+
+    #[wasm_bindgen_test]
+    fn input_type_hidden_is_not_text_input() {
+        assert!(!is_text_input(&create_input_with_type("hidden")));
+    }
+
+    #[wasm_bindgen_test]
+    fn input_type_checkbox_is_not_text_input() {
+        assert!(!is_text_input(&create_input_with_type("checkbox")));
+    }
+
+    #[wasm_bindgen_test]
+    fn input_type_radio_is_not_text_input() {
+        assert!(!is_text_input(&create_input_with_type("radio")));
+    }
+
+    #[wasm_bindgen_test]
+    fn input_type_submit_is_not_text_input() {
+        assert!(!is_text_input(&create_input_with_type("submit")));
+    }
+
+    #[wasm_bindgen_test]
+    fn input_type_button_is_not_text_input() {
+        assert!(!is_text_input(&create_input_with_type("button")));
+    }
+
+    #[wasm_bindgen_test]
+    fn input_type_file_is_not_text_input() {
+        assert!(!is_text_input(&create_input_with_type("file")));
+    }
+
+    #[wasm_bindgen_test]
+    fn input_type_range_is_not_text_input() {
+        assert!(!is_text_input(&create_input_with_type("range")));
+    }
+
+    #[wasm_bindgen_test]
+    fn input_type_color_is_not_text_input() {
+        assert!(!is_text_input(&create_input_with_type("color")));
+    }
+
+    // ── Non-input elements ────────────────────────────────────
+
+    #[wasm_bindgen_test]
+    fn button_is_not_text_input() {
+        assert!(!is_text_input(&create_element("button")));
+    }
+
+    #[wasm_bindgen_test]
+    fn div_is_not_text_input() {
+        assert!(!is_text_input(&create_element("div")));
+    }
+
+    // ── Contenteditable ───────────────────────────────────────
+
+    #[wasm_bindgen_test]
+    fn div_contenteditable_true_is_text_input() {
+        let el = create_element("div");
+        el.set_attribute("contenteditable", "true").unwrap();
+        assert!(is_text_input(&el));
+    }
+
+    #[wasm_bindgen_test]
+    fn div_contenteditable_empty_is_text_input() {
+        let el = create_element("div");
+        el.set_attribute("contenteditable", "").unwrap();
+        assert!(is_text_input(&el));
+    }
+
+    #[wasm_bindgen_test]
+    fn div_contenteditable_false_is_not_text_input() {
+        let el = create_element("div");
+        el.set_attribute("contenteditable", "false").unwrap();
+        assert!(!is_text_input(&el));
+    }
+
+    #[wasm_bindgen_test]
+    fn span_no_contenteditable_is_not_text_input() {
+        assert!(!is_text_input(&create_element("span")));
+    }
+}

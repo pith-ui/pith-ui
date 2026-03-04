@@ -203,3 +203,18 @@ fn get_state(checked: bool) -> String {
     })
     .into()
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn get_state_checked() {
+        assert_eq!(get_state(true), "checked");
+    }
+
+    #[test]
+    fn get_state_unchecked() {
+        assert_eq!(get_state(false), "unchecked");
+    }
+}

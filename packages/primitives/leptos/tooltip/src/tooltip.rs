@@ -195,15 +195,7 @@ pub fn Tooltip(
     let open_derived = Signal::derive(move || open_signal.get().unwrap_or(false));
 
     let state_attribute = Signal::derive(move || {
-        if open_derived.get() {
-            if was_open_delayed_ref.get_value() {
-                "delayed-open"
-            } else {
-                "instant-open"
-            }
-        } else {
-            "closed"
-        }
+        tooltip_state_attribute(open_derived.get(), was_open_delayed_ref.get_value())
     });
 
     let handle_open = Callback::new(move |_: ()| {
@@ -649,12 +641,12 @@ fn TooltipContentHoverable(
                             };
                             let exit_side = get_exit_side_from_rect(
                                 &exit_point,
-                                &current_target.get_bounding_client_rect(),
+                                &Rect::from(&current_target.get_bounding_client_rect()),
                             );
                             let padded_exit_points =
                                 get_padded_exit_points(&exit_point, &exit_side);
                             let hover_target_points = get_points_from_rect(
-                                &content_for_trigger.get_bounding_client_rect(),
+                                &Rect::from(&content_for_trigger.get_bounding_client_rect()),
                             );
                             let mut all_points = padded_exit_points;
                             all_points.extend(hover_target_points);
@@ -686,12 +678,12 @@ fn TooltipContentHoverable(
                             };
                             let exit_side = get_exit_side_from_rect(
                                 &exit_point,
-                                &current_target.get_bounding_client_rect(),
+                                &Rect::from(&current_target.get_bounding_client_rect()),
                             );
                             let padded_exit_points =
                                 get_padded_exit_points(&exit_point, &exit_side);
                             let hover_target_points =
-                                get_points_from_rect(&trigger_clone.get_bounding_client_rect());
+                                get_points_from_rect(&Rect::from(&trigger_clone.get_bounding_client_rect()));
                             let mut all_points = padded_exit_points;
                             all_points.extend(hover_target_points);
                             let grace_area = get_hull(&all_points);
@@ -1160,11 +1152,30 @@ struct Point {
     y: f64,
 }
 
-fn get_exit_side_from_rect(point: &Point, rect: &web_sys::DomRect) -> Side {
-    let top = (rect.top() - point.y).abs();
-    let bottom = (rect.bottom() - point.y).abs();
-    let right = (rect.right() - point.x).abs();
-    let left = (rect.left() - point.x).abs();
+#[derive(Clone, Debug)]
+struct Rect {
+    top: f64,
+    bottom: f64,
+    left: f64,
+    right: f64,
+}
+
+impl From<&web_sys::DomRect> for Rect {
+    fn from(r: &web_sys::DomRect) -> Self {
+        Self {
+            top: r.top(),
+            bottom: r.bottom(),
+            left: r.left(),
+            right: r.right(),
+        }
+    }
+}
+
+fn get_exit_side_from_rect(point: &Point, rect: &Rect) -> Side {
+    let top = (rect.top - point.y).abs();
+    let bottom = (rect.bottom - point.y).abs();
+    let right = (rect.right - point.x).abs();
+    let left = (rect.left - point.x).abs();
 
     let min = top.min(bottom).min(right).min(left);
 
@@ -1225,23 +1236,23 @@ fn get_padded_exit_points(exit_point: &Point, exit_side: &Side) -> Vec<Point> {
     }
 }
 
-fn get_points_from_rect(rect: &web_sys::DomRect) -> Vec<Point> {
+fn get_points_from_rect(rect: &Rect) -> Vec<Point> {
     vec![
         Point {
-            x: rect.left(),
-            y: rect.top(),
+            x: rect.left,
+            y: rect.top,
         },
         Point {
-            x: rect.right(),
-            y: rect.top(),
+            x: rect.right,
+            y: rect.top,
         },
         Point {
-            x: rect.right(),
-            y: rect.bottom(),
+            x: rect.right,
+            y: rect.bottom,
         },
         Point {
-            x: rect.left(),
-            y: rect.bottom(),
+            x: rect.left,
+            y: rect.bottom,
         },
     ]
 }
@@ -1332,6 +1343,14 @@ fn get_hull_presorted(points: &[Point]) -> Vec<Point> {
  * Utils
  * -----------------------------------------------------------------------------------------------*/
 
+fn tooltip_state_attribute(open: bool, was_delayed: bool) -> &'static str {
+    match (open, was_delayed) {
+        (true, true) => "delayed-open",
+        (true, false) => "instant-open",
+        (false, _) => "closed",
+    }
+}
+
 fn set_timeout(f: impl Fn() + 'static, delay: i32) -> i32 {
     let closure = Closure::once_into_js(f);
     web_sys::window()
@@ -1357,4 +1376,304 @@ fn queue_microtask(f: impl FnOnce() + 'static) {
     web_sys::window()
         .expect("Window should exist.")
         .queue_microtask(cb.unchecked_ref());
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    // ── is_point_in_polygon ─────────────────────────────────
+
+    #[test]
+    fn point_inside_triangle() {
+        let triangle = vec![
+            Point { x: 0.0, y: 0.0 },
+            Point { x: 10.0, y: 0.0 },
+            Point { x: 5.0, y: 10.0 },
+        ];
+        assert!(is_point_in_polygon(&Point { x: 5.0, y: 5.0 }, &triangle));
+    }
+
+    #[test]
+    fn point_outside_triangle() {
+        let triangle = vec![
+            Point { x: 0.0, y: 0.0 },
+            Point { x: 10.0, y: 0.0 },
+            Point { x: 5.0, y: 10.0 },
+        ];
+        assert!(!is_point_in_polygon(
+            &Point { x: 20.0, y: 20.0 },
+            &triangle
+        ));
+    }
+
+    #[test]
+    fn point_inside_rectangle() {
+        let rect = vec![
+            Point { x: 0.0, y: 0.0 },
+            Point { x: 10.0, y: 0.0 },
+            Point { x: 10.0, y: 10.0 },
+            Point { x: 0.0, y: 10.0 },
+        ];
+        assert!(is_point_in_polygon(&Point { x: 5.0, y: 5.0 }, &rect));
+    }
+
+    #[test]
+    fn point_outside_rectangle() {
+        let rect = vec![
+            Point { x: 0.0, y: 0.0 },
+            Point { x: 10.0, y: 0.0 },
+            Point { x: 10.0, y: 10.0 },
+            Point { x: 0.0, y: 10.0 },
+        ];
+        assert!(!is_point_in_polygon(
+            &Point { x: -1.0, y: 5.0 },
+            &rect
+        ));
+    }
+
+    #[test]
+    fn point_in_empty_polygon() {
+        assert!(!is_point_in_polygon(&Point { x: 0.0, y: 0.0 }, &[]));
+    }
+
+    #[test]
+    fn point_in_single_vertex_polygon() {
+        let polygon = vec![Point { x: 5.0, y: 5.0 }];
+        assert!(!is_point_in_polygon(&Point { x: 5.0, y: 5.0 }, &polygon));
+    }
+
+    #[test]
+    fn point_far_outside_large_polygon() {
+        let pentagon = vec![
+            Point { x: 5.0, y: 0.0 },
+            Point { x: 10.0, y: 4.0 },
+            Point { x: 8.0, y: 10.0 },
+            Point { x: 2.0, y: 10.0 },
+            Point { x: 0.0, y: 4.0 },
+        ];
+        assert!(!is_point_in_polygon(
+            &Point { x: 100.0, y: 100.0 },
+            &pentagon
+        ));
+        assert!(is_point_in_polygon(&Point { x: 5.0, y: 5.0 }, &pentagon));
+    }
+
+    // ── get_hull / get_hull_presorted ───────────────────────
+
+    #[test]
+    fn hull_empty() {
+        let hull = get_hull(&[]);
+        assert!(hull.is_empty());
+    }
+
+    #[test]
+    fn hull_single_point() {
+        let points = vec![Point { x: 3.0, y: 4.0 }];
+        let hull = get_hull(&points);
+        assert_eq!(hull.len(), 1);
+        assert!((hull[0].x - 3.0).abs() < f64::EPSILON);
+        assert!((hull[0].y - 4.0).abs() < f64::EPSILON);
+    }
+
+    #[test]
+    fn hull_two_points() {
+        let points = vec![Point { x: 0.0, y: 0.0 }, Point { x: 5.0, y: 5.0 }];
+        let hull = get_hull(&points);
+        assert_eq!(hull.len(), 2);
+    }
+
+    #[test]
+    fn hull_triangle_already_convex() {
+        let points = vec![
+            Point { x: 0.0, y: 0.0 },
+            Point { x: 10.0, y: 0.0 },
+            Point { x: 5.0, y: 10.0 },
+        ];
+        let hull = get_hull(&points);
+        assert_eq!(hull.len(), 3);
+    }
+
+    #[test]
+    fn hull_square_with_interior_point() {
+        let points = vec![
+            Point { x: 0.0, y: 0.0 },
+            Point { x: 10.0, y: 0.0 },
+            Point { x: 10.0, y: 10.0 },
+            Point { x: 0.0, y: 10.0 },
+            Point { x: 5.0, y: 5.0 }, // interior — should be excluded
+        ];
+        let hull = get_hull(&points);
+        assert_eq!(hull.len(), 4);
+        // Interior point should not be in the hull
+        assert!(hull
+            .iter()
+            .all(|p| !((p.x - 5.0).abs() < f64::EPSILON && (p.y - 5.0).abs() < f64::EPSILON)));
+    }
+
+    #[test]
+    fn hull_collinear_points() {
+        let points = vec![
+            Point { x: 0.0, y: 0.0 },
+            Point { x: 5.0, y: 0.0 },
+            Point { x: 10.0, y: 0.0 },
+        ];
+        let hull = get_hull(&points);
+        // Collinear points reduce to endpoints
+        assert_eq!(hull.len(), 2);
+    }
+
+    #[test]
+    fn hull_duplicate_points() {
+        let points = vec![
+            Point { x: 1.0, y: 1.0 },
+            Point { x: 1.0, y: 1.0 },
+            Point { x: 1.0, y: 1.0 },
+        ];
+        let hull = get_hull(&points);
+        assert_eq!(hull.len(), 1);
+    }
+
+    #[test]
+    fn hull_presorted_identity() {
+        // Already sorted by x then y
+        let sorted = vec![
+            Point { x: 0.0, y: 0.0 },
+            Point { x: 5.0, y: 10.0 },
+            Point { x: 10.0, y: 0.0 },
+        ];
+        let hull = get_hull_presorted(&sorted);
+        assert_eq!(hull.len(), 3);
+    }
+
+    // ── get_padded_exit_points ──────────────────────────────
+
+    #[test]
+    fn padded_exit_top() {
+        let exit = Point { x: 50.0, y: 10.0 };
+        let points = get_padded_exit_points(&exit, &Side::Top);
+        assert_eq!(points.len(), 2);
+        // Top exit: x ± 5, y + 5
+        assert!((points[0].x - 45.0).abs() < f64::EPSILON);
+        assert!((points[0].y - 15.0).abs() < f64::EPSILON);
+        assert!((points[1].x - 55.0).abs() < f64::EPSILON);
+        assert!((points[1].y - 15.0).abs() < f64::EPSILON);
+    }
+
+    #[test]
+    fn padded_exit_bottom() {
+        let exit = Point { x: 50.0, y: 90.0 };
+        let points = get_padded_exit_points(&exit, &Side::Bottom);
+        assert_eq!(points.len(), 2);
+        // Bottom exit: x ± 5, y - 5
+        assert!((points[0].x - 45.0).abs() < f64::EPSILON);
+        assert!((points[0].y - 85.0).abs() < f64::EPSILON);
+        assert!((points[1].x - 55.0).abs() < f64::EPSILON);
+        assert!((points[1].y - 85.0).abs() < f64::EPSILON);
+    }
+
+    #[test]
+    fn padded_exit_left() {
+        let exit = Point { x: 10.0, y: 50.0 };
+        let points = get_padded_exit_points(&exit, &Side::Left);
+        assert_eq!(points.len(), 2);
+        // Left exit: x + 5, y ± 5
+        assert!((points[0].x - 15.0).abs() < f64::EPSILON);
+        assert!((points[0].y - 45.0).abs() < f64::EPSILON);
+        assert!((points[1].x - 15.0).abs() < f64::EPSILON);
+        assert!((points[1].y - 55.0).abs() < f64::EPSILON);
+    }
+
+    #[test]
+    fn padded_exit_right() {
+        let exit = Point { x: 90.0, y: 50.0 };
+        let points = get_padded_exit_points(&exit, &Side::Right);
+        assert_eq!(points.len(), 2);
+        // Right exit: x - 5, y ± 5
+        assert!((points[0].x - 85.0).abs() < f64::EPSILON);
+        assert!((points[0].y - 45.0).abs() < f64::EPSILON);
+        assert!((points[1].x - 85.0).abs() < f64::EPSILON);
+        assert!((points[1].y - 55.0).abs() < f64::EPSILON);
+    }
+
+    // ── get_exit_side_from_rect ─────────────────────────────
+
+    fn rect(top: f64, right: f64, bottom: f64, left: f64) -> Rect {
+        Rect {
+            top,
+            bottom,
+            left,
+            right,
+        }
+    }
+
+    #[test]
+    fn exit_side_closest_to_left() {
+        let r = rect(0.0, 100.0, 100.0, 0.0);
+        assert_eq!(get_exit_side_from_rect(&Point { x: 1.0, y: 50.0 }, &r), Side::Left);
+    }
+
+    #[test]
+    fn exit_side_closest_to_right() {
+        let r = rect(0.0, 100.0, 100.0, 0.0);
+        assert_eq!(get_exit_side_from_rect(&Point { x: 99.0, y: 50.0 }, &r), Side::Right);
+    }
+
+    #[test]
+    fn exit_side_closest_to_top() {
+        let r = rect(0.0, 100.0, 100.0, 0.0);
+        assert_eq!(get_exit_side_from_rect(&Point { x: 50.0, y: 1.0 }, &r), Side::Top);
+    }
+
+    #[test]
+    fn exit_side_closest_to_bottom() {
+        let r = rect(0.0, 100.0, 100.0, 0.0);
+        assert_eq!(get_exit_side_from_rect(&Point { x: 50.0, y: 99.0 }, &r), Side::Bottom);
+    }
+
+    #[test]
+    fn exit_side_corner_prefers_left() {
+        // At top-left corner, left distance == top distance, left wins by priority
+        let r = rect(0.0, 100.0, 100.0, 0.0);
+        assert_eq!(get_exit_side_from_rect(&Point { x: 0.0, y: 0.0 }, &r), Side::Left);
+    }
+
+    // ── get_points_from_rect ────────────────────────────────
+
+    #[test]
+    fn points_from_rect_corners() {
+        let r = rect(10.0, 110.0, 60.0, 10.0);
+        let points = get_points_from_rect(&r);
+        assert_eq!(points.len(), 4);
+        // top-left
+        assert!((points[0].x - 10.0).abs() < f64::EPSILON);
+        assert!((points[0].y - 10.0).abs() < f64::EPSILON);
+        // top-right
+        assert!((points[1].x - 110.0).abs() < f64::EPSILON);
+        assert!((points[1].y - 10.0).abs() < f64::EPSILON);
+        // bottom-right
+        assert!((points[2].x - 110.0).abs() < f64::EPSILON);
+        assert!((points[2].y - 60.0).abs() < f64::EPSILON);
+        // bottom-left
+        assert!((points[3].x - 10.0).abs() < f64::EPSILON);
+        assert!((points[3].y - 60.0).abs() < f64::EPSILON);
+    }
+
+    // ── tooltip_state_attribute ──────────────────────────────
+
+    #[test]
+    fn state_delayed_open() {
+        assert_eq!(tooltip_state_attribute(true, true), "delayed-open");
+    }
+
+    #[test]
+    fn state_instant_open() {
+        assert_eq!(tooltip_state_attribute(true, false), "instant-open");
+    }
+
+    #[test]
+    fn state_closed() {
+        assert_eq!(tooltip_state_attribute(false, false), "closed");
+        assert_eq!(tooltip_state_attribute(false, true), "closed");
+    }
 }

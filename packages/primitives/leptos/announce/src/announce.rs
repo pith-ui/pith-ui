@@ -280,3 +280,91 @@ fn get_live_region_part_data_attr(id: Option<&str>) -> String {
         None => "data-radix-announce-region".to_owned(),
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    // ── RegionType ──────────────────────────────────────────
+
+    #[test]
+    fn region_type_as_str() {
+        assert_eq!(RegionType::Polite.as_str(), "polite");
+        assert_eq!(RegionType::Assertive.as_str(), "assertive");
+        assert_eq!(RegionType::Off.as_str(), "off");
+    }
+
+    #[test]
+    fn region_type_default_role() {
+        assert_eq!(RegionType::Polite.default_role(), RegionRole::Status);
+        assert_eq!(RegionType::Assertive.default_role(), RegionRole::Alert);
+        assert_eq!(RegionType::Off.default_role(), RegionRole::None);
+    }
+
+    #[test]
+    fn region_type_default_is_polite() {
+        assert_eq!(RegionType::default(), RegionType::Polite);
+    }
+
+    // ── RegionRole ──────────────────────────────────────────
+
+    #[test]
+    fn region_role_as_str() {
+        assert_eq!(RegionRole::Status.as_str(), "status");
+        assert_eq!(RegionRole::Alert.as_str(), "alert");
+        assert_eq!(RegionRole::Log.as_str(), "log");
+        assert_eq!(RegionRole::None.as_str(), "none");
+    }
+
+    // ── get_live_region_part_data_attr ──────────────────────
+
+    #[test]
+    fn data_attr_without_id() {
+        assert_eq!(
+            get_live_region_part_data_attr(None),
+            "data-radix-announce-region"
+        );
+    }
+
+    #[test]
+    fn data_attr_with_id() {
+        assert_eq!(
+            get_live_region_part_data_attr(Some("my-region")),
+            "data-radix-announce-region-my-region"
+        );
+    }
+
+    // ── build_selector ──────────────────────────────────────
+
+    #[test]
+    fn build_selector_basic() {
+        let opts = LiveRegionOptions {
+            r#type: "polite",
+            role: "status",
+            relevant: None,
+            atomic: false,
+            id: None,
+        };
+        let sel = build_selector(&opts);
+        assert_eq!(
+            sel,
+            "[data-radix-announce-region][aria-live=polite][aria-atomic=false][role=status]"
+        );
+    }
+
+    #[test]
+    fn build_selector_with_id_and_relevant() {
+        let opts = LiveRegionOptions {
+            r#type: "assertive",
+            role: "alert",
+            relevant: Some("additions text".to_owned()),
+            atomic: true,
+            id: Some("toast-1".to_owned()),
+        };
+        let sel = build_selector(&opts);
+        assert_eq!(
+            sel,
+            "[data-radix-announce-region-toast-1][aria-live=assertive][aria-atomic=true][aria-relevant=additions text][role=alert]"
+        );
+    }
+}

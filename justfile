@@ -1,3 +1,22 @@
+# ── Unit & Wasm Tests ──────────────────────────────────────
+
+# Run all unit tests for leptos primitives
+test_leptos_unit:
+    cargo test -p 'radix-leptos-*' --all-features --locked --release
+
+# Run all wasm-bindgen tests for leptos primitives (headless Chrome)
+test_leptos_wasm:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    for toml in packages/primitives/leptos/*/Cargo.toml; do
+        if grep -q 'wasm-bindgen-test' "$toml"; then
+            dir=$(dirname "$toml")
+            pkg=$(basename "$dir")
+            echo "==> wasm-pack test $pkg"
+            wasm-pack test --headless --chrome --release "$dir"
+        fi
+    done
+
 # Reference App — cross-framework E2E testing harness
 # ── Dev servers ──────────────────────────────────────────
 

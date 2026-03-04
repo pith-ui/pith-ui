@@ -858,3 +858,34 @@ fn wrap_array<T: Clone>(array: Vec<T>, start_index: usize) -> Vec<T> {
         .map(|(index, _)| array[(start_index + index) % len].clone())
         .collect()
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn wrap_array_empty() {
+        let result: Vec<i32> = wrap_array(vec![], 0);
+        assert!(result.is_empty());
+    }
+
+    #[test]
+    fn wrap_array_at_zero() {
+        assert_eq!(wrap_array(vec!['a', 'b', 'c', 'd'], 0), vec!['a', 'b', 'c', 'd']);
+    }
+
+    #[test]
+    fn wrap_array_at_middle() {
+        assert_eq!(wrap_array(vec!['a', 'b', 'c', 'd'], 2), vec!['c', 'd', 'a', 'b']);
+    }
+
+    #[test]
+    fn wrap_array_at_last() {
+        assert_eq!(wrap_array(vec!['a', 'b', 'c', 'd'], 3), vec!['d', 'a', 'b', 'c']);
+    }
+
+    #[test]
+    fn wrap_array_single_element() {
+        assert_eq!(wrap_array(vec![42], 0), vec![42]);
+    }
+}

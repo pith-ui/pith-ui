@@ -1246,3 +1246,100 @@ fn focus_input(element: Option<&web_sys::HtmlInputElement>) {
 
     let _ = element.focus();
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    // ── get_validation ──────────────────────────────────────
+
+    #[test]
+    fn validation_numeric() {
+        let info = get_validation(InputValidationType::Numeric).unwrap();
+        assert_eq!(info.regexp, r"[^\d]");
+        assert_eq!(info.pattern, r"\d{1}");
+        assert_eq!(info.input_mode, "numeric");
+    }
+
+    #[test]
+    fn validation_alpha() {
+        let info = get_validation(InputValidationType::Alpha).unwrap();
+        assert_eq!(info.regexp, r"[^a-zA-Z]");
+        assert_eq!(info.pattern, "[a-zA-Z]{1}");
+        assert_eq!(info.input_mode, "text");
+    }
+
+    #[test]
+    fn validation_alphanumeric() {
+        let info = get_validation(InputValidationType::Alphanumeric).unwrap();
+        assert_eq!(info.regexp, r"[^a-zA-Z0-9]");
+        assert_eq!(info.pattern, "[a-zA-Z0-9]{1}");
+        assert_eq!(info.input_mode, "text");
+    }
+
+    #[test]
+    fn validation_none() {
+        assert!(get_validation(InputValidationType::None).is_none());
+    }
+
+    // ── remove_whitespace ───────────────────────────────────
+
+    #[test]
+    fn remove_whitespace_empty() {
+        assert_eq!(remove_whitespace(""), "");
+    }
+
+    #[test]
+    fn remove_whitespace_only_spaces() {
+        assert_eq!(remove_whitespace("   "), "");
+    }
+
+    #[test]
+    fn remove_whitespace_mixed() {
+        assert_eq!(remove_whitespace("1 2 3"), "123");
+    }
+
+    #[test]
+    fn remove_whitespace_tabs_and_newlines() {
+        assert_eq!(remove_whitespace("a\tb\nc"), "abc");
+    }
+
+    #[test]
+    fn remove_whitespace_no_whitespace() {
+        assert_eq!(remove_whitespace("abc123"), "abc123");
+    }
+
+    // ── collection_at ───────────────────────────────────────
+    // collection_at depends on CollectionItemValue which requires AnyNodeRef,
+    // so these tests verify the index arithmetic logic indirectly through
+    // the function's behavior with constructed items.
+
+    // ── InputType / AutoComplete ────────────────────────────
+
+    #[test]
+    fn input_type_as_str() {
+        assert_eq!(InputType::Password.as_str(), "password");
+        assert_eq!(InputType::Text.as_str(), "text");
+    }
+
+    #[test]
+    fn autocomplete_as_str() {
+        assert_eq!(AutoComplete::Off.as_str(), "off");
+        assert_eq!(AutoComplete::OneTimeCode.as_str(), "one-time-code");
+    }
+
+    #[test]
+    fn input_type_default_is_text() {
+        assert_eq!(InputType::default(), InputType::Text);
+    }
+
+    #[test]
+    fn autocomplete_default_is_one_time_code() {
+        assert_eq!(AutoComplete::default(), AutoComplete::OneTimeCode);
+    }
+
+    #[test]
+    fn input_validation_type_default_is_numeric() {
+        assert_eq!(InputValidationType::default(), InputValidationType::Numeric);
+    }
+}

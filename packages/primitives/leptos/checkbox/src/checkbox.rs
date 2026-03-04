@@ -310,3 +310,45 @@ fn get_state(checked: CheckedState) -> String {
     })
     .into()
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn is_indeterminate_true_for_indeterminate() {
+        assert!(is_indeterminiate(CheckedState::Indeterminate));
+    }
+
+    #[test]
+    fn is_indeterminate_false_for_true() {
+        assert!(!is_indeterminiate(CheckedState::True));
+    }
+
+    #[test]
+    fn is_indeterminate_false_for_false() {
+        assert!(!is_indeterminiate(CheckedState::False));
+    }
+
+    #[test]
+    fn get_state_checked() {
+        assert_eq!(get_state(CheckedState::True), "checked");
+    }
+
+    #[test]
+    fn get_state_unchecked() {
+        assert_eq!(get_state(CheckedState::False), "unchecked");
+    }
+
+    #[test]
+    fn get_state_indeterminate() {
+        assert_eq!(get_state(CheckedState::Indeterminate), "indeterminate");
+    }
+
+    #[test]
+    fn display_impl() {
+        assert_eq!(format!("{}", CheckedState::True), "true");
+        assert_eq!(format!("{}", CheckedState::False), "false");
+        assert_eq!(format!("{}", CheckedState::Indeterminate), "indeterminate");
+    }
+}

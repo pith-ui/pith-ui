@@ -1771,17 +1771,21 @@ pub fn SelectScrollDownButton(
             let viewport_clone = viewport.clone();
 
             let handle_scroll: Closure<dyn FnMut()> = Closure::new(move || {
-                let max_scroll = viewport_clone.scroll_height() - viewport_clone.client_height();
-                let can_scroll = (viewport_clone.scroll_top() as f64).ceil() < max_scroll as f64;
-                set_can_scroll_down.set(can_scroll);
+                set_can_scroll_down.set(is_scrollable_down(
+                    viewport_clone.scroll_top(),
+                    viewport_clone.scroll_height(),
+                    viewport_clone.client_height(),
+                ));
             });
             let scroll_fn: js_sys::Function = handle_scroll.into_js_value().unchecked_into();
             let scroll_fn_cleanup = SendWrapper::new(scroll_fn.clone());
 
             // Initial check
-            let max_scroll = viewport.scroll_height() - viewport.client_height();
-            let can_scroll = (viewport.scroll_top() as f64).ceil() < max_scroll as f64;
-            set_can_scroll_down.set(can_scroll);
+            set_can_scroll_down.set(is_scrollable_down(
+                viewport.scroll_top(),
+                viewport.scroll_height(),
+                viewport.client_height(),
+            ));
 
             let _ = viewport.add_event_listener_with_callback("scroll", &scroll_fn);
 
@@ -2054,6 +2058,14 @@ fn should_show_placeholder(value: &Option<String>) -> bool {
     }
 }
 
+fn parse_px_value(css_value: &str) -> f64 {
+    css_value.replace("px", "").parse::<f64>().unwrap_or(0.0)
+}
+
+fn is_scrollable_down(scroll_top: i32, scroll_height: i32, client_height: i32) -> bool {
+    (scroll_top as f64).ceil() < (scroll_height - client_height) as f64
+}
+
 /// Typeahead search hook that returns (search_ref, handle_typeahead_search, reset_typeahead)
 fn use_typeahead_search(
     on_search_change: Callback<String>,
@@ -2289,12 +2301,11 @@ fn position_item_aligned(
         return;
     };
     let parse_px = |prop: &str| -> f64 {
-        content_styles
-            .get_property_value(prop)
-            .unwrap_or_default()
-            .replace("px", "")
-            .parse::<f64>()
-            .unwrap_or(0.0)
+        parse_px_value(
+            &content_styles
+                .get_property_value(prop)
+                .unwrap_or_default(),
+        )
     };
     let content_border_top = parse_px("border-top-width");
     let content_padding_top = parse_px("padding-top");
@@ -2311,18 +2322,16 @@ fn position_item_aligned(
     let Some(viewport_styles) = window.get_computed_style(viewport).ok().flatten() else {
         return;
     };
-    let viewport_padding_top = viewport_styles
-        .get_property_value("padding-top")
-        .unwrap_or_default()
-        .replace("px", "")
-        .parse::<f64>()
-        .unwrap_or(0.0);
-    let viewport_padding_bottom = viewport_styles
-        .get_property_value("padding-bottom")
-        .unwrap_or_default()
-        .replace("px", "")
-        .parse::<f64>()
-        .unwrap_or(0.0);
+    let viewport_padding_top = parse_px_value(
+        &viewport_styles
+            .get_property_value("padding-top")
+            .unwrap_or_default(),
+    );
+    let viewport_padding_bottom = parse_px_value(
+        &viewport_styles
+            .get_property_value("padding-bottom")
+            .unwrap_or_default(),
+    );
 
     let top_edge_to_trigger_middle =
         trigger_rect.top() + trigger_rect.height() / 2.0 - CONTENT_MARGIN;
@@ -2379,3 +2388,86 @@ fn position_item_aligned(
 
 /// Visually hidden styles for the bubble select element
 const VISUALLY_HIDDEN_STYLES_STR: &str = "position: absolute; border: 0; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; word-wrap: normal;";
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    // ── should_show_placeholder ─────────────────────────────
+
+    #[test]
+    fn placeholder_shown_for_none() {
+        assert!(should_show_placeholder(&None));
+    }
+
+    #[test]
+    fn placeholder_shown_for_empty_string() {
+        assert!(should_show_placeholder(&Some(String::new())));
+    }
+
+    #[test]
+    fn placeholder_hidden_for_value() {
+        assert!(!should_show_placeholder(&Some("apple".into())));
+    }
+
+    // ── parse_px_value ──────────────────────────────────────
+
+    #[test]
+    fn parse_px_normal() {
+        assert!((parse_px_value("10px") - 10.0).abs() < f64::EPSILON);
+    }
+
+    #[test]
+    fn parse_px_float() {
+        assert!((parse_px_value("3.5px") - 3.5).abs() < f64::EPSILON);
+    }
+
+    #[test]
+    fn parse_px_empty() {
+        assert!((parse_px_value("") - 0.0).abs() < f64::EPSILON);
+    }
+
+    #[test]
+    fn parse_px_no_unit() {
+        assert!((parse_px_value("42") - 42.0).abs() < f64::EPSILON);
+    }
+
+    #[test]
+    fn parse_px_garbage() {
+        assert!((parse_px_value("auto") - 0.0).abs() < f64::EPSILON);
+    }
+
+    #[test]
+    fn parse_px_zero() {
+        assert!((parse_px_value("0px") - 0.0).abs() < f64::EPSILON);
+    }
+
+    // ── is_scrollable_down ────────────────────────────────────
+
+    #[test]
+    fn can_scroll_when_not_at_bottom() {
+        assert!(is_scrollable_down(0, 500, 200));
+    }
+
+    #[test]
+    fn cannot_scroll_when_at_bottom() {
+        assert!(!is_scrollable_down(300, 500, 200));
+    }
+
+    #[test]
+    fn cannot_scroll_when_content_fits() {
+        assert!(!is_scrollable_down(0, 200, 200));
+    }
+
+    #[test]
+    fn can_scroll_just_below_bottom() {
+        // scroll_top=299, max_scroll=300 → ceil(299)=299 < 300
+        assert!(is_scrollable_down(299, 500, 200));
+    }
+
+    #[test]
+    fn cannot_scroll_at_exact_bottom() {
+        // scroll_top=300, max_scroll=300 → ceil(300)=300 < 300 is false
+        assert!(!is_scrollable_down(300, 500, 200));
+    }
+}

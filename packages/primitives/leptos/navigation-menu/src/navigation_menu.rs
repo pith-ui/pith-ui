@@ -146,6 +146,39 @@ fn get_open_state(open: bool) -> &'static str {
     if open { "open" } else { "closed" }
 }
 
+fn compute_motion_attribute(
+    values: &[String],
+    current_value: &str,
+    previous_value: &str,
+    this_value: &str,
+    prev_attribute: Option<&'static str>,
+) -> Option<&'static str> {
+    let index = values.iter().position(|v| v == current_value);
+    let prev_index = values.iter().position(|v| v == previous_value);
+    let is_selected = this_value == current_value;
+    let was_selected = prev_index == values.iter().position(|v| v == this_value);
+
+    if !is_selected && !was_selected {
+        return prev_attribute;
+    }
+
+    if let (Some(idx), Some(prev_idx)) = (index, prev_index) {
+        if idx != prev_idx {
+            if is_selected && prev_idx != usize::MAX {
+                Some(if idx > prev_idx { "from-end" } else { "from-start" })
+            } else if was_selected {
+                Some(if idx > prev_idx { "to-start" } else { "to-end" })
+            } else {
+                None
+            }
+        } else {
+            None
+        }
+    } else {
+        None
+    }
+}
+
 fn make_trigger_id(base_id: &str, value: &str) -> String {
     format!("{base_id}-trigger-{value}")
 }
@@ -1589,35 +1622,14 @@ fn NavigationMenuContentImpl(
         }
         let current_value = context.value.get();
         let previous_value = context.previous_value.get();
-        let index = values.iter().position(|v| *v == current_value);
-        let prev_index = values.iter().position(|v| *v == previous_value);
-        let is_selected = value_for_motion == current_value;
-        let was_selected = prev_index == values.iter().position(|v| *v == value_for_motion);
 
-        if !is_selected && !was_selected {
-            return prev_motion_attribute.get_value();
-        }
-
-        let attribute: Option<&'static str> =
-            if let (Some(idx), Some(prev_idx)) = (index, prev_index) {
-                if idx != prev_idx {
-                    if is_selected && prev_idx != usize::MAX {
-                        Some(if idx > prev_idx {
-                            "from-end"
-                        } else {
-                            "from-start"
-                        })
-                    } else if was_selected {
-                        Some(if idx > prev_idx { "to-start" } else { "to-end" })
-                    } else {
-                        None
-                    }
-                } else {
-                    None
-                }
-            } else {
-                None
-            };
+        let attribute = compute_motion_attribute(
+            &values,
+            &current_value,
+            &previous_value,
+            &value_for_motion,
+            prev_motion_attribute.get_value(),
+        );
 
         prev_motion_attribute.set_value(attribute);
         attribute
@@ -2086,5 +2098,109 @@ fn FocusGroupItem(children: ChildrenFn) -> impl IntoView {
                 {children.with_value(|children| children())}
             </Primitive>
         </CollectionItemSlot<FocusGroupItemData>>
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn vals(items: &[&str]) -> Vec<String> {
+        items.iter().map(|s| s.to_string()).collect()
+    }
+
+    // ── get_open_state ──────────────────────────────────────
+
+    #[test]
+    fn open_state_open() {
+        assert_eq!(get_open_state(true), "open");
+    }
+
+    #[test]
+    fn open_state_closed() {
+        assert_eq!(get_open_state(false), "closed");
+    }
+
+    // ── make_trigger_id / make_content_id ───────────────────
+
+    #[test]
+    fn trigger_id_format() {
+        assert_eq!(make_trigger_id("nav-1", "home"), "nav-1-trigger-home");
+    }
+
+    #[test]
+    fn content_id_format() {
+        assert_eq!(make_content_id("nav-1", "home"), "nav-1-content-home");
+    }
+
+    // ── compute_motion_attribute ────────────────────────────
+
+    #[test]
+    fn motion_from_end_when_selected_and_index_increased() {
+        // items: [a, b, c], prev=a(0), current=c(2), this=c → is_selected, idx>prev_idx → from-end
+        let items = vals(&["a", "b", "c"]);
+        assert_eq!(
+            compute_motion_attribute(&items, "c", "a", "c", None),
+            Some("from-end")
+        );
+    }
+
+    #[test]
+    fn motion_from_start_when_selected_and_index_decreased() {
+        // items: [a, b, c], prev=c(2), current=a(0), this=a → is_selected, idx<prev_idx → from-start
+        let items = vals(&["a", "b", "c"]);
+        assert_eq!(
+            compute_motion_attribute(&items, "a", "c", "a", None),
+            Some("from-start")
+        );
+    }
+
+    #[test]
+    fn motion_to_start_when_was_selected_and_index_increased() {
+        // items: [a, b, c], prev=a(0), current=c(2), this=a → was_selected, idx>prev_idx → to-start
+        let items = vals(&["a", "b", "c"]);
+        assert_eq!(
+            compute_motion_attribute(&items, "c", "a", "a", None),
+            Some("to-start")
+        );
+    }
+
+    #[test]
+    fn motion_to_end_when_was_selected_and_index_decreased() {
+        // items: [a, b, c], prev=c(2), current=a(0), this=c → was_selected, idx<prev_idx → to-end
+        let items = vals(&["a", "b", "c"]);
+        assert_eq!(
+            compute_motion_attribute(&items, "a", "c", "c", None),
+            Some("to-end")
+        );
+    }
+
+    #[test]
+    fn motion_none_when_neither_selected_nor_was_selected() {
+        // this=b, current=a, prev=c → b is neither selected nor was_selected
+        let items = vals(&["a", "b", "c"]);
+        assert_eq!(
+            compute_motion_attribute(&items, "a", "c", "b", Some("from-end")),
+            Some("from-end") // returns prev_attribute
+        );
+    }
+
+    #[test]
+    fn motion_none_when_same_index() {
+        // current==previous → idx == prev_idx → None
+        let items = vals(&["a", "b"]);
+        assert_eq!(
+            compute_motion_attribute(&items, "a", "a", "a", None),
+            None
+        );
+    }
+
+    #[test]
+    fn motion_none_when_current_not_in_list() {
+        let items = vals(&["a", "b"]);
+        assert_eq!(
+            compute_motion_attribute(&items, "z", "a", "z", None),
+            None
+        );
     }
 }

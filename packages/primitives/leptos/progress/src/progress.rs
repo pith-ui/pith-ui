@@ -121,3 +121,74 @@ fn get_progress_state(value: Option<f64>, max_value: f64) -> ProgressState {
         None => ProgressState::Indeterminate,
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    // ── default_get_value_label ─────────────────────────────
+
+    #[test]
+    fn value_label_fifty_percent() {
+        assert_eq!(default_get_value_label(50.0, 100.0), "50%");
+    }
+
+    #[test]
+    fn value_label_hundred_percent() {
+        assert_eq!(default_get_value_label(100.0, 100.0), "100%");
+    }
+
+    #[test]
+    fn value_label_zero_percent() {
+        assert_eq!(default_get_value_label(0.0, 100.0), "0%");
+    }
+
+    #[test]
+    fn value_label_rounds_fraction() {
+        // 1/3 = 33.333...% rounds to 33%
+        assert_eq!(default_get_value_label(1.0, 3.0), "33%");
+    }
+
+    #[test]
+    fn value_label_rounds_up() {
+        // 2/3 = 66.666...% rounds to 67%
+        assert_eq!(default_get_value_label(2.0, 3.0), "67%");
+    }
+
+    #[test]
+    fn value_label_custom_max() {
+        assert_eq!(default_get_value_label(25.0, 50.0), "50%");
+    }
+
+    // ── get_progress_state ──────────────────────────────────
+
+    #[test]
+    fn progress_state_none_is_indeterminate() {
+        assert_eq!(get_progress_state(None, 100.0), ProgressState::Indeterminate);
+    }
+
+    #[test]
+    fn progress_state_value_equals_max_is_complete() {
+        assert_eq!(get_progress_state(Some(100.0), 100.0), ProgressState::Complete);
+    }
+
+    #[test]
+    fn progress_state_value_less_than_max_is_loading() {
+        assert_eq!(get_progress_state(Some(50.0), 100.0), ProgressState::Loading);
+    }
+
+    #[test]
+    fn progress_state_zero_is_loading() {
+        assert_eq!(get_progress_state(Some(0.0), 100.0), ProgressState::Loading);
+    }
+
+    #[test]
+    fn progress_state_custom_max_complete() {
+        assert_eq!(get_progress_state(Some(50.0), 50.0), ProgressState::Complete);
+    }
+
+    #[test]
+    fn progress_state_custom_max_loading() {
+        assert_eq!(get_progress_state(Some(25.0), 50.0), ProgressState::Loading);
+    }
+}

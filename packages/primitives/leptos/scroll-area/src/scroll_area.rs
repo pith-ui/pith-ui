@@ -1818,3 +1818,188 @@ pub use ScrollAreaCorner as Corner;
 pub use ScrollAreaScrollbar as Scrollbar;
 pub use ScrollAreaThumb as Thumb;
 pub use ScrollAreaViewport as Viewport;
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    // ── to_int ──────────────────────────────────────────────
+
+    #[test]
+    fn to_int_pixels() {
+        assert_eq!(to_int("8px"), 8.0);
+    }
+
+    #[test]
+    fn to_int_leading_whitespace() {
+        assert_eq!(to_int("  12rem"), 12.0);
+    }
+
+    #[test]
+    fn to_int_negative() {
+        assert_eq!(to_int("-5px"), -5.0);
+    }
+
+    #[test]
+    fn to_int_positive_sign() {
+        assert_eq!(to_int("+3"), 3.0);
+    }
+
+    #[test]
+    fn to_int_non_numeric() {
+        assert_eq!(to_int("abc"), 0.0);
+    }
+
+    #[test]
+    fn to_int_empty_string() {
+        assert_eq!(to_int(""), 0.0);
+    }
+
+    #[test]
+    fn to_int_zero() {
+        assert_eq!(to_int("0"), 0.0);
+    }
+
+    // ── get_thumb_ratio ─────────────────────────────────────
+
+    #[test]
+    fn thumb_ratio_normal() {
+        assert_eq!(get_thumb_ratio(200.0, 400.0), 0.5);
+    }
+
+    #[test]
+    fn thumb_ratio_viewport_equals_content() {
+        assert_eq!(get_thumb_ratio(500.0, 500.0), 1.0);
+    }
+
+    #[test]
+    fn thumb_ratio_content_zero() {
+        // 0/0 is NaN, guard returns 0.0
+        assert_eq!(get_thumb_ratio(0.0, 0.0), 0.0);
+    }
+
+    // ── get_thumb_size ──────────────────────────────────────
+
+    #[test]
+    fn thumb_size_normal() {
+        let sizes = Sizes {
+            content: 1000.0,
+            viewport: 500.0,
+            scrollbar: ScrollbarSizes {
+                size: 500.0,
+                padding_start: 0.0,
+                padding_end: 0.0,
+            },
+        };
+        // ratio = 500/1000 = 0.5, thumb = 500 * 0.5 = 250
+        assert_eq!(get_thumb_size(&sizes), 250.0);
+    }
+
+    #[test]
+    fn thumb_size_with_padding() {
+        let sizes = Sizes {
+            content: 1000.0,
+            viewport: 500.0,
+            scrollbar: ScrollbarSizes {
+                size: 500.0,
+                padding_start: 50.0,
+                padding_end: 50.0,
+            },
+        };
+        // ratio = 0.5, scrollbar usable = 500 - 100 = 400, thumb = 400 * 0.5 = 200
+        assert_eq!(get_thumb_size(&sizes), 200.0);
+    }
+
+    #[test]
+    fn thumb_size_minimum_enforced() {
+        let sizes = Sizes {
+            content: 10000.0,
+            viewport: 100.0,
+            scrollbar: ScrollbarSizes {
+                size: 100.0,
+                padding_start: 0.0,
+                padding_end: 0.0,
+            },
+        };
+        // ratio = 100/10000 = 0.01, thumb = 100 * 0.01 = 1.0, clamped to 18.0
+        assert_eq!(get_thumb_size(&sizes), 18.0);
+    }
+
+    // ── linear_scale ────────────────────────────────────────
+
+    #[test]
+    fn linear_scale_basic() {
+        let scale = linear_scale([0.0, 100.0], [0.0, 1.0]);
+        assert_eq!(scale(0.0), 0.0);
+        assert_eq!(scale(50.0), 0.5);
+        assert_eq!(scale(100.0), 1.0);
+    }
+
+    #[test]
+    fn linear_scale_inverted_output() {
+        let scale = linear_scale([0.0, 100.0], [1.0, 0.0]);
+        assert_eq!(scale(0.0), 1.0);
+        assert_eq!(scale(100.0), 0.0);
+        assert_eq!(scale(50.0), 0.5);
+    }
+
+    #[test]
+    fn linear_scale_non_zero_origin() {
+        let scale = linear_scale([10.0, 20.0], [100.0, 200.0]);
+        assert_eq!(scale(10.0), 100.0);
+        assert_eq!(scale(15.0), 150.0);
+        assert_eq!(scale(20.0), 200.0);
+    }
+
+    #[test]
+    fn linear_scale_degenerate_input_returns_first_output() {
+        let scale = linear_scale([5.0, 5.0], [10.0, 20.0]);
+        assert_eq!(scale(5.0), 10.0);
+        assert_eq!(scale(100.0), 10.0);
+    }
+
+    #[test]
+    fn linear_scale_degenerate_output_returns_first_output() {
+        let scale = linear_scale([0.0, 100.0], [7.0, 7.0]);
+        assert_eq!(scale(50.0), 7.0);
+    }
+
+    #[test]
+    fn linear_scale_extrapolates_beyond_range() {
+        let scale = linear_scale([0.0, 10.0], [0.0, 100.0]);
+        assert_eq!(scale(15.0), 150.0);
+        assert_eq!(scale(-5.0), -50.0);
+    }
+
+    // ── is_scrolling_within_scrollbar_bounds ─────────────────
+
+    #[test]
+    fn scrolling_within_bounds_middle() {
+        assert!(is_scrolling_within_scrollbar_bounds(50.0, 100.0));
+    }
+
+    #[test]
+    fn scrolling_within_bounds_at_zero() {
+        assert!(!is_scrolling_within_scrollbar_bounds(0.0, 100.0));
+    }
+
+    #[test]
+    fn scrolling_within_bounds_at_max() {
+        assert!(!is_scrolling_within_scrollbar_bounds(100.0, 100.0));
+    }
+
+    #[test]
+    fn scrolling_within_bounds_negative() {
+        assert!(!is_scrolling_within_scrollbar_bounds(-1.0, 100.0));
+    }
+
+    #[test]
+    fn scrolling_within_bounds_just_above_zero() {
+        assert!(is_scrolling_within_scrollbar_bounds(0.001, 100.0));
+    }
+
+    #[test]
+    fn scrolling_within_bounds_just_below_max() {
+        assert!(is_scrolling_within_scrollbar_bounds(99.999, 100.0));
+    }
+}

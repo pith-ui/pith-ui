@@ -824,4 +824,296 @@ mod tests {
         stack.remove(&a);
         assert!(stack.stack.is_empty());
     }
+
+    // ── WASM browser tests ───────────────────────────────────
+
+    mod wasm {
+        use super::super::*;
+        use wasm_bindgen::JsCast;
+        use wasm_bindgen_test::*;
+
+        wasm_bindgen_test_configure!(run_in_browser);
+
+        fn document() -> web_sys::Document {
+            web_sys::window().unwrap().document().unwrap()
+        }
+
+        fn create_element(tag: &str) -> web_sys::HtmlElement {
+            document()
+                .create_element(tag)
+                .unwrap()
+                .unchecked_into::<web_sys::HtmlElement>()
+        }
+
+        /// Appends a container div to the document body and returns it.
+        /// The caller should call `cleanup` when done.
+        fn append_container() -> web_sys::HtmlElement {
+            let container = create_element("div");
+            document().body().unwrap().append_child(&container).unwrap();
+            container
+        }
+
+        fn cleanup(container: &web_sys::HtmlElement) {
+            container.remove();
+        }
+
+        // ── remove_links ─────────────────────────────────────
+
+        #[wasm_bindgen_test]
+        fn remove_links_filters_out_anchors() {
+            let a = create_element("a");
+            let button = create_element("button");
+            let input = create_element("input");
+
+            let items = vec![a, button.clone(), input.clone()];
+            let result = remove_links(items);
+
+            assert_eq!(result.len(), 2);
+            assert_eq!(result[0].tag_name(), "BUTTON");
+            assert_eq!(result[1].tag_name(), "INPUT");
+        }
+
+        #[wasm_bindgen_test]
+        fn remove_links_keeps_all_when_no_anchors() {
+            let button = create_element("button");
+            let input = create_element("input");
+
+            let items = vec![button.clone(), input.clone()];
+            let result = remove_links(items);
+
+            assert_eq!(result.len(), 2);
+        }
+
+        #[wasm_bindgen_test]
+        fn remove_links_returns_empty_for_all_anchors() {
+            let a1 = create_element("a");
+            let a2 = create_element("a");
+
+            let result = remove_links(vec![a1, a2]);
+            assert!(result.is_empty());
+        }
+
+        // ── is_hidden ────────────────────────────────────────
+
+        #[wasm_bindgen_test]
+        fn visible_element_is_not_hidden() {
+            let container = append_container();
+            let el = create_element("div");
+            container.append_child(&el).unwrap();
+
+            assert!(!is_hidden(&el, None));
+
+            cleanup(&container);
+        }
+
+        #[wasm_bindgen_test]
+        fn display_none_element_is_hidden() {
+            let container = append_container();
+            let el = create_element("div");
+            el.style().set_property("display", "none").unwrap();
+            container.append_child(&el).unwrap();
+
+            assert!(is_hidden(&el, None));
+
+            cleanup(&container);
+        }
+
+        #[wasm_bindgen_test]
+        fn visibility_hidden_element_is_hidden() {
+            let container = append_container();
+            let el = create_element("div");
+            el.style().set_property("visibility", "hidden").unwrap();
+            container.append_child(&el).unwrap();
+
+            assert!(is_hidden(&el, None));
+
+            cleanup(&container);
+        }
+
+        #[wasm_bindgen_test]
+        fn element_nested_inside_display_none_parent_is_hidden() {
+            let container = append_container();
+            let parent = create_element("div");
+            parent.style().set_property("display", "none").unwrap();
+            let child = create_element("div");
+            parent.append_child(&child).unwrap();
+            container.append_child(&parent).unwrap();
+
+            assert!(is_hidden(&child, None));
+
+            cleanup(&container);
+        }
+
+        #[wasm_bindgen_test]
+        fn is_hidden_with_up_to_stops_at_boundary() {
+            let container = append_container();
+            // outer has display:none, but we set up_to = outer so the walk
+            // stops before checking it.
+            let outer = create_element("div");
+            outer.style().set_property("display", "none").unwrap();
+            let inner = create_element("div");
+            outer.append_child(&inner).unwrap();
+            container.append_child(&outer).unwrap();
+
+            let result = is_hidden(
+                &inner,
+                Some(IsHiddenOptions {
+                    up_to: Some(&outer),
+                }),
+            );
+            // The walk hits `outer` which matches `up_to`, so it returns false
+            // before checking outer's display:none.
+            assert!(!result);
+
+            cleanup(&container);
+        }
+
+        // ── get_tabbable_candidates ──────────────────────────
+
+        #[wasm_bindgen_test]
+        fn tabbable_candidates_includes_buttons() {
+            let container = append_container();
+            let b1 = create_element("button");
+            b1.set_inner_html("One");
+            let b2 = create_element("button");
+            b2.set_inner_html("Two");
+            container.append_child(&b1).unwrap();
+            container.append_child(&b2).unwrap();
+
+            let candidates = get_tabbable_candidates(&container);
+            assert_eq!(candidates.len(), 2);
+
+            cleanup(&container);
+        }
+
+        #[wasm_bindgen_test]
+        fn tabbable_candidates_skips_hidden_input() {
+            let container = append_container();
+            let input: web_sys::HtmlInputElement =
+                document().create_element("input").unwrap().unchecked_into();
+            input.set_type("hidden");
+            container.append_child(&input).unwrap();
+
+            let candidates = get_tabbable_candidates(&container);
+            assert!(candidates.is_empty());
+
+            cleanup(&container);
+        }
+
+        #[wasm_bindgen_test]
+        fn tabbable_candidates_skips_disabled_input() {
+            let container = append_container();
+            let input: web_sys::HtmlInputElement =
+                document().create_element("input").unwrap().unchecked_into();
+            input.set_disabled(true);
+            container.append_child(&input).unwrap();
+
+            let candidates = get_tabbable_candidates(&container);
+            assert!(candidates.is_empty());
+
+            cleanup(&container);
+        }
+
+        #[wasm_bindgen_test]
+        fn tabbable_candidates_skips_div_without_tabindex() {
+            let container = append_container();
+            let div = create_element("div");
+            div.set_inner_html("plain div");
+            container.append_child(&div).unwrap();
+
+            let candidates = get_tabbable_candidates(&container);
+            assert!(candidates.is_empty());
+
+            cleanup(&container);
+        }
+
+        #[wasm_bindgen_test]
+        fn tabbable_candidates_includes_div_with_tabindex_zero() {
+            let container = append_container();
+            let div = create_element("div");
+            div.set_attribute("tabindex", "0").unwrap();
+            container.append_child(&div).unwrap();
+
+            let candidates = get_tabbable_candidates(&container);
+            assert_eq!(candidates.len(), 1);
+
+            cleanup(&container);
+        }
+
+        #[wasm_bindgen_test]
+        fn tabbable_candidates_skips_div_with_negative_tabindex() {
+            let container = append_container();
+            let div = create_element("div");
+            div.set_attribute("tabindex", "-1").unwrap();
+            container.append_child(&div).unwrap();
+
+            let candidates = get_tabbable_candidates(&container);
+            assert!(candidates.is_empty());
+
+            cleanup(&container);
+        }
+
+        #[wasm_bindgen_test]
+        fn tabbable_candidates_skips_element_with_hidden_attribute() {
+            let container = append_container();
+            let button = create_element("button");
+            button.set_hidden(true);
+            container.append_child(&button).unwrap();
+
+            let candidates = get_tabbable_candidates(&container);
+            assert!(candidates.is_empty());
+
+            cleanup(&container);
+        }
+
+        // ── get_tabbable_edges ───────────────────────────────
+
+        #[wasm_bindgen_test]
+        fn tabbable_edges_returns_first_and_last() {
+            let container = append_container();
+            let b1 = create_element("button");
+            b1.set_inner_html("First");
+            let b2 = create_element("button");
+            b2.set_inner_html("Middle");
+            let b3 = create_element("button");
+            b3.set_inner_html("Last");
+            container.append_child(&b1).unwrap();
+            container.append_child(&b2).unwrap();
+            container.append_child(&b3).unwrap();
+
+            let (first, last) = get_tabbable_edges(&container);
+            assert_eq!(first.unwrap().inner_html(), "First");
+            assert_eq!(last.unwrap().inner_html(), "Last");
+
+            cleanup(&container);
+        }
+
+        #[wasm_bindgen_test]
+        fn tabbable_edges_single_element_returns_same_for_both() {
+            let container = append_container();
+            let button = create_element("button");
+            button.set_inner_html("Only");
+            container.append_child(&button).unwrap();
+
+            let (first, last) = get_tabbable_edges(&container);
+            assert_eq!(first.as_ref().unwrap().inner_html(), "Only");
+            assert_eq!(last.as_ref().unwrap().inner_html(), "Only");
+
+            cleanup(&container);
+        }
+
+        #[wasm_bindgen_test]
+        fn tabbable_edges_no_tabbable_returns_none() {
+            let container = append_container();
+            let div = create_element("div");
+            div.set_inner_html("not tabbable");
+            container.append_child(&div).unwrap();
+
+            let (first, last) = get_tabbable_edges(&container);
+            assert!(first.is_none());
+            assert!(last.is_none());
+
+            cleanup(&container);
+        }
+    }
 }

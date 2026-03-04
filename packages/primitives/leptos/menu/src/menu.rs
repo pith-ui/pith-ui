@@ -2060,3 +2060,272 @@ fn when_mouse<H: Fn(ev::PointerEvent) + Send + Sync + 'static>(
         }
     })
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    // ── sub_open_keys ───────────────────────────────────────
+
+    #[test]
+    fn sub_open_keys_ltr() {
+        let keys = sub_open_keys(Direction::Ltr);
+        assert!(keys.contains(&"Enter"));
+        assert!(keys.contains(&" "));
+        assert!(keys.contains(&"ArrowRight"));
+        assert!(!keys.contains(&"ArrowLeft"));
+    }
+
+    #[test]
+    fn sub_open_keys_rtl() {
+        let keys = sub_open_keys(Direction::Rtl);
+        assert!(keys.contains(&"Enter"));
+        assert!(keys.contains(&" "));
+        assert!(keys.contains(&"ArrowLeft"));
+        assert!(!keys.contains(&"ArrowRight"));
+    }
+
+    // ── sub_close_keys ──────────────────────────────────────
+
+    #[test]
+    fn sub_close_keys_ltr() {
+        let keys = sub_close_keys(Direction::Ltr);
+        assert!(keys.contains(&"ArrowLeft"));
+        assert!(!keys.contains(&"ArrowRight"));
+    }
+
+    #[test]
+    fn sub_close_keys_rtl() {
+        let keys = sub_close_keys(Direction::Rtl);
+        assert!(keys.contains(&"ArrowRight"));
+        assert!(!keys.contains(&"ArrowLeft"));
+    }
+
+    // ── is_indeterminate ────────────────────────────────────
+
+    #[test]
+    fn is_indeterminate_true_for_indeterminate() {
+        assert!(is_indeterminate(CheckedState::Indeterminate));
+    }
+
+    #[test]
+    fn is_indeterminate_false_for_true() {
+        assert!(!is_indeterminate(CheckedState::True));
+    }
+
+    #[test]
+    fn is_indeterminate_false_for_false() {
+        assert!(!is_indeterminate(CheckedState::False));
+    }
+
+    // ── get_checked_state ───────────────────────────────────
+
+    #[test]
+    fn checked_state_indeterminate() {
+        assert_eq!(get_checked_state(CheckedState::Indeterminate), "indeterminate");
+    }
+
+    #[test]
+    fn checked_state_true() {
+        assert_eq!(get_checked_state(CheckedState::True), "checked");
+    }
+
+    #[test]
+    fn checked_state_false() {
+        assert_eq!(get_checked_state(CheckedState::False), "unchecked");
+    }
+
+    // ── From<bool> for CheckedState ─────────────────────────
+
+    #[test]
+    fn checked_state_from_true() {
+        assert_eq!(CheckedState::from(true), CheckedState::True);
+    }
+
+    #[test]
+    fn checked_state_from_false() {
+        assert_eq!(CheckedState::from(false), CheckedState::False);
+    }
+
+    // ── wrap_array ──────────────────────────────────────────
+
+    #[test]
+    fn wrap_array_basic() {
+        let mut arr = ['a', 'b', 'c', 'd'];
+        assert_eq!(wrap_array(&mut arr, 2), &['c', 'd', 'a', 'b']);
+    }
+
+    #[test]
+    fn wrap_array_at_zero() {
+        let mut arr = ['a', 'b', 'c'];
+        assert_eq!(wrap_array(&mut arr, 0), &['a', 'b', 'c']);
+    }
+
+    #[test]
+    fn wrap_array_at_end() {
+        let mut arr = ['a', 'b', 'c'];
+        assert_eq!(wrap_array(&mut arr, 2), &['c', 'a', 'b']);
+    }
+
+    #[test]
+    fn wrap_array_single_element() {
+        let mut arr = [42];
+        assert_eq!(wrap_array(&mut arr, 0), &[42]);
+    }
+
+    #[test]
+    fn wrap_array_empty() {
+        let mut arr: [i32; 0] = [];
+        assert_eq!(wrap_array(&mut arr, 0), &[] as &[i32]);
+    }
+
+    // ── get_next_match ──────────────────────────────────────
+
+    #[test]
+    fn next_match_empty_search_matches_first() {
+        // Empty string is a prefix of every value, so the first value matches.
+        let values = vec!["Apple".into(), "Banana".into()];
+        assert_eq!(get_next_match(values, "".into(), None), Some("Apple".into()));
+    }
+
+    #[test]
+    fn next_match_single_char_cycles_through_matches() {
+        let values = vec!["Apple".into(), "Avocado".into(), "Banana".into()];
+        // Starting with no current match, picks first "a" match
+        let result = get_next_match(values.clone(), "a".into(), None);
+        assert_eq!(result, Some("Apple".into()));
+
+        // With "Apple" as current match, cycles to "Avocado"
+        let result = get_next_match(values.clone(), "a".into(), Some("Apple".into()));
+        assert_eq!(result, Some("Avocado".into()));
+
+        // With "Avocado" as current match, wraps to "Apple"
+        let result = get_next_match(values.clone(), "a".into(), Some("Avocado".into()));
+        assert_eq!(result, Some("Apple".into()));
+    }
+
+    #[test]
+    fn next_match_repeated_chars_normalized() {
+        // "aaa" is treated the same as "a"
+        let values = vec!["Apple".into(), "Avocado".into(), "Banana".into()];
+        let result = get_next_match(values.clone(), "aaa".into(), None);
+        assert_eq!(result, Some("Apple".into()));
+
+        // With current match, still cycles like single char
+        let result = get_next_match(values.clone(), "aaa".into(), Some("Apple".into()));
+        assert_eq!(result, Some("Avocado".into()));
+    }
+
+    #[test]
+    fn next_match_multi_char_prefix() {
+        let values = vec!["Apple".into(), "Application".into(), "Banana".into()];
+        let result = get_next_match(values.clone(), "app".into(), None);
+        assert_eq!(result, Some("Apple".into()));
+
+        // Multi-char does NOT exclude current match
+        let result = get_next_match(values.clone(), "app".into(), Some("Apple".into()));
+        // "Apple" still matches and is the current, so returns None (no change)
+        // Actually it wraps from Apple and finds Apple again, which equals current_match => None
+        assert_eq!(result, None);
+    }
+
+    #[test]
+    fn next_match_case_insensitive() {
+        let values = vec!["Apple".into(), "Banana".into()];
+        let result = get_next_match(values.clone(), "A".into(), None);
+        assert_eq!(result, Some("Apple".into()));
+
+        let result = get_next_match(values.clone(), "a".into(), None);
+        assert_eq!(result, Some("Apple".into()));
+
+        let result = get_next_match(values.clone(), "BANANA".into(), None);
+        assert_eq!(result, Some("Banana".into()));
+    }
+
+    #[test]
+    fn next_match_wraps_from_current_position() {
+        let values = vec![
+            "Alpha".into(),
+            "Bravo".into(),
+            "Charlie".into(),
+            "Beta".into(),
+        ];
+        // Current match is "Charlie", search "b" should find "Beta" first (wraps around)
+        let result = get_next_match(values.clone(), "b".into(), Some("Charlie".into()));
+        assert_eq!(result, Some("Beta".into()));
+    }
+
+    #[test]
+    fn next_match_returns_none_if_only_current_matches() {
+        let values = vec!["Apple".into(), "Banana".into(), "Cherry".into()];
+        // Only "Banana" starts with "b", and it's the current match
+        let result = get_next_match(values.clone(), "b".into(), Some("Banana".into()));
+        assert_eq!(result, None);
+    }
+
+    #[test]
+    fn next_match_no_matching_values() {
+        let values = vec!["Apple".into(), "Banana".into()];
+        let result = get_next_match(values, "z".into(), None);
+        assert_eq!(result, None);
+    }
+
+    // ── is_point_in_polygon ─────────────────────────────────
+
+    fn triangle() -> Polygon {
+        vec![
+            Point { x: 0.0, y: 0.0 },
+            Point { x: 10.0, y: 0.0 },
+            Point { x: 5.0, y: 10.0 },
+        ]
+    }
+
+    fn rectangle() -> Polygon {
+        vec![
+            Point { x: 0.0, y: 0.0 },
+            Point { x: 10.0, y: 0.0 },
+            Point { x: 10.0, y: 10.0 },
+            Point { x: 0.0, y: 10.0 },
+        ]
+    }
+
+    #[test]
+    fn point_inside_triangle() {
+        assert!(is_point_in_polygon(Point { x: 5.0, y: 3.0 }, triangle()));
+    }
+
+    #[test]
+    fn point_outside_triangle() {
+        assert!(!is_point_in_polygon(Point { x: 0.0, y: 10.0 }, triangle()));
+        assert!(!is_point_in_polygon(Point { x: 20.0, y: 5.0 }, triangle()));
+    }
+
+    #[test]
+    fn point_inside_rectangle() {
+        assert!(is_point_in_polygon(Point { x: 5.0, y: 5.0 }, rectangle()));
+        assert!(is_point_in_polygon(Point { x: 1.0, y: 1.0 }, rectangle()));
+        assert!(is_point_in_polygon(Point { x: 9.0, y: 9.0 }, rectangle()));
+    }
+
+    #[test]
+    fn point_outside_rectangle() {
+        assert!(!is_point_in_polygon(Point { x: -1.0, y: 5.0 }, rectangle()));
+        assert!(!is_point_in_polygon(Point { x: 11.0, y: 5.0 }, rectangle()));
+        assert!(!is_point_in_polygon(Point { x: 5.0, y: -1.0 }, rectangle()));
+        assert!(!is_point_in_polygon(Point { x: 5.0, y: 11.0 }, rectangle()));
+    }
+
+    #[test]
+    fn point_on_edge_of_rectangle() {
+        // Ray-casting algorithms are inconsistent on exact edges;
+        // the important contract is no panic. The result may be true or false.
+        let _ = is_point_in_polygon(Point { x: 0.0, y: 5.0 }, rectangle());
+        let _ = is_point_in_polygon(Point { x: 5.0, y: 0.0 }, rectangle());
+        let _ = is_point_in_polygon(Point { x: 10.0, y: 5.0 }, rectangle());
+    }
+
+    #[test]
+    fn point_in_empty_polygon() {
+        assert!(!is_point_in_polygon(Point { x: 0.0, y: 0.0 }, vec![]));
+    }
+}

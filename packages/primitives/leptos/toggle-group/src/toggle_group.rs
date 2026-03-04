@@ -78,26 +78,19 @@ pub fn ToggleGroup(
 
     let on_item_activate = match r#type {
         ToggleGroupType::Single => Callback::new(move |item_value: String| {
-            set_value.run(Some(vec![item_value]));
+            set_value.run(Some(toggle_group_activate(vec![], item_value, ToggleGroupType::Single)));
         }),
         ToggleGroupType::Multiple => Callback::new(move |item_value: String| {
-            let mut values = current_value.get();
-            values.push(item_value);
-            set_value.run(Some(values));
+            set_value.run(Some(toggle_group_activate(current_value.get(), item_value, ToggleGroupType::Multiple)));
         }),
     };
 
     let on_item_deactivate = match r#type {
-        ToggleGroupType::Single => Callback::new(move |_: String| {
-            set_value.run(Some(vec![]));
+        ToggleGroupType::Single => Callback::new(move |item_value: String| {
+            set_value.run(Some(toggle_group_deactivate(vec![], &item_value, ToggleGroupType::Single)));
         }),
         ToggleGroupType::Multiple => Callback::new(move |item_value: String| {
-            let values = current_value
-                .get()
-                .into_iter()
-                .filter(|v| *v != item_value)
-                .collect();
-            set_value.run(Some(values));
+            set_value.run(Some(toggle_group_deactivate(current_value.get(), &item_value, ToggleGroupType::Multiple)));
         }),
     };
 
@@ -322,5 +315,96 @@ fn ToggleGroupItemImpl(
                 {children.with_value(|children| children())}
             </Primitive>
         </AttributeInterceptor>
+    }
+}
+
+fn toggle_group_activate(
+    current: Vec<String>,
+    item: String,
+    r#type: ToggleGroupType,
+) -> Vec<String> {
+    match r#type {
+        ToggleGroupType::Single => vec![item],
+        ToggleGroupType::Multiple => {
+            let mut values = current;
+            values.push(item);
+            values
+        }
+    }
+}
+
+fn toggle_group_deactivate(
+    current: Vec<String>,
+    item: &str,
+    r#type: ToggleGroupType,
+) -> Vec<String> {
+    match r#type {
+        ToggleGroupType::Single => vec![],
+        ToggleGroupType::Multiple => current.into_iter().filter(|v| v != item).collect(),
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    // ── toggle_group_activate ───────────────────────────────
+
+    #[test]
+    fn activate_single_replaces() {
+        let result = toggle_group_activate(
+            vec!["a".into()],
+            "b".into(),
+            ToggleGroupType::Single,
+        );
+        assert_eq!(result, vec!["b"]);
+    }
+
+    #[test]
+    fn activate_multiple_appends() {
+        let result = toggle_group_activate(
+            vec!["a".into()],
+            "b".into(),
+            ToggleGroupType::Multiple,
+        );
+        assert_eq!(result, vec!["a", "b"]);
+    }
+
+    #[test]
+    fn activate_multiple_from_empty() {
+        let result = toggle_group_activate(vec![], "a".into(), ToggleGroupType::Multiple);
+        assert_eq!(result, vec!["a"]);
+    }
+
+    // ── toggle_group_deactivate ─────────────────────────────
+
+    #[test]
+    fn deactivate_single_clears() {
+        let result = toggle_group_deactivate(
+            vec!["a".into()],
+            "a",
+            ToggleGroupType::Single,
+        );
+        assert!(result.is_empty());
+    }
+
+    #[test]
+    fn deactivate_multiple_removes_item() {
+        let result = toggle_group_deactivate(
+            vec!["a".into(), "b".into(), "c".into()],
+            "b",
+            ToggleGroupType::Multiple,
+        );
+        assert_eq!(result, vec!["a", "c"]);
+    }
+
+    #[test]
+    fn deactivate_multiple_nonexistent() {
+        let result = toggle_group_deactivate(
+            vec!["a".into(), "b".into()],
+            "z",
+            ToggleGroupType::Multiple,
+        );
+        assert_eq!(result, vec!["a", "b"]);
     }
 }

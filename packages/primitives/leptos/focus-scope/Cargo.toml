@@ -28,3 +28,14 @@ web-sys = { workspace = true, features = [
     "NodeList",
     "TreeWalker",
 ] }
+
+[dev-dependencies]
+wasm-bindgen-test = "0.3"
+web-sys = { workspace = true, features = [
+    "CssStyleDeclaration",
+    "Document",
+    "Element",
+    "HtmlButtonElement",
+    "HtmlElement",
+    "HtmlInputElement",
+] }

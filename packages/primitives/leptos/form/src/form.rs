@@ -1062,3 +1062,203 @@ pub use FormLabel as Label;
 pub use FormMessage as Message;
 pub use FormSubmit as Submit;
 pub use FormValidityState as ValidityState;
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn validity_all_false() -> Validity {
+        Validity::default()
+    }
+
+    fn validity_with(f: impl FnOnce(&mut Validity)) -> Validity {
+        let mut v = Validity::default();
+        f(&mut v);
+        v
+    }
+
+    // ── ValidityMatcher::matches ────────────────────────────
+
+    #[test]
+    fn matcher_bad_input() {
+        let v = validity_with(|v| v.bad_input = true);
+        assert!(ValidityMatcher::BadInput.matches(&v));
+        assert!(!ValidityMatcher::BadInput.matches(&validity_all_false()));
+    }
+
+    #[test]
+    fn matcher_pattern_mismatch() {
+        let v = validity_with(|v| v.pattern_mismatch = true);
+        assert!(ValidityMatcher::PatternMismatch.matches(&v));
+        assert!(!ValidityMatcher::PatternMismatch.matches(&validity_all_false()));
+    }
+
+    #[test]
+    fn matcher_range_overflow() {
+        let v = validity_with(|v| v.range_overflow = true);
+        assert!(ValidityMatcher::RangeOverflow.matches(&v));
+        assert!(!ValidityMatcher::RangeOverflow.matches(&validity_all_false()));
+    }
+
+    #[test]
+    fn matcher_range_underflow() {
+        let v = validity_with(|v| v.range_underflow = true);
+        assert!(ValidityMatcher::RangeUnderflow.matches(&v));
+        assert!(!ValidityMatcher::RangeUnderflow.matches(&validity_all_false()));
+    }
+
+    #[test]
+    fn matcher_step_mismatch() {
+        let v = validity_with(|v| v.step_mismatch = true);
+        assert!(ValidityMatcher::StepMismatch.matches(&v));
+        assert!(!ValidityMatcher::StepMismatch.matches(&validity_all_false()));
+    }
+
+    #[test]
+    fn matcher_too_long() {
+        let v = validity_with(|v| v.too_long = true);
+        assert!(ValidityMatcher::TooLong.matches(&v));
+        assert!(!ValidityMatcher::TooLong.matches(&validity_all_false()));
+    }
+
+    #[test]
+    fn matcher_too_short() {
+        let v = validity_with(|v| v.too_short = true);
+        assert!(ValidityMatcher::TooShort.matches(&v));
+        assert!(!ValidityMatcher::TooShort.matches(&validity_all_false()));
+    }
+
+    #[test]
+    fn matcher_type_mismatch() {
+        let v = validity_with(|v| v.type_mismatch = true);
+        assert!(ValidityMatcher::TypeMismatch.matches(&v));
+        assert!(!ValidityMatcher::TypeMismatch.matches(&validity_all_false()));
+    }
+
+    #[test]
+    fn matcher_valid() {
+        let v = validity_with(|v| v.valid = true);
+        assert!(ValidityMatcher::Valid.matches(&v));
+        assert!(!ValidityMatcher::Valid.matches(&validity_all_false()));
+    }
+
+    #[test]
+    fn matcher_value_missing() {
+        let v = validity_with(|v| v.value_missing = true);
+        assert!(ValidityMatcher::ValueMissing.matches(&v));
+        assert!(!ValidityMatcher::ValueMissing.matches(&validity_all_false()));
+    }
+
+    // ── ValidityMatcher::default_message ────────────────────
+
+    #[test]
+    fn default_messages() {
+        assert_eq!(ValidityMatcher::BadInput.default_message(), DEFAULT_INVALID_MESSAGE);
+        assert_eq!(
+            ValidityMatcher::PatternMismatch.default_message(),
+            "This value does not match the required pattern"
+        );
+        assert_eq!(ValidityMatcher::RangeOverflow.default_message(), "This value is too large");
+        assert_eq!(ValidityMatcher::RangeUnderflow.default_message(), "This value is too small");
+        assert_eq!(
+            ValidityMatcher::StepMismatch.default_message(),
+            "This value does not match the required step"
+        );
+        assert_eq!(ValidityMatcher::TooLong.default_message(), "This value is too long");
+        assert_eq!(ValidityMatcher::TooShort.default_message(), "This value is too short");
+        assert_eq!(
+            ValidityMatcher::TypeMismatch.default_message(),
+            "This value does not match the required type"
+        );
+        assert_eq!(ValidityMatcher::Valid.default_message(), "");
+        assert_eq!(ValidityMatcher::ValueMissing.default_message(), "This value is missing");
+    }
+
+    // ── has_built_in_error ──────────────────────────────────
+
+    #[test]
+    fn no_errors_returns_false() {
+        assert!(!has_built_in_error(&validity_all_false()));
+    }
+
+    #[test]
+    fn valid_field_alone_is_not_an_error() {
+        // valid=true but no actual error flags — should return false
+        let v = validity_with(|v| v.valid = true);
+        assert!(!has_built_in_error(&v));
+    }
+
+    #[test]
+    fn each_error_field_triggers() {
+        let fields: &[fn(&mut Validity)] = &[
+            |v| v.bad_input = true,
+            |v| v.pattern_mismatch = true,
+            |v| v.range_overflow = true,
+            |v| v.range_underflow = true,
+            |v| v.step_mismatch = true,
+            |v| v.too_long = true,
+            |v| v.too_short = true,
+            |v| v.type_mismatch = true,
+            |v| v.value_missing = true,
+        ];
+        for f in fields {
+            assert!(has_built_in_error(&validity_with(f)));
+        }
+    }
+
+    // ── get_valid_attribute / get_invalid_attribute ──────────
+
+    #[test]
+    fn valid_attr_none_validity() {
+        assert_eq!(get_valid_attribute(&None, false), None);
+        assert_eq!(get_valid_attribute(&None, true), None);
+    }
+
+    #[test]
+    fn valid_attr_valid_and_not_server_invalid() {
+        let v = validity_with(|v| v.valid = true);
+        assert_eq!(get_valid_attribute(&Some(v), false), Some("true"));
+    }
+
+    #[test]
+    fn valid_attr_valid_but_server_invalid() {
+        let v = validity_with(|v| v.valid = true);
+        assert_eq!(get_valid_attribute(&Some(v), true), None);
+    }
+
+    #[test]
+    fn valid_attr_not_valid() {
+        assert_eq!(get_valid_attribute(&Some(validity_all_false()), false), None);
+    }
+
+    #[test]
+    fn invalid_attr_none_validity_not_server_invalid() {
+        assert_eq!(get_invalid_attribute(&None, false), None);
+    }
+
+    #[test]
+    fn invalid_attr_none_validity_server_invalid() {
+        assert_eq!(get_invalid_attribute(&None, true), Some("true"));
+    }
+
+    #[test]
+    fn invalid_attr_not_valid() {
+        // valid=false (default) → invalid
+        assert_eq!(
+            get_invalid_attribute(&Some(validity_all_false()), false),
+            Some("true")
+        );
+    }
+
+    #[test]
+    fn invalid_attr_valid_not_server_invalid() {
+        let v = validity_with(|v| v.valid = true);
+        assert_eq!(get_invalid_attribute(&Some(v), false), None);
+    }
+
+    #[test]
+    fn invalid_attr_valid_but_server_invalid() {
+        let v = validity_with(|v| v.valid = true);
+        assert_eq!(get_invalid_attribute(&Some(v), true), Some("true"));
+    }
+}
