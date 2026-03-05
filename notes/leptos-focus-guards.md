@@ -1,6 +1,6 @@
 ---
 react_location: "[[reference/react-radix-primitives/packages/react/focus-guards/src/focus-guards.tsx|focus-guards]]"
-rust_location: "[[packages/primitives/leptos/focus-guards/src/focus_guards.rs|focus_guards]]"
+rust_location: "[[packages/primitives/leptos/src/focus_guards/mod.rs|focus_guards]]"
 react_story: ""
 rust_story: ""
 dependencies: []

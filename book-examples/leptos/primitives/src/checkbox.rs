@@ -1,6 +1,5 @@
 use leptos::*;
-use radix_leptos_checkbox::*;
-use radix_leptos_icons::CheckIcon;
+use radix_leptos_primitives::checkbox::*;
 
 #[component]
 pub fn CheckboxDemo() -> impl IntoView {

@@ -1,6 +1,6 @@
 ---
 react_location: "[[reference/react-radix-primitives/packages/react/hover-card/src/hover-card.tsx|hover-card]]"
-rust_location: "[[packages/primitives/leptos/hover-card/src/hover_card.rs|hover-card]]"
+rust_location: "[[packages/primitives/leptos/src/hover_card/mod.rs|hover_card]]"
 react_story: "[[reference/react-radix-primitives/apps/storybook/stories/hover-card.stories.tsx|hover-card]]"
 rust_story: "[[stories/leptos/src/primitives/hover_card.rs|hover-card]]"
 dependencies:

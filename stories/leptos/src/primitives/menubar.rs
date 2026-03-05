@@ -1,6 +1,6 @@
 use leptos::prelude::*;
-use radix_leptos_direction::{Direction, DirectionProvider};
-use radix_leptos_menubar::*;
+use radix_leptos_primitives::direction::{Direction, DirectionProvider};
+use radix_leptos_primitives::menubar::*;
 
 stylance::import_crate_style!(
     #[allow(dead_code)]

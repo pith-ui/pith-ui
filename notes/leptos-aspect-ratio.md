@@ -1,6 +1,6 @@
 ---
 react_location: "[[reference/react-radix-primitives/packages/react/aspect-ratio/src/aspect-ratio.tsx|aspect-ratio]]"
-rust_location: "[[packages/primitives/leptos/aspect-ratio/src/aspect_ratio.rs|aspect_ratio]]"
+rust_location: "[[packages/primitives/leptos/src/aspect_ratio/mod.rs|aspect_ratio]]"
 react_story: "[[reference/react-radix-primitives/apps/storybook/stories/aspect-ratio.stories.tsx|aspect-ratio]]"
 rust_story: "[[stories/leptos/src/primitives/aspect_ratio.rs|aspect_ratio]]"
 dependencies:

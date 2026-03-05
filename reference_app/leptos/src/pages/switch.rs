@@ -1,5 +1,5 @@
 use leptos::prelude::*;
-use radix_leptos_switch::*;
+use radix_leptos_primitives::switch::*;
 
 #[component]
 pub fn SwitchPage() -> impl IntoView {

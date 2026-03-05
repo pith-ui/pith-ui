@@ -1,5 +1,5 @@
 use leptos::prelude::*;
-use radix_leptos_accessible_icon::AccessibleIcon;
+use radix_leptos_primitives::accessible_icon::AccessibleIcon;
 
 #[component]
 pub fn Styled() -> impl IntoView {

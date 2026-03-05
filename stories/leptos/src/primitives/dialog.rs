@@ -1,6 +1,6 @@
 use leptos::prelude::*;
 use leptos_node_ref::AnyNodeRef;
-use radix_leptos_dialog::*;
+use radix_leptos_primitives::dialog::*;
 
 stylance::import_crate_style!(classes, "src/primitives/dialog.stories.module.css");
 

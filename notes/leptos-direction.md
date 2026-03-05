@@ -1,6 +1,6 @@
 ---
 react_location: "[[reference/react-radix-primitives/packages/react/direction/src/direction.tsx|direction]]"
-rust_location: "[[packages/primitives/leptos/direction/src/direction.rs|direction]]"
+rust_location: "[[packages/primitives/leptos/src/direction/mod.rs|direction]]"
 react_story: ""
 rust_story: ""
 dependencies: []

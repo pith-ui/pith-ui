@@ -1,6 +1,6 @@
 ---
 react_location: "[[reference/react-radix-primitives/packages/react/popover/src/popover.tsx|popover]]"
-rust_location: "[[packages/primitives/leptos/popover/src/popover.rs|popover]]"
+rust_location: "[[packages/primitives/leptos/src/popover/mod.rs|popover]]"
 react_story: "[[reference/react-radix-primitives/apps/storybook/stories/popover.stories.tsx|popover]]"
 rust_story: "[[stories/leptos/src/primitives/popover.rs|popover]]"
 dependencies:

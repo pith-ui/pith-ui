@@ -1,3 +1,9 @@
+#![allow(
+    clippy::too_many_arguments,
+    clippy::type_complexity,
+    clippy::redundant_locals
+)]
+
 mod app;
 mod primitives;
 

@@ -1,6 +1,6 @@
 use leptos::prelude::*;
-use radix_leptos_direction::DirectionProvider;
-use radix_leptos_toggle_group::*;
+use radix_leptos_primitives::direction::DirectionProvider;
+use radix_leptos_primitives::toggle_group::*;
 
 stylance::import_crate_style!(classes, "src/primitives/toggle-group.stories.module.css");
 
@@ -54,7 +54,7 @@ pub fn Vertical() -> impl IntoView {
     view! {
         <ToggleGroup
             r#type=ToggleGroupType::Single
-            orientation=radix_leptos_roving_focus::Orientation::Vertical
+            orientation=radix_leptos_primitives::roving_focus::Orientation::Vertical
             default_value=vec!["1".to_string()]
             attr:class=classes::root
             attr:aria-label="Options"
@@ -230,7 +230,7 @@ pub fn Chromatic() -> impl IntoView {
         <ToggleGroup
             r#type=ToggleGroupType::Single
             default_value=vec!["1".to_string()]
-            dir=radix_leptos_direction::Direction::Rtl
+            dir=radix_leptos_primitives::direction::Direction::Rtl
             attr:class=classes::root
         >
             <ToggleGroupItem value="1" attr:class=classes::item>
@@ -245,7 +245,7 @@ pub fn Chromatic() -> impl IntoView {
         </ToggleGroup>
 
         <h2>"Inherited"</h2>
-        <DirectionProvider direction=Signal::derive(|| radix_leptos_direction::Direction::Rtl)>
+        <DirectionProvider direction=Signal::derive(|| radix_leptos_primitives::direction::Direction::Rtl)>
             <ToggleGroup
                 r#type=ToggleGroupType::Single
                 default_value=vec!["1".to_string()]

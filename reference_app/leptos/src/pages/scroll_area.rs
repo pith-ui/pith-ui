@@ -1,5 +1,5 @@
 use leptos::prelude::*;
-use radix_leptos_scroll_area::*;
+use radix_leptos_primitives::scroll_area::*;
 
 const ITEM_COUNT: usize = 50;
 

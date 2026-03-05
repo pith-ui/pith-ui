@@ -2,7 +2,7 @@
 #![allow(dead_code)]
 
 use leptos::prelude::*;
-use radix_leptos_password_toggle_field::*;
+use radix_leptos_primitives::password_toggle_field::*;
 
 stylance::import_crate_style!(
     classes,

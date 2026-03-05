@@ -1,6 +1,6 @@
 ---
 react_location: "[[reference/react-radix-primitives/packages/react/use-size/src/use-size.tsx|use-size]]"
-rust_location: "[[packages/primitives/leptos/use-size/src/use_size.rs|use_size]]"
+rust_location: "[[packages/primitives/leptos/src/use_size/mod.rs|use_size]]"
 react_story: ""
 rust_story: ""
 dependencies: []

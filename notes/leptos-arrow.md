@@ -1,6 +1,6 @@
 ---
 react_location: "[[reference/react-radix-primitives/packages/react/arrow/src/arrow.tsx|arrow]]"
-rust_location: "[[packages/primitives/leptos/arrow/src/arrow.rs|arrow]]"
+rust_location: "[[packages/primitives/leptos/src/arrow/mod.rs|arrow]]"
 react_story: "[[reference/react-radix-primitives/apps/storybook/stories/arrow.stories.tsx|arrow]]"
 rust_story: "[[stories/leptos/src/primitives/arrow.rs|arrow]]"
 dependencies:

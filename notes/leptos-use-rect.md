@@ -1,6 +1,6 @@
 ---
 react_location: "[[reference/react-radix-primitives/packages/react/use-rect/src/use-rect.tsx|use-rect]]"
-rust_location: "[[packages/primitives/leptos/use-rect/src/use_rect.rs|use-rect]]"
+rust_location: "[[packages/primitives/leptos/src/use_rect/mod.rs|use_rect]]"
 react_story: ""
 rust_story: ""
 dependencies:

@@ -1,6 +1,6 @@
 ---
 react_location: "[[reference/react-radix-primitives/packages/react/presence/src/presence.tsx|presence]]"
-rust_location: "[[packages/primitives/leptos/presence/src/presence.rs|presence]]"
+rust_location: "[[packages/primitives/leptos/src/presence/mod.rs|presence]]"
 react_story: "[[reference/react-radix-primitives/apps/storybook/stories/presence.stories.tsx|presence]]"
 rust_story: "[[stories/leptos/src/primitives/presence.rs|presence]]"
 dependencies:

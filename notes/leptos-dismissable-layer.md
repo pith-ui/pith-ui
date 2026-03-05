@@ -1,6 +1,6 @@
 ---
 react_location: "[[reference/react-radix-primitives/packages/react/dismissable-layer/src/dismissable-layer.tsx|dismissable-layer]]"
-rust_location: "[[packages/primitives/leptos/dismissable-layer/src/dismissable_layer.rs|dismissable_layer]]"
+rust_location: "[[packages/primitives/leptos/src/dismissable_layer/mod.rs|dismissable_layer]]"
 react_story: "[[reference/react-radix-primitives/apps/storybook/stories/dismissable-layer.stories.tsx|dismissable-layer]]"
 rust_story: "[[stories/leptos/src/primitives/dismissable_layer.rs|dismissable_layer]]"
 dependencies:

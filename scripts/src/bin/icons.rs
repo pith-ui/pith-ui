@@ -3,10 +3,7 @@ use std::{error::Error, fs, path::Path};
 use convert_case::{Case, Casing};
 use git2::Repository;
 use log::info;
-use scripts::{
-    framework::Framework,
-    frameworks::{dioxus::Dioxus, leptos::Leptos, yew::Yew},
-};
+use scripts::{framework::Framework, frameworks::leptos::Leptos};
 use tempfile::tempdir;
 
 const GIT_URL: &str = "https://github.com/radix-ui/icons.git";
@@ -15,7 +12,7 @@ const GIT_REF: &str = "@radix-ui/react-icons@1.3.2";
 fn main() -> Result<(), Box<dyn Error>> {
     env_logger::init();
 
-    let frameworks: [Box<dyn Framework>; 3] = [Box::new(Dioxus), Box::new(Leptos), Box::new(Yew)];
+    let frameworks: [Box<dyn Framework>; 1] = [Box::new(Leptos)];
 
     let repository_path = tempdir()?;
     let repository_icons_path = repository_path.path().join("packages/radix-icons/icons");

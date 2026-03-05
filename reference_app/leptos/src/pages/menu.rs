@@ -1,5 +1,5 @@
 use leptos::prelude::*;
-use radix_leptos_menu::*;
+use radix_leptos_primitives::menu::*;
 
 #[component]
 pub fn MenuPage() -> impl IntoView {

@@ -1,6 +1,6 @@
 use leptos::prelude::*;
 use leptos_node_ref::AnyNodeRef;
-use radix_leptos_focus_scope::*;
+use radix_leptos_primitives::focus_scope::*;
 use web_sys::wasm_bindgen::JsCast;
 
 #[component]

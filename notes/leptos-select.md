@@ -1,6 +1,6 @@
 ---
 react_location: "[[reference/react-radix-primitives/packages/react/select/src/select.tsx|select]]"
-rust_location: "[[packages/primitives/leptos/select/src/select.rs|select]]"
+rust_location: "[[packages/primitives/leptos/src/select/mod.rs|select]]"
 react_story: "[[reference/react-radix-primitives/apps/storybook/stories/select.stories.tsx|select]]"
 rust_story: "[[stories/leptos/src/primitives/select.rs|select]]"
 dependencies:

@@ -2,9 +2,9 @@
 #![allow(dead_code)]
 
 use leptos::prelude::*;
-use radix_leptos_dialog::*;
-use radix_leptos_one_time_password_field::*;
-use radix_leptos_separator::*;
+use radix_leptos_primitives::dialog::*;
+use radix_leptos_primitives::one_time_password_field::*;
+use radix_leptos_primitives::separator::*;
 use web_sys::wasm_bindgen::JsCast;
 
 stylance::import_crate_style!(

@@ -1,5 +1,5 @@
 use leptos::*;
-use radix_leptos_avatar::*;
+use radix_leptos_primitives::avatar::*;
 
 #[component]
 pub fn AvatarDemo() -> impl IntoView {

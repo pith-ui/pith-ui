@@ -1,6 +1,6 @@
 ---
 react_location: "[[reference/react-radix-primitives/packages/react/menubar/src/menubar.tsx|menubar]]"
-rust_location: "[[packages/primitives/leptos/menubar/src/menubar.rs|menubar]]"
+rust_location: "[[packages/primitives/leptos/src/menubar/mod.rs|menubar]]"
 react_story: "[[reference/react-radix-primitives/apps/storybook/stories/menubar.stories.tsx|menubar]]"
 rust_story: "[[stories/leptos/src/primitives/menubar.rs|menubar]]"
 dependencies:

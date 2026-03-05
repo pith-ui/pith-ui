@@ -1,0 +1,43 @@
+use crate::primitive::Primitive;
+use leptos::{
+    attr::{NextAttribute, custom::custom_attribute},
+    prelude::*,
+    svg,
+};
+use leptos_node_ref::AnyNodeRef;
+
+#[component]
+pub fn Arrow(
+    #[prop(into, optional, default=10.0.into())] width: MaybeProp<f64>,
+    #[prop(into, optional, default=5.0.into())] height: MaybeProp<f64>,
+    #[prop(into, optional)] as_child: MaybeProp<bool>,
+    #[prop(into, optional)] node_ref: AnyNodeRef,
+    #[prop(optional)] children: Option<ChildrenFn>,
+) -> impl IntoView {
+    let children = StoredValue::new(children);
+
+    let attrs = custom_attribute("viewBox", "0 0 30 10")
+        .add_any_attr(custom_attribute("preserveAspectRatio", "none"));
+
+    view! {
+        <Primitive
+            element=svg::svg
+            as_child=as_child
+            attr:width=move || width.get().unwrap_or(10.0)
+            attr:height=move || height.get().unwrap_or(5.0)
+            node_ref={node_ref}
+            {..attrs}
+        >
+            <Show
+                when=move || as_child.get().unwrap_or_default()
+                fallback=move || {
+                    view! {
+                        <polygon points="0,0 30,0 15,10" />
+                    }
+                }
+            >
+                {children.with_value(|maybe_children| maybe_children.as_ref().map(|child_fn| child_fn()))}
+            </Show>
+        </Primitive>
+    }
+}

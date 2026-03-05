@@ -1,5 +1,5 @@
 use leptos::prelude::*;
-use radix_leptos_checkbox::*;
+use radix_leptos_primitives::checkbox::*;
 
 #[component]
 pub fn CheckboxPage() -> impl IntoView {

@@ -1,5 +1,5 @@
 use leptos::prelude::*;
-use radix_leptos_aspect_ratio::*;
+use radix_leptos_primitives::aspect_ratio::*;
 
 stylance::import_crate_style!(
     aspect_ratio_classes,

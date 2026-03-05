@@ -1,9 +1,9 @@
 use leptos::prelude::*;
-use radix_leptos_dismissable_layer::DismissableLayer;
-use radix_leptos_focus_guards::FocusGuards;
-use radix_leptos_focus_scope::FocusScope;
-use radix_leptos_popper::{Popper, PopperAnchor, PopperArrow, PopperContent};
-use radix_leptos_portal::Portal;
+use radix_leptos_primitives::dismissable_layer::DismissableLayer;
+use radix_leptos_primitives::focus_guards::FocusGuards;
+use radix_leptos_primitives::focus_scope::FocusScope;
+use radix_leptos_primitives::popper::{Popper, PopperAnchor, PopperArrow, PopperContent};
+use radix_leptos_primitives::portal::Portal;
 use web_sys::wasm_bindgen::JsCast;
 
 const SYSTEM_FONT: &str = "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\"";

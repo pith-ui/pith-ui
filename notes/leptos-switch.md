@@ -1,6 +1,6 @@
 ---
 react_location: "[[reference/react-radix-primitives/packages/react/switch/src/switch.tsx|switch]]"
-rust_location: "[[packages/primitives/leptos/switch/src/switch.rs|switch]]"
+rust_location: "[[packages/primitives/leptos/src/switch/mod.rs|switch]]"
 react_story: "[[reference/react-radix-primitives/apps/storybook/stories/switch.stories.tsx|switch]]"
 rust_story: "[[stories/leptos/src/primitives/switch.rs|switch]]"
 dependencies:

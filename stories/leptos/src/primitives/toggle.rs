@@ -1,5 +1,5 @@
 use leptos::prelude::*;
-use radix_leptos_toggle::*;
+use radix_leptos_primitives::toggle::*;
 
 stylance::import_crate_style!(classes, "src/primitives/toggle.stories.module.css");
 

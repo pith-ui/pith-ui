@@ -1,6 +1,6 @@
 ---
 react_location: "[[reference/react-radix-primitives/packages/react/avatar/src/avatar.tsx|avatar]]"
-rust_location: "[[packages/primitives/leptos/avatar/src/avatar.rs|avatar]]"
+rust_location: "[[packages/primitives/leptos/src/avatar/mod.rs|avatar]]"
 react_story: "[[reference/react-radix-primitives/apps/storybook/stories/avatar.stories.tsx|avatar]]"
 rust_story: "[[stories/leptos/src/primitives/avatar.rs|avatar]]"
 dependencies:

@@ -1,5 +1,5 @@
 use leptos::prelude::*;
-use radix_leptos_dialog::*;
+use radix_leptos_primitives::dialog::*;
 
 #[component]
 pub fn DialogPage() -> impl IntoView {

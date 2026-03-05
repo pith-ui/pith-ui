@@ -1,5 +1,5 @@
 use leptos::prelude::*;
-use radix_leptos_popper::*;
+use radix_leptos_primitives::popper::*;
 
 #[component]
 pub fn PopperPage() -> impl IntoView {

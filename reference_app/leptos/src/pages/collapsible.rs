@@ -1,5 +1,5 @@
 use leptos::prelude::*;
-use radix_leptos_collapsible::*;
+use radix_leptos_primitives::collapsible::*;
 
 #[component]
 pub fn CollapsiblePage() -> impl IntoView {

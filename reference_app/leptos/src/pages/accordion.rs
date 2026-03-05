@@ -1,5 +1,5 @@
 use leptos::prelude::*;
-use radix_leptos_accordion::*;
+use radix_leptos_primitives::accordion::*;
 
 #[component]
 fn AccordionItems() -> impl IntoView {

@@ -1,6 +1,6 @@
 use leptos::prelude::*;
 use leptos_node_ref::AnyNodeRef;
-use radix_leptos_portal::Portal;
+use radix_leptos_primitives::portal::Portal;
 
 #[component]
 pub fn Base() -> impl IntoView {

@@ -1,6 +1,5 @@
 use leptos::*;
-use radix_leptos_icons::FontItalicIcon;
-use radix_leptos_toggle::*;
+use radix_leptos_primitives::toggle::*;
 
 #[component]
 pub fn ToggleDemo() -> impl IntoView {

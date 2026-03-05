@@ -1,3 +1,9 @@
+#![allow(
+    clippy::clone_on_copy,
+    clippy::redundant_locals,
+    clippy::type_complexity
+)]
+
 mod app;
 mod pages;
 

@@ -1,6 +1,6 @@
 ---
 react_location: "[[reference/react-radix-primitives/packages/react/id/src/id.tsx|id]]"
-rust_location: "[[packages/primitives/leptos/id/src/id.rs|id]]"
+rust_location: "[[packages/primitives/leptos/src/id/mod.rs|id]]"
 react_story: ""
 rust_story: ""
 dependencies: []

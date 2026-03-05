@@ -1,6 +1,6 @@
 ---
 react_location: "[[reference/react-radix-primitives/packages/react/alert-dialog/src/alert-dialog.tsx|alert-dialog]]"
-rust_location: "[[packages/primitives/leptos/alert-dialog/src/alert_dialog.rs|alert-dialog]]"
+rust_location: "[[packages/primitives/leptos/src/alert_dialog/mod.rs|alert_dialog]]"
 react_story: "[[reference/react-radix-primitives/apps/storybook/stories/alert-dialog.stories.tsx|alert-dialog]]"
 rust_story: "[[stories/leptos/src/primitives/alert_dialog.rs|alert-dialog]]"
 dependencies:

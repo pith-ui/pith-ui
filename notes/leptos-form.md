@@ -1,6 +1,6 @@
 ---
 react_location: "[[reference/react-radix-primitives/packages/react/form/src/form.tsx|form]]"
-rust_location: "[[packages/primitives/leptos/form/src/form.rs|form]]"
+rust_location: "[[packages/primitives/leptos/src/form/mod.rs|form]]"
 react_story: "[[reference/react-radix-primitives/apps/storybook/stories/form.stories.tsx|form]]"
 rust_story: "[[stories/leptos/src/primitives/form.rs|form]]"
 dependencies:

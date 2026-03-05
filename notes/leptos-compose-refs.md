@@ -1,6 +1,6 @@
 ---
 react_location: "[[reference/react-radix-primitives/packages/react/compose-refs/src/compose-refs.tsx|compose-refs]]"
-rust_location: "[[packages/primitives/leptos/compose-refs/src/compose_refs.rs|compose_refs]]"
+rust_location: "[[packages/primitives/leptos/src/compose_refs/mod.rs|compose_refs]]"
 react_story: ""
 rust_story: ""
 dependencies: []

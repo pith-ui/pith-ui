@@ -1,6 +1,6 @@
 use leptos::{context::Provider, ev, prelude::*};
-use radix_leptos_direction::Direction;
-use radix_leptos_roving_focus::*;
+use radix_leptos_primitives::direction::Direction;
+use radix_leptos_primitives::roving_focus::*;
 use web_sys::wasm_bindgen::JsCast;
 
 #[derive(Clone)]

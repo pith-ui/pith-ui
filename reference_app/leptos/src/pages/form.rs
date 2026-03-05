@@ -1,5 +1,5 @@
 use leptos::prelude::*;
-use radix_leptos_form::*;
+use radix_leptos_primitives::form::*;
 
 #[component]
 pub fn FormPage() -> impl IntoView {

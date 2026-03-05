@@ -1,6 +1,6 @@
 ---
 react_location: "[[reference/react-radix-primitives/packages/react/roving-focus/src/roving-focus-group.tsx|roving-focus-group]]"
-rust_location: "[[packages/primitives/leptos/roving-focus/src/roving_focus_group.rs|roving_focus_group]]"
+rust_location: "[[packages/primitives/leptos/src/roving_focus/mod.rs|roving_focus]]"
 react_story: "[[reference/react-radix-primitives/apps/storybook/stories/roving-focus-group.stories.tsx|roving-focus-group]]"
 rust_story: "[[stories/leptos/src/primitives/roving_focus.rs|roving_focus]]"
 dependencies:

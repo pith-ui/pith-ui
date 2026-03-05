@@ -1,5 +1,5 @@
 use leptos::prelude::*;
-use radix_leptos_select::*;
+use radix_leptos_primitives::select::*;
 use web_sys::wasm_bindgen::JsCast;
 
 #[component]

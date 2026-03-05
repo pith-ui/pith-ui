@@ -1,5 +1,5 @@
 use leptos::prelude::*;
-use radix_leptos_toggle_group::*;
+use radix_leptos_primitives::toggle_group::*;
 
 #[component]
 pub fn ToggleGroupPage() -> impl IntoView {
@@ -13,8 +13,8 @@ pub fn ToggleGroupPage() -> impl IntoView {
     });
 
     let orient = Signal::derive(move || match orientation.get().as_str() {
-        "vertical" => radix_leptos_roving_focus::Orientation::Vertical,
-        _ => radix_leptos_roving_focus::Orientation::Horizontal,
+        "vertical" => radix_leptos_primitives::roving_focus::Orientation::Vertical,
+        _ => radix_leptos_primitives::roving_focus::Orientation::Horizontal,
     });
 
     view! {

@@ -1,6 +1,6 @@
 ---
 react_location: "[[reference/react-radix-primitives/packages/react/one-time-password-field/src/one-time-password-field.tsx|one-time-password-field]]"
-rust_location: "[[packages/primitives/leptos/one-time-password-field/src/one_time_password_field.rs|one-time-password-field]]"
+rust_location: "[[packages/primitives/leptos/src/one_time_password_field/mod.rs|one_time_password_field]]"
 react_story: "[[reference/react-radix-primitives/apps/storybook/stories/one-time-password-field.stories.tsx|one-time-password-field]]"
 rust_story: "[[stories/leptos/src/primitives/one_time_password_field.rs|one-time-password-field]]"
 dependencies:

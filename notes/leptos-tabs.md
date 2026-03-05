@@ -1,6 +1,6 @@
 ---
 react_location: "[[reference/react-radix-primitives/packages/react/tabs/src/tabs.tsx|tabs]]"
-rust_location: "[[packages/primitives/leptos/tabs/src/tabs.rs|tabs]]"
+rust_location: "[[packages/primitives/leptos/src/tabs/mod.rs|tabs]]"
 react_story: "[[reference/react-radix-primitives/apps/storybook/stories/tabs.stories.tsx|tabs]]"
 rust_story: "[[stories/leptos/src/primitives/tabs.rs|tabs]]"
 dependencies:

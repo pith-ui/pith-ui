@@ -1,6 +1,6 @@
 use leptos::prelude::*;
-use radix_leptos_toggle_group::ToggleGroupType;
-use radix_leptos_toolbar::*;
+use radix_leptos_primitives::toggle_group::ToggleGroupType;
+use radix_leptos_primitives::toolbar::*;
 
 #[component]
 pub fn ToolbarPage() -> impl IntoView {

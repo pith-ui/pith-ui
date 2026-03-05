@@ -1,5 +1,5 @@
 use leptos::*;
-use radix_leptos_switch::*;
+use radix_leptos_primitives::switch::*;
 
 #[component]
 pub fn SwitchDemo() -> impl IntoView {

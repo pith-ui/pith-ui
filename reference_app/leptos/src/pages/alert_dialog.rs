@@ -1,5 +1,5 @@
 use leptos::prelude::*;
-use radix_leptos_alert_dialog::*;
+use radix_leptos_primitives::alert_dialog::*;
 
 #[component]
 pub fn AlertDialogPage() -> impl IntoView {

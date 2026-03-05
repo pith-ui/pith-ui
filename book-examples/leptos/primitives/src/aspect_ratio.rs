@@ -1,5 +1,5 @@
 use leptos::prelude::*;
-use radix_leptos_aspect_ratio::*;
+use radix_leptos_primitives::aspect_ratio::*;
 
 #[component]
 pub fn AspectRatioDemo() -> impl IntoView {

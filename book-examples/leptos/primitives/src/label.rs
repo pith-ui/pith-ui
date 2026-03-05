@@ -1,5 +1,5 @@
 use leptos::prelude::*;
-use radix_leptos_label::*;
+use radix_leptos_primitives::label::*;
 
 #[component]
 pub fn LabelDemo() -> impl IntoView {

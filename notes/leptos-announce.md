@@ -1,6 +1,6 @@
 ---
 react_location: "[[reference/react-radix-primitives/packages/react/announce/src/announce.tsx|announce]]"
-rust_location: "[[packages/primitives/leptos/announce/src/announce.rs|announce]]"
+rust_location: "[[packages/primitives/leptos/src/announce/mod.rs|announce]]"
 react_story: ""
 rust_story: ""
 dependencies:

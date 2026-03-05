@@ -1,5 +1,5 @@
 use leptos::prelude::*;
-use radix_leptos_visually_hidden::*;
+use radix_leptos_primitives::visually_hidden::*;
 
 #[component]
 pub fn Basic() -> impl IntoView {

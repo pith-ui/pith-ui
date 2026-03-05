@@ -1,6 +1,6 @@
 use leptos::prelude::*;
-use radix_leptos_label::Label;
-use radix_leptos_select::*;
+use radix_leptos_primitives::label::Label;
+use radix_leptos_primitives::select::*;
 use wasm_bindgen::JsCast;
 
 stylance::import_crate_style!(classes, "src/primitives/select.stories.module.css");
@@ -706,7 +706,7 @@ fn RtlSelectExample(position: &'static str) -> impl IntoView {
     view! {
         <Label>
             {"\u{0627}\u{062E}\u{062A}\u{0631} \u{0641}\u{0627}\u{0643}\u{0647}\u{0629}:"}
-            <Select default_value="two" dir=radix_leptos_direction::Direction::Rtl>
+            <Select default_value="two" dir=radix_leptos_primitives::direction::Direction::Rtl>
                 <SelectTrigger attr:class=classes::trigger>
                     <SelectValue />
                     <SelectIcon />
@@ -850,7 +850,7 @@ pub fn WithinForm() -> impl IntoView {
 
 #[component]
 pub fn WithinDialog() -> impl IntoView {
-    use radix_leptos_dialog::*;
+    use radix_leptos_primitives::dialog::*;
 
     view! {
         <div style="height: 120vh;">

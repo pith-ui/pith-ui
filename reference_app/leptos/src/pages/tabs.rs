@@ -1,5 +1,5 @@
 use leptos::prelude::*;
-use radix_leptos_tabs::*;
+use radix_leptos_primitives::tabs::*;
 
 #[component]
 pub fn TabsPage() -> impl IntoView {

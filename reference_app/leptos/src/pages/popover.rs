@@ -1,5 +1,5 @@
 use leptos::prelude::*;
-use radix_leptos_popover::*;
+use radix_leptos_primitives::popover::*;
 
 #[component]
 pub fn PopoverPage() -> impl IntoView {

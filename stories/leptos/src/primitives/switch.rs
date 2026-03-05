@@ -1,6 +1,6 @@
 use leptos::{ev::Event, prelude::*};
-use radix_leptos_label::*;
-use radix_leptos_switch::*;
+use radix_leptos_primitives::label::*;
+use radix_leptos_primitives::switch::*;
 
 stylance::import_crate_style!(classes, "src/primitives/switch.stories.module.css");
 

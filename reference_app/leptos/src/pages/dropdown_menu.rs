@@ -1,5 +1,5 @@
 use leptos::prelude::*;
-use radix_leptos_dropdown_menu::*;
+use radix_leptos_primitives::dropdown_menu::*;
 
 #[component]
 pub fn DropdownMenuPage() -> impl IntoView {

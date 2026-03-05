@@ -1,7 +1,7 @@
 use leptos::prelude::*;
-use radix_leptos_direction::DirectionProvider;
-use radix_leptos_toggle::Toggle;
-use radix_leptos_toolbar::*;
+use radix_leptos_primitives::direction::DirectionProvider;
+use radix_leptos_primitives::toggle::Toggle;
+use radix_leptos_primitives::toolbar::*;
 
 stylance::import_crate_style!(
     #[allow(dead_code)]
@@ -13,7 +13,7 @@ stylance::import_crate_style!(
 pub fn Styled() -> impl IntoView {
     view! {
         <ToolbarExample title="Horizontal" />
-        <ToolbarExample title="Vertical" orientation=radix_leptos_roving_focus::Orientation::Vertical />
+        <ToolbarExample title="Vertical" orientation=radix_leptos_primitives::roving_focus::Orientation::Vertical />
     }
 }
 
@@ -23,14 +23,14 @@ pub fn Chromatic() -> impl IntoView {
         <div style:padding="50px">
             <h1>"Example"</h1>
             <ToolbarExample title="" />
-            <ToolbarExample title="" orientation=radix_leptos_roving_focus::Orientation::Vertical />
+            <ToolbarExample title="" orientation=radix_leptos_primitives::roving_focus::Orientation::Vertical />
 
             <h1>"Direction"</h1>
             <h2>"Prop"</h2>
-            <ToolbarExample title="" dir=radix_leptos_direction::Direction::Rtl />
+            <ToolbarExample title="" dir=radix_leptos_primitives::direction::Direction::Rtl />
 
             <h2>"Inherited"</h2>
-            <DirectionProvider direction=Signal::derive(|| radix_leptos_direction::Direction::Rtl)>
+            <DirectionProvider direction=Signal::derive(|| radix_leptos_primitives::direction::Direction::Rtl)>
                 <ToolbarExample title="" />
             </DirectionProvider>
         </div>
@@ -40,10 +40,11 @@ pub fn Chromatic() -> impl IntoView {
 #[component]
 fn ToolbarExample(
     #[prop(into)] title: String,
-    #[prop(optional)] orientation: Option<radix_leptos_roving_focus::Orientation>,
-    #[prop(into, optional)] dir: MaybeProp<radix_leptos_direction::Direction>,
+    #[prop(optional)] orientation: Option<radix_leptos_primitives::roving_focus::Orientation>,
+    #[prop(into, optional)] dir: MaybeProp<radix_leptos_primitives::direction::Direction>,
 ) -> impl IntoView {
-    let orientation = orientation.unwrap_or(radix_leptos_roving_focus::Orientation::Horizontal);
+    let orientation =
+        orientation.unwrap_or(radix_leptos_primitives::roving_focus::Orientation::Horizontal);
 
     let title = StoredValue::new(title);
     let aria_label = StoredValue::new(format!("{} toolbar", title.get_value()));
@@ -90,7 +91,7 @@ fn ToolbarExample(
                 </ToolbarButton>
                 <ToolbarSeparator attr:class=classes::toolbarSeparator />
                 <ToolbarToggleGroup
-                    r#type=radix_leptos_toggle_group::ToggleGroupType::Single
+                    r#type=radix_leptos_primitives::toggle_group::ToggleGroupType::Single
                     attr:class=classes::toolbarToggleGroup
                 >
                     <ToolbarToggleItem value="left" attr:class=toggle_item_class.get_value()>

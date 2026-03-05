@@ -1,0 +1,159 @@
+[package]
+name = "radix-leptos-primitives"
+description = "Leptos port of Radix Primitives - accessible, unstyled UI components."
+
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+version.workspace = true
+
+[features]
+default = []
+all = [
+    "accessible-icon",
+    "accordion",
+    "alert-dialog",
+    "aspect-ratio",
+    "avatar",
+    "checkbox",
+    "collapsible",
+    "context-menu",
+    "dialog",
+    "dropdown-menu",
+    "form",
+    "hover-card",
+    "label",
+    "menu",
+    "menubar",
+    "navigation-menu",
+    "one-time-password-field",
+    "password-toggle-field",
+    "popover",
+    "progress",
+    "radio-group",
+    "scroll-area",
+    "select",
+    "separator",
+    "slider",
+    "switch",
+    "tabs",
+    "toast",
+    "toggle",
+    "toggle-group",
+    "toolbar",
+    "tooltip",
+]
+
+# Component-to-component dependencies
+accordion = ["collapsible"]
+alert-dialog = ["dialog"]
+context-menu = ["menu"]
+dropdown-menu = ["menu"]
+form = ["label"]
+menubar = ["menu"]
+toolbar = ["separator", "toggle-group"]
+
+# Leaf features (no component deps)
+accessible-icon = []
+aspect-ratio = []
+avatar = []
+checkbox = []
+collapsible = []
+dialog = []
+hover-card = []
+label = []
+menu = []
+navigation-menu = []
+one-time-password-field = []
+password-toggle-field = []
+popover = []
+progress = []
+radio-group = []
+scroll-area = []
+select = []
+separator = []
+slider = []
+switch = []
+tabs = []
+toast = []
+toggle = []
+toggle-group = []
+tooltip = []
+
+[dependencies]
+floating-ui-leptos = "0.6.0"
+getrandom = { version = "0.2", features = ["js"] }
+js-sys = "0.3"
+leptos.workspace = true
+leptos-maybe-callback.workspace = true
+leptos-node-ref.workspace = true
+leptos_dom.workspace = true
+nanoid = "0.4.0"
+once_cell = "1.19.0"
+radix-number.workspace = true
+radix-primitive.workspace = true
+radix-rect.workspace = true
+radix-utils.workspace = true
+send_wrapper.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+wasm-bindgen = "0.2"
+
+[dependencies.web-sys]
+workspace = true
+features = [
+    "AddEventListenerOptions",
+    "Attr",
+    "ClipboardEvent",
+    "CssStyleDeclaration",
+    "CustomEvent",
+    "CustomEventInit",
+    "DataTransfer",
+    "Document",
+    "DomRect",
+    "DomTokenList",
+    "Element",
+    "Event",
+    "EventInit",
+    "EventListenerOptions",
+    "EventTarget",
+    "FocusEvent",
+    "FocusOptions",
+    "FormData",
+    "HtmlButtonElement",
+    "HtmlCollection",
+    "HtmlElement",
+    "HtmlFormElement",
+    "HtmlInputElement",
+    "HtmlSelectElement",
+    "HtmlStyleElement",
+    "HtmlTextAreaElement",
+    "InputEvent",
+    "KeyboardEvent",
+    "MutationObserver",
+    "MutationObserverInit",
+    "MutationRecord",
+    "NamedNodeMap",
+    "Node",
+    "NodeFilter",
+    "NodeList",
+    "PointerEvent",
+    "ResizeObserver",
+    "ResizeObserverBoxOptions",
+    "ResizeObserverEntry",
+    "ResizeObserverOptions",
+    "ResizeObserverSize",
+    "ScrollIntoViewOptions",
+    "ScrollLogicalPosition",
+    "Selection",
+    "TreeWalker",
+    "ValidityState",
+    "WheelEvent",
+    "Window",
+]
+
+[dev-dependencies]
+any_spawner = "0.3.0"
+wasm-bindgen = "0.2"
+wasm-bindgen-test = "0.3"

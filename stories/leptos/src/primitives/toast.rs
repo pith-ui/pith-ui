@@ -1,10 +1,10 @@
 use leptos::prelude::*;
 use leptos_node_ref::AnyNodeRef;
-use radix_leptos_dialog::{
+use radix_leptos_primitives::dialog::{
     Dialog, DialogClose, DialogContent, DialogDescription, DialogOverlay, DialogTitle,
     DialogTrigger,
 };
-use radix_leptos_toast::*;
+use radix_leptos_primitives::toast::*;
 use web_sys::wasm_bindgen::{JsCast, closure::Closure};
 
 stylance::import_crate_style!(classes, "src/primitives/toast.stories.module.css");
