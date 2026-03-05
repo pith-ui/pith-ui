@@ -352,6 +352,19 @@ pub fn MenubarContent(
 
     let has_interacted_outside_ref = SendWrapper::new(Rc::new(Cell::new(false)));
 
+    let content_ref = AnyNodeRef::new();
+    let composed_refs = use_composed_refs(vec![node_ref, content_ref]);
+
+    // Set data-radix-menubar-content via Effect so it lands on the inner content
+    // element (where the keydown handler is attached), not the outer PopperContent
+    // wrapper. This matches the pattern used by MenubarSubContent.
+    Effect::new(move |_| {
+        if let Some(el) = content_ref.get() {
+            let el: &web_sys::Element = (*el).unchecked_ref();
+            el.set_attribute("data-radix-menubar-content", "").ok();
+        }
+    });
+
     let align = prop_or(align, Align::Start);
 
     // Wrap pass-through callbacks for view! macro forwarding.
@@ -366,7 +379,7 @@ pub fn MenubarContent(
             force_mount=force_mount
             class=class
             as_child=as_child
-            node_ref=node_ref
+            node_ref=composed_refs
             id=Signal::derive(move || Some(menu_context.content_id.get()))
             aria_labelledby=Signal::derive(move || Some(menu_context.trigger_id.get()))
             align=align
@@ -375,7 +388,6 @@ pub fn MenubarContent(
             side=side
             side_offset=side_offset
             content_style="--radix-menubar-content-transform-origin: var(--radix-popper-transform-origin); --radix-menubar-content-available-width: var(--radix-popper-available-width); --radix-menubar-content-available-height: var(--radix-popper-available-height); --radix-menubar-trigger-width: var(--radix-popper-anchor-width); --radix-menubar-trigger-height: var(--radix-popper-anchor-height);"
-            attr:data-radix-menubar-content=""
             on_close_auto_focus=compose_callbacks(
                 on_close_auto_focus,
                 Some(Callback::new({
