@@ -15,7 +15,8 @@ use crate::focus_guards::use_focus_guards;
 use crate::focus_scope::FocusScope;
 use crate::id::use_id;
 pub use crate::popper::{
-    Align, ClientRectObject, PopperVirtualElement, Side as PopperSide, set_popper_virtual_ref,
+    Align, ClientRectObject, Padding, PopperVirtualElement, Side as PopperSide, Sticky,
+    set_popper_virtual_ref,
 };
 use crate::popper::{Popper, PopperAnchor, PopperArrow, PopperContent};
 use crate::portal::ScopedPortal;
@@ -352,6 +353,24 @@ pub fn MenuContent(
     /// When `true`, overrides the `side` and `align` preferences to prevent collisions with boundary edges.
     #[prop(into, optional)]
     avoid_collisions: MaybeProp<bool>,
+    /// The element(s) used as the collision boundary.
+    #[prop(into, optional)]
+    collision_boundary: MaybeProp<SendWrapper<Vec<web_sys::Element>>>,
+    /// The padding between the boundary edges and the content.
+    #[prop(into, optional)]
+    collision_padding: MaybeProp<Padding>,
+    /// The padding between the arrow and the edges of the content.
+    #[prop(into, optional)]
+    arrow_padding: MaybeProp<f64>,
+    /// The sticky behavior on the align axis.
+    #[prop(into, optional)]
+    sticky: MaybeProp<Sticky>,
+    /// Whether the content should be hidden when detached from its reference element.
+    #[prop(into, optional)]
+    hide_when_detached: MaybeProp<bool>,
+    /// Whether keyboard navigation should loop around.
+    #[prop(into, optional)]
+    r#loop: MaybeProp<bool>,
     /// The id of the content element.
     #[prop(into, optional)]
     id: MaybeProp<String>,
@@ -404,6 +423,12 @@ pub fn MenuContent(
                                 align=align
                                 align_offset=align_offset
                                 avoid_collisions=avoid_collisions
+                                collision_boundary=collision_boundary
+                                collision_padding=collision_padding
+                                arrow_padding=arrow_padding
+                                sticky=sticky
+                                hide_when_detached=hide_when_detached
+                                r#loop=r#loop
                                 id=id
                                 aria_labelledby=aria_labelledby
                                 as_child=as_child
@@ -428,6 +453,12 @@ pub fn MenuContent(
                             align=align
                             align_offset=align_offset
                             avoid_collisions=avoid_collisions
+                            collision_boundary=collision_boundary
+                            collision_padding=collision_padding
+                            arrow_padding=arrow_padding
+                            sticky=sticky
+                            hide_when_detached=hide_when_detached
+                            r#loop=r#loop
                             id=id
                             aria_labelledby=aria_labelledby
                             as_child=as_child
@@ -456,6 +487,12 @@ fn MenuRootContentModal(
     #[prop(into, optional)] align: MaybeProp<Align>,
     #[prop(into, optional)] align_offset: MaybeProp<f64>,
     #[prop(into, optional)] avoid_collisions: MaybeProp<bool>,
+    #[prop(into, optional)] collision_boundary: MaybeProp<SendWrapper<Vec<web_sys::Element>>>,
+    #[prop(into, optional)] collision_padding: MaybeProp<Padding>,
+    #[prop(into, optional)] arrow_padding: MaybeProp<f64>,
+    #[prop(into, optional)] sticky: MaybeProp<Sticky>,
+    #[prop(into, optional)] hide_when_detached: MaybeProp<bool>,
+    #[prop(into, optional)] r#loop: MaybeProp<bool>,
     #[prop(into, optional)] id: MaybeProp<String>,
     #[prop(into, optional)] aria_labelledby: MaybeProp<String>,
     #[prop(into, optional)] class: MaybeProp<String>,
@@ -513,6 +550,12 @@ fn MenuRootContentModal(
             align=align
             align_offset=align_offset
             avoid_collisions=avoid_collisions
+            collision_boundary=collision_boundary
+            collision_padding=collision_padding
+            arrow_padding=arrow_padding
+            sticky=sticky
+            hide_when_detached=hide_when_detached
+            r#loop=r#loop
             id=id
             aria_labelledby=aria_labelledby
             class=class
@@ -539,6 +582,12 @@ fn MenuRootContentNonModal(
     #[prop(into, optional)] align: MaybeProp<Align>,
     #[prop(into, optional)] align_offset: MaybeProp<f64>,
     #[prop(into, optional)] avoid_collisions: MaybeProp<bool>,
+    #[prop(into, optional)] collision_boundary: MaybeProp<SendWrapper<Vec<web_sys::Element>>>,
+    #[prop(into, optional)] collision_padding: MaybeProp<Padding>,
+    #[prop(into, optional)] arrow_padding: MaybeProp<f64>,
+    #[prop(into, optional)] sticky: MaybeProp<Sticky>,
+    #[prop(into, optional)] hide_when_detached: MaybeProp<bool>,
+    #[prop(into, optional)] r#loop: MaybeProp<bool>,
     #[prop(into, optional)] id: MaybeProp<String>,
     #[prop(into, optional)] aria_labelledby: MaybeProp<String>,
     #[prop(into, optional)] class: MaybeProp<String>,
@@ -576,6 +625,12 @@ fn MenuRootContentNonModal(
             align=align
             align_offset=align_offset
             avoid_collisions=avoid_collisions
+            collision_boundary=collision_boundary
+            collision_padding=collision_padding
+            arrow_padding=arrow_padding
+            sticky=sticky
+            hide_when_detached=hide_when_detached
+            r#loop=r#loop
             id=id
             aria_labelledby=aria_labelledby
             class=class
@@ -630,6 +685,21 @@ fn MenuContentImpl(
     /// When `true`, overrides the `side` and `align` preferences to prevent collisions with boundary edges.
     #[prop(into, optional)]
     avoid_collisions: MaybeProp<bool>,
+    /// The element(s) used as the collision boundary.
+    #[prop(into, optional)]
+    collision_boundary: MaybeProp<SendWrapper<Vec<web_sys::Element>>>,
+    /// The padding between the boundary edges and the content.
+    #[prop(into, optional)]
+    collision_padding: MaybeProp<Padding>,
+    /// The padding between the arrow and the edges of the content.
+    #[prop(into, optional)]
+    arrow_padding: MaybeProp<f64>,
+    /// The sticky behavior on the align axis.
+    #[prop(into, optional)]
+    sticky: MaybeProp<Sticky>,
+    /// Whether the content should be hidden when detached from its reference element.
+    #[prop(into, optional)]
+    hide_when_detached: MaybeProp<bool>,
     /// The id of the content element.
     #[prop(into, optional)]
     id: MaybeProp<String>,
@@ -1084,6 +1154,11 @@ fn MenuContentImpl(
                             align=Signal::derive(move || align.get().unwrap_or(Align::Center))
                             align_offset=Signal::derive(move || align_offset.get().unwrap_or(0.0))
                             avoid_collisions=Signal::derive(move || avoid_collisions.get().unwrap_or(true))
+                            collision_boundary=Signal::derive(move || collision_boundary.get().unwrap_or_else(|| SendWrapper::new(vec![])))
+                            collision_padding=Signal::derive(move || collision_padding.get().unwrap_or(Padding::All(0.0)))
+                            arrow_padding=Signal::derive(move || arrow_padding.get().unwrap_or(0.0))
+                            sticky=Signal::derive(move || sticky.get().unwrap_or(Sticky::Partial))
+                            hide_when_detached=Signal::derive(move || hide_when_detached.get().unwrap_or(false))
                             dir=Signal::derive(move || Some(root_context.dir.get().to_string()))
                             as_child=as_child
                             node_ref=composed_refs
@@ -1793,6 +1868,14 @@ pub fn MenuSubContent(
     #[prop(into, optional)] side_offset: MaybeProp<f64>,
     #[prop(into, optional)] align_offset: MaybeProp<f64>,
     #[prop(into, optional)] avoid_collisions: MaybeProp<bool>,
+    #[prop(into, optional)] collision_boundary: MaybeProp<SendWrapper<Vec<web_sys::Element>>>,
+    #[prop(into, optional)] collision_padding: MaybeProp<Padding>,
+    #[prop(into, optional)] arrow_padding: MaybeProp<f64>,
+    #[prop(into, optional)] sticky: MaybeProp<Sticky>,
+    #[prop(into, optional)] hide_when_detached: MaybeProp<bool>,
+    /// Whether keyboard navigation should loop around.
+    #[prop(into, optional)]
+    r#loop: MaybeProp<bool>,
     #[prop(into, optional)] on_escape_key_down: Option<Callback<ev::KeyboardEvent>>,
     #[prop(into, optional)] on_focus_outside: Option<Callback<CustomEvent>>,
     #[prop(into, optional)] on_key_down: Option<Callback<ev::KeyboardEvent>>,
@@ -1834,6 +1917,12 @@ pub fn MenuSubContent(
                         align=Align::Start
                         align_offset=align_offset
                         avoid_collisions=avoid_collisions
+                        collision_boundary=collision_boundary
+                        collision_padding=collision_padding
+                        arrow_padding=arrow_padding
+                        sticky=sticky
+                        hide_when_detached=hide_when_detached
+                        r#loop=r#loop
                         disable_outside_pointer_events=false
                         disable_outside_scroll=false
                         trap_focus=false

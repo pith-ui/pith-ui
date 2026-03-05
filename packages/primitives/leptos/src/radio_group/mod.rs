@@ -31,6 +31,7 @@ struct RadioGroupContextValue {
     disabled: Signal<bool>,
     value: Signal<Option<String>>,
     on_value_change: Callback<String>,
+    form: Signal<Option<String>>,
 }
 
 #[component]
@@ -41,6 +42,10 @@ pub fn RadioGroup(
     #[prop(into, optional)] on_value_change: Option<Callback<String>>,
     #[prop(into, optional)] required: MaybeProp<bool>,
     #[prop(into, optional)] disabled: MaybeProp<bool>,
+    /// The `id` of a `<form>` element to associate the radio group with. Allows the radio group
+    /// to participate in a form even when it is not a descendant of that form.
+    #[prop(into, optional)]
+    form: MaybeProp<String>,
     #[prop(into, optional)] orientation: MaybeProp<Orientation>,
     #[prop(into, optional)] dir: MaybeProp<Direction>,
     #[prop(into, optional)] r#loop: MaybeProp<bool>,
@@ -80,6 +85,7 @@ pub fn RadioGroup(
         disabled,
         value: value_signal,
         on_value_change: on_value_change_callback,
+        form: Signal::derive(move || form.get()),
     };
 
     view! {
@@ -139,6 +145,9 @@ pub fn RadioGroupItem(
     let composed_refs = use_composed_refs(vec![node_ref, item_ref]);
 
     let is_form_control = Signal::derive(move || {
+        if context.form.get().is_some() {
+            return true;
+        }
         item_ref
             .get()
             .and_then(|button| {
@@ -280,6 +289,7 @@ pub fn RadioGroupItem(
                 disabled=is_disabled
                 value=value_signal
                 name=Signal::derive(move || context.name.get())
+                form=Signal::derive(move || context.form.get())
             />
         </Show>
     }

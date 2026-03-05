@@ -186,6 +186,16 @@ pub fn DropdownMenuContent(
     #[prop(into, optional)] side: MaybeProp<PopperSide>,
     #[prop(into, optional)] side_offset: MaybeProp<f64>,
     #[prop(into, optional)] align: MaybeProp<Align>,
+    #[prop(into, optional)] align_offset: MaybeProp<f64>,
+    #[prop(into, optional)] avoid_collisions: MaybeProp<bool>,
+    #[prop(into, optional)] collision_boundary: MaybeProp<SendWrapper<Vec<web_sys::Element>>>,
+    #[prop(into, optional)] collision_padding: MaybeProp<Padding>,
+    #[prop(into, optional)] arrow_padding: MaybeProp<f64>,
+    #[prop(into, optional)] sticky: MaybeProp<Sticky>,
+    #[prop(into, optional)] hide_when_detached: MaybeProp<bool>,
+    /// Whether keyboard navigation should loop around.
+    #[prop(into, optional)]
+    r#loop: MaybeProp<bool>,
     #[prop(into, optional)] on_close_auto_focus: Option<Callback<ev::Event>>,
     #[prop(into, optional)] on_interact_outside: Option<Callback<web_sys::CustomEvent>>,
     #[prop(into, optional)] on_escape_key_down: Option<Callback<ev::KeyboardEvent>>,
@@ -218,6 +228,14 @@ pub fn DropdownMenuContent(
             side=side
             side_offset=side_offset
             align=align
+            align_offset=align_offset
+            avoid_collisions=avoid_collisions
+            collision_boundary=collision_boundary
+            collision_padding=collision_padding
+            arrow_padding=arrow_padding
+            sticky=sticky
+            hide_when_detached=hide_when_detached
+            r#loop=r#loop
             attr:style=move || {
                 [
                     "--radix-dropdown-menu-content-transform-origin: var(--radix-popper-transform-origin);",
@@ -548,6 +566,14 @@ pub fn DropdownMenuSubTrigger(
 pub fn DropdownMenuSubContent(
     #[prop(into, optional)] force_mount: MaybeProp<bool>,
     #[prop(into, optional)] side_offset: MaybeProp<f64>,
+    #[prop(into, optional)] align_offset: MaybeProp<f64>,
+    #[prop(into, optional)] avoid_collisions: MaybeProp<bool>,
+    #[prop(into, optional)] collision_boundary: MaybeProp<SendWrapper<Vec<web_sys::Element>>>,
+    #[prop(into, optional)] collision_padding: MaybeProp<Padding>,
+    #[prop(into, optional)] arrow_padding: MaybeProp<f64>,
+    #[prop(into, optional)] sticky: MaybeProp<Sticky>,
+    #[prop(into, optional)] hide_when_detached: MaybeProp<bool>,
+    #[prop(into, optional)] r#loop: MaybeProp<bool>,
     #[prop(into, optional)] class: MaybeProp<String>,
     #[prop(into, optional)] on_escape_key_down: Option<Callback<ev::KeyboardEvent>>,
     #[prop(into, optional)] on_focus_outside: Option<Callback<web_sys::CustomEvent>>,
@@ -562,6 +588,14 @@ pub fn DropdownMenuSubContent(
         <MenuSubContent
             force_mount=force_mount
             side_offset=side_offset
+            align_offset=align_offset
+            avoid_collisions=avoid_collisions
+            collision_boundary=collision_boundary
+            collision_padding=collision_padding
+            arrow_padding=arrow_padding
+            sticky=sticky
+            hide_when_detached=hide_when_detached
+            r#loop=r#loop
             class=class
             as_child=as_child
             node_ref=node_ref

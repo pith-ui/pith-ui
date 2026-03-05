@@ -333,6 +333,12 @@ pub fn MenubarContent(
     #[prop(into, optional)] align: MaybeProp<Align>,
     #[prop(into, optional)] align_offset: MaybeProp<f64>,
     #[prop(into, optional)] avoid_collisions: MaybeProp<bool>,
+    #[prop(into, optional)] collision_boundary: MaybeProp<SendWrapper<Vec<web_sys::Element>>>,
+    #[prop(into, optional)] collision_padding: MaybeProp<Padding>,
+    #[prop(into, optional)] arrow_padding: MaybeProp<f64>,
+    #[prop(into, optional)] sticky: MaybeProp<Sticky>,
+    #[prop(into, optional)] hide_when_detached: MaybeProp<bool>,
+    #[prop(into, optional)] r#loop: MaybeProp<bool>,
     #[prop(into, optional)] side: MaybeProp<PopperSide>,
     #[prop(into, optional)] side_offset: MaybeProp<f64>,
     #[prop(into, optional)] on_close_auto_focus: Option<Callback<ev::Event>>,
@@ -385,6 +391,12 @@ pub fn MenubarContent(
             align=align
             align_offset=align_offset
             avoid_collisions=avoid_collisions
+            collision_boundary=collision_boundary
+            collision_padding=collision_padding
+            arrow_padding=arrow_padding
+            sticky=sticky
+            hide_when_detached=hide_when_detached
+            r#loop=r#loop
             side=side
             side_offset=side_offset
             content_style="--radix-menubar-content-transform-origin: var(--radix-popper-transform-origin); --radix-menubar-content-available-width: var(--radix-popper-available-width); --radix-menubar-content-available-height: var(--radix-popper-available-height); --radix-menubar-trigger-width: var(--radix-popper-anchor-width); --radix-menubar-trigger-height: var(--radix-popper-anchor-height);"
@@ -817,6 +829,12 @@ pub fn MenubarSubContent(
     #[prop(into, optional)] side_offset: MaybeProp<f64>,
     #[prop(into, optional)] align_offset: MaybeProp<f64>,
     #[prop(into, optional)] avoid_collisions: MaybeProp<bool>,
+    #[prop(into, optional)] collision_boundary: MaybeProp<SendWrapper<Vec<web_sys::Element>>>,
+    #[prop(into, optional)] collision_padding: MaybeProp<Padding>,
+    #[prop(into, optional)] arrow_padding: MaybeProp<f64>,
+    #[prop(into, optional)] sticky: MaybeProp<Sticky>,
+    #[prop(into, optional)] hide_when_detached: MaybeProp<bool>,
+    #[prop(into, optional)] r#loop: MaybeProp<bool>,
     #[prop(into, optional)] class: MaybeProp<String>,
     #[prop(into, optional)] on_escape_key_down: Option<Callback<ev::KeyboardEvent>>,
     #[prop(into, optional)] on_focus_outside: Option<Callback<web_sys::CustomEvent>>,
@@ -844,6 +862,12 @@ pub fn MenubarSubContent(
             side_offset=side_offset
             align_offset=align_offset
             avoid_collisions=avoid_collisions
+            collision_boundary=collision_boundary
+            collision_padding=collision_padding
+            arrow_padding=arrow_padding
+            sticky=sticky
+            hide_when_detached=hide_when_detached
+            r#loop=r#loop
             class=class
             as_child=as_child
             node_ref=composed_refs

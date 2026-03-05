@@ -71,6 +71,7 @@ pub(crate) fn RadioBubbleInput(
     #[prop(into)] disabled: Signal<bool>,
     #[prop(into)] value: Signal<String>,
     #[prop(into, optional)] name: Signal<Option<String>>,
+    #[prop(into, optional)] form: Signal<Option<String>>,
 ) -> impl IntoView {
     let input_ref: AnyNodeRef = AnyNodeRef::new();
     let prev_checked = use_previous(Signal::derive(move || Some(checked.get())));
@@ -118,6 +119,7 @@ pub(crate) fn RadioBubbleInput(
             disabled=data_attr(disabled)
             name=move || name.get()
             value=move || value.get()
+            form=move || form.get()
             tabindex="-1"
             // We transform because the input is absolutely positioned but we have
             // rendered it **after** the button. This pulls it back to sit on top

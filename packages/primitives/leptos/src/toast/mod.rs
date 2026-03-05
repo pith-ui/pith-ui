@@ -52,6 +52,13 @@ impl SwipeDirection {
     }
 }
 
+#[derive(Clone, Copy, Debug, Default, Eq, Hash, PartialEq)]
+pub enum ToastType {
+    #[default]
+    Foreground,
+    Background,
+}
+
 #[derive(Clone, Debug)]
 pub struct SwipeEvent {
     pub current_target: Option<SwipeEventTarget>,
@@ -569,9 +576,10 @@ pub fn Toast(
     /// controlling animation with animation libraries.
     #[prop(into, optional)]
     force_mount: Option<bool>,
-    /// The type of toast.
-    #[prop(into, optional, default = "foreground".to_string())]
-    r#type: String,
+    /// The type of toast. `Foreground` toasts are announced as `assertive`,
+    /// `Background` toasts as `polite`.
+    #[prop(into, optional)]
+    r#type: MaybeProp<ToastType>,
     /// Time in milliseconds that toast should remain visible for. Overrides value
     /// given to `ToastProvider`.
     #[prop(into, optional)]
@@ -611,7 +619,7 @@ pub fn Toast(
     let is_open = Signal::derive(move || open_signal.get().unwrap_or(true));
 
     let force_mount = force_mount.unwrap_or(false);
-    let r#type = StoredValue::new(r#type);
+    let toast_type = Signal::derive(move || r#type.get().unwrap_or_default());
 
     let context = expect_context::<ToastProviderContextValue>();
     let toast_node_ref = AnyNodeRef::new();
@@ -773,7 +781,10 @@ pub fn Toast(
                                         attr:class=move || class.get().unwrap_or_default()
                                         attr:role="status"
                                         attr:aria-live=move || {
-                                            if r#type.get_value() == "foreground" { "assertive" } else { "polite" }
+                                            match toast_type.get() {
+                                                ToastType::Foreground => "assertive",
+                                                ToastType::Background => "polite",
+                                            }
                                         }
                                         attr:aria-atomic="true"
                                         attr:tabindex="0"

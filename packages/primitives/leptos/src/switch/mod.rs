@@ -24,6 +24,10 @@ pub fn Switch(
     #[prop(into, optional)] required: MaybeProp<bool>,
     #[prop(into, optional)] disabled: MaybeProp<bool>,
     #[prop(into, optional)] value: MaybeProp<String>,
+    /// The `id` of a `<form>` element to associate the switch with. Allows the switch
+    /// to participate in a form even when it is not a descendant of that form.
+    #[prop(into, optional)]
+    form: MaybeProp<String>,
     #[prop(into, optional)] on_click: Option<Callback<ev::MouseEvent>>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
@@ -40,6 +44,9 @@ pub fn Switch(
     let composed_refs = use_composed_refs(vec![node_ref, button_ref]);
 
     let is_form_control = Signal::derive(move || {
+        if form.get().is_some() {
+            return true;
+        }
         button_ref
             .get()
             .and_then(|button| {
@@ -111,6 +118,7 @@ pub fn Switch(
                     checked=checked
                     required=required
                     disabled=disabled
+                    form=Signal::derive(move || form.get())
                 />
             </Show>
         </Provider>
@@ -148,6 +156,7 @@ fn BubbleInput(
     #[prop(into)] required: Signal<bool>,
     #[prop(into)] disabled: Signal<bool>,
     #[prop(into)] value: Signal<String>,
+    #[prop(into, optional)] form: Signal<Option<String>>,
 ) -> impl IntoView {
     let node_ref: NodeRef<html::Input> = NodeRef::new();
     let prev_checked = use_previous(checked);
@@ -181,6 +190,7 @@ fn BubbleInput(
             required=move || required.get().then_some("")
             disabled=move || disabled.get().then_some("")
             value=move || value.get()
+            form=move || form.get()
             tabindex="-1"
             // We transform because the input is absolutely positioned, but we have
             // rendered it **after** the button. This pulls it back to sit on top

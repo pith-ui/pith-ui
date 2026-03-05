@@ -53,6 +53,12 @@ pub fn Avatar(
 #[component]
 pub fn AvatarImage(
     #[prop(into, optional)] src: MaybeProp<String>,
+    /// The referrer policy to use when fetching the image for loading status detection.
+    #[prop(into, optional)]
+    referrer_policy: MaybeProp<String>,
+    /// The CORS setting to use when fetching the image for loading status detection.
+    #[prop(into, optional)]
+    cross_origin: MaybeProp<String>,
     #[prop(into, optional)] on_loading_status_change: Option<Callback<ImageLoadingStatus>>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
@@ -61,7 +67,7 @@ pub fn AvatarImage(
     let children = StoredValue::new(children);
 
     let context = expect_context::<AvatarContextValue>();
-    let image_loading_status = use_image_loading_status(src);
+    let image_loading_status = use_image_loading_status(src, referrer_policy, cross_origin);
     let handle_loading_status_change = move |status: ImageLoadingStatus| {
         if let Some(on_loading_status_change) = on_loading_status_change {
             on_loading_status_change.run(status);
@@ -143,7 +149,11 @@ pub fn AvatarFallback(
     }
 }
 
-fn use_image_loading_status(src: MaybeProp<String>) -> ReadSignal<ImageLoadingStatus> {
+fn use_image_loading_status(
+    src: MaybeProp<String>,
+    referrer_policy: MaybeProp<String>,
+    cross_origin: MaybeProp<String>,
+) -> ReadSignal<ImageLoadingStatus> {
     let (loading_status, set_loading_status) = signal(ImageLoadingStatus::Idle);
     let is_mounted = StoredValue::new(true);
 
@@ -179,6 +189,15 @@ fn use_image_loading_status(src: MaybeProp<String>) -> ReadSignal<ImageLoadingSt
                     update_status_error.as_ref().unchecked_ref(),
                 )
                 .expect("Error event listener should be added.");
+
+            // Set referrer_policy and cross_origin BEFORE src, since setting src triggers the load.
+            if let Some(referrer_policy) = referrer_policy.get() {
+                image.set_referrer_policy(&referrer_policy);
+            }
+            if let Some(cross_origin) = cross_origin.get() {
+                image.set_cross_origin(Some(&cross_origin));
+            }
+
             image.set_src(&src);
         } else {
             set_loading_status.set(ImageLoadingStatus::Error);
