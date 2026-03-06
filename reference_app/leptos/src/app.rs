@@ -34,6 +34,7 @@ pub fn App() -> impl IntoView {
                     <Route path=path!("/hover-card") view=pages::hover_card::HoverCardPage />
                     <Route path=path!("/navigation-menu") view=pages::navigation_menu::NavigationMenuPage />
                     <Route path=path!("/one-time-password-field") view=pages::one_time_password_field::OneTimePasswordFieldPage />
+                    <Route path=path!("/password-toggle-field") view=pages::password_toggle_field::PasswordToggleFieldPage />
                     <Route path=path!("/popper") view=pages::popper::PopperPage />
                     <Route path=path!("/popover") view=pages::popover::PopoverPage />
                     <Route path=path!("/progress") view=pages::progress::ProgressPage />

@@ -13,6 +13,7 @@ pub mod menu;
 pub mod menubar;
 pub mod navigation_menu;
 pub mod one_time_password_field;
+pub mod password_toggle_field;
 pub mod popover;
 pub mod popper;
 pub mod progress;

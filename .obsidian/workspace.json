@@ -23,7 +23,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "notes/leptos-one-time-password-field.md",
+                "file": "notes/leptos-slot.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -38,7 +38,7 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "leptos-one-time-password-field"
+              "title": "leptos-slot"
             }
           }
         ],
@@ -204,26 +204,28 @@
   },
   "active": "3e772ed181e91dea",
   "lastOpenFiles": [
-    "reference_app/cypress/screenshots/one-time-password-field.cy.js/OneTimePasswordField -- keyboard navigation -- Tab leaves the OTP field entirely (failed).png",
-    "reference_app/cypress/screenshots/one-time-password-field.cy.js/OneTimePasswordField -- backspace -- backspace on empty input moves focus to previous input (failed).png",
-    "reference_app/cypress/screenshots/one-time-password-field.cy.js",
-    "reference_app/cypress/screenshots/one-time-password-field.cy.js/OneTimePasswordField -- vertical orientation -- ArrowUp moves to previous input (failed).png",
-    "reference_app/leptos/dist/radix-leptos-reference-app-f8c2c8659b497a46.js",
-    "reference_app/leptos/dist/radix-leptos-reference-app-f8c2c8659b497a46_bg.wasm",
+    "reference_app/leptos/dist/password-toggle-field-7200c5866f405e43.css",
+    "reference_app/leptos/dist/radix-leptos-reference-app-c08030c79a7eba7b_bg.wasm",
+    "reference_app/leptos/dist/radix-leptos-reference-app-c08030c79a7eba7b.js",
+    "target/wasm-bindgen/debug/radix-leptos-reference-app.js",
+    "target/wasm-bindgen/debug/radix-leptos-reference-app_bg.wasm",
+    "target/wasm-bindgen/debug",
+    "target/wasm-bindgen",
+    "target/wasm32-unknown-unknown/debug/radix-leptos-reference-app.d",
+    "target/wasm32-unknown-unknown/debug/radix-leptos-reference-app.wasm",
     "target/wasm32-unknown-unknown/debug/deps/radix_leptos_reference_app-5b8d50b770654b46.wasm",
-    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_reference_app-24yaq7cpnb7f6/s-hgepc4oo1z-1xizrqx-7ejjo19jav89gq3hnzd7n53ab/work-products.bin",
-    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_reference_app-24yaq7cpnb7f6/s-hgepc4oo1z-1xizrqx-7ejjo19jav89gq3hnzd7n53ab/query-cache.bin",
-    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_reference_app-24yaq7cpnb7f6/s-hgepc4oo1z-1xizrqx-7ejjo19jav89gq3hnzd7n53ab/f3fxw3z2p2qmnzxdgllgxao3r.o",
-    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_reference_app-24yaq7cpnb7f6/s-hgepc4oo1z-1xizrqx-7ejjo19jav89gq3hnzd7n53ab/f37ulzmxwvapt9k8oeapwqwd8.o",
-    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_reference_app-24yaq7cpnb7f6/s-hgepc4oo1z-1xizrqx-7ejjo19jav89gq3hnzd7n53ab/f0s2kzot5nmj10ik95mlgnrzb.o",
-    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_reference_app-24yaq7cpnb7f6/s-hgepc4oo1z-1xizrqx-7ejjo19jav89gq3hnzd7n53ab/eyssw00af7boy79yvzy5bk4uv.o",
-    "reference_app/cypress/screenshots/one-time-password-field.cy.js/OneTimePasswordField -- backspace -- Cmd+Backspace clears all inputs and focuses first (failed).png",
-    "reference_app/cypress/screenshots/one-time-password-field.cy.js/OneTimePasswordField -- backspace -- backspace on filled input removes char and shifts values left (failed).png",
-    "reference_app/cypress/screenshots/one-time-password-field.cy.js/OneTimePasswordField -- keyboard navigation -- ArrowLeft moves to previous input (failed).png",
-    "reference_app/cypress/screenshots/one-time-password-field.cy.js/OneTimePasswordField -- delete -- delete on filled input removes char and shifts values left, keeps focus (failed).png",
-    "reference_app/cypress/screenshots/one-time-password-field.cy.js/OneTimePasswordField -- focus management -- clicking redirects to last filled + 1 position (failed).png",
-    "reference_app/cypress/screenshots/one-time-password-field.cy.js/OneTimePasswordField -- focus management -- clicking an input focuses the last selectable position (failed).png",
-    "reference_app/cypress/screenshots/one-time-password-field.cy.js/OneTimePasswordField -- backspace -- backspace on filled input clears char and moves focus back (failed).png",
+    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_reference_app-24yaq7cpnb7f6/s-hgf1l3jjhk-17e5rs5-86h5b5twdgd2g7q7re7v4kpy2/work-products.bin",
+    "reference_app/cypress/screenshots/password-toggle-field.cy.js/PasswordToggleField -- accessibility -- no implicit aria-label when toggle has text content (slot variant) (failed).png",
+    "reference_app/cypress/screenshots/password-toggle-field.cy.js/PasswordToggleField -- accessibility -- implicit aria-label changes to Hide password when visible (icon variant) (failed).png",
+    "reference_app/cypress/screenshots/password-toggle-field.cy.js/PasswordToggleField -- accessibility -- implicit aria-label is Show password when hidden (icon variant) (failed).png",
+    "reference_app/cypress/screenshots/password-toggle-field.cy.js/PasswordToggleField -- accessibility -- icon toggle has aria-controls pointing to input id (failed).png",
+    "reference_app/cypress/screenshots/password-toggle-field.cy.js/PasswordToggleField -- slot rendering -- slot variant toggles input type (failed).png",
+    "reference_app/cypress/screenshots/password-toggle-field.cy.js/PasswordToggleField -- slot rendering -- shows Hide text when visible (failed).png",
+    "reference_app/cypress/screenshots/password-toggle-field.cy.js/PasswordToggleField -- slot rendering -- shows Show text when hidden (failed).png",
+    "reference_app/cypress/screenshots/password-toggle-field.cy.js/PasswordToggleField -- form integration -- resets visibility to hidden on form reset (failed).png",
+    "reference_app/cypress/screenshots/password-toggle-field.cy.js/PasswordToggleField -- form integration -- resets visibility to hidden on form submit (failed).png",
+    "notes/leptos-one-time-password-field.md",
+    "reference_app/cypress/screenshots/one-time-password-field.cy.js/OneTimePasswordField -- keyboard navigation -- Tab leaves the OTP field entirely (failed).png",
     "target/doc/static.files/SourceSerif4-LICENSE-a2cfd9d5.md",
     "notes/leptos-menubar.md",
     "notes/api-comparison.md",
@@ -248,7 +250,6 @@
     "packages/primitives/leptos-old/focus-scope/README.md",
     "packages/primitives/leptos-old/focus-guards/README.md",
     "packages/primitives/leptos-old/dismissable-layer/README.md",
-    "packages/primitives/leptos-old/collection/README.md",
     "Untitled.canvas"
   ]
 }
