@@ -6,7 +6,7 @@ describe('Menubar', () => {
     }
 
     function getTrigger(name) {
-        return cy.findByRole('menuitem', {name});
+        return cy.findByRole('menuitem', { name });
     }
 
     function shouldHaveMenuOpen() {
@@ -20,6 +20,9 @@ describe('Menubar', () => {
     function openMenu(name) {
         getTrigger(name).click();
         shouldHaveMenuOpen();
+        // Ensure focus has settled inside the menu before proceeding.
+        // Without this, events may fire before the menu is fully interactive.
+        cy.focused().closest('[role=menu]').should('exist');
     }
 
     beforeEach(() => {
@@ -130,34 +133,34 @@ describe('Menubar', () => {
         it('CheckboxItem data-state toggles checked/unchecked', () => {
             openMenu('View');
             // "Always Show Bookmarks Bar" starts checked (bookmarks=true)
-            cy.findByRole('menuitemcheckbox', {name: /Bookmarks/}).should(
+            cy.findByRole('menuitemcheckbox', { name: /Bookmarks/ }).should(
                 'have.attr',
                 'data-state',
                 'checked'
             );
             // "Always Show Full URLs" starts unchecked (urls=false)
-            cy.findByRole('menuitemcheckbox', {name: /URLs/}).should(
+            cy.findByRole('menuitemcheckbox', { name: /URLs/ }).should(
                 'have.attr',
                 'data-state',
                 'unchecked'
             );
             // Toggle URLs checkbox
-            cy.findByRole('menuitemcheckbox', {name: /URLs/}).click();
+            cy.findByRole('menuitemcheckbox', { name: /URLs/ }).click();
             // Menu closes after click; reopen to verify
             openMenu('View');
-            cy.findByRole('menuitemcheckbox', {name: /URLs/}).should('have.attr', 'data-state', 'checked');
+            cy.findByRole('menuitemcheckbox', { name: /URLs/ }).should('have.attr', 'data-state', 'checked');
         });
 
         it('RadioItem data-state reflects selection', () => {
             openMenu('View');
             // "Normal" is default selected — use regex since indicator text changes accessible name
-            cy.findByRole('menuitemradio', {name: /Normal/}).should('have.attr', 'data-state', 'checked');
-            cy.findByRole('menuitemradio', {name: /Compact/}).should('have.attr', 'data-state', 'unchecked');
+            cy.findByRole('menuitemradio', { name: /Normal/ }).should('have.attr', 'data-state', 'checked');
+            cy.findByRole('menuitemradio', { name: /Compact/ }).should('have.attr', 'data-state', 'unchecked');
             // Select Compact
-            cy.findByRole('menuitemradio', {name: /Compact/}).click();
+            cy.findByRole('menuitemradio', { name: /Compact/ }).click();
             openMenu('View');
-            cy.findByRole('menuitemradio', {name: /Compact/}).should('have.attr', 'data-state', 'checked');
-            cy.findByRole('menuitemradio', {name: /Normal/}).should('have.attr', 'data-state', 'unchecked');
+            cy.findByRole('menuitemradio', { name: /Compact/ }).should('have.attr', 'data-state', 'checked');
+            cy.findByRole('menuitemradio', { name: /Normal/ }).should('have.attr', 'data-state', 'unchecked');
         });
     });
 
@@ -271,7 +274,7 @@ describe('Menubar', () => {
 
         it('click outside closes menu', () => {
             openMenu('File');
-            cy.get('body').realClick({position: {x: 1, y: 1}});
+            cy.get('body').realClick({ position: { x: 1, y: 1 } });
             shouldHaveMenuClosed();
         });
 
@@ -364,21 +367,21 @@ describe('Menubar', () => {
         it('click toggles checked state (readout updates)', () => {
             cy.findByTestId('checkbox-bookmarks').should('have.text', 'true');
             openMenu('View');
-            cy.findByRole('menuitemcheckbox', {name: /Bookmarks/}).click();
+            cy.findByRole('menuitemcheckbox', { name: /Bookmarks/ }).click();
             cy.findByTestId('checkbox-bookmarks').should('have.text', 'false');
             openMenu('View');
-            cy.findByRole('menuitemcheckbox', {name: /Bookmarks/}).click();
+            cy.findByRole('menuitemcheckbox', { name: /Bookmarks/ }).click();
             cy.findByTestId('checkbox-bookmarks').should('have.text', 'true');
         });
 
         it('data-state reflects checked/unchecked', () => {
             cy.findByTestId('checkbox-urls').should('have.text', 'false');
             openMenu('View');
-            cy.findByRole('menuitemcheckbox', {name: /URLs/}).should('have.attr', 'data-state', 'unchecked');
-            cy.findByRole('menuitemcheckbox', {name: /URLs/}).click();
+            cy.findByRole('menuitemcheckbox', { name: /URLs/ }).should('have.attr', 'data-state', 'unchecked');
+            cy.findByRole('menuitemcheckbox', { name: /URLs/ }).click();
             cy.findByTestId('checkbox-urls').should('have.text', 'true');
             openMenu('View');
-            cy.findByRole('menuitemcheckbox', {name: /URLs/}).should('have.attr', 'data-state', 'checked');
+            cy.findByRole('menuitemcheckbox', { name: /URLs/ }).should('have.attr', 'data-state', 'checked');
         });
     });
 
@@ -389,24 +392,24 @@ describe('Menubar', () => {
             cy.findByTestId('radio-size').should('have.text', 'normal');
             openMenu('View');
             // Use regex since indicator text changes accessible name when checked
-            cy.findByRole('menuitemradio', {name: /Compact/}).click();
+            cy.findByRole('menuitemradio', { name: /Compact/ }).click();
             cy.findByTestId('radio-size').should('have.text', 'compact');
         });
 
         it('only one radio can be checked at a time', () => {
             openMenu('View');
-            cy.findByRole('menuitemradio', {name: /Normal/}).should('have.attr', 'data-state', 'checked');
-            cy.findByRole('menuitemradio', {name: /Compact/}).should('have.attr', 'data-state', 'unchecked');
-            cy.findByRole('menuitemradio', {name: /Compact/}).click();
+            cy.findByRole('menuitemradio', { name: /Normal/ }).should('have.attr', 'data-state', 'checked');
+            cy.findByRole('menuitemradio', { name: /Compact/ }).should('have.attr', 'data-state', 'unchecked');
+            cy.findByRole('menuitemradio', { name: /Compact/ }).click();
             openMenu('View');
-            cy.findByRole('menuitemradio', {name: /Compact/}).should('have.attr', 'data-state', 'checked');
-            cy.findByRole('menuitemradio', {name: /Normal/}).should('have.attr', 'data-state', 'unchecked');
+            cy.findByRole('menuitemradio', { name: /Compact/ }).should('have.attr', 'data-state', 'checked');
+            cy.findByRole('menuitemradio', { name: /Normal/ }).should('have.attr', 'data-state', 'unchecked');
         });
 
         it('data-state reflects selection', () => {
             openMenu('View');
-            cy.findByRole('menuitemradio', {name: /Normal/}).should('have.attr', 'data-state', 'checked');
-            cy.findByRole('menuitemradio', {name: /Compact/}).should('have.attr', 'data-state', 'unchecked');
+            cy.findByRole('menuitemradio', { name: /Normal/ }).should('have.attr', 'data-state', 'checked');
+            cy.findByRole('menuitemradio', { name: /Compact/ }).should('have.attr', 'data-state', 'unchecked');
         });
     });
 
@@ -508,7 +511,7 @@ describe('Menubar', () => {
 
         it('disabled item does not trigger onSelect', () => {
             openMenu('Edit');
-            cy.findByText('Undo').click({force: true});
+            cy.findByText('Undo').click({ force: true });
             // Menu should still be open (disabled items don't close menu)
             // and last-action should be empty
             cy.findByTestId('last-action').should('have.text', '');

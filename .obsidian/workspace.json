@@ -11,9 +11,19 @@
             "id": "8c5a22cb96fe50b9",
             "type": "leaf",
             "state": {
+              "type": "graph",
+              "state": {},
+              "icon": "lucide-git-fork",
+              "title": "Graph view"
+            }
+          },
+          {
+            "id": "3e772ed181e91dea",
+            "type": "leaf",
+            "state": {
               "type": "markdown",
               "state": {
-                "file": "notes/leptos-menubar.md",
+                "file": "notes/leptos-one-time-password-field.md",
                 "mode": "source",
                 "source": false,
                 "backlinks": true,
@@ -28,10 +38,11 @@
                 }
               },
               "icon": "lucide-file",
-              "title": "leptos-menubar"
+              "title": "leptos-one-time-password-field"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -191,25 +202,30 @@
       "bases:Create new base": false
     }
   },
-  "active": "8c5a22cb96fe50b9",
+  "active": "3e772ed181e91dea",
   "lastOpenFiles": [
-    "reference_app/cypress/screenshots/menubar.cy.js/Menubar -- inter-menu navigation -- ArrowLeft wraps from first to last menu (failed).png",
-    "reference_app/cypress/screenshots/menubar.cy.js",
-    "reference_app/cypress/screenshots/menubar.cy.js/Menubar -- submenus -- hover on SubTrigger opens submenu (failed).png",
-    "reference_app/cypress/screenshots/menubar.cy.js/Menubar -- submenus -- ArrowRight opens submenu (failed).png",
-    "reference_app/cypress/screenshots/debug-accordion.cy.js/Debug Accordion Header -- check value context directly (failed).png",
-    "reference_app/cypress/screenshots/debug-accordion.cy.js",
-    "reference_app/cypress/screenshots/popover.cy.js/Popover -- modal variant -- keyboard opencloseescape work (failed).png",
-    "reference_app/cypress/screenshots/popover.cy.js",
-    "reference_app/cypress/screenshots/menubar.cy.js/Menubar -- submenus -- Escape from submenu closes entire menu tree (failed).png",
-    "reference_app/cypress/screenshots/menubar.cy.js/Menubar -- submenus -- ArrowLeft closes submenu (returns to parent) (failed).png",
-    "reference_app/leptos/dist/radix-leptos-reference-app-797f8b46f6167c91.js",
-    "reference_app/leptos/dist/radix-leptos-reference-app-797f8b46f6167c91_bg.wasm",
-    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_reference_app-24yaq7cpnb7f6/s-hgdlj5c0tu-1llme7h-cn1v6q63woma3b1zvmi8o9phu/work-products.bin",
-    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_reference_app-24yaq7cpnb7f6/s-hgdlj5c0tu-1llme7h-cn1v6q63woma3b1zvmi8o9phu/query-cache.bin",
-    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_reference_app-24yaq7cpnb7f6/s-hgdlj5c0tu-1llme7h-cn1v6q63woma3b1zvmi8o9phu/f57a5382bkn05cw2pd4fw5ay4.o",
-    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_reference_app-24yaq7cpnb7f6/s-hgdlj5c0tu-1llme7h-cn1v6q63woma3b1zvmi8o9phu/f3fxw3z2p2qmnzxdgllgxao3r.o",
-    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_reference_app-24yaq7cpnb7f6/s-hgdlj5c0tu-1llme7h-cn1v6q63woma3b1zvmi8o9phu/f37ulzmxwvapt9k8oeapwqwd8.o",
+    "reference_app/cypress/screenshots/one-time-password-field.cy.js/OneTimePasswordField -- keyboard navigation -- Tab leaves the OTP field entirely (failed).png",
+    "reference_app/cypress/screenshots/one-time-password-field.cy.js/OneTimePasswordField -- backspace -- backspace on empty input moves focus to previous input (failed).png",
+    "reference_app/cypress/screenshots/one-time-password-field.cy.js",
+    "reference_app/cypress/screenshots/one-time-password-field.cy.js/OneTimePasswordField -- vertical orientation -- ArrowUp moves to previous input (failed).png",
+    "reference_app/leptos/dist/radix-leptos-reference-app-f8c2c8659b497a46.js",
+    "reference_app/leptos/dist/radix-leptos-reference-app-f8c2c8659b497a46_bg.wasm",
+    "target/wasm32-unknown-unknown/debug/deps/radix_leptos_reference_app-5b8d50b770654b46.wasm",
+    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_reference_app-24yaq7cpnb7f6/s-hgepc4oo1z-1xizrqx-7ejjo19jav89gq3hnzd7n53ab/work-products.bin",
+    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_reference_app-24yaq7cpnb7f6/s-hgepc4oo1z-1xizrqx-7ejjo19jav89gq3hnzd7n53ab/query-cache.bin",
+    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_reference_app-24yaq7cpnb7f6/s-hgepc4oo1z-1xizrqx-7ejjo19jav89gq3hnzd7n53ab/f3fxw3z2p2qmnzxdgllgxao3r.o",
+    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_reference_app-24yaq7cpnb7f6/s-hgepc4oo1z-1xizrqx-7ejjo19jav89gq3hnzd7n53ab/f37ulzmxwvapt9k8oeapwqwd8.o",
+    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_reference_app-24yaq7cpnb7f6/s-hgepc4oo1z-1xizrqx-7ejjo19jav89gq3hnzd7n53ab/f0s2kzot5nmj10ik95mlgnrzb.o",
+    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_reference_app-24yaq7cpnb7f6/s-hgepc4oo1z-1xizrqx-7ejjo19jav89gq3hnzd7n53ab/eyssw00af7boy79yvzy5bk4uv.o",
+    "reference_app/cypress/screenshots/one-time-password-field.cy.js/OneTimePasswordField -- backspace -- Cmd+Backspace clears all inputs and focuses first (failed).png",
+    "reference_app/cypress/screenshots/one-time-password-field.cy.js/OneTimePasswordField -- backspace -- backspace on filled input removes char and shifts values left (failed).png",
+    "reference_app/cypress/screenshots/one-time-password-field.cy.js/OneTimePasswordField -- keyboard navigation -- ArrowLeft moves to previous input (failed).png",
+    "reference_app/cypress/screenshots/one-time-password-field.cy.js/OneTimePasswordField -- delete -- delete on filled input removes char and shifts values left, keeps focus (failed).png",
+    "reference_app/cypress/screenshots/one-time-password-field.cy.js/OneTimePasswordField -- focus management -- clicking redirects to last filled + 1 position (failed).png",
+    "reference_app/cypress/screenshots/one-time-password-field.cy.js/OneTimePasswordField -- focus management -- clicking an input focuses the last selectable position (failed).png",
+    "reference_app/cypress/screenshots/one-time-password-field.cy.js/OneTimePasswordField -- backspace -- backspace on filled input clears char and moves focus back (failed).png",
+    "target/doc/static.files/SourceSerif4-LICENSE-a2cfd9d5.md",
+    "notes/leptos-menubar.md",
     "notes/api-comparison.md",
     "packages/primitives/leptos-old/visually-hidden/README.md",
     "packages/primitives/leptos-old/use-size/README.md",
@@ -233,11 +249,6 @@
     "packages/primitives/leptos-old/focus-guards/README.md",
     "packages/primitives/leptos-old/dismissable-layer/README.md",
     "packages/primitives/leptos-old/collection/README.md",
-    "packages/primitives/leptos-old/compose-refs/README.md",
-    "packages/primitives/leptos-old/checkbox/README.md",
-    "reference_app/cypress/screenshots/toolbar.cy.js/Toolbar -- keyboard navigation -- Tab again leaves toolbar (failed).png",
-    "reference_app/cypress/screenshots/scroll-area.cy.js/horizontal scrollbar has data-orientation=horizontal -- after each hook (failed).png",
-    "reference_app/cypress/screenshots/scroll-area.cy.js/vertical scrollbar has data-orientation=vertical -- after each hook (failed).png",
     "Untitled.canvas"
   ]
 }

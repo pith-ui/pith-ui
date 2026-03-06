@@ -1,0 +1,92 @@
+use leptos::prelude::*;
+use radix_leptos_primitives::one_time_password_field::*;
+use radix_leptos_primitives::roving_focus::Orientation;
+
+#[component]
+pub fn OneTimePasswordFieldPage() -> impl IntoView {
+    let (value, set_value) = signal(String::new());
+    let (disabled, set_disabled) = signal(false);
+    let (read_only, set_read_only) = signal(false);
+    let (vertical, set_vertical) = signal(false);
+    let (submitted, set_submitted) = signal(String::new());
+
+    let on_submit = move |event: web_sys::SubmitEvent| {
+        event.prevent_default();
+
+        let form = event.target().and_then(|t| {
+            use web_sys::wasm_bindgen::JsCast;
+            t.dyn_into::<web_sys::HtmlFormElement>().ok()
+        });
+
+        if let Some(form) = form
+            && let Ok(form_data) = web_sys::FormData::new_with_form(&form)
+        {
+            let code = form_data.get("code").as_string().unwrap_or_default();
+            set_submitted.set(format!("Submitted: {code}"));
+        }
+    };
+
+    let on_reset = move |_: web_sys::Event| {
+        set_value.set(String::new());
+        set_submitted.set(String::new());
+    };
+
+    view! {
+        <form on:submit=on_submit on:reset=on_reset>
+            <OneTimePasswordField
+                attr:class="otp-root"
+                value=Signal::derive(move || Some(value.get()))
+                on_value_change=Callback::new(move |v: String| set_value.set(v))
+                disabled=Signal::derive(move || disabled.get())
+                read_only=Signal::derive(move || read_only.get())
+                orientation=Signal::derive(move || if vertical.get() { Orientation::Vertical } else { Orientation::Horizontal })
+                name="code"
+            >
+                <OneTimePasswordFieldInput />
+                <OneTimePasswordFieldInput />
+                <OneTimePasswordFieldInput />
+                <OneTimePasswordFieldInput />
+                <OneTimePasswordFieldInput />
+                <OneTimePasswordFieldInput />
+                <OneTimePasswordFieldHiddenInput />
+            </OneTimePasswordField>
+
+            <div class="controls">
+                <button type="submit">"submit"</button>
+                <button type="reset">"reset"</button>
+            </div>
+        </form>
+
+        <output data-testid="otp-value">{move || value.get()}</output>
+        <pre data-testid="form-result">{move || submitted.get()}</pre>
+
+        <div class="controls">
+            <label>
+                <input
+                    type="checkbox"
+                    prop:checked=move || disabled.get()
+                    on:change=move |ev| set_disabled.set(event_target_checked(&ev))
+                />
+                " disabled"
+            </label>
+            <label>
+                <input
+                    type="checkbox"
+                    prop:checked=move || read_only.get()
+                    on:change=move |ev| set_read_only.set(event_target_checked(&ev))
+                />
+                " read-only"
+            </label>
+            <label>
+                <input
+                    type="checkbox"
+                    prop:checked=move || vertical.get()
+                    on:change=move |ev| set_vertical.set(event_target_checked(&ev))
+                />
+                " vertical"
+            </label>
+        </div>
+
+        <button data-testid="outside">"outside"</button>
+    }
+}

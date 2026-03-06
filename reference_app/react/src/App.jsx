@@ -13,6 +13,7 @@ import Menu from './pages/Menu';
 import Menubar from './pages/Menubar';
 import HoverCard from './pages/HoverCard';
 import NavigationMenu from './pages/NavigationMenu';
+import OneTimePasswordField from './pages/OneTimePasswordField';
 import Popover from './pages/Popover';
 import Popper from './pages/Popper';
 import Progress from './pages/Progress';
@@ -74,6 +75,9 @@ function Index() {
                     </li>
                     <li>
                         <Link to="/navigation-menu">Navigation Menu</Link>
+                    </li>
+                    <li>
+                        <Link to="/one-time-password-field">One-Time Password Field</Link>
                     </li>
                     <li>
                         <Link to="/popper">Popper</Link>
@@ -144,6 +148,7 @@ export default function App() {
             <Route path="/menubar" element={<Menubar />} />
             <Route path="/hover-card" element={<HoverCard />} />
             <Route path="/navigation-menu" element={<NavigationMenu />} />
+            <Route path="/one-time-password-field" element={<OneTimePasswordField />} />
             <Route path="/popper" element={<Popper />} />
             <Route path="/popover" element={<Popover />} />
             <Route path="/progress" element={<Progress />} />
