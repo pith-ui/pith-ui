@@ -115,4 +115,30 @@ describe('Hover Card', () => {
             cy.findByTestId('hover-card-content').should('have.attr', 'data-align', 'center');
         });
     });
+
+    // ── Internal Styles ─────────────────────────────────────
+
+    describe('internal styles', () => {
+        it('content has --radix-hover-card-content-available-width', () => {
+            cy.findByTestId('hover-card-trigger').realHover();
+            shouldBeOpen();
+            cy.findByTestId('hover-card-content').then(($el) => {
+                const value = getComputedStyle($el[0]).getPropertyValue(
+                    '--radix-hover-card-content-available-width'
+                );
+                expect(value.trim()).to.not.be.empty;
+            });
+        });
+
+        it('content has --radix-hover-card-content-available-height', () => {
+            cy.findByTestId('hover-card-trigger').realHover();
+            shouldBeOpen();
+            cy.findByTestId('hover-card-content').then(($el) => {
+                const value = getComputedStyle($el[0]).getPropertyValue(
+                    '--radix-hover-card-content-available-height'
+                );
+                expect(value.trim()).to.not.be.empty;
+            });
+        });
+    });
 });

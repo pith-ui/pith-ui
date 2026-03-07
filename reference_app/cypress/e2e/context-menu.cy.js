@@ -286,4 +286,20 @@ describe('Context Menu', () => {
             cy.findByText('Item 2').should('have.attr', 'data-disabled');
         });
     });
+
+    // ── 9. Internal Styles ──────────────────────────────────
+
+    describe('internal styles', () => {
+        // NOTE: -webkit-touch-callout is an iOS Safari property not recognized by
+        // Chromium/Electron, so we cannot assert its value in headless Cypress.
+        // We verify that user styles coexist with the trigger's internal styles.
+
+        it('user background coexists with trigger internal styles', () => {
+            cy.findByTestId('styled-context-trigger').should(
+                'have.css',
+                'background-color',
+                'rgb(255, 99, 71)'
+            );
+        });
+    });
 });

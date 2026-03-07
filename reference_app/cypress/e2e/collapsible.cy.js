@@ -140,7 +140,39 @@ describe('Collapsible', () => {
         });
     });
 
-    // ── 6. Controlled Variant ───────────────────────────────
+    // ── 6. Internal Styles (CSS custom properties) ──────────
+
+    describe('internal styles', () => {
+        it('--radix-collapsible-content-height matches actual height', () => {
+            cy.findByTestId('styled-collapsible-content').then(($el) => {
+                const height = $el[0].getBoundingClientRect().height;
+                const cssVar = getComputedStyle($el[0]).getPropertyValue(
+                    '--radix-collapsible-content-height'
+                );
+                expect(cssVar.trim()).to.equal(`${height}px`);
+            });
+        });
+
+        it('--radix-collapsible-content-width matches actual width', () => {
+            cy.findByTestId('styled-collapsible-content').then(($el) => {
+                const width = $el[0].getBoundingClientRect().width;
+                const cssVar = getComputedStyle($el[0]).getPropertyValue(
+                    '--radix-collapsible-content-width'
+                );
+                expect(cssVar.trim()).to.equal(`${width}px`);
+            });
+        });
+
+        it('user style is preserved alongside internal CSS variables', () => {
+            cy.findByTestId('styled-collapsible-content').should(
+                'have.css',
+                'background-color',
+                'rgb(255, 99, 71)'
+            );
+        });
+    });
+
+    // ── 7. Controlled Variant ───────────────────────────────
 
     describe('controlled variant', () => {
         it('external open checkbox controls collapsible state', () => {

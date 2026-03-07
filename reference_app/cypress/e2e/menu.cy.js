@@ -613,4 +613,12 @@ describe('Menu', () => {
             cy.findByText('Option B').should('have.attr', 'data-highlighted');
         });
     });
+
+    // ── Internal Styles ─────────────────────────────────────
+
+    describe('internal styles', () => {
+        it('menu content has outline: none', () => {
+            getMenu().should('have.css', 'outline-style', 'none');
+        });
+    });
 });

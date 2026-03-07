@@ -320,4 +320,22 @@ describe('Tabs', () => {
             cy.findByRole('tab', {name: 'Tab 2'}).should('have.attr', 'aria-selected', 'false');
         });
     });
+
+    // ── Internal Styles ─────────────────────────────────────
+
+    describe('internal styles', () => {
+        it('initially active tab content has animation-duration: 0s to prevent mount animation', () => {
+            // TabsContent suppresses mount animation by setting animation-duration: 0s
+            cy.findByText('Content 1').should('have.css', 'animation-duration', '0s');
+        });
+
+        it('newly activated tab content does not have animation-duration: 0s', () => {
+            // Switch to Tab 3 — its content should animate normally
+            cy.findByRole('tab', {name: 'Tab 3'}).click();
+            cy.findByText('Content 3').then(($el) => {
+                const inlineStyle = $el[0].style.cssText;
+                expect(inlineStyle).to.not.contain('animation-duration');
+            });
+        });
+    });
 });

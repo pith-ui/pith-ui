@@ -408,6 +408,7 @@ pub(super) fn MenuContentImpl(
     let (current_item_id, set_current_item_id) = signal::<Option<String>>(None);
     let content_ref = AnyNodeRef::new();
     let composed_refs = use_composed_refs(vec![node_ref, content_ref]);
+    let composed_refs = use_internal_styles(composed_refs, &[("outline", "none")]);
     let timer = RwSignal::new(0);
     let search = RwSignal::new("".to_string());
     let pointer_grace_timer = RwSignal::new(0);
@@ -846,14 +847,7 @@ pub(super) fn MenuContentImpl(
                             as_child=as_child
                             node_ref=composed_refs
                             attr:class=move || class.get().unwrap_or_default()
-                            attr:style=move || {
-                                let extra = content_style.get().unwrap_or_default();
-                                if extra.is_empty() {
-                                    "outline: none;".to_string()
-                                } else {
-                                    format!("outline: none; {extra}")
-                                }
-                            }
+                            attr:style=move || content_style.get().unwrap_or_default()
                             attr:role="menu"
                             attr:aria-orientation="vertical"
                             attr:data-state=move || open_closed_state(context.open.get())

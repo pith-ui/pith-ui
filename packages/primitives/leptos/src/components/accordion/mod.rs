@@ -6,6 +6,7 @@ use crate::support::collection::{
     CollectionItemSlot, CollectionProvider, CollectionSlot, use_collection,
 };
 use crate::support::compose_refs::use_composed_refs;
+use crate::support::use_internal_styles::use_internal_styles;
 use crate::support::direction::{Direction, use_direction};
 use crate::support::id::use_id;
 use crate::support::primitive::{Primitive, data_attr, open_closed_state, prop_or_default};

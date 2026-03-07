@@ -1,5 +1,6 @@
 use crate::support::aria_hidden::{hide_others, unhide_others};
 use crate::support::compose_refs::use_composed_refs;
+use crate::support::use_internal_styles::use_internal_styles;
 use crate::support::dismissable_layer::DismissableLayer;
 use crate::support::focus_guards::use_focus_guards;
 use crate::support::focus_scope::FocusScope;

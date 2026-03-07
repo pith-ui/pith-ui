@@ -468,4 +468,28 @@ describe('Dropdown Menu', () => {
             cy.findByRole('menu').should('not.exist');
         });
     });
+
+    // ── Internal Styles ─────────────────────────────────────
+
+    describe('internal styles', () => {
+        it('content has --radix-dropdown-menu-content-available-width', () => {
+            openMenu();
+            cy.findByRole('menu').then(($el) => {
+                const value = getComputedStyle($el[0]).getPropertyValue(
+                    '--radix-dropdown-menu-content-available-width'
+                );
+                expect(value.trim()).to.not.be.empty;
+            });
+        });
+
+        it('content has --radix-dropdown-menu-content-available-height', () => {
+            openMenu();
+            cy.findByRole('menu').then(($el) => {
+                const value = getComputedStyle($el[0]).getPropertyValue(
+                    '--radix-dropdown-menu-content-available-height'
+                );
+                expect(value.trim()).to.not.be.empty;
+            });
+        });
+    });
 });

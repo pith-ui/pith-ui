@@ -4,6 +4,7 @@ use std::rc::Rc;
 pub use crate::menu::CheckedState;
 use crate::menu::*;
 use crate::support::compose_refs::use_composed_refs;
+use crate::support::use_internal_styles::use_internal_styles;
 use crate::support::id::use_id;
 use crate::support::primitive::{
     Primitive, compose_callbacks, data_attr, prop_or, prop_or_default, wrap_callback,

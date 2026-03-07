@@ -11,7 +11,10 @@ export default function ContextMenuPage() {
     return (
         <>
             <ContextMenu.Root>
-                <ContextMenu.Trigger className="context-trigger" data-testid="context-trigger">
+                <ContextMenu.Trigger
+                    className="context-trigger"
+                    data-testid="context-trigger"
+                >
                     Right click here
                 </ContextMenu.Trigger>
                 <ContextMenu.Portal>
@@ -112,6 +115,19 @@ export default function ContextMenuPage() {
             <span data-testid="radio-value">{radioValue}</span>
 
             <br />
+            <br />
+
+            {/* Styled trigger for internal styles testing */}
+            <ContextMenu.Root>
+                <ContextMenu.Trigger
+                    className="context-trigger"
+                    data-testid="styled-context-trigger"
+                    style={{background: 'tomato'}}
+                >
+                    Styled trigger
+                </ContextMenu.Trigger>
+            </ContextMenu.Root>
+
             <br />
 
             <button data-testid="outside-button">outside</button>

@@ -310,43 +310,33 @@ fn HoverCardContentImpl(
 
     let on_dismiss = context.on_dismiss;
 
-    // Apply custom CSS properties and user-select via Effect rather than attr:style.
-    // Caller attributes (including attr:style from stories) are forwarded through the
-    // component chain to the inner Primitive. Using attr:style here would conflict with
-    // the caller's attr:style (last one wins). An Effect uses setProperty() which sets
-    // individual CSS properties without affecting the style attribute string.
-    Effect::new(move |_| {
-        if let Some(el) = content_ref.get() {
-            let el: web_sys::HtmlElement = el.unchecked_into();
-            let style = el.style();
-            // Re-namespace exposed content custom properties
-            let _ = style.set_property(
-                "--radix-hover-card-content-transform-origin",
-                "var(--radix-popper-transform-origin)",
-            );
-            let _ = style.set_property(
-                "--radix-hover-card-content-available-width",
-                "var(--radix-popper-available-width)",
-            );
-            let _ = style.set_property(
-                "--radix-hover-card-content-available-height",
-                "var(--radix-popper-available-height)",
-            );
-            let _ = style.set_property(
-                "--radix-hover-card-trigger-width",
-                "var(--radix-popper-anchor-width)",
-            );
-            let _ = style.set_property(
-                "--radix-hover-card-trigger-height",
-                "var(--radix-popper-anchor-height)",
-            );
-            if contain_selection.get() {
-                let _ = style.set_property("user-select", "text");
-                let _ = style.set_property("-webkit-user-select", "text");
-            } else {
-                let _ = style.remove_property("user-select");
-                let _ = style.remove_property("-webkit-user-select");
-            }
+    let composed_refs = use_internal_styles_effect(composed_refs, move |style| {
+        let _ = style.set_property(
+            "--radix-hover-card-content-transform-origin",
+            "var(--radix-popper-transform-origin)",
+        );
+        let _ = style.set_property(
+            "--radix-hover-card-content-available-width",
+            "var(--radix-popper-available-width)",
+        );
+        let _ = style.set_property(
+            "--radix-hover-card-content-available-height",
+            "var(--radix-popper-available-height)",
+        );
+        let _ = style.set_property(
+            "--radix-hover-card-trigger-width",
+            "var(--radix-popper-anchor-width)",
+        );
+        let _ = style.set_property(
+            "--radix-hover-card-trigger-height",
+            "var(--radix-popper-anchor-height)",
+        );
+        if contain_selection.get() {
+            let _ = style.set_property("user-select", "text");
+            let _ = style.set_property("-webkit-user-select", "text");
+        } else {
+            let _ = style.remove_property("user-select");
+            let _ = style.remove_property("-webkit-user-select");
         }
     });
 

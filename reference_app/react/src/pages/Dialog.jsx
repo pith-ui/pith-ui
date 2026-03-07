@@ -14,6 +14,7 @@ export default function DialogPage() {
                 <Dialog.Trigger>open</Dialog.Trigger>
                 <Dialog.Portal>
                     <Dialog.Overlay
+                        data-testid="overlay"
                         className={[
                             'dialog-overlay',
                             animated && 'dialog-animated-overlay',
@@ -41,6 +42,22 @@ export default function DialogPage() {
                                 </button>
                             </div>
                         )}
+                    </Dialog.Content>
+                </Dialog.Portal>
+            </Dialog.Root>
+
+            {/* Second dialog for internal styles testing */}
+            <Dialog.Root>
+                <Dialog.Trigger data-testid="styled-dialog-trigger">open styled</Dialog.Trigger>
+                <Dialog.Portal>
+                    <Dialog.Overlay
+                        data-testid="styled-overlay"
+                        className="dialog-overlay"
+                        style={{background: 'tomato'}}
+                    />
+                    <Dialog.Content className="dialog-content">
+                        <Dialog.Title>styled title</Dialog.Title>
+                        <Dialog.Close>close styled</Dialog.Close>
                     </Dialog.Content>
                 </Dialog.Portal>
             </Dialog.Root>

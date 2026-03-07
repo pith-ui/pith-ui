@@ -233,12 +233,12 @@ fn RovingFocusGroupImpl(
                     element=html::div
                     as_child=as_child
                     node_ref=composed_refs
+                    style:outline="none"
                     attr:tabindex=move || match is_tabbing_back_out.get() || (items_initialized.get() && focusable_items_count.get() == 0) {
                         true => "-1",
                         false => "0",
                     }
                     attr:data-orientation=move || orientation.get().map(|o| o.to_string())
-                    attr:style="outline: none"
                     on:mousedown=compose_callbacks(on_mouse_down.flatten(), Some(Callback::new(move |_: ev::MouseEvent| {
                         let _ = is_click_focus.try_set(true);
                     })), None)

@@ -23,6 +23,18 @@ pub fn CollapsiblePage() -> impl IntoView {
         </Collapsible>
 
         <br />
+
+        // Always-open collapsible for internal styles testing
+        <Collapsible open=true>
+            <CollapsibleContent
+                attr:data-testid="styled-collapsible-content"
+                attr:style="background: tomato"
+            >
+                <p>"Styled collapsible content."</p>
+            </CollapsibleContent>
+        </Collapsible>
+
+        <br />
         <br />
 
         <label>

@@ -13,6 +13,7 @@ pub fn DialogPage() -> impl IntoView {
             <DialogTrigger>"open"</DialogTrigger>
             <DialogPortal>
                 <DialogOverlay
+                    attr:data-testid="overlay"
                     attr:class=move || {
                         let mut classes = vec!["dialog-overlay".to_string()];
                         if animated.get() {
@@ -42,6 +43,22 @@ pub fn DialogPage() -> impl IntoView {
                             </button>
                         </div>
                     </Show>
+                </DialogContent>
+            </DialogPortal>
+        </Dialog>
+
+        // Second dialog for internal styles testing
+        <Dialog>
+            <DialogTrigger attr:data-testid="styled-dialog-trigger">"open styled"</DialogTrigger>
+            <DialogPortal>
+                <DialogOverlay
+                    attr:data-testid="styled-overlay"
+                    attr:class="dialog-overlay"
+                    attr:style="background: tomato"
+                />
+                <DialogContent attr:class="dialog-content">
+                    <DialogTitle>"styled title"</DialogTitle>
+                    <DialogClose>"close styled"</DialogClose>
                 </DialogContent>
             </DialogPortal>
         </Dialog>

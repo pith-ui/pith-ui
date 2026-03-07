@@ -22,6 +22,15 @@ export default function CollapsiblePage() {
             </Collapsible.Root>
 
             <br />
+
+            {/* Always-open collapsible for internal styles testing */}
+            <Collapsible.Root open={true}>
+                <Collapsible.Content data-testid="styled-collapsible-content" style={{background: 'tomato'}}>
+                    <p>Styled collapsible content.</p>
+                </Collapsible.Content>
+            </Collapsible.Root>
+
+            <br />
             <br />
 
             <label>

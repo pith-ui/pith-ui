@@ -141,16 +141,29 @@ pub fn AccordionContent(
     let accordion_context = expect_context::<AccordionImplContextValue>();
     let item_context = expect_context::<AccordionItemContextValue>();
 
+    let composed_ref = use_internal_styles(
+        node_ref,
+        &[
+            (
+                "--radix-accordion-content-height",
+                "var(--radix-collapsible-content-height)",
+            ),
+            (
+                "--radix-accordion-content-width",
+                "var(--radix-collapsible-content-width)",
+            ),
+        ],
+    );
+
     view! {
         <AttributeInterceptor let:attrs>
             <CollapsibleContent
                 force_mount=force_mount
                 as_child=as_child
-                node_ref=node_ref
+                node_ref=composed_ref
                 attr:role="region"
                 attr:aria-labelledby=move || item_context.trigger_id.get()
                 attr:data-orientation=move || accordion_context.orientation.get().to_string()
-                attr:style="--radix-accordion-content-height: var(--radix-collapsible-content-height); --radix-accordion-content-width: var(--radix-collapsible-content-width);"
                 {..attrs}
             >
                 {children.with_value(|children| children.as_ref().map(|children| children()))}

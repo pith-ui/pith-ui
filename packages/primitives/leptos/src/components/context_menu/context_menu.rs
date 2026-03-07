@@ -93,9 +93,9 @@ pub fn ContextMenuTrigger(
             element=html::span
             as_child=as_child
             node_ref=node_ref
+            style:-webkit-touch-callout="none"
             attr:data-state=move || if context.open.get() { "open" } else { "closed" }
             attr:data-disabled=data_attr(disabled)
-            attr:style="-webkit-touch-callout: none;"
             on:contextmenu=move |event: ev::MouseEvent| {
                 if disabled.get_untracked() {
                     return;

@@ -129,4 +129,60 @@ describe('Select (forced open)', () => {
             cy.get('[data-testid="forced-aligned-content"]').should('not.have.attr', 'data-side');
         });
     });
+
+    // ── Internal Styles ─────────────────────────────────────
+
+    describe('internal styles', () => {
+        it('SelectValue has pointer-events: none', () => {
+            // The SelectValue span is inside the trigger
+            cy.get('[data-testid="forced-trigger"]')
+                .find('span[style]')
+                .first()
+                .should('have.css', 'pointer-events', 'none');
+        });
+
+        it('SelectContent (popper) has display: flex and flex-direction: column', () => {
+            cy.get('[data-testid="forced-content"]').should('have.css', 'display', 'flex');
+            cy.get('[data-testid="forced-content"]').should(
+                'have.css',
+                'flex-direction',
+                'column'
+            );
+        });
+
+        it('SelectContent (popper) has outline: none and box-sizing: border-box', () => {
+            cy.get('[data-testid="forced-content"]').should(
+                'have.css',
+                'outline-style',
+                'none'
+            );
+            cy.get('[data-testid="forced-content"]').should(
+                'have.css',
+                'box-sizing',
+                'border-box'
+            );
+        });
+
+        it('SelectContent (popper) has --radix-select-content-available-width', () => {
+            cy.get('[data-testid="forced-content"]').then(($el) => {
+                const value = getComputedStyle($el[0]).getPropertyValue(
+                    '--radix-select-content-available-width'
+                );
+                expect(value.trim()).to.not.be.empty;
+            });
+        });
+
+        it('SelectContent (item-aligned) has box-sizing: border-box and outline: none', () => {
+            cy.get('[data-testid="forced-aligned-content"]').should(
+                'have.css',
+                'box-sizing',
+                'border-box'
+            );
+            cy.get('[data-testid="forced-aligned-content"]').should(
+                'have.css',
+                'outline-style',
+                'none'
+            );
+        });
+    });
 });

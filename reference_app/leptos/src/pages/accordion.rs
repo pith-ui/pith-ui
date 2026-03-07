@@ -35,6 +35,22 @@ fn AccordionItems() -> impl IntoView {
             </AccordionHeader>
             <AccordionContent attr:class="accordion-content">"Content 3"</AccordionContent>
         </AccordionItem>
+        <AccordionItem
+            value="item-styled".to_string()
+            attr:class="accordion-item"
+            attr:data-testid="item-styled"
+        >
+            <AccordionHeader attr:class="accordion-header">
+                <AccordionTrigger attr:class="accordion-trigger">"Styled Item"</AccordionTrigger>
+            </AccordionHeader>
+            <AccordionContent
+                attr:class="accordion-content"
+                attr:data-testid="styled-content"
+                attr:style="background: tomato"
+            >
+                "Styled content"
+            </AccordionContent>
+        </AccordionItem>
     }
 }
 

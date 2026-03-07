@@ -286,4 +286,23 @@ describe('Dialog', () => {
             cy.findByText('1').should('exist');
         });
     });
+
+    // ── 8. Internal Styles ──────────────────────────────────
+
+    describe('internal styles', () => {
+        it('overlay has pointer-events: auto', () => {
+            cy.findByText('open').click();
+            shouldBeOpen();
+            cy.findByTestId('overlay').should('have.css', 'pointer-events', 'auto');
+        });
+
+        it('user background coexists with internal pointer-events on overlay', () => {
+            cy.findByTestId('styled-dialog-trigger').click();
+            cy.findByTestId('styled-overlay').should(
+                'have.css',
+                'background-color',
+                'rgb(255, 99, 71)'
+            );
+        });
+    });
 });

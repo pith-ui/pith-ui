@@ -74,7 +74,6 @@ fn DialogOverlayImpl(
 
     let context = expect_context::<DialogContextValue>();
     let composed_ref = use_composed_refs(vec![node_ref, presence_ref]);
-
     // Body scroll lock: set overflow hidden on body while overlay is mounted
     use_body_scroll_lock();
 
@@ -83,10 +82,10 @@ fn DialogOverlayImpl(
             <Primitive
                 element=html::div
                 as_child=as_child
-                node_ref=composed_ref
                 attr:data-state=move || open_closed_state(context.open.get())
-                attr:style="pointer-events: auto;"
                 {..attrs}
+                node_ref=composed_ref
+                style:pointer-events="auto"
             >
                 {children.with_value(|children| children.as_ref().map(|children| children()))}
             </Primitive>

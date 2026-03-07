@@ -150,7 +150,26 @@ describe('Checkbox', () => {
         });
     });
 
-    // ── 6. Indicator ────────────────────────────────────────
+    // ── 6. Internal Styles ──────────────────────────────────
+
+    describe('internal styles', () => {
+        it('indicator has pointer-events: none', () => {
+            cy.findByRole('checkbox', {name: 'accept terms'}).click();
+            cy.findByRole('checkbox', {name: 'accept terms'})
+                .find('span')
+                .should('have.css', 'pointer-events', 'none');
+        });
+
+        it('user background coexists with internal pointer-events on styled indicator', () => {
+            cy.findByTestId('styled-indicator').should(
+                'have.css',
+                'background-color',
+                'rgb(255, 99, 71)'
+            );
+        });
+    });
+
+    // ── 7. Indicator ────────────────────────────────────────
 
     describe('indicator', () => {
         it('indicator is not visible when unchecked', () => {

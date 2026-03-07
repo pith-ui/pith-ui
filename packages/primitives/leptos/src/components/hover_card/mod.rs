@@ -1,4 +1,5 @@
 use crate::support::compose_refs::use_composed_refs;
+use crate::support::use_internal_styles::use_internal_styles_effect;
 use crate::support::dismissable_layer::DismissableLayer;
 use crate::support::popper::{
     Align, Padding, Popper, PopperAnchor, PopperArrow, PopperContent, Side, Sticky,

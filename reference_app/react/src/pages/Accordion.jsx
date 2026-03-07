@@ -86,6 +86,18 @@ function AccordionItems() {
                 </Accordion.Header>
                 <Accordion.Content className="accordion-content">Content 3</Accordion.Content>
             </Accordion.Item>
+            <Accordion.Item value="item-styled" className="accordion-item" data-testid="item-styled">
+                <Accordion.Header className="accordion-header">
+                    <Accordion.Trigger className="accordion-trigger">Styled Item</Accordion.Trigger>
+                </Accordion.Header>
+                <Accordion.Content
+                    className="accordion-content"
+                    data-testid="styled-content"
+                    style={{background: 'tomato'}}
+                >
+                    Styled content
+                </Accordion.Content>
+            </Accordion.Item>
         </>
     );
 }

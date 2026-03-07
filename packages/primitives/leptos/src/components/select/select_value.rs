@@ -29,7 +29,9 @@ pub fn SelectValue(
                 element=html::span
                 as_child=as_child
                 node_ref=composed_ref
-                attr:style="pointer-events: none;"
+                style:pointer-events="none"
+                // Empty attr to prevent view! macro parse ambiguity with {..attrs}
+                attr:data-radix-select-value=""
                 {..attrs}
             >
                 {move || {

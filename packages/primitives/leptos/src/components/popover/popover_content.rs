@@ -469,8 +469,13 @@ fn PopoverContentImpl(
     let children = StoredValue::new(children);
 
     let context = expect_context::<PopoverContextValue>();
-    let content_ref = AnyNodeRef::new();
-    let composed_refs = use_composed_refs(vec![node_ref, content_ref]);
+    let composed_refs = use_internal_styles(node_ref, &[
+        ("--radix-popover-content-transform-origin", "var(--radix-popper-transform-origin)"),
+        ("--radix-popover-content-available-width", "var(--radix-popper-available-width)"),
+        ("--radix-popover-content-available-height", "var(--radix-popper-available-height)"),
+        ("--radix-popover-trigger-width", "var(--radix-popper-anchor-width)"),
+        ("--radix-popover-trigger-height", "var(--radix-popper-anchor-height)"),
+    ]);
 
     // Make sure the whole tree has focus guards as our `Popover` may be
     // the last element in the DOM (because of the `Portal`)
@@ -478,39 +483,6 @@ fn PopoverContentImpl(
 
     let trapped = prop_or_default(trap_focus);
     let disable_outside = prop_or_default(disable_outside_pointer_events);
-
-    // Apply custom CSS properties via Effect rather than attr:style.
-    // Caller attributes (including attr:style from stories) are forwarded through the
-    // component chain to the inner Primitive. Using attr:style here would conflict with
-    // the caller's attr:style (last one wins). An Effect uses setProperty() which sets
-    // individual CSS properties without affecting the style attribute string.
-    Effect::new(move |_| {
-        if let Some(el) = content_ref.get() {
-            let el: web_sys::HtmlElement = el.unchecked_into();
-            let style = el.style();
-            // Re-namespace exposed content custom properties
-            let _ = style.set_property(
-                "--radix-popover-content-transform-origin",
-                "var(--radix-popper-transform-origin)",
-            );
-            let _ = style.set_property(
-                "--radix-popover-content-available-width",
-                "var(--radix-popper-available-width)",
-            );
-            let _ = style.set_property(
-                "--radix-popover-content-available-height",
-                "var(--radix-popper-available-height)",
-            );
-            let _ = style.set_property(
-                "--radix-popover-trigger-width",
-                "var(--radix-popper-anchor-width)",
-            );
-            let _ = style.set_property(
-                "--radix-popover-trigger-height",
-                "var(--radix-popper-anchor-height)",
-            );
-        }
-    });
 
     view! {
         <FocusScope

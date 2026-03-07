@@ -1,3 +1,4 @@
+use crate::support::compose_refs::use_composed_refs;
 use crate::support::direction::{Direction, use_direction};
 use crate::support::id::use_id;
 use crate::support::presence::Presence;
@@ -323,8 +324,7 @@ fn TabsContentImpl(
 ) -> impl IntoView {
     let children = StoredValue::new(children);
 
-    let composed_ref =
-        crate::support::compose_refs::use_composed_refs(vec![node_ref, presence_ref]);
+    let composed_ref = use_composed_refs(vec![node_ref, presence_ref]);
 
     // Prevent animation on initial mount: if the tab is already selected when it first mounts,
     // suppress the entry animation by setting animation-duration to 0s for one frame.
@@ -358,15 +358,13 @@ fn TabsContentImpl(
             element=html::div
             as_child=as_child
             node_ref=composed_ref
+            style:animation-duration=move || is_mount_animation_prevented.get().then_some("0s")
             attr:data-state=move || if is_selected.get() { "active" } else { "inactive" }
             attr:data-orientation=move || orientation.get().to_string()
             attr:role="tabpanel"
             attr:aria-labelledby=move || trigger_id.get()
             attr:id=move || content_id.get()
             attr:tabindex="0"
-            attr:style=move || {
-                is_mount_animation_prevented.get().then_some("animation-duration: 0s;")
-            }
         >
             {children.with_value(|children| children.as_ref().map(|children| children()))}
         </Primitive>

@@ -224,16 +224,15 @@ pub fn CheckboxIndicator(
     });
 
     let children = StoredValue::new(children);
-
     view! {
         <Presence present=present node_ref=node_ref>
             <Primitive
                 element=html::span
                 as_child=as_child
                 node_ref=node_ref
+                style:pointer-events="none"
                 attr:data-state=move || get_state(context.state.get())
                 attr:data-disabled=data_attr(context.disabled)
-                attr:style="pointer-events: none;"
             >
                 {children.with_value(|children| children.as_ref().map(|children| children()))}
             </Primitive>

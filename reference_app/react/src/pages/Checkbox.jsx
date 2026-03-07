@@ -36,6 +36,20 @@ export default function CheckboxPage() {
             <br />
             <br />
 
+            {/* Always-checked checkbox for internal styles testing */}
+            <Checkbox.Root className="checkbox-root" checked={true} data-testid="styled-checkbox">
+                <Checkbox.Indicator
+                    className="checkbox-indicator"
+                    data-testid="styled-indicator"
+                    style={{background: 'tomato'}}
+                >
+                    ✓
+                </Checkbox.Indicator>
+            </Checkbox.Root>
+
+            <br />
+            <br />
+
             <label>
                 <input
                     type="checkbox"

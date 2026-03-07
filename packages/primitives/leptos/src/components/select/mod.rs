@@ -7,6 +7,7 @@ use crate::support::collection::{
     provide_collection_scope, use_collection, use_collection_scope,
 };
 use crate::support::compose_refs::use_composed_refs;
+use crate::support::use_internal_styles::use_internal_styles;
 use crate::support::direction::{Direction, use_direction};
 use crate::support::dismissable_layer::DismissableLayer;
 use crate::support::focus_guards::use_focus_guards;

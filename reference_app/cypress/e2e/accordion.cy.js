@@ -155,7 +155,7 @@ describe('Accordion', () => {
         });
 
         it('ArrowDown wraps from last to first trigger', () => {
-            cy.findByRole('button', {name: 'Item 3'}).focus();
+            cy.findByRole('button', {name: 'Styled Item'}).focus();
             cy.realPress('ArrowDown');
             cy.findByRole('button', {name: 'Item 1'}).should('be.focused');
         });
@@ -163,11 +163,11 @@ describe('Accordion', () => {
         it('ArrowUp wraps from first to last trigger', () => {
             cy.findByRole('button', {name: 'Item 1'}).focus();
             cy.realPress('ArrowUp');
-            cy.findByRole('button', {name: 'Item 3'}).should('be.focused');
+            cy.findByRole('button', {name: 'Styled Item'}).should('be.focused');
         });
 
         it('Home moves focus to first trigger', () => {
-            cy.findByRole('button', {name: 'Item 3'}).focus();
+            cy.findByRole('button', {name: 'Styled Item'}).focus();
             cy.realPress('Home');
             cy.findByRole('button', {name: 'Item 1'}).should('be.focused');
         });
@@ -175,7 +175,7 @@ describe('Accordion', () => {
         it('End moves focus to last trigger', () => {
             cy.findByRole('button', {name: 'Item 1'}).focus();
             cy.realPress('End');
-            cy.findByRole('button', {name: 'Item 3'}).should('be.focused');
+            cy.findByRole('button', {name: 'Styled Item'}).should('be.focused');
         });
     });
 
@@ -276,7 +276,58 @@ describe('Accordion', () => {
         });
     });
 
-    // ── 7. Disabled ─────────────────────────────────────────
+    // ── 7. Internal Styles (CSS custom properties) ──────────
+
+    describe('internal styles', () => {
+        beforeEach(() => {
+            // Switch to multiple mode so we can open styled item without closing others
+            cy.findByLabelText('multiple').click();
+            cy.findByRole('button', {name: 'Styled Item'}).click();
+        });
+
+        it('--radix-accordion-content-height matches actual height', () => {
+            cy.findByTestId('styled-content').then(($el) => {
+                const height = $el[0].getBoundingClientRect().height;
+                const cssVar = getComputedStyle($el[0]).getPropertyValue(
+                    '--radix-accordion-content-height'
+                );
+                expect(cssVar.trim()).to.equal(`${height}px`);
+            });
+        });
+
+        it('--radix-accordion-content-width matches actual width', () => {
+            cy.findByTestId('styled-content').then(($el) => {
+                const width = $el[0].getBoundingClientRect().width;
+                const cssVar = getComputedStyle($el[0]).getPropertyValue(
+                    '--radix-accordion-content-width'
+                );
+                expect(cssVar.trim()).to.equal(`${width}px`);
+            });
+        });
+
+        it('user style is preserved alongside internal CSS variables', () => {
+            cy.findByTestId('styled-content').should(
+                'have.css',
+                'background-color',
+                'rgb(255, 99, 71)'
+            );
+        });
+
+        it('internal CSS variables are not clobbered by user style', () => {
+            cy.findByTestId('styled-content').then(($el) => {
+                const heightVar = getComputedStyle($el[0]).getPropertyValue(
+                    '--radix-accordion-content-height'
+                );
+                const widthVar = getComputedStyle($el[0]).getPropertyValue(
+                    '--radix-accordion-content-width'
+                );
+                expect(heightVar.trim()).to.match(/^\d+(\.\d+)?px$/);
+                expect(widthVar.trim()).to.match(/^\d+(\.\d+)?px$/);
+            });
+        });
+    });
+
+    // ── 8. Disabled ─────────────────────────────────────────
 
     describe('disabled', () => {
         it('disabled item cannot be toggled by click', () => {

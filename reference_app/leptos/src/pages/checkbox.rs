@@ -55,6 +55,23 @@ pub fn CheckboxPage() -> impl IntoView {
 
         <br /><br />
 
+        // Always-checked checkbox for internal styles testing
+        <Checkbox
+            attr:class="checkbox-root"
+            checked=Signal::derive(|| CheckedState::True)
+            attr:data-testid="styled-checkbox"
+        >
+            <CheckboxIndicator
+                attr:class="checkbox-indicator"
+                attr:data-testid="styled-indicator"
+                attr:style="background: tomato"
+            >
+                "\u{2713}"
+            </CheckboxIndicator>
+        </Checkbox>
+
+        <br /><br />
+
         <label>
             <input
                 type="checkbox"

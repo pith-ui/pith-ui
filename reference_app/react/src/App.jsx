@@ -1,6 +1,7 @@
 import {Routes, Route, Link} from 'react-router-dom';
 import Accordion from './pages/Accordion';
 import AlertDialog from './pages/AlertDialog';
+import AspectRatio from './pages/AspectRatio';
 import Avatar from './pages/Avatar';
 import Checkbox from './pages/Checkbox';
 import Collapsible from './pages/Collapsible';
@@ -140,6 +141,7 @@ export default function App() {
             <Route path="/" element={<Index />} />
             <Route path="/accordion" element={<Accordion />} />
             <Route path="/alert-dialog" element={<AlertDialog />} />
+            <Route path="/aspect-ratio" element={<AspectRatio />} />
             <Route path="/avatar" element={<Avatar />} />
             <Route path="/checkbox" element={<Checkbox />} />
             <Route path="/collapsible" element={<Collapsible />} />

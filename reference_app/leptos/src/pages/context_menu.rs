@@ -135,6 +135,19 @@ pub fn ContextMenuPage() -> impl IntoView {
         <br />
         <br />
 
+        // Styled trigger for internal styles testing
+        <ContextMenu>
+            <ContextMenuTrigger
+                attr:class="context-trigger"
+                attr:data-testid="styled-context-trigger"
+                attr:style="background: tomato"
+            >
+                "Styled trigger"
+            </ContextMenuTrigger>
+        </ContextMenu>
+
+        <br />
+
         <button data-testid="outside-button">"outside"</button>
         <input data-testid="outside-input" placeholder="name" />
     }

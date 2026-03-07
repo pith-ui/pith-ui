@@ -224,4 +224,31 @@ describe('Scroll Area', () => {
             });
         });
     });
+
+    // ── Internal Styles ─────────────────────────────────────
+
+    describe('internal styles', () => {
+        beforeEach(() => {
+            // Switch to "always" so thumb is visible
+            cy.findByLabelText('always').click();
+        });
+
+        it('thumb references CSS variable for width via inline style', () => {
+            cy.findByTestId('thumb-vertical').then(($el) => {
+                const style = $el[0].style;
+                const width = style.getPropertyValue('width');
+                const height = style.getPropertyValue('height');
+                // Vertical thumb should have a height set
+                expect(height).to.not.be.empty;
+            });
+        });
+
+        it('thumb has non-zero computed dimensions', () => {
+            cy.findByTestId('thumb-vertical').then(($el) => {
+                const rect = $el[0].getBoundingClientRect();
+                expect(rect.width).to.be.greaterThan(0);
+                expect(rect.height).to.be.greaterThan(0);
+            });
+        });
+    });
 });

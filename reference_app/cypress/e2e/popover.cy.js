@@ -232,4 +232,30 @@ describe('Popover', () => {
             cy.findByTestId('outside-input').should('not.be.focused');
         });
     });
+
+    // ── Internal Styles ─────────────────────────────────────
+
+    describe('internal styles', () => {
+        it('content has --radix-popover-content-available-width', () => {
+            cy.findByText('open').click();
+            shouldBeOpen();
+            cy.findByRole('dialog').then(($el) => {
+                const value = getComputedStyle($el[0]).getPropertyValue(
+                    '--radix-popover-content-available-width'
+                );
+                expect(value.trim()).to.not.be.empty;
+            });
+        });
+
+        it('content has --radix-popover-content-available-height', () => {
+            cy.findByText('open').click();
+            shouldBeOpen();
+            cy.findByRole('dialog').then(($el) => {
+                const value = getComputedStyle($el[0]).getPropertyValue(
+                    '--radix-popover-content-available-height'
+                );
+                expect(value.trim()).to.not.be.empty;
+            });
+        });
+    });
 });

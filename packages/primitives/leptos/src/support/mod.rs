@@ -16,6 +16,7 @@ pub mod roving_focus;
 pub mod scroll_lock;
 pub mod use_controllable_state;
 pub mod use_escape_keydown;
+pub mod use_internal_styles;
 pub mod use_previous;
 pub mod use_rect;
 pub mod use_size;

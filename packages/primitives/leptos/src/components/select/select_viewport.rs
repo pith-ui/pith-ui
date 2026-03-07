@@ -24,11 +24,13 @@ pub fn SelectViewport(
                     <Primitive
                         element=html::div
                         as_child=as_child
-                        node_ref=composed_ref
                         attr:data-radix-select-viewport=""
                         attr:role="presentation"
-                        attr:style="position: relative; flex: 1; overflow: hidden auto;"
                         {..attrs}
+                        node_ref=composed_ref
+                        style:position="relative"
+                        style:flex="1"
+                        style:overflow="hidden auto"
                     >
                         {children.try_with_value(|children| children.as_ref().map(|c| c()))}
                     </Primitive>
