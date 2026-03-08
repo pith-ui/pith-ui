@@ -50,6 +50,23 @@ export default function CheckboxPage() {
             <br />
             <br />
 
+            {/* Checkbox with style forwarded to root button and indicator */}
+            <Checkbox.Root
+                checked={true}
+                data-testid="style-forwarded-checkbox"
+                style={{backgroundColor: 'rgb(0, 128, 0)', border: '3px solid rgb(255, 0, 0)'}}
+            >
+                <Checkbox.Indicator
+                    id="style-forwarded-indicator"
+                    style={{color: 'rgb(0, 0, 255)', fontSize: '24px'}}
+                >
+                    ✓
+                </Checkbox.Indicator>
+            </Checkbox.Root>
+
+            <br />
+            <br />
+
             <label>
                 <input
                     type="checkbox"

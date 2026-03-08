@@ -72,6 +72,22 @@ pub fn CheckboxPage() -> impl IntoView {
 
         <br /><br />
 
+        // Checkbox with style forwarded to root button and indicator
+        <Checkbox
+            checked=Signal::derive(|| CheckedState::True)
+            attr:data-testid="style-forwarded-checkbox"
+            attr:style="background-color: rgb(0, 128, 0); border: 3px solid rgb(255, 0, 0)"
+        >
+            <CheckboxIndicator
+                attr:id="style-forwarded-indicator"
+                attr:style="color: rgb(0, 0, 255); font-size: 24px"
+            >
+                "\u{2713}"
+            </CheckboxIndicator>
+        </Checkbox>
+
+        <br /><br />
+
         <label>
             <input
                 type="checkbox"

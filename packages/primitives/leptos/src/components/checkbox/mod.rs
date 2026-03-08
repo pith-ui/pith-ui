@@ -3,6 +3,7 @@ use std::fmt::{Display, Formatter};
 use crate::support::compose_refs::use_composed_refs;
 use crate::support::presence::Presence;
 use crate::support::primitive::{Primitive, compose_callbacks, data_attr, prop_or};
+use crate::support::use_internal_styles::use_internal_styles;
 use crate::support::use_controllable_state::{UseControllableStateParams, use_controllable_state};
 use crate::support::use_previous::use_previous;
 use crate::support::use_size::use_size;
@@ -224,19 +225,23 @@ pub fn CheckboxIndicator(
     });
 
     let children = StoredValue::new(children);
+    let styled_ref = use_internal_styles(node_ref, &[("pointer-events", "none")]);
+
     view! {
-        <Presence present=present node_ref=node_ref>
-            <Primitive
-                element=html::span
-                as_child=as_child
-                node_ref=node_ref
-                style:pointer-events="none"
-                attr:data-state=move || get_state(context.state.get())
-                attr:data-disabled=data_attr(context.disabled)
-            >
-                {children.with_value(|children| children.as_ref().map(|children| children()))}
-            </Primitive>
-        </Presence>
+        <AttributeInterceptor let:attrs>
+            <Presence present=present node_ref=node_ref>
+                <Primitive
+                    element=html::span
+                    as_child=as_child
+                    node_ref=styled_ref
+                    attr:data-state=move || get_state(context.state.get())
+                    attr:data-disabled=data_attr(context.disabled)
+                    {..attrs}
+                >
+                    {children.with_value(|children| children.as_ref().map(|children| children()))}
+                </Primitive>
+            </Presence>
+        </AttributeInterceptor>
     }
 }
 

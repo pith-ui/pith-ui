@@ -167,6 +167,21 @@ describe('Checkbox', () => {
                 'rgb(255, 99, 71)'
             );
         });
+
+        it('style attribute on Checkbox root is forwarded to the inner button', () => {
+            cy.findByTestId('style-forwarded-checkbox')
+                .should('have.css', 'background-color', 'rgb(0, 128, 0)')
+                .and('have.css', 'border-top-color', 'rgb(255, 0, 0)')
+                .and('have.css', 'border-top-width', '3px')
+                .and('have.css', 'border-top-style', 'solid');
+        });
+
+        it('style attribute on CheckboxIndicator is forwarded to the inner span', () => {
+            cy.get('#style-forwarded-indicator')
+                .should('have.css', 'color', 'rgb(0, 0, 255)')
+                .and('have.css', 'font-size', '24px')
+                .and('have.css', 'pointer-events', 'none');
+        });
     });
 
     // ── 7. Indicator ────────────────────────────────────────
