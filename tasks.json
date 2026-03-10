@@ -1,0 +1,1530 @@
+[
+  {
+    "id": "accessible-icon-bp-1",
+    "component": "accessible-icon",
+    "principle": "Be Predictable",
+    "description": "The Leptos implementation does not enforce exactly one child like the React reference does (React uses React.Children.only which throws if not exactly one child). The Leptos version accepts TypedChildren which allows multiple children, meaning all children get aria-hidden and focusable attributes applied, which could produce unexpected behavior. See /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/accessible_icon/mod.rs line 12 vs /Users/adamduvick/Code/clones/rust-radix/reference/react-radix-primitives/packages/react/accessible-icon/src/accessible-icon.tsx line 16.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "accessible-icon-bp-2",
+    "component": "accessible-icon",
+    "principle": "Be Predictable",
+    "description": "No e2e tests exist for accessible-icon (file /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/accessible-icon.cy.js does not exist), so there is no runtime verification that the Leptos component behaves predictably (e.g., correctly applies aria-hidden, focusable, and renders the visually hidden label).",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "accessible-icon-dsr-1",
+    "component": "accessible-icon",
+    "principle": "Design for Server Rendering",
+    "description": "No e2e tests exist to verify that the accessible-icon component renders correct initial HTML (aria-hidden, focusable, visually hidden label) on first paint without client JS. File /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/accessible-icon.cy.js does not exist.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "accessible-icon-dcnv-1",
+    "component": "accessible-icon",
+    "principle": "Document the Contract, Not the Visuals",
+    "description": "No e2e tests exist to document and verify the behavioral contract (ARIA attributes, focusable behavior, visually hidden label) of the accessible-icon component. File /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/accessible-icon.cy.js does not exist.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "accordion-slp-1",
+    "component": "accordion",
+    "principle": "Separate Logic from Presentation",
+    "description": "AccordionContent in /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/accordion/accordion_item.rs (lines 144-156) sets internal CSS custom properties (--radix-accordion-content-height, --radix-accordion-content-width) via use_internal_styles, which injects presentation-related inline styles. The React reference does the same (accordion.tsx lines 491-495), so this is a matched behavior, but it is still an opinion about presentation leaking from the component.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "accordion-msc-1",
+    "component": "accordion",
+    "principle": "Make State Controllable",
+    "description": "E2E tests in /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/accordion.cy.js do not test controlled mode (externally-driven value/values props with on_value_change/on_values_change callbacks). All tests use uncontrolled mode. There are no tests verifying that passing a controlled value prop makes the component follow external state, or that on_value_change fires correctly.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "accordion-mo-1",
+    "component": "accordion",
+    "principle": "Minimize Opinions",
+    "description": "AccordionContent in /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/accordion/accordion_item.rs (lines 144-156) ships internal CSS custom properties (--radix-accordion-content-height, --radix-accordion-content-width) as inline styles on the content element. While useful for animation, these are opinionated CSS variables that consumers may not need and cannot opt out of.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "accordion-kass-1",
+    "component": "accordion",
+    "principle": "Keep the API Surface Small",
+    "description": "The Leptos Accordion component in /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/accordion/accordion.rs (lines 8-44) merges single-mode and multiple-mode props into one flat component signature (value, default_value, on_value_change for single; values, default_values, on_values_change for multiple), resulting in 6 mode-specific props where only 3 are relevant at a time. The React reference avoids this by using discriminated union types (AccordionSingleProps | AccordionMultipleProps in accordion.tsx lines 35-40), making it impossible to pass invalid prop combinations. The Leptos version allows passing both single and multiple props simultaneously with no compile-time or runtime guard.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "accordion-dcnv-1",
+    "component": "accordion",
+    "principle": "Document the Contract, Not the Visuals",
+    "description": "E2E tests in /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/accordion.cy.js (lines 281-328) include an 'internal styles' section that tests visual CSS custom properties (--radix-accordion-content-height, --radix-accordion-content-width) and specific CSS values like 'rgb(255, 99, 71)'. These tests document visual/presentation details rather than behavioral contracts.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "alert-dialog-msc-1",
+    "component": "alert-dialog",
+    "principle": "Make State Controllable",
+    "description": "E2e tests do not verify controlled mode (passing `open` and `on_open_change` props to AlertDialog). Only the default uncontrolled behavior is tested in /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/alert-dialog.cy.js. There are no tests that pass an explicit `open` signal and `on_open_change` callback to confirm the controlled mode works correctly.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "alert-dialog-dsr-1",
+    "component": "alert-dialog",
+    "principle": "Design for Server Rendering",
+    "description": "No e2e tests verify server-rendered (SSR) initial HTML for AlertDialog. The e2e tests in /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/alert-dialog.cy.js only test client-side interaction after full hydration. There are no assertions that the trigger renders correct ARIA attributes (aria-haspopup, aria-expanded='false', data-state='closed') on first paint without client JS, nor that the closed dialog produces no layout shift.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "aspect-ratio-slp-1",
+    "component": "aspect-ratio",
+    "principle": "Separate Logic from Presentation",
+    "description": "The Leptos component (/Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/aspect_ratio/mod.rs, lines 16-23) renders a wrapper <div> with hardcoded inline styles (position: relative, width: 100%, padding-bottom) that the consumer cannot override or opt out of. While the React reference does the same, this couples structural presentation into the component rather than exposing it as composable behavior.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "aspect-ratio-slp-2",
+    "component": "aspect-ratio",
+    "principle": "Separate Logic from Presentation",
+    "description": "E2e tests (/Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/aspect-ratio.cy.js) verify the wrapper styles exist but do not test that the component works with as_child to confirm the consumer can control the inner element's presentation.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "aspect-ratio-icc-1",
+    "component": "aspect-ratio",
+    "principle": "Invert Control to the Consumer",
+    "description": "The outer wrapper <div> (mod.rs lines 16-23) is always rendered and cannot be replaced or removed by the consumer via as_child or any other mechanism. The as_child prop only affects the inner Primitive element, not the wrapper. This limits consumer control over the rendered DOM structure.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "aspect-ratio-icc-2",
+    "component": "aspect-ratio",
+    "principle": "Invert Control to the Consumer",
+    "description": "E2e tests (/Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/aspect-ratio.cy.js) do not test as_child rendering behavior to verify that consumers can replace the inner element with their own markup.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "aspect-ratio-mo-1",
+    "component": "aspect-ratio",
+    "principle": "Minimize Opinions",
+    "description": "The Leptos component (mod.rs lines 16-23) injects a mandatory wrapper <div> element with a data-radix-aspect-ratio-wrapper attribute and hardcoded inline styles. This introduces an extra DOM node that the consumer cannot avoid, creating friction if the consumer's design system has constraints on DOM structure. The React reference implementation (aspect-ratio.tsx lines 20-28) does the same.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "aspect-ratio-dcnv-1",
+    "component": "aspect-ratio",
+    "principle": "Document the Contract, Not the Visuals",
+    "description": "E2e tests (/Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/aspect-ratio.cy.js lines 30-35) only verify padding-bottom starts with a digit (regex /^[0-9]/) rather than asserting the mathematically correct value for a given ratio (e.g., 100% for 1:1, ~56.25% for 16:9). The core behavioral contract of the ratio prop is not verified with precision.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "avatar-bp-1",
+    "component": "avatar",
+    "principle": "Be Predictable",
+    "description": "In /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/avatar/mod.rs, the use_image_loading_status function (lines 152-212) does not remove event listeners from the hidden image element when the Effect re-runs (e.g., when src changes). Each re-run of the Effect at line 171 creates a new HTMLImageElement and attaches load/error listeners, but the previous image's listeners are never removed. The React reference (avatar.tsx lines 173-176) properly returns a cleanup function from useLayoutEffect that calls removeEventListener. This could lead to stale callbacks firing on old image elements.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "avatar-bp-2",
+    "component": "avatar",
+    "principle": "Be Predictable",
+    "description": "E2e test 'does not show delayed fallback immediately' in /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/avatar.cy.js (lines 78-83) does not actually verify that the fallback is absent before the 300ms delay elapses. It visits the page then asserts the fallback 'should contain text DI', which Cypress auto-retries until true. A proper test would first assert the fallback is NOT present, then wait and assert it IS present, as the React unit tests do in avatar.test.tsx lines 188-198.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "avatar-dsr-1",
+    "component": "avatar",
+    "principle": "Design for Server Rendering",
+    "description": "In /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/avatar/mod.rs, the use_image_loading_status function (lines 152-212) lacks an SSR-aware hydration guard equivalent to the React reference's useIsHydrated hook (avatar.tsx line 137). The React reference uses useIsHydrated to avoid creating a window.Image during SSR and to prevent hydration mismatches when an image is already cached (resolveLoadingStatus returns 'idle' when not hydrated). While Leptos Effects don't run during SSR (so the initial Idle state is correct), there is no mechanism to synchronously resolve a cached image's status on first client render the way the React version does with resolveLoadingStatus, meaning the Leptos version will always flash the fallback briefly even for cached images.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "avatar-dsr-2",
+    "component": "avatar",
+    "principle": "Design for Server Rendering",
+    "description": "E2e tests in /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/avatar.cy.js do not verify any SSR behavior: no tests check initial server-rendered HTML, no tests verify absence of layout shifts, and no tests confirm fallback content is present in the first paint without client JS. The React unit tests (avatar.test.tsx lines 29-36, 145-171) explicitly test SSR via renderToString and hydration.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "checkbox-cdc-1",
+    "component": "checkbox",
+    "principle": "Compose, Don't Configure",
+    "description": "The Leptos implementation uses a monolithic Checkbox component that bundles the trigger button and BubbleInput together (lines 44-206 of /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/checkbox/mod.rs), rather than exposing separate composable primitives like the React reference does with CheckboxProvider, CheckboxTrigger, and CheckboxBubbleInput (lines 56-113, 129-189, 303-373 of /Users/adamduvick/Code/clones/rust-radix/reference/react-radix-primitives/packages/react/checkbox/src/checkbox.tsx). The consumer cannot independently compose the trigger and bubble input sub-components.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "checkbox-cdc-2",
+    "component": "checkbox",
+    "principle": "Compose, Don't Configure",
+    "description": "The e2e tests do not verify that the checkbox can be composed from separate sub-primitives (Provider + Trigger + BubbleInput); all tests in /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/checkbox.cy.js use the monolithic Checkbox component via the demo page at /Users/adamduvick/Code/clones/rust-radix/reference_app/leptos/src/pages/checkbox.rs.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "checkbox-mo-1",
+    "component": "checkbox",
+    "principle": "Minimize Opinions",
+    "description": "The CheckboxIndicator in the Leptos implementation applies an internal style of pointer-events: none via use_internal_styles (line 228 of /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/checkbox/mod.rs). While the React reference does the same (line 285 of checkbox.tsx), this is an opinionated style that affects behavior. However, both implementations do this identically, so this is noted but matches the reference.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "checkbox-dsr-1",
+    "component": "checkbox",
+    "principle": "Design for Server Rendering",
+    "description": "The Leptos Checkbox component uses Effect::new (line 106 of /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/checkbox/mod.rs) for form reset handler registration and relies on button_ref.get() which returns None during SSR. The is_form_control signal (lines 73-85) calls button_ref.get() and el.closest('form'), both of which require a DOM node and will return false during SSR. This means the hidden BubbleInput (rendered via <Show when=is_form_control>) will not be included in the SSR HTML for checkboxes inside forms. The React reference handles this by defaulting isFormControl to true during SSR (line 86 of checkbox.tsx: 'We set this to true by default so that events bubble to forms without JS (SSR)'), ensuring correct initial HTML.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "collapsible-dsr-1",
+    "component": "collapsible",
+    "principle": "Design for Server Rendering",
+    "description": "The Leptos CollapsibleContentImpl component calls `web_sys::window().expect(\"Window should exist.\")` directly at component body scope (lines 199 and 208 in /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/collapsible/mod.rs) for `request_animation_frame` and `cancel_animation_frame`. This code executes during component initialization, not inside an Effect or client-only guard, so it will panic during server-side rendering where `window` is not available.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "collapsible-dsr-2",
+    "component": "collapsible",
+    "principle": "Design for Server Rendering",
+    "description": "The e2e tests (collapsible.cy.js) do not verify SSR behavior at all -- there are no tests that check the initial HTML rendered by the server contains correct ARIA attributes, data-state, or hidden attributes before client JS hydrates.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "context-menu-oac-1",
+    "component": "context-menu",
+    "principle": "Own Accessibility Completely",
+    "description": "E2E tests do not verify typeahead/search keyboard navigation (typing characters to jump to matching menu items), which is implemented in both the Leptos MenuContentImpl (packages/primitives/leptos/src/components/menu/menu_content.rs handle_typeahead_search) and React reference. Without tests, this accessibility behavior is unverified.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "context-menu-oac-2",
+    "component": "context-menu",
+    "principle": "Own Accessibility Completely",
+    "description": "E2E tests do not verify that the content element has aria-orientation='vertical' (set in menu_content.rs line 852). This WAI-ARIA menu attribute is untested.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "context-menu-oac-3",
+    "component": "context-menu",
+    "principle": "Own Accessibility Completely",
+    "description": "E2E tests do not verify aria-checked attribute on menuitemcheckbox and menuitemradio items (set in menu_checkbox_item.rs lines 40-46 and 119). Tests only check data-state, not the aria-checked attribute that screen readers depend on.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "context-menu-oac-4",
+    "component": "context-menu",
+    "principle": "Own Accessibility Completely",
+    "description": "E2E tests do not verify the SubTrigger's aria-haspopup='menu', aria-expanded, or aria-controls attributes (set in menu_sub.rs lines 111-113). These ARIA properties for submenu triggers are untested.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "context-menu-mo-1",
+    "component": "context-menu",
+    "principle": "Minimize Opinions",
+    "description": "ContextMenuContent hardcodes side=PopperSide::Right, side_offset=2.0, and align=Align::Start (context_menu_content.rs lines 62-64) without allowing the consumer to override side or sideOffset. The React reference similarly omits side/sideOffset/align from ContextMenuContentProps (Omit<MenuContentProps, 'onEntryFocus' | 'side' | 'sideOffset' | 'align'>), but the Leptos implementation does not expose these as props either, meaning consumers cannot override these positioning opinions. E2E tests do not verify these can be overridden.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "context-menu-dsr-1",
+    "component": "context-menu",
+    "principle": "Design for Server Rendering",
+    "description": "The ContextMenuTrigger in Leptos uses an Effect (context_menu.rs lines 86-89) to set the Popper virtual ref, and another Effect (lines 76-79) to clear the long press timer when disabled changes. These Effects only run on the client. On SSR first paint, the virtual ref for the Popper anchor will not be set, which means the initial server-rendered HTML has no anchor positioning context. While this is acceptable for a context menu (which is closed on first paint), there is no e2e test verifying correct server-rendered initial HTML for ContextMenu.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "context-menu-dsr-2",
+    "component": "context-menu",
+    "principle": "Design for Server Rendering",
+    "description": "MenuContentImpl uses Effects (menu_content.rs lines 685-706) to attach keydown, blur, and pointermove event handlers to the content element imperatively via addEventListener. These handlers do not exist during SSR, meaning keyboard navigation and pointer tracking behavior require client JS. No e2e test verifies the initial server-rendered state of the menu.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "context-menu-dcnv-1",
+    "component": "context-menu",
+    "principle": "Document the Contract, Not the Visuals",
+    "description": "E2E tests do not verify the behavioral contract for typeahead search (typing characters focuses matching items, repeated characters cycle through matches, search resets after 1 second timeout). This is a core behavioral feature implemented in menu_content.rs (handle_typeahead_search) but has no test coverage.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "context-menu-dcnv-2",
+    "component": "context-menu",
+    "principle": "Document the Contract, Not the Visuals",
+    "description": "E2E tests do not verify the behavioral contract for Tab key prevention inside the menu (menu_content.rs line 587: event.prevent_default() when key == 'Tab'). This is an important behavioral constraint (menus should not be navigable via Tab) that is undocumented by tests.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "dialog-oac-1",
+    "component": "dialog",
+    "principle": "Own Accessibility Completely",
+    "description": "The Leptos implementation does not include dev-time warnings when DialogTitle or DialogDescription are missing. The React reference (dialog.tsx lines 498-548) renders TitleWarning and DescriptionWarning components that console.error/warn when required accessible labels are absent. The Leptos implementation in /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/dialog/dialog_content.rs has no equivalent, meaning consumers can silently create inaccessible dialogs without notice.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "dialog-oac-2",
+    "component": "dialog",
+    "principle": "Own Accessibility Completely",
+    "description": "The e2e tests in /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/dialog.cy.js do not verify that aria-hidden is applied to elements outside the modal dialog content (the hide_others/unhide_others behavior implemented in dialog_content.rs lines 131-148). This is a core accessibility behavior that prevents screen readers from accessing background content.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "dialog-icc-1",
+    "component": "dialog",
+    "principle": "Invert Control to the Consumer",
+    "description": "In the Leptos DialogContentModal (dialog_content.rs lines 150-165), the on_close_auto_focus callback unconditionally calls event.prevent_default() and focuses the trigger, ignoring whether the consumer's callback already called preventDefault(). In the React reference (dialog.tsx lines 279-282), composeEventHandlers is used so that if the consumer prevents default, the internal focus-to-trigger logic is skipped. This means Leptos consumers cannot override the close-focus behavior for modal dialogs.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "dialog-msc-1",
+    "component": "dialog",
+    "principle": "Make State Controllable",
+    "description": "The e2e tests in /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/dialog.cy.js do not test controlled mode (externally providing open/onOpenChange props). All tests use only uncontrolled mode. There are no tests verifying that a consumer-provided open signal drives the dialog state or that on_open_change is called with the correct values.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "dialog-dsr-1",
+    "component": "dialog",
+    "principle": "Design for Server Rendering",
+    "description": "The e2e tests in /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/dialog.cy.js do not verify SSR behavior. There are no tests confirming that the initial server-rendered HTML includes correct ARIA attributes (e.g., aria-haspopup='dialog', aria-expanded='false', data-state='closed' on the trigger) without requiring client-side JavaScript. The Leptos framework supports SSR but no test validates the dialog's initial HTML output.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "dialog-dcnv-1",
+    "component": "dialog",
+    "principle": "Document the Contract, Not the Visuals",
+    "description": "The e2e tests in /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/dialog.cy.js do not verify the on_open_auto_focus, on_close_auto_focus, on_escape_key_down, on_pointer_down_outside, on_focus_outside, or on_interact_outside callback contracts. These callbacks (defined in dialog_content.rs lines 34-39) are part of the behavioral contract allowing consumers to intercept and prevent default behavior, but no tests confirm they fire or that preventDefault() works as expected.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "dropdown-menu-slp-1",
+    "component": "dropdown-menu",
+    "principle": "Separate Logic from Presentation",
+    "description": "MenuContentImpl in /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/menu/menu_content.rs line 411 applies `use_internal_styles(composed_refs, &[(\"outline\", \"none\")])` which sets a visual style (`outline: none`) on the content element. This is a presentational opinion that should be left to the consumer.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "dropdown-menu-slp-2",
+    "component": "dropdown-menu",
+    "principle": "Separate Logic from Presentation",
+    "description": "DropdownMenuContent in /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/dropdown_menu/dropdown_menu_content.rs lines 65-71 and DropdownMenuSubContent lines 431-437 inject CSS custom properties (e.g., `--radix-dropdown-menu-content-transform-origin`) via `use_internal_styles`. While these are CSS custom property aliases rather than visual styles, they are still presentational concerns injected by the component. The React reference does the same (lines 198-209), so this is a shared design choice.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "dropdown-menu-slp-3",
+    "component": "dropdown-menu",
+    "principle": "Separate Logic from Presentation",
+    "description": "E2e tests do not verify that the component ships zero visual styles. The 'internal styles' tests in /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/dropdown-menu.cy.js lines 474-494 actually verify internal CSS custom properties exist, but there is no test asserting the absence of visual styling opinions like `outline: none`.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "dropdown-menu-icc-1",
+    "component": "dropdown-menu",
+    "principle": "Invert Control to the Consumer",
+    "description": "DropdownMenuTrigger in /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/dropdown_menu/dropdown_menu.rs lines 73-131 does not accept consumer event handler props (e.g., `on_pointer_down`, `on_key_down`) for composition. The React reference (dropdown-menu.tsx lines 117-134) uses `composeEventHandlers(props.onPointerDown, ...)` and `composeEventHandlers(props.onKeyDown, ...)` to compose consumer handlers with internal ones. In the Leptos version, the `on:pointerdown` and `on:keydown` handlers are hard-coded directly on the Primitive element, potentially preventing consumers from adding their own handlers that compose correctly with the component's internal logic.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "dropdown-menu-icc-2",
+    "component": "dropdown-menu",
+    "principle": "Invert Control to the Consumer",
+    "description": "E2e tests do not verify that consumer-provided event handlers on the trigger are composed with the component's internal handlers.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "dropdown-menu-msc-1",
+    "component": "dropdown-menu",
+    "principle": "Make State Controllable",
+    "description": "E2e tests in /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/dropdown-menu.cy.js do not test controlled mode for the `open` prop. There are no tests passing an explicit `open` signal and `on_open_change` callback to verify that the component works in fully controlled mode (consumer-driven open/close). Only uncontrolled mode (internal state) is exercised.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "dropdown-menu-mo-1",
+    "component": "dropdown-menu",
+    "principle": "Minimize Opinions",
+    "description": "MenuContentImpl in /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/menu/menu_content.rs line 411 sets `outline: none` as an internal style on the content element. This is an opinionated visual default that removes the browser's native focus indicator without the consumer's consent. The React reference does not set this style at the dropdown-menu level (it may exist deeper in the React menu primitive, but it is not present in the dropdown-menu source).",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "dropdown-menu-dsr-1",
+    "component": "dropdown-menu",
+    "principle": "Design for Server Rendering",
+    "description": "E2e tests in /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/dropdown-menu.cy.js do not verify SSR correctness. There are no tests checking that the trigger renders correct ARIA attributes (`aria-haspopup`, `aria-expanded=\"false\"`, `data-state=\"closed\"`) on initial server-rendered HTML before client-side hydration. While the implementation sets these attributes declaratively (which should work in SSR), the absence of SSR-specific tests means the principle is not verified.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "dropdown-menu-dcnv-1",
+    "component": "dropdown-menu",
+    "principle": "Document the Contract, Not the Visuals",
+    "description": "E2e tests in /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/dropdown-menu.cy.js lines 474-494 include an 'internal styles' test section that verifies specific CSS custom property values (`--radix-dropdown-menu-content-available-width`, `--radix-dropdown-menu-content-available-height`). These tests verify internal presentational implementation details (CSS custom property aliasing) rather than behavioral contract. If the implementation changed how it exposes sizing information, these tests would break even though the behavioral contract is intact.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "form-msc-1",
+    "component": "form",
+    "principle": "Make State Controllable",
+    "description": "The form component's validation state (validity_map, custom_errors_map) is entirely internal with no way for the consumer to control it externally. Unlike the React reference which also keeps this internal, neither implementation provides a controlled mode for validation state. The consumer cannot programmatically set or override the validity of a field from the outside (e.g., via a controlled prop), only indirectly via server_invalid. However, the React reference also has this limitation, so this is a parity issue. More critically, there is no e2e test verifying that server_invalid (the one controllable validation signal) correctly sets aria-invalid='true' and data-invalid on the field/control, nor that focus moves to the first server-invalid control. The test file at /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/form.cy.js has no tests exercising the server_invalid prop or the on_clear_server_errors callback.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "form-mo-1",
+    "component": "form",
+    "principle": "Minimize Opinions",
+    "description": "In /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/form/form_message.rs, the FormMessage component ships default validation messages (e.g., 'This value is not valid', 'This value is too short', etc.) via ValidityMatcher::default_message() in mod.rs lines 90-103. When the consumer does not provide children to FormMessage, these default English-language messages are rendered (form_message.rs lines 26-29, 44-47, 61-63, 77-79). The React reference (form.tsx lines 440-451, 471, 501, 542) does the same. While both implementations allow the consumer to override these messages by providing children, shipping default human-readable error text is an opinionated choice. However, this is parity with React. No e2e test verifies that consumers can override default messages with custom content.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "form-bp-1",
+    "component": "form",
+    "principle": "Be Predictable",
+    "description": "In the Leptos implementation at /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/form/form.rs lines 83-87, the Form component's on:submit handler calls on_clear_server_errors but does NOT call event.prevent_default(). In the React reference (form.tsx line 175), onSubmit is composed with the consumer's onSubmit handler via composeEventHandlers with checkForDefaultPrevented: false, meaning the clear callback always runs regardless. However, in the Leptos implementation, the form's on:submit does not prevent default either, but critically: the consumer must separately attach their own on:submit handler via attr forwarding (as seen in the demo at /Users/adamduvick/Code/clones/rust-radix/reference_app/leptos/src/pages/form.rs line 43), which means TWO on:submit handlers run. The ordering of these handlers relative to the internal on_clear_server_errors callback is not guaranteed to be deterministic in the same way React's composeEventHandlers guarantees order.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "form-dsr-1",
+    "component": "form",
+    "principle": "Design for Server Rendering",
+    "description": "In the Leptos implementation at /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/form/form_field.rs lines 93-101, the FormControl component renders an <input> with aria-describedby dynamically computed from message IDs. However, the AriaDescriptionContextValue::message_ids_map is initialized empty (form.rs mod.rs line 20, RwSignal::new(HashMap::new())), and message IDs are only registered via FormMessageImpl which runs client-side effects. On the initial server render, aria-describedby will be None even if FormMessage components are present in the tree, because the message registration happens via Owner::on_cleanup/reactive effects. The React reference has the same issue (message IDs registered via useEffect in form.tsx lines 565-568). No e2e test verifies correct ARIA attributes on first paint without JavaScript.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "form-dcnv-1",
+    "component": "form",
+    "principle": "Document the Contract, Not the Visuals",
+    "description": "There are no e2e tests verifying the behavioral contract of FormValidityState (the render-prop/callback component that exposes validity state to consumers). The FormValidityState component at /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/form/form_message.rs lines 222-233 accepts a callback children prop that receives Option<Validity>, but no test in /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/form.cy.js exercises this component or verifies its contract.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "hover-card-oac-1",
+    "component": "hover-card",
+    "principle": "Own Accessibility Completely",
+    "description": "Neither the Leptos implementation (/Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/hover_card/hover_card.rs, hover_card_content.rs) nor the React reference (/Users/adamduvick/Code/clones/rust-radix/reference/react-radix-primitives/packages/react/hover-card/src/hover-card.tsx) set any ARIA roles or aria-* attributes (e.g., no role, no aria-expanded on trigger, no aria-haspopup, no aria-describedby/aria-labelledby linking trigger to content). While WAI-ARIA does not define a dedicated 'hovercard' pattern, supplementary content shown on hover should still communicate its relationship to the trigger via aria attributes.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "hover-card-oac-2",
+    "component": "hover-card",
+    "principle": "Own Accessibility Completely",
+    "description": "The e2e tests (/Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/hover-card.cy.js) do not test any ARIA attributes, roles, or screen reader announcements. There are no assertions for aria-expanded, role, aria-haspopup, or any other accessibility attribute.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "hover-card-msc-1",
+    "component": "hover-card",
+    "principle": "Make State Controllable",
+    "description": "The e2e tests (/Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/hover-card.cy.js) do not test controlled mode (passing an explicit open prop and on_open_change callback). The test page (/Users/adamduvick/Code/clones/rust-radix/reference_app/leptos/src/pages/hover_card.rs) only uses uncontrolled mode with open_delay=0 and close_delay=0. There are no tests verifying that the component works correctly in controlled mode or that on_open_change fires appropriately.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "hover-card-mo-1",
+    "component": "hover-card",
+    "principle": "Minimize Opinions",
+    "description": "The Leptos HoverCardContentImpl (/Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/hover_card/hover_card_content.rs, lines 313-341) injects CSS custom properties (--radix-hover-card-content-transform-origin, --radix-hover-card-content-available-width, --radix-hover-card-content-available-height, --radix-hover-card-trigger-width, --radix-hover-card-trigger-height) and conditionally sets user-select styles via use_internal_styles_effect. The React reference does the same via inline style objects (lines 344-357). While these are CSS custom properties rather than visible styles, the user-select manipulation on the document body (lines 177-201 in hover_card_content.rs) directly modifies global document styling which is an opinionated behavior not controllable by the consumer.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "hover-card-bp-1",
+    "component": "hover-card",
+    "principle": "Be Predictable",
+    "description": "The e2e tests (/Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/hover-card.cy.js) do not test dismiss-on-escape-key behavior. The DismissableLayer handles Escape key dismissal, but there are no tests verifying this deterministic state transition.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "hover-card-bp-2",
+    "component": "hover-card",
+    "principle": "Be Predictable",
+    "description": "The e2e tests do not verify open/close delay timing behavior. The test page uses delay=0 which bypasses the timer logic entirely, so the default 700ms/300ms delay behavior (hover_card.rs lines 12-13) is never tested.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "hover-card-dsr-1",
+    "component": "hover-card",
+    "principle": "Design for Server Rendering",
+    "description": "The Leptos HoverCardContentImpl (/Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/hover_card/hover_card_content.rs, lines 179-202, 210-257, 277-287) uses Effect::new for user-select management, pointerup listener attachment, and tabbable node suppression. These effects run only on the client. While appropriate for client-only behavior, the component has no SSR-specific guards or cfg attributes, and relies on web_sys APIs (document(), window()) that would panic in a server context if these code paths were reached during SSR.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "hover-card-dsr-2",
+    "component": "hover-card",
+    "principle": "Design for Server Rendering",
+    "description": "The e2e tests (/Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/hover-card.cy.js) do not test server-rendered HTML output, initial ARIA state on first paint, or hydration behavior.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "hover-card-dcnv-1",
+    "component": "hover-card",
+    "principle": "Document the Contract, Not the Visuals",
+    "description": "The e2e tests (/Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/hover-card.cy.js) do not test keyboard interaction contracts (Escape to dismiss), focus-triggered open/close behavior, or the behavioral contract around text selection within the content (the containSelection/has_selection_ref logic in hover_card_content.rs). The tests only cover pointer-based hover interactions, data attributes, positioning, and CSS custom properties.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "label-bp-1",
+    "component": "label",
+    "principle": "Be Predictable",
+    "description": "No e2e test file exists at /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/label.cy.js to verify that the mousedown handler correctly prevents text selection on double-click while allowing default behavior for single clicks and clicks on interactive elements (button, input, select, textarea).",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "label-dsr-1",
+    "component": "label",
+    "principle": "Design for Server Rendering",
+    "description": "No e2e test exists to verify that the Label component renders correct initial HTML (a native <label> element) on first paint without requiring client-side JS.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "label-dcnv-1",
+    "component": "label",
+    "principle": "Document the Contract, Not the Visuals",
+    "description": "No e2e test file exists at /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/label.cy.js to verify the behavioral contract: that the component renders a <label> element, that double-click does not select text, and that clicks on nested interactive elements are not intercepted.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "menu-msc-1",
+    "component": "menu",
+    "principle": "Make State Controllable",
+    "description": "The Leptos Menu component's `open` prop (in /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/menu/menu.rs line 5) and MenuSub's `open` prop (in /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/menu/menu_sub.rs line 5) use `prop_or_default(open)` which simply derives a Signal from the consumer-provided value or falls back to `false`. However, there is no internal state management for the uncontrolled case -- the component never creates its own RwSignal to track open state when the consumer does not provide the `open` prop. This means the menu cannot function in uncontrolled mode: without passing `open`, the menu is permanently closed since nothing internally toggles it. The React reference (menu.tsx line 88) similarly defaults `open` to `false` but this is because Menu is a low-level building block always controlled by higher-level components (DropdownMenu, ContextMenu). Both implementations match, but the e2e tests do not verify uncontrolled/controlled toggling of the `open` prop since the test page uses an always-open menu.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "menu-msc-2",
+    "component": "menu",
+    "principle": "Make State Controllable",
+    "description": "MenuCheckboxItem's `checked` prop (in /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/menu/menu_checkbox_item.rs line 5) uses `prop_or(checked, CheckedState::False)` but has no internal state -- the consumer must provide both `checked` and `on_checked_change` to make it work. Similarly, MenuRadioGroup's `value` prop (line 58) has no internal state. The React reference has the same pattern (props with no internal state), but neither implementation supports true uncontrolled mode where the component manages its own state when no controlled prop is provided. The e2e tests (menu.cy.js) test checkbox toggling (lines 295-306) and radio selection (lines 373-375) but these rely on the test page wiring up the state externally, never testing uncontrolled mode.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "menu-mo-1",
+    "component": "menu",
+    "principle": "Minimize Opinions",
+    "description": "Both the Leptos implementation (menu_content.rs line 411 via `use_internal_styles(composed_refs, &[(\"outline\", \"none\")])`) and the React reference (menu.tsx line 508 via `style={{ outline: 'none', ...contentProps.style }}`) apply a hardcoded `outline: none` style to the menu content element. This is a visual opinion that interferes with consumer design systems that may rely on outline for accessibility focus indicators. The e2e test (menu.cy.js lines 619-623) explicitly validates this internal style exists, reinforcing the opinion rather than testing its absence.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "menu-dsr-1",
+    "component": "menu",
+    "principle": "Design for Server Rendering",
+    "description": "The Leptos Menu component (menu.rs lines 73-92) uses `Effect::new` to attach a global `keydown` event listener on `document` for keyboard-vs-pointer detection. This Effect runs only on the client, meaning during SSR/hydration the `is_using_keyboard` signal starts as `false` and the event listener is not yet attached. While this matches the React reference (menu.tsx lines 95-110 using `React.useEffect`), neither implementation provides correct initial state for server rendering since both rely on client-side effects.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "menu-dsr-2",
+    "component": "menu",
+    "principle": "Design for Server Rendering",
+    "description": "The MenuContentImpl (menu_content.rs lines 685-706) attaches keydown, blur, and pointermove event listeners via `Effect::new` after mount rather than declaratively. This means the initial server-rendered HTML has no event handlers attached. While this is inherent to both implementations (React also relies on client hydration for events), the e2e tests do not verify that the initial server-rendered HTML has correct ARIA attributes before hydration completes.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "menubar-icc-1",
+    "component": "menubar",
+    "principle": "Invert Control to the Consumer",
+    "description": "Leptos MenubarTrigger does not expose or compose consumer-provided event handler props (on_pointer_down, on_key_down, on_focus, on_blur, on_pointer_enter). The React reference uses composeEventHandlers(props.onPointerDown, ...) etc. to let consumers intercept/augment all event handlers. In the Leptos version (menubar.rs lines 207-247), handlers are set directly via on:pointerdown, on:keydown, on:focus, on:blur, on:pointerenter with no consumer composition mechanism, preventing consumers from hooking into these events on the trigger element.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "menubar-dsr-1",
+    "component": "menubar",
+    "principle": "Design for Server Rendering",
+    "description": "Leptos MenubarContent sets data-radix-menubar-content via a client-side Effect (menubar_content.rs lines 65-69) instead of rendering it in the initial HTML. On first server-rendered paint this attribute will be missing, which means the ArrowLeft/ArrowRight inter-menu keyboard navigation logic (menubar_content.rs line 175: target.closest(\"[data-radix-menubar-content]\")) would malfunction until the Effect runs on the client. The React reference sets data-radix-menubar-content as a static JSX prop (menubar.tsx line 323), ensuring it is present in server-rendered HTML.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "menubar-dsr-2",
+    "component": "menubar",
+    "principle": "Design for Server Rendering",
+    "description": "Leptos MenubarSubTrigger sets data-radix-menubar-subtrigger via a client-side Effect (menubar_items.rs lines 268-272) instead of in the initial HTML. The React reference sets it as a static JSX prop (menubar.tsx line 630). This attribute is used by the inter-menu keyboard navigation logic (menubar_content.rs line 171: target.hasAttribute(\"data-radix-menubar-subtrigger\")), so it must be present on first render for correct behavior.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "menubar-dsr-3",
+    "component": "menubar",
+    "principle": "Design for Server Rendering",
+    "description": "Leptos MenubarSubContent sets data-radix-menubar-content via a client-side Effect (menubar_items.rs lines 317-321) instead of in the initial HTML. The React reference sets it as a static JSX prop (menubar.tsx line 659).",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "navigation-menu-slp-1",
+    "component": "navigation-menu",
+    "principle": "Separate Logic from Presentation",
+    "description": "NavigationMenuIndicatorImpl in /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/navigation_menu/navigation_menu_indicator.rs (lines 201-213) ships hardcoded inline styles: style:position=\"absolute\", style:left, style:top, style:width, style:height, style:transform. The React reference does the same (lines 713-726 of navigation-menu.tsx). These positioning styles are behavioral (they compute indicator position), but they impose layout opinions (absolute positioning) that a consumer cannot override without fighting inline styles.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "navigation-menu-slp-2",
+    "component": "navigation-menu",
+    "principle": "Separate Logic from Presentation",
+    "description": "NavigationMenuList in /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/navigation_menu/navigation_menu_list.rs (line 164) renders a wrapper <div style=\"position: relative\"> around the list for the indicator track. This is a structural/visual wrapper element that the consumer has no control over. The React reference does the same (line 377 of navigation-menu.tsx).",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "navigation-menu-slp-3",
+    "component": "navigation-menu",
+    "principle": "Separate Logic from Presentation",
+    "description": "NavigationMenuViewportImpl in /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/navigation_menu/navigation_menu_viewport.rs (lines 101-108) sets inline styles on the viewport element via Effect: --radix-navigation-menu-viewport-width, --radix-navigation-menu-viewport-height, and pointer-events. The CSS custom properties are acceptable (behavioral sizing data), but pointer-events:none is a visual/interaction opinion applied via inline style.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "navigation-menu-oac-1",
+    "component": "navigation-menu",
+    "principle": "Own Accessibility Completely",
+    "description": "Both the Leptos implementation (/Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/navigation_menu/navigation_menu.rs line 157) and React reference (navigation-menu.tsx line 204) hardcode aria-label=\"Main\" on the <nav> element. This prevents consumers from providing a custom aria-label for secondary or site-specific navigation menus without overriding it, which is an accessibility limitation. The e2e tests do not verify that a consumer-provided aria-label is respected.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "navigation-menu-oac-2",
+    "component": "navigation-menu",
+    "principle": "Own Accessibility Completely",
+    "description": "The e2e tests (/Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/navigation-menu.cy.js) do not test keyboard navigation with screen reader announcements or verify that the aria-owns restructuring in NavigationMenuTrigger (used when a viewport is present) correctly exposes content to assistive technology.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "navigation-menu-msc-1",
+    "component": "navigation-menu",
+    "principle": "Make State Controllable",
+    "description": "The e2e tests (/Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/navigation-menu.cy.js) do not test controlled mode (externally-driven value/on_value_change props) for NavigationMenu. Only uncontrolled mode is exercised. There is no test verifying that a consumer can control the open state externally via the value prop and on_value_change callback.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "navigation-menu-mo-1",
+    "component": "navigation-menu",
+    "principle": "Minimize Opinions",
+    "description": "NavigationMenuIndicatorImpl in /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/navigation_menu/navigation_menu_indicator.rs (lines 201-213) ships hardcoded positioning styles (position: absolute, left, top, width, height, transform) that cannot be removed or overridden by the consumer without fighting inline styles. The React reference has the same issue (lines 713-726) but at least allows user styles to be merged via {...indicatorProps.style} spread; the Leptos version uses individual style: directives which cannot be overridden by consumer attrs.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "navigation-menu-mo-2",
+    "component": "navigation-menu",
+    "principle": "Minimize Opinions",
+    "description": "NavigationMenuList in /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/navigation_menu/navigation_menu_list.rs (line 164) injects an opaque wrapper <div style=\"position: relative\"> that the consumer cannot control or remove. The React reference does the same (line 377).",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "navigation-menu-mo-3",
+    "component": "navigation-menu",
+    "principle": "Minimize Opinions",
+    "description": "NavigationMenuContentImpl in /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/navigation_menu/navigation_menu_content.rs (lines 183-185) and NavigationMenuViewportImpl (lines 105-108 of navigation_menu_viewport.rs) apply pointer-events:none via inline styles. This is an interaction opinion that could conflict with consumer animation strategies.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "navigation-menu-dsr-1",
+    "component": "navigation-menu",
+    "principle": "Design for Server Rendering",
+    "description": "NavigationMenuList in /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/navigation_menu/navigation_menu_list.rs uses Effects (lines 108-127, 130-138, 142-147) to capture and forward user attributes from a hidden span to the <ul>, and to register the indicator track element. On first server-rendered paint, the <ul> will be missing any user-provided attributes (e.g., class, data-testid) until the client-side Effect runs, causing a potential mismatch.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "navigation-menu-dsr-2",
+    "component": "navigation-menu",
+    "principle": "Design for Server Rendering",
+    "description": "NavigationMenuContent in /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/navigation_menu/navigation_menu_content.rs (lines 55-99) uses an Effect to capture user attributes from a hidden span and another Effect to register content data with the viewport. On SSR first paint, user attributes like data-testid and class will not be present on the content element until hydration Effects run.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "navigation-menu-dsr-3",
+    "component": "navigation-menu",
+    "principle": "Design for Server Rendering",
+    "description": "NavigationMenuIndicator in /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/navigation_menu/navigation_menu_indicator.rs (lines 27-46, 49-58) uses Effects for attribute capture and forwarding. The indicator content is portaled via mount_to inside an Effect (lines 92-111), meaning on SSR the indicator will be entirely absent from the initial HTML.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "navigation-menu-dsr-4",
+    "component": "navigation-menu",
+    "principle": "Design for Server Rendering",
+    "description": "NavigationMenuViewportImpl in /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/navigation_menu/navigation_menu_viewport.rs (lines 63-68) registers the viewport DOM element via an Effect, and sets CSS custom properties via another Effect (lines 95-111). The viewport's sizing CSS custom properties and pointer-events will be missing on first paint.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "navigation-menu-dsr-5",
+    "component": "navigation-menu",
+    "principle": "Design for Server Rendering",
+    "description": "The e2e tests (/Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/navigation-menu.cy.js) do not test SSR output or verify that initial HTML is correct without client JS.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "navigation-menu-dcnv-1",
+    "component": "navigation-menu",
+    "principle": "Document the Contract, Not the Visuals",
+    "description": "The e2e tests (/Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/navigation-menu.cy.js) include tests for visual layout (section 8 'content layout', lines 354-388) that verify grid positioning and CSS class forwarding, which are visual concerns rather than behavioral contract verification. Meanwhile, there are no tests for the behavioral contract around delay_duration/skip_delay_duration timing, hover intent behavior, or the data-motion attribute values (from-start, from-end, to-start, to-end) that define the animation direction contract.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "one-time-password-field-msc-1",
+    "component": "one-time-password-field",
+    "principle": "Make State Controllable",
+    "description": "E2E tests only exercise controlled mode (value + on_value_change are always provided in the test page at /Users/adamduvick/Code/clones/rust-radix/reference_app/leptos/src/pages/one_time_password_field.rs). There is no e2e test verifying uncontrolled mode (using default_value without value/on_value_change), so there is no test proof that uncontrolled mode works correctly.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "one-time-password-field-bp-1",
+    "component": "one-time-password-field",
+    "principle": "Be Predictable",
+    "description": "In the Leptos implementation at /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/one_time_password_field/one_time_password_field_input.rs lines 572-579, the onPointerDown handler always focuses the last selectable index regardless of which input was clicked. The React reference at /Users/adamduvick/Code/clones/rust-radix/reference/react-radix-primitives/packages/react/one-time-password-field/src/one-time-password-field.tsx lines 876-881 uses Math.min(index, lastSelectableIndex) to clamp focus to the clicked index or the last selectable one, whichever is smaller. The Leptos behavior diverges: clicking an input before the last selectable index will skip to the end rather than focusing the clicked position, which is inconsistent with the React reference.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "one-time-password-field-dsr-1",
+    "component": "one-time-password-field",
+    "principle": "Design for Server Rendering",
+    "description": "The React reference implementation uses useIsHydrated (imported at /Users/adamduvick/Code/clones/rust-radix/reference/react-radix-primitives/packages/react/one-time-password-field/src/one-time-password-field.tsx line 8, used at line 431) and passes isHydrated into context to gate placeholder rendering until after hydration (line 601: canSetPlaceholder = indexProp != null || isHydrated), preventing layout shifts from placeholder text changing after hydration. The Leptos implementation at /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/one_time_password_field/one_time_password_field_input.rs has no equivalent hydration guard for placeholder values, which could cause placeholder flicker on SSR pages where the index is resolved via DOM after hydration.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "one-time-password-field-dsr-2",
+    "component": "one-time-password-field",
+    "principle": "Design for Server Rendering",
+    "description": "No e2e tests verify correct SSR initial HTML rendering, absence of layout shifts, or proper ARIA attributes on first paint before client JS hydration.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "one-time-password-field-dcnv-1",
+    "component": "one-time-password-field",
+    "principle": "Document the Contract, Not the Visuals",
+    "description": "No e2e tests verify the behavioral contract for autoSubmit (auto-submission when all fields are filled), the password input type, placeholder behavior, autoComplete attribute handling, or the sanitizeValue callback. These are documented/implemented behavioral contracts that lack test verification.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "password-toggle-field-slp-1",
+    "component": "password-toggle-field",
+    "principle": "Separate Logic from Presentation",
+    "description": "The Leptos PasswordToggleFieldIcon component in /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/password_toggle_field/password_toggle_field_slot.rs (line 49) renders a Primitive with element=leptos::svg::svg, forcing the icon wrapper to be an SVG element. Similarly, the React PasswordToggleFieldIcon in /Users/adamduvick/Code/clones/rust-radix/reference/react-radix-primitives/packages/react/password-toggle-field/src/password-toggle-field.tsx (line 431) renders Primitive.svg. While both support asChild, the default element choice prescribes a visual container type (SVG).",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "password-toggle-field-oac-1",
+    "component": "password-toggle-field",
+    "principle": "Own Accessibility Completely",
+    "description": "Neither the Leptos implementation nor the React reference implementation sets aria-pressed on the toggle button to communicate the current toggle state to assistive technology. The toggle button controls a binary visible/hidden state but only conveys this through aria-label text changes (\"Show password\" / \"Hide password\"), which is fragile if the consumer provides their own aria-label. The e2e tests in /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/password-toggle-field.cy.js do not verify aria-pressed.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "password-toggle-field-oac-2",
+    "component": "password-toggle-field",
+    "principle": "Own Accessibility Completely",
+    "description": "The Leptos PasswordToggleFieldToggle in /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/password_toggle_field/password_toggle_field_slot.rs does not set aria-expanded or any equivalent ARIA state attribute to indicate whether the password is currently visible. The React reference similarly omits this. The e2e tests do not verify any toggle state attribute beyond aria-label.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "password-toggle-field-mo-1",
+    "component": "password-toggle-field",
+    "principle": "Minimize Opinions",
+    "description": "The Leptos PasswordToggleFieldInput in /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/password_toggle_field/password_toggle_field_input.rs (lines 81-83) hardcodes attr:autocapitalize=\"off\", attr:autocomplete to default \"current-password\", and attr:spellcheck=\"false\". Similarly the React version at /Users/adamduvick/Code/clones/rust-radix/reference/react-radix-primitives/packages/react/password-toggle-field/src/password-toggle-field.tsx (lines 122-123) defaults autoCapitalize='off' and spellCheck=false. While autocomplete is exposed as a prop, autocapitalize and spellcheck are opinionated defaults that are not overridable in the Leptos version (they are hardcoded string attributes, not props). The e2e tests do not verify these defaults can be overridden.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "password-toggle-field-dsr-1",
+    "component": "password-toggle-field",
+    "principle": "Design for Server Rendering",
+    "description": "The Leptos implementation in /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/password_toggle_field/password_toggle_field_slot.rs does not implement any SSR hydration guard for the toggle button. The React reference implementation at /Users/adamduvick/Code/clones/rust-radix/reference/react-radix-primitives/packages/react/password-toggle-field/src/password-toggle-field.tsx (lines 235, 277-282) uses useIsHydrated() to set aria-hidden=true and tabIndex=-1 before hydration, and only sets aria-controls after hydration, preventing the button from referencing a potentially non-existent element ID during SSR. The Leptos PasswordToggleFieldToggle always sets aria-controls (line 225 of password_toggle_field_slot.rs), with no equivalent hydration gating. The e2e tests do not test SSR behavior.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "password-toggle-field-dsr-2",
+    "component": "password-toggle-field",
+    "principle": "Design for Server Rendering",
+    "description": "The Leptos PasswordToggleFieldToggle auto-generates aria-label via a MutationObserver set up inside an Effect (lines 92-165 of /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/password_toggle_field/password_toggle_field_slot.rs). On SSR first paint, before the Effect runs client-side, the toggle button will have no aria-label if the consumer does not provide one and the toggle only contains an icon (no text content). This means the initial HTML served will lack an accessible name for icon-only toggles.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "password-toggle-field-dcnv-1",
+    "component": "password-toggle-field",
+    "principle": "Document the Contract, Not the Visuals",
+    "description": "The e2e tests in /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/password-toggle-field.cy.js do not test or document the autocomplete attribute contract (the input should have autocomplete=\"current-password\" or autocomplete=\"new-password\"). This behavioral attribute is important for password managers and the form contract but is not verified by any test.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "password-toggle-field-dcnv-2",
+    "component": "password-toggle-field",
+    "principle": "Document the Contract, Not the Visuals",
+    "description": "The e2e tests do not verify the spellcheck=\"false\" or autocapitalize=\"off\" attributes on the input, which are part of the behavioral contract for security-sensitive password fields.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "popover-msc-1",
+    "component": "popover",
+    "principle": "Make State Controllable",
+    "description": "The e2e tests in /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/popover.cy.js do not verify controlled state mode. While the Leptos implementation correctly supports controlled open/default_open/on_open_change via use_controllable_state (popover.rs lines 9-29), there are no tests exercising the controlled pattern where the consumer drives the open state externally, leaving this contract unverified.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "popover-dsr-1",
+    "component": "popover",
+    "principle": "Design for Server Rendering",
+    "description": "The e2e tests in /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/popover.cy.js do not verify server-rendered HTML. There are no tests confirming that the initial HTML output (before client JS hydration) contains correct ARIA attributes on the trigger (aria-haspopup, aria-expanded, aria-controls) or that no layout shifts occur on hydration.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "popover-dcnv-1",
+    "component": "popover",
+    "principle": "Document the Contract, Not the Visuals",
+    "description": "The e2e tests in /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/popover.cy.js do not verify the PopoverAnchor sub-component behavioral contract. The test page at /Users/adamduvick/Code/clones/rust-radix/reference_app/leptos/src/pages/popover.rs does not include a PopoverAnchor usage, so there is no test coverage for the custom anchor positioning behavior documented in the implementation (popover.rs lines 63-87).",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "progress-msc-1",
+    "component": "progress",
+    "principle": "Make State Controllable",
+    "description": "The Leptos Progress component only supports a controlled `value` prop (MaybeProp<f64>). There is no built-in uncontrolled mode with internal default state and an optional `default_value` prop. The consumer must always manage the value signal externally. The React reference also lacks an uncontrolled mode, but this principle requires every stateful value to support both uncontrolled (internal) and controlled (consumer-driven) modes seamlessly. File: /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/progress/mod.rs, lines 38-39.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "progress-msc-2",
+    "component": "progress",
+    "principle": "Make State Controllable",
+    "description": "E2E tests do not verify an uncontrolled usage pattern (e.g., rendering Progress with a default_value and no explicit signal management). File: /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/progress.cy.js.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "progress-bp-1",
+    "component": "progress",
+    "principle": "Be Predictable",
+    "description": "The Leptos implementation silently clamps out-of-range values (value is clamped via `.min(max).max(0.0)` at line 55) and silently ignores a zero max (falls back to DEFAULT_MAX at lines 48-54), whereas the React reference logs explicit console.error messages for invalid max and value props (lines 40-48 of progress.tsx). This behavioral difference means consumers get no feedback about misuse. File: /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/progress/mod.rs, lines 47-55.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "progress-bp-2",
+    "component": "progress",
+    "principle": "Be Predictable",
+    "description": "E2E tests do not verify the behavior when invalid values are provided (e.g., negative value, value exceeding max, zero or negative max) to confirm predictable error handling or clamping. File: /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/progress.cy.js.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "progress-dcnv-1",
+    "component": "progress",
+    "principle": "Document the Contract, Not the Visuals",
+    "description": "E2E tests include a visual/style assertion that checks the indicator's CSS width and inline style contain '100%' (line 173: `getIndicator().invoke('attr', 'style').should('contain', '100%')`). This tests a visual property set by the consumer's demo page rather than verifying the behavioral contract (data attributes, ARIA state). The indicator width is not part of the component's contract -- it is consumer-supplied styling in the demo page (reference_app/leptos/src/pages/progress.rs, line 18). File: /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/progress.cy.js, line 170-174.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "radio-group-msc-1",
+    "component": "radio-group",
+    "principle": "Make State Controllable",
+    "description": "E2E tests do not verify controlled mode (passing a reactive `value` prop and `on_value_change` callback to RadioGroup). All tests use uncontrolled mode only. There is no test that the component works correctly when the consumer drives state externally. File: /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/radio-group.cy.js",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "radio-group-dsr-1",
+    "component": "radio-group",
+    "principle": "Design for Server Rendering",
+    "description": "The React reference (radio.tsx line 49) sets isFormControl to true by default for SSR (`const isFormControl = button ? form || !!button.closest('form') : true`), ensuring the hidden native <input> is rendered on first paint for form participation. The Leptos implementation in /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/radio_group/mod.rs (lines 149-161) uses a Signal that reads the DOM (item_ref.get() and closest('form')), which will be false during SSR, meaning the RadioBubbleInput will not be rendered in the initial server HTML when the radio is inside a <form>. This could cause missing form participation on first paint.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "radio-group-dcnv-1",
+    "component": "radio-group",
+    "principle": "Document the Contract, Not the Visuals",
+    "description": "No behavioral contract documentation exists for the radio-group component. The README at /Users/adamduvick/Code/clones/rust-radix/reference/react-radix-primitives/packages/react/radio-group/README.md only links to external docs. There is no documentation in the Leptos codebase describing the component's props, ARIA behavior, keyboard interactions, or state contract.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "scroll-area-slp-1",
+    "component": "scroll-area",
+    "principle": "Separate Logic from Presentation",
+    "description": "The Leptos ScrollArea component sets inline styles such as 'position: relative' and CSS custom properties via attr:style in /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/scroll_area/scroll_area.rs (line 51-57). The React reference does the same (line 114-119 of scroll-area.tsx), so this is consistent with the reference. However, the ScrollAreaViewport injects a <style> tag with CSS rules for hiding native scrollbars (scroll_area.rs line 108-111), and the ScrollAreaScrollbarImpl sets 'position: absolute' (scroll_area_scrollbar.rs line 895). The ScrollAreaCornerImpl sets inline positioning styles including 'position: absolute; right: 0; bottom: 0' (scroll_area_corner.rs line 100-108). The ScrollAreaThumbImpl sets width/height via CSS variables (scroll_area_thumb.rs lines 186-187). These are all structural/positioning styles required for functionality, matching the React reference. No e2e test verifies that these styles can be fully overridden by the consumer.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "scroll-area-slp-2",
+    "component": "scroll-area",
+    "principle": "Separate Logic from Presentation",
+    "description": "The ScrollAreaViewport renders a wrapper <div style='min-width: 100%; display: table;'> around children (scroll_area.rs line 127-129), which is a non-overrideable internal element that imposes layout opinions. The React reference does the same (scroll-area.tsx line 183), but this is still an internal wrapper element that the consumer cannot control or remove.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "scroll-area-oac-1",
+    "component": "scroll-area",
+    "principle": "Own Accessibility Completely",
+    "description": "Neither the Leptos implementation nor the React reference implementation applies any ARIA roles, aria-* attributes, or keyboard navigation to the scroll area components. There is no role='scrollbar' on the scrollbar elements, no aria-controls linking scrollbar to viewport, no aria-valuenow/aria-valuemin/aria-valuemax on the thumb, and no keyboard support (arrow keys, page up/down) for the custom scrollbar. The WAI-ARIA scrollbar pattern (https://www.w3.org/WAI/ARIA/apg/patterns/scrollbar/) is not implemented. While the React reference also omits these, the principle requires full WAI-ARIA pattern compliance.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "scroll-area-oac-2",
+    "component": "scroll-area",
+    "principle": "Own Accessibility Completely",
+    "description": "The e2e tests in /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/scroll-area.cy.js do not test any ARIA attributes, roles, or keyboard navigation for the scroll area. The 'accessibility' test section (lines 159-180) only checks that the viewport is scrollable and that native scrollbars are hidden via CSS, not that ARIA roles or keyboard support are present.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "scroll-area-msc-1",
+    "component": "scroll-area",
+    "principle": "Make State Controllable",
+    "description": "The ScrollArea component's scroll position is not exposed as a controllable prop. The consumer cannot provide a controlled scroll position value or receive callbacks when the scroll position changes. The scroll_type and scroll_hide_delay are configuration props, not controllable stateful values. The internal visibility state of scrollbars (visible/hidden in Hover/Scroll/Auto modes) is entirely internal with no controlled mode exposed to the consumer. The React reference has the same limitation.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "scroll-area-msc-2",
+    "component": "scroll-area",
+    "principle": "Make State Controllable",
+    "description": "The e2e tests do not verify any controlled state pattern for scroll position or scrollbar visibility.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "scroll-area-mo-1",
+    "component": "scroll-area",
+    "principle": "Minimize Opinions",
+    "description": "The Leptos ScrollArea root component hardcodes 'position: relative' in its inline style (scroll_area.rs line 53). The ScrollAreaScrollbarImpl hardcodes 'position: absolute' (scroll_area_scrollbar.rs line 895). The ScrollAreaCornerImpl hardcodes 'position: absolute; right/left: 0; bottom: 0' (scroll_area_corner.rs lines 100-108). The ScrollAreaViewport injects a global <style> tag that hides native scrollbars (scroll_area.rs lines 108-111). While the React reference has the same opinions, these are still opinionated layout styles that may conflict with consumer design systems. The React reference merges consumer styles via '...props.style' spread (e.g., scroll-area.tsx line 119), allowing consumers to override internal styles, but the Leptos implementation uses attr:style which may clobber consumer-provided styles rather than merging them.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "scroll-area-dsr-1",
+    "component": "scroll-area",
+    "principle": "Design for Server Rendering",
+    "description": "The Leptos ScrollArea component relies on Effect::new (client-side effect) to set viewport and content element references in context (scroll_area.rs lines 87-92, 99-104). The scrollbar visibility in Auto mode depends on ResizeObserver measurements (scroll_area_scrollbar.rs lines 320-332) which only run on the client. During SSR, the viewport and content signals will be None, meaning scrollbar visibility state cannot be determined server-side. For type='always', the scrollbar should render on the server, but the thumb position and sizes depend on client-side DOM measurements (Effect and ResizeObserver in scroll_area_scrollbar.rs lines 540-581, 862-874), so the thumb will have default/zero sizes on first paint.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "scroll-area-dsr-2",
+    "component": "scroll-area",
+    "principle": "Design for Server Rendering",
+    "description": "The e2e tests do not verify server-rendered HTML output or initial paint state without client JS.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "scroll-area-dcnv-1",
+    "component": "scroll-area",
+    "principle": "Document the Contract, Not the Visuals",
+    "description": "The e2e tests in /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/scroll-area.cy.js focus on visual/structural aspects (element existence, visibility, CSS properties, computed dimensions) but do not test the behavioral contract: no tests for scrollbar state machine transitions (hidden->scrolling->idle->hidden), no tests for scroll-hide-delay timing, no tests for pointer interaction behavior (drag-to-scroll, thumb pointer tracking), no tests for wheel event handling on the scrollbar, and no tests for RTL direction support. The contract of how the scrollbar responds to user interaction is untested.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "select-slp-1",
+    "component": "select",
+    "principle": "Separate Logic from Presentation",
+    "description": "The Leptos SelectIcon component in /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/select/select_value.rs (line 72) ships a default visual glyph '\u25bc' when no children are provided, injecting visual content rather than leaving presentation entirely to the consumer. The React reference does the same (select.tsx line 409), so both implementations violate this principle.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "select-slp-2",
+    "component": "select",
+    "principle": "Separate Logic from Presentation",
+    "description": "The Leptos SelectViewport in /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/select/select_viewport.rs (line 21) injects a global <style> tag that hides scrollbars ('scrollbar-width:none; -ms-overflow-style:none; display:none for ::-webkit-scrollbar'). This imposes a visual opinion on scrollbar appearance. The React reference does the same (select.tsx lines 1118-1123).",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "select-slp-3",
+    "component": "select",
+    "principle": "Separate Logic from Presentation",
+    "description": "The Leptos SelectContentImpl in /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/select/select_content.rs (lines 158-167) applies internal styles including 'display: flex', 'flex-direction: column', 'outline: none' via use_internal_styles. While these are structural/layout styles needed for behavior, 'outline: none' is a visual opinion that removes the browser's default focus indicator.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "select-oac-1",
+    "component": "select",
+    "principle": "Own Accessibility Completely",
+    "description": "The Leptos implementation defines hide_others() in /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/select/mod.rs (lines 257-302) but marks it #[allow(dead_code)] and never calls it. The React reference calls hideOthers(content) in select.tsx (lines 573-575) to aria-hide everything except the select content when open, providing the equivalent of aria-modal. This missing call means screen readers may still announce background content while the select is open.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "select-oac-2",
+    "component": "select",
+    "principle": "Own Accessibility Completely",
+    "description": "The e2e tests do not verify that aria-controls on the trigger points to a valid content element id. The trigger sets aria-controls={content_id} but no test checks that the referenced id actually exists in the DOM when the select is open.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "select-mo-1",
+    "component": "select",
+    "principle": "Minimize Opinions",
+    "description": "The Leptos SelectScrollUpButton and SelectScrollDownButton in /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/select/select_scroll_button.rs (lines 55-56, 125-126) use a hardcoded scroll amount of 32px ('let item_height = 32'). The React reference uses selectedItem.offsetHeight (select.tsx lines 1471-1473, 1521-1523), dynamically adapting to the actual item size. This hardcoded value imposes an assumption about item height that may not match the consumer's design.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "select-bp-1",
+    "component": "select",
+    "principle": "Be Predictable",
+    "description": "The Leptos implementation is missing the window blur/resize close behavior present in the React reference. React's SelectContentImpl (select.tsx lines 653-661) closes the select on window blur and resize events. The Leptos SelectContentImpl in /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/select/select_content.rs has no equivalent listeners, meaning the select could remain open when the browser tab loses focus or the window is resized.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "select-bp-2",
+    "component": "select",
+    "principle": "Be Predictable",
+    "description": "The Leptos implementation is missing the pointer-move-delta guard from React's SelectContentImpl (select.tsx lines 617-651). React tracks pointer movement after opening via pointerdown to prevent accidental item selection on pointerup when the pointer hasn't moved significantly (threshold of 10px). The Leptos implementation stores trigger_pointer_down_pos_ref but never reads it in the content to implement this guard, potentially causing accidental selections on touch/pointer interactions.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "select-bp-3",
+    "component": "select",
+    "principle": "Be Predictable",
+    "description": "The e2e tests do not verify that the select closes on window blur or resize events.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "select-dsr-1",
+    "component": "select",
+    "principle": "Design for Server Rendering",
+    "description": "There are no e2e tests verifying SSR behavior such as correct initial HTML without JavaScript, no layout shifts, or proper ARIA attributes on first paint. The Leptos implementation relies on client-side Effects for positioning and focus (select_content.rs lines 299-312, 387-546), and there are no tests confirming the component renders meaningful initial HTML server-side.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "select-dcnv-1",
+    "component": "select",
+    "principle": "Document the Contract, Not the Visuals",
+    "description": "There are no e2e tests verifying the behavioral contract of Tab key prevention inside the open select content. The React reference (select.tsx line 781) and Leptos implementation (select_content.rs lines 319-322) both prevent Tab from navigating away, but the e2e tests never assert this behavior.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "select-dcnv-2",
+    "component": "select",
+    "principle": "Document the Contract, Not the Visuals",
+    "description": "There are no e2e tests verifying that context menu (right-click) is suppressed on the select content, which both implementations enforce (select_content.rs lines 608-609 and select.tsx line 764).",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "separator-bp-1",
+    "component": "separator",
+    "principle": "Be Predictable",
+    "description": "The React reference implementation in /Users/adamduvick/Code/clones/rust-radix/reference/react-radix-primitives/packages/react/separator/src/separator.tsx validates orientation at runtime via isValidOrientation() and falls back to DEFAULT_ORIENTATION ('horizontal') if an invalid string is passed (line 29). The Leptos implementation in /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/separator/mod.rs uses a Rust enum Orientation (line 7-12), which prevents invalid values at compile time but does not replicate the runtime fallback behavior for dynamic/string-based inputs. This is a minor behavioral divergence from the reference. No e2e test verifies behavior with invalid orientation values.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "separator-dcnv-1",
+    "component": "separator",
+    "principle": "Document the Contract, Not the Visuals",
+    "description": "No e2e tests verify behavioral documentation/contract aspects such as the rendered element type (div) or the as_child composition pattern. The e2e tests in /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/separator.cy.js only verify ARIA attributes and data attributes, but do not test that the component renders as a div element or that as_child properly delegates rendering to consumer-provided children, which are key parts of the behavioral contract.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "slider-slp-1",
+    "component": "slider",
+    "principle": "Separate Logic from Presentation",
+    "description": "In the Leptos SliderThumbImpl (slider_parts.rs lines 281-294), positioning styles (transform, position:absolute, calc-based offset, and conditional display:none) are applied directly on the Primitive element via attr:style. The React reference (slider.tsx lines 585-591) uses a separate outer <span> wrapper for positioning, keeping the consumer-facing Primitive.span free of layout styles. The Leptos approach merges internal positioning with the consumer's element, violating separation by imposing layout concerns.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "slider-slp-2",
+    "component": "slider",
+    "principle": "Separate Logic from Presentation",
+    "description": "In the Leptos SliderRange (slider_parts.rs lines 75-84), internal positioning styles (start_edge and end_edge percentages) are applied via attr:style directly on the Primitive, which will clobber any consumer-provided inline styles. The React reference (slider.tsx lines 515-519) merges consumer styles with internal styles via {...props.style, ...internalStyles}.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "slider-icc-1",
+    "component": "slider",
+    "principle": "Invert Control to the Consumer",
+    "description": "In the Leptos SliderRange (slider_parts.rs lines 68-89), using attr:style to set the positioning styles clobbers any consumer-provided inline style attribute. The React reference (slider.tsx lines 515-519) merges styles with {...props.style}, preserving consumer customization. Consumers cannot override or extend the inline style on SliderRange in the Leptos implementation.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "slider-icc-2",
+    "component": "slider",
+    "principle": "Invert Control to the Consumer",
+    "description": "In the Leptos SliderThumbImpl (slider_parts.rs lines 266-314), the attr:style attribute combines positioning, transform, and conditional display:none, preventing consumers from providing their own inline styles on the thumb. The React reference (slider.tsx line 611) passes props.style through to the consumer-facing Primitive separately from the positioning wrapper.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "slider-msc-1",
+    "component": "slider",
+    "principle": "Make State Controllable",
+    "description": "The e2e tests (slider.cy.js) do not test uncontrolled mode (default_value without value prop). All tests use the controlled pattern via the test page (reference_app/leptos/src/pages/slider.rs uses value=value with on_value_change). There are no tests verifying that the slider works correctly in uncontrolled mode with only default_value.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "slider-mo-1",
+    "component": "slider",
+    "principle": "Minimize Opinions",
+    "description": "The Leptos SliderThumbImpl (slider_parts.rs lines 281-294) hardcodes inline styles: 'transform: var(--radix-slider-thumb-transform); position: absolute; {start_edge}: calc(...)' directly on the consumer-facing Primitive element. While the React reference also applies positioning, it does so on a non-consumer-facing wrapper <span> (slider.tsx lines 585-591), keeping the consumer Primitive clean. The Leptos implementation forces these styles onto the element the consumer interacts with.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "slider-mo-2",
+    "component": "slider",
+    "principle": "Minimize Opinions",
+    "description": "The Leptos SliderRange (slider_parts.rs lines 68-89) sets attr:style with positioning percentages directly on the Primitive, clobbering any consumer-provided inline styles. The React reference (slider.tsx lines 515-519) merges internal styles with consumer-provided styles via the spread operator.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "slider-dsr-1",
+    "component": "slider",
+    "principle": "Design for Server Rendering",
+    "description": "In the Leptos SliderThumbImpl (slider_parts.rs lines 206-235), thumb registration uses an Effect to register thumbs with the context. During SSR, Effects do not run, so the thumbs collection will be empty on the server. The index Memo (slider_parts.rs lines 108-129) depends on thumb_ref.get() which returns None during SSR, so index will be -1. With index=-1, the thumb will render with value=None but the condition at line 291 (index >= 0 && value.is_none()) will be false, so display:none is NOT applied during SSR. However, the thumb will render at the wrong position (percent=0, default) until hydration corrects it, which can cause a visual layout shift.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "switch-dsr-1",
+    "component": "switch",
+    "principle": "Design for Server Rendering",
+    "description": "In the Leptos implementation, `is_form_control` relies on `button_ref.get()` which is `None` during SSR, causing the hidden `<input>` form control to not render on the server. The React reference handles this by defaulting `isFormControl` to `true` when `button` is null (line 51: `const isFormControl = button ? form || !!button.closest('form') : true`), so the hidden input is always present on first paint inside a form. The Leptos version at `/Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/switch/mod.rs` lines 46-58 will evaluate to `false` when the ref is not yet populated, meaning the BubbleInput is missing from the initial SSR HTML for switches inside forms.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "switch-dsr-2",
+    "component": "switch",
+    "principle": "Design for Server Rendering",
+    "description": "The e2e tests do not verify SSR behavior (no tests check initial server-rendered HTML before hydration or confirm the absence of layout shifts).",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "switch-dcnv-1",
+    "component": "switch",
+    "principle": "Document the Contract, Not the Visuals",
+    "description": "The e2e tests at `/Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/switch.cy.js` do not verify the behavioral contract for `required` (aria-required attribute propagation) or the hidden form input's `name`/`value` semantics, which are part of the component's behavioral contract for form integration.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "tabs-oac-1",
+    "component": "tabs",
+    "principle": "Own Accessibility Completely",
+    "description": "Leptos TabsContentImpl (packages/primitives/leptos/src/components/tabs/mod.rs, line 356-371) does not set a `hidden` attribute on the tabpanel when it is not the active tab. The React reference (reference/react-radix-primitives/packages/react/tabs/src/tabs.tsx, line 250) sets `hidden={!present}` so that when `forceMount` keeps the panel mounted, inactive panels are hidden from the accessibility tree. The Leptos version omits this, so with `force_mount=true` inactive tab panels would remain visible and announced to screen readers.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "tabs-oac-2",
+    "component": "tabs",
+    "principle": "Own Accessibility Completely",
+    "description": "E2E tests (reference_app/cypress/e2e/tabs.cy.js) do not verify the `hidden` attribute on inactive tabpanels when using forceMount, so there is no test coverage proving inactive force-mounted panels are properly hidden from assistive technology.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "tabs-msc-1",
+    "component": "tabs",
+    "principle": "Make State Controllable",
+    "description": "E2E tests (reference_app/cypress/e2e/tabs.cy.js) only test the uncontrolled mode (using `default_value`). There are no e2e tests verifying controlled mode (passing `value` and `on_value_change` props) works correctly, such as confirming the consumer can drive tab selection externally or that `on_value_change` fires with the correct value.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "tabs-mo-1",
+    "component": "tabs",
+    "principle": "Minimize Opinions",
+    "description": "Leptos TabsContentImpl (packages/primitives/leptos/src/components/tabs/mod.rs, line 361) sets an inline `style:animation-duration=\"0s\"` on mount to suppress initial animation. While the React reference does this too (reference/react-radix-primitives/packages/react/tabs/src/tabs.tsx, lines 255-257), this is an opinionated behavior that assumes CSS animations are used and injects inline styles. However, the e2e tests do verify this behavior (reference_app/cypress/e2e/tabs.cy.js, lines 327-339), so the implementation is at least tested.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "tabs-dsr-1",
+    "component": "tabs",
+    "principle": "Design for Server Rendering",
+    "description": "Leptos TabsContentImpl (packages/primitives/leptos/src/components/tabs/mod.rs, lines 338-343) calls `web_sys::window().expect(\"Window should exist.\")` and `request_animation_frame` unconditionally during component initialization (outside of any Effect or client-only guard). During server-side rendering, `web_sys::window()` returns `None`, causing a panic. The React reference (reference/react-radix-primitives/packages/react/tabs/src/tabs.tsx, lines 237-239) safely wraps this in `React.useEffect` which only runs on the client.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "tabs-dsr-2",
+    "component": "tabs",
+    "principle": "Design for Server Rendering",
+    "description": "E2E tests (reference_app/cypress/e2e/tabs.cy.js) do not include any SSR verification, such as checking that initial HTML renders correctly without JavaScript or that ARIA attributes are present on first paint.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "toast-slp-1",
+    "component": "toast",
+    "principle": "Separate Logic from Presentation",
+    "description": "Leptos Toast component applies inline styles `style:user-select=\"none\"` and `style:touch-action=\"none\"` on the toast `<li>` element in `/Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/toast/toast.rs` (lines 235-236). The React reference also applies these (`userSelect: 'none', touchAction: 'none'` at line 578 of toast.tsx), so this is consistent, but both impose visual/interaction styles the consumer cannot opt out of.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "toast-slp-2",
+    "component": "toast",
+    "principle": "Separate Logic from Presentation",
+    "description": "Leptos FocusProxy applies `style:position=\"fixed\"` in `/Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/toast/toast_viewport.rs` (line 392). The React reference also applies `position: 'fixed'` (toast.tsx line 347). Both impose layout styles, though these are on internal helper elements.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "toast-slp-3",
+    "component": "toast",
+    "principle": "Separate Logic from Presentation",
+    "description": "Leptos ToastViewport applies `style:pointer-events=\"none\"` when no toasts exist in `/Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/toast/toast_viewport.rs` (lines 339-341). The React reference also does this (toast.tsx line 288). Both impose visual behavior on the viewport wrapper.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "toast-oac-1",
+    "component": "toast",
+    "principle": "Own Accessibility Completely",
+    "description": "Leptos implementation is missing the `ToastAnnounce` component that exists in the React reference (toast.tsx lines 669-699). React renders a separate VisuallyHidden element with role=\"status\" and aria-live to announce toast content to screen readers via an off-screen live region. The Leptos implementation computes `announce_text` in an effect (toast.rs lines 181-189) but never renders a corresponding announce element, so screen reader announcements may not work correctly for new toasts.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "toast-oac-2",
+    "component": "toast",
+    "principle": "Own Accessibility Completely",
+    "description": "Leptos Toast places `role=\"status\"` and `aria-live` directly on the interactive toast `<li>` element (toast.rs lines 224-230), whereas the React reference places `role=\"status\"` and `aria-live` on a separate non-interactive VisuallyHidden announce element (toast.tsx lines 554-556) and the interactive `<li>` has no role/aria-live. This architectural difference means the Leptos toast conflates the interactive container with the announcement region.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "toast-oac-3",
+    "component": "toast",
+    "principle": "Own Accessibility Completely",
+    "description": "Leptos Toast does not wrap the toast `<li>` in a `DismissableLayer.Root` like the React reference does (toast.tsx lines 565-570). In React, `DismissableLayer.Root` provides a global `onEscapeKeyDown` handler that closes the toast when Escape is pressed anywhere on the page. The Leptos implementation only handles Escape via `on:keydown` on the `<li>` itself (toast.rs lines 237-248), so pressing Escape when the toast is not focused will not dismiss it.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "toast-oac-4",
+    "component": "toast",
+    "principle": "Own Accessibility Completely",
+    "description": "E2E tests do not verify that the toast has `role=\"status\"`, `aria-live`, or `aria-atomic` attributes in `/Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/toast.cy.js`. No tests verify screen reader announcement behavior.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "toast-msc-1",
+    "component": "toast",
+    "principle": "Make State Controllable",
+    "description": "E2E tests in `/Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/toast.cy.js` only test uncontrolled mode (section '7. Uncontrolled Mode', lines 225-263). There are no tests verifying controlled mode where the consumer provides `open` and `on_open_change` props and externally drives the toast's open/closed state.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "toast-mo-1",
+    "component": "toast",
+    "principle": "Minimize Opinions",
+    "description": "Leptos Toast component applies `style:user-select=\"none\"` and `style:touch-action=\"none\"` inline styles on the toast `<li>` element in `/Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/toast/toast.rs` (lines 235-236), which the consumer cannot override or opt out of. These are opinionated interaction styles that may conflict with consumer design requirements.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "toast-mo-2",
+    "component": "toast",
+    "principle": "Minimize Opinions",
+    "description": "Leptos ToastViewport applies `style:pointer-events=\"none\"` when there are no toasts in `/Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/toast/toast_viewport.rs` (lines 339-341), and FocusProxy applies `style:position=\"fixed\"` (line 392). These inline styles cannot be overridden by consumer CSS.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "toast-bp-1",
+    "component": "toast",
+    "principle": "Be Predictable",
+    "description": "E2E tests do not verify pause/resume behavior (hovering over viewport pauses auto-dismiss timers, leaving resumes them) in `/Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/toast.cy.js`. The Leptos implementation has this logic in `toast_viewport.rs` (lines 94-245) and `toast.rs` (lines 110-166), but there are no tests confirming deterministic timer pause/resume on hover/focus.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "toast-bp-2",
+    "component": "toast",
+    "principle": "Be Predictable",
+    "description": "E2E tests do not verify swipe-to-dismiss gesture behavior in `/Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/toast.cy.js`. The only swipe-related test checks the `data-swipe-direction` attribute exists (line 66-72), but no tests verify that swiping actually dismisses the toast or that CSS variables (`--radix-toast-swipe-move-x`, etc.) are set during swipe.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "toast-dsr-1",
+    "component": "toast",
+    "principle": "Design for Server Rendering",
+    "description": "Leptos Toast component relies on `Effect::new` for critical setup: registering viewport pause/resume listeners (toast.rs lines 111-156), starting the close timer (toast.rs lines 159-166), and tracking toast count (toast.rs lines 169-174). Effects do not run during SSR, so on first paint the toast timer will not be running and toast count will not be incremented until hydration completes.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "toast-dsr-2",
+    "component": "toast",
+    "principle": "Design for Server Rendering",
+    "description": "Leptos ToastViewport relies on `Effect::new` for hotkey registration (toast_viewport.rs lines 51-84), viewport registration with provider (toast_viewport.rs lines 87-92), and pause/resume event handlers (toast_viewport.rs lines 95-245). None of these run during SSR, meaning the viewport won't be registered with the provider until client hydration, and the F8 hotkey won't work until then.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "toast-dsr-3",
+    "component": "toast",
+    "principle": "Design for Server Rendering",
+    "description": "Leptos Toast conditionally renders nothing when viewport is not available via `<Show when=move || has_viewport.get()>` (toast.rs line 205). Since viewport registration happens in an Effect (toast_viewport.rs lines 87-92) which doesn't run during SSR, the toast content will not be rendered in the initial server HTML at all.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "toggle-group-msc-1",
+    "component": "toggle-group",
+    "principle": "Make State Controllable",
+    "description": "E2e tests in /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/toggle-group.cy.js do not verify controlled mode (passing value + on_value_change props). The reference_app page at /Users/adamduvick/Code/clones/rust-radix/reference_app/leptos/src/pages/toggle_group.rs only uses uncontrolled mode (no value or on_value_change props are passed to ToggleGroup). There are no e2e tests confirming that externally-driven state is reflected correctly, or that on_value_change fires with the correct payload.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "toggle-dsr-1",
+    "component": "toggle",
+    "principle": "Design for Server Rendering",
+    "description": "The Leptos Toggle component uses an Effect (inside use_controllable_state at /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/support/use_controllable_state/mod.rs line 62-69) in the uncontrolled path to fire on_change callbacks. Effects do not run during SSR in Leptos, so while the initial HTML render (aria-pressed, data-state) is correct, the on_change callback will not fire for any state changes that occur server-side. The React reference avoids this by using useCallbackRef which works synchronously. This is a minor SSR behavioral difference though the initial paint attributes are correct.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "toggle-dsr-2",
+    "component": "toggle",
+    "principle": "Design for Server Rendering",
+    "description": "The e2e tests (at /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/toggle.cy.js) do not verify SSR behavior: there are no tests checking that the initial server-rendered HTML contains correct aria-pressed and data-state attributes before client-side hydration occurs.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "toggle-dcnv-1",
+    "component": "toggle",
+    "principle": "Document the Contract, Not the Visuals",
+    "description": "The e2e tests at /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/toggle.cy.js do not verify the on_pressed_change callback contract (that the callback receives the correct new boolean value). The React unit tests (toggle.test.tsx lines 106-142) verify this with onPressedChangeMock, but the e2e tests only verify external state synchronization indirectly via a checkbox, not the callback's argument value itself.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "toolbar-mo-1",
+    "component": "toolbar",
+    "principle": "Minimize Opinions",
+    "description": "RovingFocusGroup (used internally by Toolbar) applies style:outline=\"none\" at /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/support/roving_focus/mod.rs line 236, which ships a default style and imposes a visual opinion on the consumer. The React reference does the same, but this still violates the principle of shipping zero default styles.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "toolbar-dsr-1",
+    "component": "toolbar",
+    "principle": "Design for Server Rendering",
+    "description": "RovingFocusGroup (used internally by Toolbar) relies on an Effect to register the ENTRY_FOCUS custom event listener at /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/support/roving_focus/mod.rs lines 178-186. It also uses items_initialized (line 167) that defaults to false, meaning the initial SSR HTML will always produce tabindex=\"0\" on the roving focus container rather than computing the correct value from the actual focusable item count. While this is a deliberate workaround to avoid a brief tabindex=\"-1\" window, it means the SSR-rendered tabindex may not match the eventual client-hydrated value if no items are focusable, causing a potential hydration mismatch.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "toolbar-dsr-2",
+    "component": "toolbar",
+    "principle": "Design for Server Rendering",
+    "description": "RovingFocusGroupItem registers focusable items via Effect callbacks (on_focusable_item_add/remove) at /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/support/roving_focus/mod.rs lines 329-345, and uses queue_microtask for focus tracking at lines 399-405. During SSR, none of these Effects run, so the current_tab_stop_id is never set, meaning all items render with tabindex=\"-1\" on the server. The first item should have tabindex=\"0\" for correct initial keyboard access without client JS.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "toolbar-dcnv-1",
+    "component": "toolbar",
+    "principle": "Document the Contract, Not the Visuals",
+    "description": "The e2e tests at /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/toolbar.cy.js do not test disabled button behavior (e.g., that a disabled ToolbarButton is excluded from roving focus and cannot be activated), which is part of the behavioral contract. The ToolbarButton component supports a disabled prop (mod.rs line 112) that affects focusability (line 124) and sets the disabled attribute (line 131), but no e2e test verifies this.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "toolbar-dcnv-2",
+    "component": "toolbar",
+    "principle": "Document the Contract, Not the Visuals",
+    "description": "The e2e tests do not verify RTL (right-to-left) direction behavior, which is part of the toolbar's behavioral contract. The Toolbar component accepts a dir prop (mod.rs line 29) and passes it to RovingFocusGroup for direction-aware arrow key navigation, but no test exercises this functionality.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "toolbar-dcnv-3",
+    "component": "toolbar",
+    "principle": "Document the Contract, Not the Visuals",
+    "description": "The e2e tests do not verify vertical orientation behavior. The Toolbar component accepts an orientation prop (mod.rs line 28) that changes aria-orientation and keyboard navigation axis, but all tests only exercise the default horizontal orientation.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "tooltip-oac-1",
+    "component": "tooltip",
+    "principle": "Own Accessibility Completely",
+    "description": "E2E tests do not verify that the trigger has aria-describedby pointing to the tooltip content id when open, nor that aria-describedby is absent when closed. The Leptos implementation sets aria-describedby correctly (tooltip.rs line 188-194) and role=\"tooltip\" is placed on a VisuallyHidden element (tooltip_content.rs line 648), but no e2e test asserts these ARIA attributes exist.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "tooltip-oac-2",
+    "component": "tooltip",
+    "principle": "Own Accessibility Completely",
+    "description": "E2E tests do not verify that a role=\"tooltip\" element exists in the DOM when the tooltip is open. Without this, there is no test proof that the WAI-ARIA tooltip pattern is correctly implemented.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "tooltip-msc-1",
+    "component": "tooltip",
+    "principle": "Make State Controllable",
+    "description": "E2E tests do not exercise controlled mode (passing open and on_open_change props to Tooltip). The demo page at reference_app/leptos/src/pages/tooltip.rs only uses uncontrolled tooltips. While the Leptos implementation supports controlled state via use_controllable_state (tooltip.rs lines 9-10, 39-66), there is no e2e test verifying that consumer-driven open state works correctly.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "tooltip-mo-1",
+    "component": "tooltip",
+    "principle": "Minimize Opinions",
+    "description": "The Leptos TooltipContentImpl sets inline CSS custom properties via an Effect (tooltip_content.rs lines 575-599): --radix-tooltip-content-transform-origin, --radix-tooltip-content-available-width, --radix-tooltip-content-available-height, --radix-tooltip-trigger-width, --radix-tooltip-trigger-height. These are CSS variable aliases (mapping to popper variables), not hard visual styles, but the React reference does the same (tooltip.tsx lines 553-562) so this matches the reference. However, these are applied via imperative style.setProperty calls in an Effect rather than declaratively, meaning on SSR/first paint they will be absent until the Effect runs client-side.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "tooltip-dsr-1",
+    "component": "tooltip",
+    "principle": "Design for Server Rendering",
+    "description": "The Leptos TooltipContentImpl applies CSS custom properties (--radix-tooltip-content-transform-origin, etc.) via a client-side Effect (tooltip_content.rs lines 575-599) using web_sys::HtmlElement::style().set_property(). During server rendering, these properties will be absent from the initial HTML, potentially causing a layout shift or incorrect transform-origin on first paint before hydration runs the Effect. The React reference sets these declaratively via the style prop (tooltip.tsx lines 553-562), which is included in SSR output.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "tooltip-dsr-2",
+    "component": "tooltip",
+    "principle": "Design for Server Rendering",
+    "description": "The Leptos TooltipTrigger syncs the trigger element ref to context via a client-side Effect (tooltip.rs lines 167-172). During SSR, the trigger ref will be None, meaning aria-describedby cannot resolve the content_id relationship on the server. However, since the tooltip starts closed and aria-describedby is only set when open, this is a minor concern.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "tooltip-dsr-3",
+    "component": "tooltip",
+    "principle": "Design for Server Rendering",
+    "description": "E2E tests do not verify correct initial server-rendered HTML (no tests check that the closed tooltip trigger renders with data-state=\"closed\" and no aria-describedby on first paint without JS).",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "tooltip-dcnv-1",
+    "component": "tooltip",
+    "principle": "Document the Contract, Not the Visuals",
+    "description": "The documentation at book/src/primitives/components/tooltip.md documents the Yew framework API but does not document the Leptos API. The Leptos implementation is what is being evaluated and tested, but the docs reference radix-yew-tooltip, Yew types (Callback<TooltipTriggerChildProps, Html>), and Yew-specific installation instructions. There is no Leptos-specific documentation of the behavioral contract.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "tooltip-dcnv-2",
+    "component": "tooltip",
+    "principle": "Document the Contract, Not the Visuals",
+    "description": "The documentation Examples section is marked as TODO, and the Custom APIs section is marked as TODO, meaning the behavioral contract (state transitions, event timing, keyboard interactions) is only partially documented.",
+    "status": "open",
+    "blockers": []
+  }
+]
