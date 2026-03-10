@@ -311,6 +311,38 @@ fn SelectContentImpl(
         }
     });
 
+    // Close on window blur and resize (matches React lines 653-661)
+    {
+        let close_blur = SendWrapper::new(Closure::<dyn Fn()>::new(move || {
+            context.on_open_change.run(false);
+        }));
+        let close_resize = SendWrapper::new(Closure::<dyn Fn()>::new(move || {
+            context.on_open_change.run(false);
+        }));
+        let window = web_sys::window().expect("Window should exist.");
+        let _ = window.add_event_listener_with_callback(
+            "blur",
+            close_blur.as_ref().unchecked_ref(),
+        );
+        let _ = window.add_event_listener_with_callback(
+            "resize",
+            close_resize.as_ref().unchecked_ref(),
+        );
+
+        on_cleanup(move || {
+            if let Some(win) = web_sys::window() {
+                let _ = win.remove_event_listener_with_callback(
+                    "blur",
+                    close_blur.as_ref().unchecked_ref(),
+                );
+                let _ = win.remove_event_listener_with_callback(
+                    "resize",
+                    close_resize.as_ref().unchecked_ref(),
+                );
+            }
+        });
+    }
+
     // Keyboard handler
     let on_key_down = move |event: web_sys::KeyboardEvent| {
         let is_modifier_key = event.ctrl_key() || event.alt_key() || event.meta_key();

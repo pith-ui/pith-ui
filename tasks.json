@@ -1548,7 +1548,7 @@
     "component": "toggle-group",
     "principle": "bug",
     "description": "In single mode, pressing Space or Enter on an already-on ToggleGroupItem should toggle it off (data-state back to \"off\"). The Leptos implementation does not toggle off on second keypress. Tests: \"Space toggles focused item\" and \"Enter toggles focused item\" in toggle-group.cy.js.",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -1556,7 +1556,7 @@
     "component": "progress",
     "principle": "bug",
     "description": "Leptos Progress does not validate/reset invalid values (negative or exceeding max) to indeterminate state. React Progress resets invalid values to null (indeterminate) with a console error. Tests: \"negative value becomes indeterminate\" and \"value exceeding max becomes indeterminate\" in progress.cy.js.",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -1564,7 +1564,7 @@
     "component": "select",
     "principle": "bug",
     "description": "Leptos Select does not close on window blur or resize events. The React reference (select.tsx lines 653-661) adds event listeners for blur and resize on the window that close the select. The Leptos implementation is missing this behavior. E2E tests in select.cy.js section 14 (window events) pass on React but fail on Leptos.",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {

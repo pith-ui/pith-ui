@@ -46,13 +46,14 @@ pub fn Progress(
 
     let max = Signal::derive(move || {
         max.get()
-            .and_then(|max| match max == 0.0 {
-                true => None,
-                false => Some(max),
-            })
+            .filter(|&m| is_valid_max_number(m))
             .unwrap_or(DEFAULT_MAX)
     });
-    let value = Signal::derive(move || value.get().map(|value| value.min(max.get()).max(0.0)));
+    let value = Signal::derive(move || {
+        value
+            .get()
+            .filter(|&v| is_valid_value_number(v, max.get()))
+    });
 
     let value_label = Signal::derive(move || {
         value.get().map(|v| match get_value_label {
@@ -110,6 +111,14 @@ pub fn ProgressIndicator(
 
 fn default_get_value_label(value: f64, max: f64) -> String {
     format!("{}%", ((value / max) * 100.0).round())
+}
+
+fn is_valid_max_number(max: f64) -> bool {
+    !max.is_nan() && max > 0.0
+}
+
+fn is_valid_value_number(value: f64, max: f64) -> bool {
+    !value.is_nan() && value >= 0.0 && value <= max
 }
 
 fn get_progress_state(value: Option<f64>, max_value: f64) -> ProgressState {

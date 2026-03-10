@@ -19,6 +19,9 @@ pub fn ToggleGroupPage() -> impl IntoView {
         _ => radix_leptos_primitives::roving_focus::Orientation::Horizontal,
     });
 
+    let single_value_signal = Signal::derive(move || single_value.get());
+    let multiple_value_signal = Signal::derive(move || multiple_value.get());
+
     view! {
         <Show
             when=move || matches!(toggle_type.get(), ToggleGroupType::Single)
@@ -26,11 +29,11 @@ pub fn ToggleGroupPage() -> impl IntoView {
                 view! {
                     <ToggleGroup
                         r#type=ToggleGroupType::Multiple
-                        orientation=orient.get()
+                        orientation=orient
                         disabled=disabled
                         attr:class="toggle-group-root"
                         attr:aria-label="Options"
-                        value=multiple_value.get()
+                        value=multiple_value_signal
                         on_value_change=Callback::new(move |v: Vec<String>| set_multiple_value.set(v))
                     >
                         <ToggleGroupItem value="1" attr:class="toggle-group-item">
@@ -48,11 +51,11 @@ pub fn ToggleGroupPage() -> impl IntoView {
         >
             <ToggleGroup
                 r#type=ToggleGroupType::Single
-                orientation=orient.get()
+                orientation=orient
                 disabled=disabled
                 attr:class="toggle-group-root"
                 attr:aria-label="Options"
-                value=single_value.get()
+                value=single_value_signal
                 on_value_change=Callback::new(move |v: Vec<String>| set_single_value.set(v))
             >
                 <ToggleGroupItem value="1" attr:class="toggle-group-item">
