@@ -328,6 +328,12 @@ just dev_leptos   # Start Leptos dev server on :3000
 just cy_open      # Open Cypress GUI (server must already be running)
 ```
 
+**Test output handling:** When running test commands, always capture output to a temp file using `tee` so you can examine failures without re-running:
+```bash
+just test_leptos_component <component> 2>&1 | tee /tmp/cypress-output.txt | tail -120
+```
+If you need more detail on failures, read from `/tmp/cypress-output.txt` — never re-run the test suite just to get different output formatting.
+
 ### RA Rule 6: Cypress Test Conventions
 
 Tests must be framework-agnostic and follow these conventions:
