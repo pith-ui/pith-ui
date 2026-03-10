@@ -38,6 +38,25 @@ pub fn SliderPage() -> impl IntoView {
             {move || value.get()[0] as i64}
         </span>
 
+        <hr />
+
+        <h3>"Uncontrolled"</h3>
+        <Slider
+            attr:class="slider-root"
+            default_value=vec![30.0]
+            min=0.0
+            max=100.0
+            step=1.0
+            attr:data-testid="uncontrolled-slider"
+        >
+            <SliderTrack attr:class="slider-track">
+                <SliderRange attr:class="slider-range" />
+            </SliderTrack>
+            <SliderThumb attr:class="slider-thumb" attr:aria-label="Uncontrolled volume" attr:data-testid="uncontrolled-thumb" />
+        </Slider>
+
+        <hr />
+
         <br />
         <br />
 

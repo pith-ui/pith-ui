@@ -7,10 +7,17 @@ pub fn DropdownMenuPage() -> impl IntoView {
     let (checked, set_checked) = signal(false);
     let (radio_value, set_radio_value) = signal("radio1".to_string());
     let (disabled, set_disabled) = signal(false);
+    let (controlled_open, set_controlled_open) = signal(false);
+    let (trigger_click_count, set_trigger_click_count) = signal(0i32);
 
     view! {
         <DropdownMenu>
-            <DropdownMenuTrigger attr:class="dropdown-trigger">"open"</DropdownMenuTrigger>
+            <DropdownMenuTrigger
+                attr:class="dropdown-trigger"
+                on:click=move |_| set_trigger_click_count.update(|c| *c += 1)
+            >
+                "open"
+            </DropdownMenuTrigger>
             <DropdownMenuPortal>
                 <DropdownMenuContent attr:class="dropdown-content" side_offset=5.0>
                     <DropdownMenuLabel attr:class="dropdown-label">"Actions"</DropdownMenuLabel>
@@ -135,7 +142,65 @@ pub fn DropdownMenuPage() -> impl IntoView {
         <br />
         <br />
 
+        <span data-testid="trigger-click-count">{move || trigger_click_count.get()}</span>
+        <br />
         <button data-testid="outside-button">"outside"</button>
         <input data-testid="outside-input" placeholder="name" />
+
+        <br />
+        <br />
+        <hr />
+
+        // Controlled dropdown menu
+        <h3>"Controlled"</h3>
+
+        <label>
+            <input
+                type="checkbox"
+                data-testid="controlled-open-checkbox"
+                prop:checked=move || controlled_open.get()
+                on:change=move |ev| set_controlled_open.set(event_target_checked(&ev))
+            />
+            " open"
+        </label>
+        <button
+            type="button"
+            data-testid="controlled-external-close"
+            on:click=move |_| set_controlled_open.set(false)
+        >
+            "external close"
+        </button>
+        <span data-testid="controlled-open-state">
+            {move || if controlled_open.get() { "open" } else { "closed" }}
+        </span>
+
+        <br />
+        <br />
+
+        <DropdownMenu
+            open=controlled_open
+            on_open_change=Callback::new(move |value: bool| set_controlled_open.set(value))
+        >
+            <DropdownMenuTrigger
+                attr:class="controlled-dropdown-trigger"
+                attr:data-testid="controlled-dropdown-trigger"
+            >
+                "controlled open"
+            </DropdownMenuTrigger>
+            <DropdownMenuPortal>
+                <DropdownMenuContent
+                    attr:class="dropdown-content"
+                    attr:data-testid="controlled-dropdown-content"
+                    side_offset=5.0
+                >
+                    <DropdownMenuItem attr:class="dropdown-item">
+                        "Controlled Item 1"
+                    </DropdownMenuItem>
+                    <DropdownMenuItem attr:class="dropdown-item">
+                        "Controlled Item 2"
+                    </DropdownMenuItem>
+                </DropdownMenuContent>
+            </DropdownMenuPortal>
+        </DropdownMenu>
     }
 }

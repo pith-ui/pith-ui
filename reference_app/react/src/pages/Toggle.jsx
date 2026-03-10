@@ -39,6 +39,9 @@ export default function TogglePage() {
                 />{' '}
                 pressed
             </label>
+
+            <br />
+            <span data-testid="pressed-state">{pressed ? 'true' : 'false'}</span>
         </>
     );
 }

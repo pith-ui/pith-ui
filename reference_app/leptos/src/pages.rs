@@ -1,3 +1,4 @@
+pub mod accessible_icon;
 pub mod accordion;
 pub mod alert_dialog;
 pub mod aspect_ratio;
@@ -10,6 +11,7 @@ pub mod dropdown_menu;
 pub mod dropdown_menu_with_tooltip;
 pub mod form;
 pub mod hover_card;
+pub mod label;
 pub mod menu;
 pub mod menubar;
 pub mod navigation_menu;

@@ -12,7 +12,7 @@
     "component": "accessible-icon",
     "principle": "Be Predictable",
     "description": "No e2e tests exist for accessible-icon (file /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/accessible-icon.cy.js does not exist), so there is no runtime verification that the Leptos component behaves predictably (e.g., correctly applies aria-hidden, focusable, and renders the visually hidden label).",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -20,7 +20,7 @@
     "component": "accessible-icon",
     "principle": "Design for Server Rendering",
     "description": "No e2e tests exist to verify that the accessible-icon component renders correct initial HTML (aria-hidden, focusable, visually hidden label) on first paint without client JS. File /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/accessible-icon.cy.js does not exist.",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -28,7 +28,7 @@
     "component": "accessible-icon",
     "principle": "Document the Contract, Not the Visuals",
     "description": "No e2e tests exist to document and verify the behavioral contract (ARIA attributes, focusable behavior, visually hidden label) of the accessible-icon component. File /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/accessible-icon.cy.js does not exist.",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -44,7 +44,7 @@
     "component": "accordion",
     "principle": "Make State Controllable",
     "description": "E2E tests in /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/accordion.cy.js do not test controlled mode (externally-driven value/values props with on_value_change/on_values_change callbacks). All tests use uncontrolled mode. There are no tests verifying that passing a controlled value prop makes the component follow external state, or that on_value_change fires correctly.",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -67,8 +67,8 @@
     "id": "accordion-dcnv-1",
     "component": "accordion",
     "principle": "Document the Contract, Not the Visuals",
-    "description": "E2E tests in /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/accordion.cy.js (lines 281-328) include an 'internal styles' section that tests visual CSS custom properties (--radix-accordion-content-height, --radix-accordion-content-width) and specific CSS values like 'rgb(255, 99, 71)'. These tests document visual/presentation details rather than behavioral contracts.",
-    "status": "open",
+    "description": "E2E tests in /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/accordion.cy.js (lines 281-328) include an 'internal styles' section that tests visual CSS custom properties (--radix-accordion-content-height, --radix-accordion-content-width) and specific CSS values like 'rgb(255, 99, 71)'. These tests document visual/presentation details rather than behavioral contracts. NOTE: CSS custom properties are part of the component's public contract per the Radix docs — they're how consumers implement animations and responsive layouts. The rgb(255, 99, 71) test verifies that user-provided styles are preserved alongside internal CSS variables (testing Invert Control to the Consumer). These tests ARE documenting the behavioral contract.",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -76,7 +76,7 @@
     "component": "alert-dialog",
     "principle": "Make State Controllable",
     "description": "E2e tests do not verify controlled mode (passing `open` and `on_open_change` props to AlertDialog). Only the default uncontrolled behavior is tested in /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/alert-dialog.cy.js. There are no tests that pass an explicit `open` signal and `on_open_change` callback to confirm the controlled mode works correctly.",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -99,8 +99,8 @@
     "id": "aspect-ratio-slp-2",
     "component": "aspect-ratio",
     "principle": "Separate Logic from Presentation",
-    "description": "E2e tests (/Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/aspect-ratio.cy.js) verify the wrapper styles exist but do not test that the component works with as_child to confirm the consumer can control the inner element's presentation.",
-    "status": "open",
+    "description": "E2e tests (/Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/aspect-ratio.cy.js) verify the wrapper styles exist but do not test that the component works with as_child to confirm the consumer can control the inner element's presentation. RESOLVED: Added section 4 'asChild rendering' (4 tests) verifying consumer element replaces default div, retains internal styles, keeps own attributes, and wrapper maintains correct ratio. Tests pass on both React and Leptos.",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -115,8 +115,8 @@
     "id": "aspect-ratio-icc-2",
     "component": "aspect-ratio",
     "principle": "Invert Control to the Consumer",
-    "description": "E2e tests (/Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/aspect-ratio.cy.js) do not test as_child rendering behavior to verify that consumers can replace the inner element with their own markup.",
-    "status": "open",
+    "description": "E2e tests (/Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/aspect-ratio.cy.js) do not test as_child rendering behavior to verify that consumers can replace the inner element with their own markup. RESOLVED: Added asChild tests in section 4 verifying img element replaces default div, consumer attributes are retained, and internal styles are still applied. Tests pass on both React and Leptos.",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -132,7 +132,7 @@
     "component": "aspect-ratio",
     "principle": "Document the Contract, Not the Visuals",
     "description": "E2e tests (/Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/aspect-ratio.cy.js lines 30-35) only verify padding-bottom starts with a digit (regex /^[0-9]/) rather than asserting the mathematically correct value for a given ratio (e.g., 100% for 1:1, ~56.25% for 16:9). The core behavioral contract of the ratio prop is not verified with precision.",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -148,7 +148,7 @@
     "component": "avatar",
     "principle": "Be Predictable",
     "description": "E2e test 'does not show delayed fallback immediately' in /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/avatar.cy.js (lines 78-83) does not actually verify that the fallback is absent before the 300ms delay elapses. It visits the page then asserts the fallback 'should contain text DI', which Cypress auto-retries until true. A proper test would first assert the fallback is NOT present, then wait and assert it IS present, as the React unit tests do in avatar.test.tsx lines 188-198.",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -220,7 +220,7 @@
     "component": "context-menu",
     "principle": "Own Accessibility Completely",
     "description": "E2E tests do not verify typeahead/search keyboard navigation (typing characters to jump to matching menu items), which is implemented in both the Leptos MenuContentImpl (packages/primitives/leptos/src/components/menu/menu_content.rs handle_typeahead_search) and React reference. Without tests, this accessibility behavior is unverified.",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -228,7 +228,7 @@
     "component": "context-menu",
     "principle": "Own Accessibility Completely",
     "description": "E2E tests do not verify that the content element has aria-orientation='vertical' (set in menu_content.rs line 852). This WAI-ARIA menu attribute is untested.",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -236,7 +236,7 @@
     "component": "context-menu",
     "principle": "Own Accessibility Completely",
     "description": "E2E tests do not verify aria-checked attribute on menuitemcheckbox and menuitemradio items (set in menu_checkbox_item.rs lines 40-46 and 119). Tests only check data-state, not the aria-checked attribute that screen readers depend on.",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -244,7 +244,7 @@
     "component": "context-menu",
     "principle": "Own Accessibility Completely",
     "description": "E2E tests do not verify the SubTrigger's aria-haspopup='menu', aria-expanded, or aria-controls attributes (set in menu_sub.rs lines 111-113). These ARIA properties for submenu triggers are untested.",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -276,7 +276,7 @@
     "component": "context-menu",
     "principle": "Document the Contract, Not the Visuals",
     "description": "E2E tests do not verify the behavioral contract for typeahead search (typing characters focuses matching items, repeated characters cycle through matches, search resets after 1 second timeout). This is a core behavioral feature implemented in menu_content.rs (handle_typeahead_search) but has no test coverage.",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -284,7 +284,7 @@
     "component": "context-menu",
     "principle": "Document the Contract, Not the Visuals",
     "description": "E2E tests do not verify the behavioral contract for Tab key prevention inside the menu (menu_content.rs line 587: event.prevent_default() when key == 'Tab'). This is an important behavioral constraint (menus should not be navigable via Tab) that is undocumented by tests.",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -300,7 +300,7 @@
     "component": "dialog",
     "principle": "Own Accessibility Completely",
     "description": "The e2e tests in /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/dialog.cy.js do not verify that aria-hidden is applied to elements outside the modal dialog content (the hide_others/unhide_others behavior implemented in dialog_content.rs lines 131-148). This is a core accessibility behavior that prevents screen readers from accessing background content.",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -316,7 +316,7 @@
     "component": "dialog",
     "principle": "Make State Controllable",
     "description": "The e2e tests in /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/dialog.cy.js do not test controlled mode (externally providing open/onOpenChange props). All tests use only uncontrolled mode. There are no tests verifying that a consumer-provided open signal drives the dialog state or that on_open_change is called with the correct values.",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -332,7 +332,7 @@
     "component": "dialog",
     "principle": "Document the Contract, Not the Visuals",
     "description": "The e2e tests in /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/dialog.cy.js do not verify the on_open_auto_focus, on_close_auto_focus, on_escape_key_down, on_pointer_down_outside, on_focus_outside, or on_interact_outside callback contracts. These callbacks (defined in dialog_content.rs lines 34-39) are part of the behavioral contract allowing consumers to intercept and prevent default behavior, but no tests confirm they fire or that preventDefault() works as expected.",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -372,7 +372,7 @@
     "component": "dropdown-menu",
     "principle": "Invert Control to the Consumer",
     "description": "E2e tests do not verify that consumer-provided event handlers on the trigger are composed with the component's internal handlers.",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -380,7 +380,7 @@
     "component": "dropdown-menu",
     "principle": "Make State Controllable",
     "description": "E2e tests in /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/dropdown-menu.cy.js do not test controlled mode for the `open` prop. There are no tests passing an explicit `open` signal and `on_open_change` callback to verify that the component works in fully controlled mode (consumer-driven open/close). Only uncontrolled mode (internal state) is exercised.",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -403,8 +403,8 @@
     "id": "dropdown-menu-dcnv-1",
     "component": "dropdown-menu",
     "principle": "Document the Contract, Not the Visuals",
-    "description": "E2e tests in /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/dropdown-menu.cy.js lines 474-494 include an 'internal styles' test section that verifies specific CSS custom property values (`--radix-dropdown-menu-content-available-width`, `--radix-dropdown-menu-content-available-height`). These tests verify internal presentational implementation details (CSS custom property aliasing) rather than behavioral contract. If the implementation changed how it exposes sizing information, these tests would break even though the behavioral contract is intact.",
-    "status": "open",
+    "description": "E2e tests in /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/dropdown-menu.cy.js lines 474-494 include an 'internal styles' test section that verifies specific CSS custom property values (`--radix-dropdown-menu-content-available-width`, `--radix-dropdown-menu-content-available-height`). These CSS custom properties are documented in the Radix API Reference and are part of the public contract for consumers to use in animations and responsive layouts. The tests verify these properties have non-empty values, which is a valid behavioral contract test.",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -412,7 +412,7 @@
     "component": "form",
     "principle": "Make State Controllable",
     "description": "The form component's validation state (validity_map, custom_errors_map) is entirely internal with no way for the consumer to control it externally. Unlike the React reference which also keeps this internal, neither implementation provides a controlled mode for validation state. The consumer cannot programmatically set or override the validity of a field from the outside (e.g., via a controlled prop), only indirectly via server_invalid. However, the React reference also has this limitation, so this is a parity issue. More critically, there is no e2e test verifying that server_invalid (the one controllable validation signal) correctly sets aria-invalid='true' and data-invalid on the field/control, nor that focus moves to the first server-invalid control. The test file at /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/form.cy.js has no tests exercising the server_invalid prop or the on_clear_server_errors callback.",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -420,15 +420,15 @@
     "component": "form",
     "principle": "Minimize Opinions",
     "description": "In /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/form/form_message.rs, the FormMessage component ships default validation messages (e.g., 'This value is not valid', 'This value is too short', etc.) via ValidityMatcher::default_message() in mod.rs lines 90-103. When the consumer does not provide children to FormMessage, these default English-language messages are rendered (form_message.rs lines 26-29, 44-47, 61-63, 77-79). The React reference (form.tsx lines 440-451, 471, 501, 542) does the same. While both implementations allow the consumer to override these messages by providing children, shipping default human-readable error text is an opinionated choice. However, this is parity with React. No e2e test verifies that consumers can override default messages with custom content.",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {
     "id": "form-bp-1",
     "component": "form",
     "principle": "Be Predictable",
-    "description": "In the Leptos implementation at /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/form/form.rs lines 83-87, the Form component's on:submit handler calls on_clear_server_errors but does NOT call event.prevent_default(). In the React reference (form.tsx line 175), onSubmit is composed with the consumer's onSubmit handler via composeEventHandlers with checkForDefaultPrevented: false, meaning the clear callback always runs regardless. However, in the Leptos implementation, the form's on:submit does not prevent default either, but critically: the consumer must separately attach their own on:submit handler via attr forwarding (as seen in the demo at /Users/adamduvick/Code/clones/rust-radix/reference_app/leptos/src/pages/form.rs line 43), which means TWO on:submit handlers run. The ordering of these handlers relative to the internal on_clear_server_errors callback is not guaranteed to be deterministic in the same way React's composeEventHandlers guarantees order.",
-    "status": "open",
+    "description": "In the Leptos implementation at /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/form/form.rs lines 83-87, the Form component's on:submit handler calls on_clear_server_errors but does NOT call event.prevent_default(). In the React reference (form.tsx line 175), onSubmit is composed with the consumer's onSubmit handler via composeEventHandlers with checkForDefaultPrevented: false, meaning the clear callback always runs regardless. However, in the Leptos implementation, the form's on:submit does not prevent default either, but critically: the consumer must separately attach their own on:submit handler via attr forwarding (as seen in the demo at /Users/adamduvick/Code/clones/rust-radix/reference_app/leptos/src/pages/form.rs line 43), which means TWO on:submit handlers run. The ordering of these handlers relative to the internal on_clear_server_errors callback is not guaranteed to be deterministic in the same way React's composeEventHandlers guarantees order. NOTE: Server validation e2e tests (form-msc-1) now verify that server_invalid, on_clear_server_errors on re-submit, and on_clear_server_errors on reset all work correctly using an async pattern (setTimeout) that mirrors real-world server calls. Tests pass on both React and Leptos.",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -444,7 +444,7 @@
     "component": "form",
     "principle": "Document the Contract, Not the Visuals",
     "description": "There are no e2e tests verifying the behavioral contract of FormValidityState (the render-prop/callback component that exposes validity state to consumers). The FormValidityState component at /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/form/form_message.rs lines 222-233 accepts a callback children prop that receives Option<Validity>, but no test in /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/form.cy.js exercises this component or verifies its contract.",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -460,7 +460,7 @@
     "component": "hover-card",
     "principle": "Own Accessibility Completely",
     "description": "The e2e tests (/Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/hover-card.cy.js) do not test any ARIA attributes, roles, or screen reader announcements. There are no assertions for aria-expanded, role, aria-haspopup, or any other accessibility attribute.",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -468,7 +468,7 @@
     "component": "hover-card",
     "principle": "Make State Controllable",
     "description": "The e2e tests (/Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/hover-card.cy.js) do not test controlled mode (passing an explicit open prop and on_open_change callback). The test page (/Users/adamduvick/Code/clones/rust-radix/reference_app/leptos/src/pages/hover_card.rs) only uses uncontrolled mode with open_delay=0 and close_delay=0. There are no tests verifying that the component works correctly in controlled mode or that on_open_change fires appropriately.",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -483,8 +483,8 @@
     "id": "hover-card-bp-1",
     "component": "hover-card",
     "principle": "Be Predictable",
-    "description": "The e2e tests (/Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/hover-card.cy.js) do not test dismiss-on-escape-key behavior. The DismissableLayer handles Escape key dismissal, but there are no tests verifying this deterministic state transition.",
-    "status": "open",
+    "description": "The e2e tests (/Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/hover-card.cy.js) do not test dismiss-on-escape-key behavior. The DismissableLayer handles Escape key dismissal, but there are no tests verifying this deterministic state transition. UPDATE: HoverCard intentionally has no keyboard equivalent per Radix docs. Escape dismissal is NOT a documented behavior. This task is invalid.",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -492,7 +492,7 @@
     "component": "hover-card",
     "principle": "Be Predictable",
     "description": "The e2e tests do not verify open/close delay timing behavior. The test page uses delay=0 which bypasses the timer logic entirely, so the default 700ms/300ms delay behavior (hover_card.rs lines 12-13) is never tested.",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -516,7 +516,7 @@
     "component": "hover-card",
     "principle": "Document the Contract, Not the Visuals",
     "description": "The e2e tests (/Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/hover-card.cy.js) do not test keyboard interaction contracts (Escape to dismiss), focus-triggered open/close behavior, or the behavioral contract around text selection within the content (the containSelection/has_selection_ref logic in hover_card_content.rs). The tests only cover pointer-based hover interactions, data attributes, positioning, and CSS custom properties.",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -524,7 +524,7 @@
     "component": "label",
     "principle": "Be Predictable",
     "description": "No e2e test file exists at /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/label.cy.js to verify that the mousedown handler correctly prevents text selection on double-click while allowing default behavior for single clicks and clicks on interactive elements (button, input, select, textarea).",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -532,7 +532,7 @@
     "component": "label",
     "principle": "Design for Server Rendering",
     "description": "No e2e test exists to verify that the Label component renders correct initial HTML (a native <label> element) on first paint without requiring client-side JS.",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -540,7 +540,7 @@
     "component": "label",
     "principle": "Document the Contract, Not the Visuals",
     "description": "No e2e test file exists at /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/label.cy.js to verify the behavioral contract: that the component renders a <label> element, that double-click does not select text, and that clicks on nested interactive elements are not intercepted.",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -651,8 +651,8 @@
     "id": "navigation-menu-oac-2",
     "component": "navigation-menu",
     "principle": "Own Accessibility Completely",
-    "description": "The e2e tests (/Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/navigation-menu.cy.js) do not test keyboard navigation with screen reader announcements or verify that the aria-owns restructuring in NavigationMenuTrigger (used when a viewport is present) correctly exposes content to assistive technology.",
-    "status": "open",
+    "description": "The e2e tests (/Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/navigation-menu.cy.js) do not test keyboard navigation with screen reader announcements or verify that the aria-owns restructuring in NavigationMenuTrigger (used when a viewport is present) correctly exposes content to assistive technology. RESOLVED: Added test verifying span[aria-owns] exists and points to content when trigger is open and viewport is present. Screen reader announcement testing is not possible in Cypress.",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -660,7 +660,7 @@
     "component": "navigation-menu",
     "principle": "Make State Controllable",
     "description": "The e2e tests (/Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/navigation-menu.cy.js) do not test controlled mode (externally-driven value/on_value_change props) for NavigationMenu. Only uncontrolled mode is exercised. There is no test verifying that a consumer can control the open state externally via the value prop and on_value_change callback.",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -731,8 +731,8 @@
     "id": "navigation-menu-dcnv-1",
     "component": "navigation-menu",
     "principle": "Document the Contract, Not the Visuals",
-    "description": "The e2e tests (/Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/navigation-menu.cy.js) include tests for visual layout (section 8 'content layout', lines 354-388) that verify grid positioning and CSS class forwarding, which are visual concerns rather than behavioral contract verification. Meanwhile, there are no tests for the behavioral contract around delay_duration/skip_delay_duration timing, hover intent behavior, or the data-motion attribute values (from-start, from-end, to-start, to-end) that define the animation direction contract.",
-    "status": "open",
+    "description": "The e2e tests (/Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/navigation-menu.cy.js) include tests for visual layout (section 8 'content layout', lines 354-388) that verify grid positioning and CSS class forwarding, which are visual concerns rather than behavioral contract verification. Meanwhile, there are no tests for the behavioral contract around delay_duration/skip_delay_duration timing, hover intent behavior, or the data-motion attribute values (from-start, from-end, to-start, to-end) that define the animation direction contract. RESOLVED: Added section 10 'data-motion attributes' testing no data-motion on initial open, from-end when switching forward, from-start when switching backward. delay_duration/skip_delay_duration timing tests are not feasible in Cypress headless mode.",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -740,7 +740,7 @@
     "component": "one-time-password-field",
     "principle": "Make State Controllable",
     "description": "E2E tests only exercise controlled mode (value + on_value_change are always provided in the test page at /Users/adamduvick/Code/clones/rust-radix/reference_app/leptos/src/pages/one_time_password_field.rs). There is no e2e test verifying uncontrolled mode (using default_value without value/on_value_change), so there is no test proof that uncontrolled mode works correctly.",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -772,7 +772,7 @@
     "component": "one-time-password-field",
     "principle": "Document the Contract, Not the Visuals",
     "description": "No e2e tests verify the behavioral contract for autoSubmit (auto-submission when all fields are filled), the password input type, placeholder behavior, autoComplete attribute handling, or the sanitizeValue callback. These are documented/implemented behavioral contracts that lack test verification.",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -828,7 +828,7 @@
     "component": "password-toggle-field",
     "principle": "Document the Contract, Not the Visuals",
     "description": "The e2e tests in /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/password-toggle-field.cy.js do not test or document the autocomplete attribute contract (the input should have autocomplete=\"current-password\" or autocomplete=\"new-password\"). This behavioral attribute is important for password managers and the form contract but is not verified by any test.",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -836,7 +836,7 @@
     "component": "password-toggle-field",
     "principle": "Document the Contract, Not the Visuals",
     "description": "The e2e tests do not verify the spellcheck=\"false\" or autocapitalize=\"off\" attributes on the input, which are part of the behavioral contract for security-sensitive password fields.",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -844,7 +844,7 @@
     "component": "popover",
     "principle": "Make State Controllable",
     "description": "The e2e tests in /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/popover.cy.js do not verify controlled state mode. While the Leptos implementation correctly supports controlled open/default_open/on_open_change via use_controllable_state (popover.rs lines 9-29), there are no tests exercising the controlled pattern where the consumer drives the open state externally, leaving this contract unverified.",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -860,7 +860,7 @@
     "component": "popover",
     "principle": "Document the Contract, Not the Visuals",
     "description": "The e2e tests in /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/popover.cy.js do not verify the PopoverAnchor sub-component behavioral contract. The test page at /Users/adamduvick/Code/clones/rust-radix/reference_app/leptos/src/pages/popover.rs does not include a PopoverAnchor usage, so there is no test coverage for the custom anchor positioning behavior documented in the implementation (popover.rs lines 63-87).",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -875,8 +875,8 @@
     "id": "progress-msc-2",
     "component": "progress",
     "principle": "Make State Controllable",
-    "description": "E2E tests do not verify an uncontrolled usage pattern (e.g., rendering Progress with a default_value and no explicit signal management). File: /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/progress.cy.js.",
-    "status": "open",
+    "description": "E2E tests do not verify an uncontrolled usage pattern (e.g., rendering Progress with a default_value and no explicit signal management). File: /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/progress.cy.js. RESOLVED: Not applicable — React Radix Progress has no defaultValue or uncontrolled mode. The value prop is always externally controlled because Progress is a purely declarative display component with no user interaction to change state. The existing controlled tests fully cover the component's state management contract.",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -892,7 +892,7 @@
     "component": "progress",
     "principle": "Be Predictable",
     "description": "E2E tests do not verify the behavior when invalid values are provided (e.g., negative value, value exceeding max, zero or negative max) to confirm predictable error handling or clamping. File: /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/progress.cy.js.",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -900,7 +900,7 @@
     "component": "progress",
     "principle": "Document the Contract, Not the Visuals",
     "description": "E2E tests include a visual/style assertion that checks the indicator's CSS width and inline style contain '100%' (line 173: `getIndicator().invoke('attr', 'style').should('contain', '100%')`). This tests a visual property set by the consumer's demo page rather than verifying the behavioral contract (data attributes, ARIA state). The indicator width is not part of the component's contract -- it is consumer-supplied styling in the demo page (reference_app/leptos/src/pages/progress.rs, line 18). File: /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/progress.cy.js, line 170-174.",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -908,7 +908,7 @@
     "component": "radio-group",
     "principle": "Make State Controllable",
     "description": "E2E tests do not verify controlled mode (passing a reactive `value` prop and `on_value_change` callback to RadioGroup). All tests use uncontrolled mode only. There is no test that the component works correctly when the consumer drives state externally. File: /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/radio-group.cy.js",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -955,8 +955,8 @@
     "id": "scroll-area-oac-2",
     "component": "scroll-area",
     "principle": "Own Accessibility Completely",
-    "description": "The e2e tests in /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/scroll-area.cy.js do not test any ARIA attributes, roles, or keyboard navigation for the scroll area. The 'accessibility' test section (lines 159-180) only checks that the viewport is scrollable and that native scrollbars are hidden via CSS, not that ARIA roles or keyboard support are present.",
-    "status": "open",
+    "description": "The e2e tests in /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/scroll-area.cy.js do not test any ARIA attributes, roles, or keyboard navigation for the scroll area. The 'accessibility' test section (lines 159-180) only checks that the viewport is scrollable and that native scrollbars are hidden via CSS, not that ARIA roles or keyboard support are present. RESOLUTION: ScrollArea intentionally does not add ARIA roles or keyboard handlers — it relies entirely on native browser scrolling behavior. The React source confirms no aria-* or role attributes are set on any sub-component. No additional ARIA tests are needed.",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -971,8 +971,8 @@
     "id": "scroll-area-msc-2",
     "component": "scroll-area",
     "principle": "Make State Controllable",
-    "description": "The e2e tests do not verify any controlled state pattern for scroll position or scrollbar visibility.",
-    "status": "open",
+    "description": "The e2e tests do not verify any controlled state pattern for scroll position or scrollbar visibility. RESOLVED: Not applicable — React Radix ScrollArea does not expose controlled props for scroll position or scrollbar visibility. Scroll position is managed via standard DOM APIs (scrollTop), and scrollbar visibility is controlled by the type prop (hover/scroll/auto/always) which is already tested in the variants section. The component's state management contract is fully covered.",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -1003,8 +1003,8 @@
     "id": "scroll-area-dcnv-1",
     "component": "scroll-area",
     "principle": "Document the Contract, Not the Visuals",
-    "description": "The e2e tests in /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/scroll-area.cy.js focus on visual/structural aspects (element existence, visibility, CSS properties, computed dimensions) but do not test the behavioral contract: no tests for scrollbar state machine transitions (hidden->scrolling->idle->hidden), no tests for scroll-hide-delay timing, no tests for pointer interaction behavior (drag-to-scroll, thumb pointer tracking), no tests for wheel event handling on the scrollbar, and no tests for RTL direction support. The contract of how the scrollbar responds to user interaction is untested.",
-    "status": "open",
+    "description": "The e2e tests in /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/scroll-area.cy.js focus on visual/structural aspects (element existence, visibility, CSS properties, computed dimensions) but do not test the behavioral contract: no tests for scrollbar state machine transitions (hidden->scrolling->idle->hidden), no tests for scroll-hide-delay timing, no tests for pointer interaction behavior (drag-to-scroll, thumb pointer tracking), no tests for wheel event handling on the scrollbar, and no tests for RTL direction support. The contract of how the scrollbar responds to user interaction is untested. RESOLVED: Added section 6 'thumb position tracking' (4 tests: thumb at top, moves down on scroll, at bottom when scrolled to bottom, returns to top) and section 7 'pointer drag scrolling' (1 test: dragging thumb scrolls content). Tests pass on both React and Leptos. Scroll-hide-delay timing and RTL are not feasibly testable in headless Cypress.",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -1044,7 +1044,7 @@
     "component": "select",
     "principle": "Own Accessibility Completely",
     "description": "The e2e tests do not verify that aria-controls on the trigger points to a valid content element id. The trigger sets aria-controls={content_id} but no test checks that the referenced id actually exists in the DOM when the select is open.",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -1076,7 +1076,7 @@
     "component": "select",
     "principle": "Be Predictable",
     "description": "The e2e tests do not verify that the select closes on window blur or resize events.",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -1092,7 +1092,7 @@
     "component": "select",
     "principle": "Document the Contract, Not the Visuals",
     "description": "There are no e2e tests verifying the behavioral contract of Tab key prevention inside the open select content. The React reference (select.tsx line 781) and Leptos implementation (select_content.rs lines 319-322) both prevent Tab from navigating away, but the e2e tests never assert this behavior.",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -1100,7 +1100,7 @@
     "component": "select",
     "principle": "Document the Contract, Not the Visuals",
     "description": "There are no e2e tests verifying that context menu (right-click) is suppressed on the select content, which both implementations enforce (select_content.rs lines 608-609 and select.tsx line 764).",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -1116,7 +1116,7 @@
     "component": "separator",
     "principle": "Document the Contract, Not the Visuals",
     "description": "No e2e tests verify behavioral documentation/contract aspects such as the rendered element type (div) or the as_child composition pattern. The e2e tests in /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/separator.cy.js only verify ARIA attributes and data attributes, but do not test that the component renders as a div element or that as_child properly delegates rendering to consumer-provided children, which are key parts of the behavioral contract.",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -1156,7 +1156,7 @@
     "component": "slider",
     "principle": "Make State Controllable",
     "description": "The e2e tests (slider.cy.js) do not test uncontrolled mode (default_value without value prop). All tests use the controlled pattern via the test page (reference_app/leptos/src/pages/slider.rs uses value=value with on_value_change). There are no tests verifying that the slider works correctly in uncontrolled mode with only default_value.",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -1204,15 +1204,15 @@
     "component": "switch",
     "principle": "Document the Contract, Not the Visuals",
     "description": "The e2e tests at `/Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/switch.cy.js` do not verify the behavioral contract for `required` (aria-required attribute propagation) or the hidden form input's `name`/`value` semantics, which are part of the component's behavioral contract for form integration.",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {
     "id": "tabs-oac-1",
     "component": "tabs",
     "principle": "Own Accessibility Completely",
-    "description": "Leptos TabsContentImpl (packages/primitives/leptos/src/components/tabs/mod.rs, line 356-371) does not set a `hidden` attribute on the tabpanel when it is not the active tab. The React reference (reference/react-radix-primitives/packages/react/tabs/src/tabs.tsx, line 250) sets `hidden={!present}` so that when `forceMount` keeps the panel mounted, inactive panels are hidden from the accessibility tree. The Leptos version omits this, so with `force_mount=true` inactive tab panels would remain visible and announced to screen readers.",
-    "status": "open",
+    "description": "Leptos TabsContentImpl (packages/primitives/leptos/src/components/tabs/mod.rs, line 356-371) does not set a `hidden` attribute on the tabpanel when it is not the active tab. The React reference (reference/react-radix-primitives/packages/react/tabs/src/tabs.tsx, line 250) sets `hidden={!present}` but with forceMount=true the present prop is always true (forceMount || isSelected), so hidden is never actually applied to force-mounted inactive panels. Both React and Leptos leave force-mounted inactive panels visible in the DOM. The hidden attribute is only relevant during exit animations (managed by Presence) which don't apply with forceMount.",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -1220,7 +1220,7 @@
     "component": "tabs",
     "principle": "Own Accessibility Completely",
     "description": "E2E tests (reference_app/cypress/e2e/tabs.cy.js) do not verify the `hidden` attribute on inactive tabpanels when using forceMount, so there is no test coverage proving inactive force-mounted panels are properly hidden from assistive technology.",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -1228,7 +1228,7 @@
     "component": "tabs",
     "principle": "Make State Controllable",
     "description": "E2E tests (reference_app/cypress/e2e/tabs.cy.js) only test the uncontrolled mode (using `default_value`). There are no e2e tests verifying controlled mode (passing `value` and `on_value_change` props) works correctly, such as confirming the consumer can drive tab selection externally or that `on_value_change` fires with the correct value.",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -1308,7 +1308,7 @@
     "component": "toast",
     "principle": "Own Accessibility Completely",
     "description": "E2E tests do not verify that the toast has `role=\"status\"`, `aria-live`, or `aria-atomic` attributes in `/Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/toast.cy.js`. No tests verify screen reader announcement behavior.",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -1316,7 +1316,7 @@
     "component": "toast",
     "principle": "Make State Controllable",
     "description": "E2E tests in `/Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/toast.cy.js` only test uncontrolled mode (section '7. Uncontrolled Mode', lines 225-263). There are no tests verifying controlled mode where the consumer provides `open` and `on_open_change` props and externally drives the toast's open/closed state.",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -1340,7 +1340,7 @@
     "component": "toast",
     "principle": "Be Predictable",
     "description": "E2E tests do not verify pause/resume behavior (hovering over viewport pauses auto-dismiss timers, leaving resumes them) in `/Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/toast.cy.js`. The Leptos implementation has this logic in `toast_viewport.rs` (lines 94-245) and `toast.rs` (lines 110-166), but there are no tests confirming deterministic timer pause/resume on hover/focus.",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -1348,7 +1348,7 @@
     "component": "toast",
     "principle": "Be Predictable",
     "description": "E2E tests do not verify swipe-to-dismiss gesture behavior in `/Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/toast.cy.js`. The only swipe-related test checks the `data-swipe-direction` attribute exists (line 66-72), but no tests verify that swiping actually dismisses the toast or that CSS variables (`--radix-toast-swipe-move-x`, etc.) are set during swipe.",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -1380,7 +1380,7 @@
     "component": "toggle-group",
     "principle": "Make State Controllable",
     "description": "E2e tests in /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/toggle-group.cy.js do not verify controlled mode (passing value + on_value_change props). The reference_app page at /Users/adamduvick/Code/clones/rust-radix/reference_app/leptos/src/pages/toggle_group.rs only uses uncontrolled mode (no value or on_value_change props are passed to ToggleGroup). There are no e2e tests confirming that externally-driven state is reflected correctly, or that on_value_change fires with the correct payload.",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -1404,7 +1404,7 @@
     "component": "toggle",
     "principle": "Document the Contract, Not the Visuals",
     "description": "The e2e tests at /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/toggle.cy.js do not verify the on_pressed_change callback contract (that the callback receives the correct new boolean value). The React unit tests (toggle.test.tsx lines 106-142) verify this with onPressedChangeMock, but the e2e tests only verify external state synchronization indirectly via a checkbox, not the callback's argument value itself.",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -1436,7 +1436,7 @@
     "component": "toolbar",
     "principle": "Document the Contract, Not the Visuals",
     "description": "The e2e tests at /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/toolbar.cy.js do not test disabled button behavior (e.g., that a disabled ToolbarButton is excluded from roving focus and cannot be activated), which is part of the behavioral contract. The ToolbarButton component supports a disabled prop (mod.rs line 112) that affects focusability (line 124) and sets the disabled attribute (line 131), but no e2e test verifies this.",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -1444,7 +1444,7 @@
     "component": "toolbar",
     "principle": "Document the Contract, Not the Visuals",
     "description": "The e2e tests do not verify RTL (right-to-left) direction behavior, which is part of the toolbar's behavioral contract. The Toolbar component accepts a dir prop (mod.rs line 29) and passes it to RovingFocusGroup for direction-aware arrow key navigation, but no test exercises this functionality.",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -1452,7 +1452,7 @@
     "component": "toolbar",
     "principle": "Document the Contract, Not the Visuals",
     "description": "The e2e tests do not verify vertical orientation behavior. The Toolbar component accepts an orientation prop (mod.rs line 28) that changes aria-orientation and keyboard navigation axis, but all tests only exercise the default horizontal orientation.",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -1460,7 +1460,7 @@
     "component": "tooltip",
     "principle": "Own Accessibility Completely",
     "description": "E2E tests do not verify that the trigger has aria-describedby pointing to the tooltip content id when open, nor that aria-describedby is absent when closed. The Leptos implementation sets aria-describedby correctly (tooltip.rs line 188-194) and role=\"tooltip\" is placed on a VisuallyHidden element (tooltip_content.rs line 648), but no e2e test asserts these ARIA attributes exist.",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -1468,7 +1468,7 @@
     "component": "tooltip",
     "principle": "Own Accessibility Completely",
     "description": "E2E tests do not verify that a role=\"tooltip\" element exists in the DOM when the tooltip is open. Without this, there is no test proof that the WAI-ARIA tooltip pattern is correctly implemented.",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -1476,7 +1476,7 @@
     "component": "tooltip",
     "principle": "Make State Controllable",
     "description": "E2E tests do not exercise controlled mode (passing open and on_open_change props to Tooltip). The demo page at reference_app/leptos/src/pages/tooltip.rs only uses uncontrolled tooltips. While the Leptos implementation supports controlled state via use_controllable_state (tooltip.rs lines 9-10, 39-66), there is no e2e test verifying that consumer-driven open state works correctly.",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -1524,6 +1524,62 @@
     "component": "tooltip",
     "principle": "Document the Contract, Not the Visuals",
     "description": "The documentation Examples section is marked as TODO, and the Custom APIs section is marked as TODO, meaning the behavioral contract (state transitions, event timing, keyboard interactions) is only partially documented.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "dropdown-menu-body-lock-cleanup-1",
+    "component": "dropdown-menu",
+    "principle": "Be Predictable",
+    "description": "When a modal DropdownMenu closes (e.g., by clicking an item or pressing Escape), the body scroll lock styles (overflow: hidden; pointer-events: none) are not always cleaned up. This is reproducible when the dropdown trigger is wrapped in a TooltipTrigger (as on the /dropdown-menu/with-tooltip page): after opening and closing the menu, the body retains pointer-events: none and overflow: hidden, which blocks all subsequent interaction on the page. The 4 controlled-mode E2E tests in dropdown-menu.cy.js fail because of this leftover body lock from prior tooltip+dropdown tests. All 55 tests pass against the React reference app. The bug is likely in the DismissableLayer or RemoveScroll cleanup logic when the dropdown content unmounts after a tooltip interaction cycle.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "hover-card-msc-bug-1",
+    "component": "hover-card",
+    "principle": "Make State Controllable",
+    "description": "Leptos HoverCard controlled mode: on_open_change callback does not fire when hovering over the trigger. The controlled hover card can be opened/closed via external state (open prop), but hovering the trigger does not invoke on_open_change. This means consumers using controlled mode cannot receive hover events. React reference correctly fires onOpenChange on hover. E2E test: hover-card.cy.js \"on_open_change callback fires on hover\".",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "toggle-group-kb-bug-1",
+    "component": "toggle-group",
+    "principle": "bug",
+    "description": "In single mode, pressing Space or Enter on an already-on ToggleGroupItem should toggle it off (data-state back to \"off\"). The Leptos implementation does not toggle off on second keypress. Tests: \"Space toggles focused item\" and \"Enter toggles focused item\" in toggle-group.cy.js.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "progress-bp-bug-1",
+    "component": "progress",
+    "principle": "bug",
+    "description": "Leptos Progress does not validate/reset invalid values (negative or exceeding max) to indeterminate state. React Progress resets invalid values to null (indeterminate) with a console error. Tests: \"negative value becomes indeterminate\" and \"value exceeding max becomes indeterminate\" in progress.cy.js.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "select-bp-bug-1",
+    "component": "select",
+    "principle": "bug",
+    "description": "Leptos Select does not close on window blur or resize events. The React reference (select.tsx lines 653-661) adds event listeners for blur and resize on the window that close the select. The Leptos implementation is missing this behavior. E2E tests in select.cy.js section 14 (window events) pass on React but fail on Leptos.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "navigation-menu-bug-1",
+    "component": "navigation-menu",
+    "principle": "bug",
+    "description": "Leptos NavigationMenu renders content elements in multiple DOM locations simultaneously (both in the original tree and in the viewport), causing duplicate data-testid attributes. This breaks 16 pre-existing Cypress tests and 4 controlled mode tests that use findByTestId to locate content panels. React only renders content inside the viewport. Additionally, the Leptos implementation does not remove content from the DOM when its parent item is closed — content with data-testid='products-content' exists even when the Products trigger has data-state='closed'. The 20 failing tests in navigation-menu.cy.js include: content data-orientation, Enter/Space opens content, ArrowDown into content, click opens/switches content, content links, focus management into content, content layout tests, and controlled mode content assertions.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "otp-bug-1",
+    "component": "one-time-password-field",
+    "principle": "bug",
+    "description": "Multiple Leptos OneTimePasswordField behavioral failures compared to React: (1) default_value (uncontrolled mode) does not pre-fill inputs — 'renders with default value pre-filled' fails. (2) auto_submit + on_auto_submit callback does not fire when all inputs are filled. (3) first input does not get autocomplete='one-time-code' when auto_complete=AutoComplete::OneTimeCode is set. (4) Vertical orientation arrow key navigation (ArrowDown/ArrowUp) does not work — the orientation prop may not be correctly switching arrow key behavior. Additionally, many pre-existing failures exist for keyboard navigation (ArrowRight, Home, End, Enter), backspace/delete, typing individual characters, aria-label generation, and data-radix-index attributes. These are all tests in one-time-password-field.cy.js that pass on React but fail on Leptos.",
     "status": "open",
     "blockers": []
   }

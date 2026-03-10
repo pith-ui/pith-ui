@@ -1,8 +1,12 @@
 describe('OneTimePasswordField', () => {
     // ── Helpers ──────────────────────────────────────────────
 
+    function getRoot() {
+        return cy.findByTestId('main-otp-root');
+    }
+
     function getInputs() {
-        return cy.get('[data-radix-otp-input]');
+        return getRoot().find('[data-radix-otp-input]');
     }
 
     function getOutput() {
@@ -10,7 +14,7 @@ describe('OneTimePasswordField', () => {
     }
 
     function getHiddenInput() {
-        return cy.get('input[type="hidden"][name="code"]');
+        return getRoot().find('input[type="hidden"][name="code"]');
     }
 
     function shouldHaveValue(expected) {
@@ -23,7 +27,7 @@ describe('OneTimePasswordField', () => {
 
     // Paste text into the OTP group via a ClipboardEvent on the root.
     function pasteIntoOtp(text) {
-        cy.findByRole('group').then(($group) => {
+        getRoot().then(($group) => {
             const clipboardData = new DataTransfer();
             clipboardData.setData('text/plain', text);
             const pasteEvent = new ClipboardEvent('paste', {
@@ -41,13 +45,17 @@ describe('OneTimePasswordField', () => {
         cy.visit('/one-time-password-field');
         // Reset to clean state
         cy.findByRole('button', {name: 'reset'}).click();
+        // Ensure vertical is unchecked
+        cy.findByLabelText('vertical').then(($cb) => {
+            if ($cb.is(':checked')) cy.wrap($cb).click();
+        });
     });
 
     // ── 1. Accessibility Semantics ──────────────────────────
 
     describe('accessibility', () => {
         it('root has role="group"', () => {
-            cy.findByRole('group').should('exist');
+            getRoot().should('have.attr', 'role', 'group');
         });
 
         it('each input has aria-label "Character N of 6"', () => {
@@ -66,7 +74,7 @@ describe('OneTimePasswordField', () => {
 
     describe('data attributes', () => {
         it('root has data-orientation="horizontal"', () => {
-            cy.findByRole('group').should('have.attr', 'data-orientation', 'horizontal');
+            getRoot().should('have.attr', 'data-orientation', 'horizontal');
         });
 
         it('each input has data-radix-otp-input', () => {
@@ -369,12 +377,115 @@ describe('OneTimePasswordField', () => {
         });
     });
 
-    // ── 12. Vertical Orientation ──────────────────────────
+    // ── 12. Uncontrolled Mode ───────────────────────────────
+
+    describe('uncontrolled mode', () => {
+        function getUncontrolledInputs() {
+            return cy.findByTestId('uncontrolled-root').find('[data-radix-otp-input]');
+        }
+
+        it('renders with default value pre-filled', () => {
+            getUncontrolledInputs().eq(0).should('have.value', '1');
+            getUncontrolledInputs().eq(1).should('have.value', '2');
+            getUncontrolledInputs().eq(2).should('have.value', '');
+        });
+
+        it('typing adds to the pre-filled value', () => {
+            getUncontrolledInputs().eq(2).click();
+            cy.realPress('3');
+            getUncontrolledInputs().eq(2).should('have.value', '3');
+        });
+
+        it('form submission sends the uncontrolled value', () => {
+            cy.findByTestId('uncontrolled-submit').click();
+            cy.findByTestId('uncontrolled-result').should('have.text', 'Submitted: 12');
+        });
+    });
+
+    // ── 13. Password Type ─────────────────────────────────
+
+    describe('password type', () => {
+        function getPasswordInputs() {
+            return cy.findByTestId('password-root').find('[data-radix-otp-input]');
+        }
+
+        it('inputs have type="password"', () => {
+            getPasswordInputs().each(($input) => {
+                cy.wrap($input).should('have.attr', 'type', 'password');
+            });
+        });
+    });
+
+    // ── 14. Placeholder ───────────────────────────────────
+
+    describe('placeholder', () => {
+        function getPlaceholderInputs() {
+            return cy.findByTestId('placeholder-root').find('[data-radix-otp-input]');
+        }
+
+        it('empty inputs show placeholder character', () => {
+            getPlaceholderInputs().each(($input) => {
+                cy.wrap($input).should('have.attr', 'placeholder', '○');
+            });
+        });
+    });
+
+    // ── 15. AutoSubmit ────────────────────────────────────
+
+    describe('autoSubmit', () => {
+        function getAutoSubmitInputs() {
+            return cy.findByTestId('autosubmit-root').find('[data-radix-otp-input]');
+        }
+
+        function pasteIntoAutoSubmit(text) {
+            cy.findByTestId('autosubmit-root').then(($root) => {
+                const clipboardData = new DataTransfer();
+                clipboardData.setData('text/plain', text);
+                const pasteEvent = new ClipboardEvent('paste', {
+                    clipboardData,
+                    bubbles: true,
+                    cancelable: true,
+                });
+                $root[0].dispatchEvent(pasteEvent);
+            });
+        }
+
+        it('onAutoSubmit fires when all inputs are filled', () => {
+            getAutoSubmitInputs().first().click();
+            pasteIntoAutoSubmit('1234');
+            cy.findByTestId('autosubmit-result').should('have.text', 'AutoSubmitted: 1234');
+        });
+
+        it('onAutoSubmit does not fire when partially filled', () => {
+            getAutoSubmitInputs().first().click();
+            pasteIntoAutoSubmit('123');
+            cy.findByTestId('autosubmit-result').should('have.text', '');
+        });
+    });
+
+    // ── 16. AutoComplete ──────────────────────────────────
+
+    describe('autoComplete', () => {
+        function getAutoCompleteInputs() {
+            return cy.findByTestId('autocomplete-root').find('[data-radix-otp-input]');
+        }
+
+        it('first input has autocomplete="one-time-code"', () => {
+            getAutoCompleteInputs().first().should('have.attr', 'autocomplete', 'one-time-code');
+        });
+
+        it('subsequent inputs have autocomplete="off"', () => {
+            getAutoCompleteInputs().eq(1).should('have.attr', 'autocomplete', 'off');
+            getAutoCompleteInputs().eq(2).should('have.attr', 'autocomplete', 'off');
+        });
+    });
+
+    // ── 17. Vertical Orientation ──────────────────────────
 
     describe('vertical orientation', () => {
         beforeEach(() => {
             cy.findByLabelText('vertical').click();
-            cy.findByRole('group').should('have.attr', 'data-orientation', 'vertical');
+            getRoot().should('have.attr', 'data-orientation', 'vertical');
         });
 
         it('ArrowDown moves to next input', () => {

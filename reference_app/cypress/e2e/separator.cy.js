@@ -47,6 +47,22 @@ describe('Separator', () => {
         });
     });
 
+    // ── 1b. Element Type ─────────────────────────────────────
+
+    describe('element type', () => {
+        it('renders as a div element', () => {
+            getHorizontal().should('have.prop', 'tagName', 'DIV');
+        });
+
+        it('vertical separator renders as a div element', () => {
+            getVertical().should('have.prop', 'tagName', 'DIV');
+        });
+
+        it('decorative separator renders as a div element', () => {
+            getDecorative().should('have.prop', 'tagName', 'DIV');
+        });
+    });
+
     // ── 2. Data Attributes ──────────────────────────────────
 
     describe('data attributes', () => {

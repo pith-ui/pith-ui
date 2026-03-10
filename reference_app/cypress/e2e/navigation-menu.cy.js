@@ -34,11 +34,11 @@ describe('Navigation Menu', () => {
 
     describe('accessibility', () => {
         it('Root has role="navigation"', () => {
-            cy.findByRole('navigation').should('exist');
+            cy.findByTestId('nav-root').should('match', 'nav');
         });
 
         it('List renders as a list element', () => {
-            cy.findByRole('navigation').find('ul').should('exist');
+            cy.findByTestId('nav-root').find('ul').should('exist');
         });
 
         it('Trigger has aria-expanded="false" when closed', () => {
@@ -79,6 +79,17 @@ describe('Navigation Menu', () => {
         it('Link without active does not have aria-current', () => {
             cy.findByRole('button', {name: 'Products'}).click();
             cy.findByText('Product A').should('not.have.attr', 'aria-current');
+        });
+
+        it('aria-owns restructures a11y tree when viewport is present and trigger is open', () => {
+            cy.findByRole('button', {name: 'Products'}).click();
+            shouldBeOpen('Products');
+            // When a viewport is present, a span[aria-owns] should exist pointing to content
+            cy.findByRole('button', {name: 'Products'})
+                .invoke('attr', 'aria-controls')
+                .then((contentId) => {
+                    cy.get(`span[aria-owns="${contentId}"]`).should('exist');
+                });
         });
     });
 
@@ -387,7 +398,85 @@ describe('Navigation Menu', () => {
         });
     });
 
-    // ── 9. Layout Stability ────────────────────────────────────
+    // ── 9. Controlled Mode ──────────────────────────────────────
+
+    describe('controlled mode', () => {
+        it('external button opens products', () => {
+            cy.findByTestId('set-products').click();
+            cy.findByTestId('controlled-products-content').should('exist');
+            cy.findByTestId('controlled-nav-value').should('have.text', 'c-products');
+        });
+
+        it('external button opens resources', () => {
+            cy.findByTestId('set-resources').click();
+            cy.findByTestId('controlled-resources-content').should('exist');
+            cy.findByTestId('controlled-nav-value').should('have.text', 'c-resources');
+        });
+
+        it('external button closes all', () => {
+            cy.findByTestId('set-products').click();
+            cy.findByTestId('controlled-products-content').should('exist');
+            cy.findByTestId('close-all').click();
+            cy.findByTestId('controlled-products-content').should('not.exist');
+            cy.findByTestId('controlled-nav-value').should('have.text', '(none)');
+        });
+
+        it('clicking trigger updates external state', () => {
+            cy.findByTestId('controlled-nav-value').should('have.text', '(none)');
+            cy.findByTestId('controlled-products-trigger').click();
+            cy.findByTestId('controlled-products-content').should('exist');
+            cy.findByTestId('controlled-nav-value').should('have.text', 'c-products');
+        });
+
+        it('switching triggers updates external state', () => {
+            cy.findByTestId('controlled-products-trigger').click();
+            cy.findByTestId('controlled-nav-value').should('have.text', 'c-products');
+            cy.findByTestId('controlled-resources-trigger').click();
+            cy.findByTestId('controlled-nav-value').should('have.text', 'c-resources');
+        });
+
+        it('Escape updates external state', () => {
+            cy.findByTestId('controlled-products-trigger').click();
+            cy.findByTestId('controlled-nav-value').should('have.text', 'c-products');
+            cy.realPress('Escape');
+            cy.findByTestId('controlled-products-content').should('not.exist');
+            cy.findByTestId('controlled-nav-value').should('have.text', '(none)');
+        });
+    });
+
+    // ── 10. Data Motion Attributes ──────────────────────────────
+
+    describe('data-motion attributes', () => {
+        it('no data-motion on initial open from closed state', () => {
+            cy.findByRole('button', {name: 'Products'}).click();
+            shouldBeOpen('Products');
+            cy.findByTestId('products-content').should('not.have.attr', 'data-motion');
+        });
+
+        it('incoming content gets data-motion="from-end" when switching forward', () => {
+            // Open Products first (index 0)
+            cy.findByRole('button', {name: 'Products'}).click();
+            shouldBeOpen('Products');
+            // Switch to Resources (index 1) — moving forward
+            cy.findByRole('button', {name: 'Resources'}).click();
+            shouldBeOpen('Resources');
+            cy.findByTestId('resources-content').should('have.attr', 'data-motion', 'from-end');
+        });
+
+        it('incoming content gets data-motion="from-start" when switching backward', () => {
+            // Open Products first, then switch to Resources
+            cy.findByRole('button', {name: 'Products'}).click();
+            shouldBeOpen('Products');
+            cy.findByRole('button', {name: 'Resources'}).click();
+            shouldBeOpen('Resources');
+            // Switch back to Products (index 0) — moving backward
+            cy.findByRole('button', {name: 'Products'}).click();
+            shouldBeOpen('Products');
+            cy.findByTestId('products-content').should('have.attr', 'data-motion', 'from-start');
+        });
+    });
+
+    // ── 11. Layout Stability ────────────────────────────────────
 
     describe('layout stability', () => {
         function getNavList() {

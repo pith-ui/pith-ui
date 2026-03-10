@@ -11,6 +11,7 @@ pub fn ToastPage() -> impl IntoView {
     let timer_ref: StoredValue<Option<i32>> = StoredValue::new(None);
     let (show_uncontrolled, set_show_uncontrolled) = signal(false);
     let (multi_count, set_multi_count) = signal(0u32);
+    let (controlled_open, set_controlled_open) = signal(false);
 
     let add_toast = move |_: web_sys::MouseEvent| {
         set_open.set(false);
@@ -102,6 +103,32 @@ pub fn ToastPage() -> impl IntoView {
             <Show when=move || show_uncontrolled.get()>
                 <UncontrolledToast />
             </Show>
+
+            <h2>"Controlled Mode"</h2>
+            <label>
+                <input
+                    type="checkbox"
+                    prop:checked=move || controlled_open.get()
+                    on:change=move |ev| {
+                        let target: web_sys::HtmlInputElement = ev.target().unwrap().unchecked_into();
+                        set_controlled_open.set(target.checked());
+                    }
+                />
+                " open controlled toast"
+            </label>
+
+            <Toast
+                class="toast-root"
+                open=controlled_open
+                on_open_change=Callback::new(move |value: bool| set_controlled_open.set(value))
+                duration=MaybeProp::from(Some(1_000_000))
+            >
+                <ToastTitle attr:class="toast-title">"Controlled toast title"</ToastTitle>
+                <ToastDescription attr:class="toast-description">"Controlled toast description"</ToastDescription>
+                <ToastClose attr:class="toast-close" as_child=true>
+                    <button data-testid="controlled-toast-close">"Close controlled"</button>
+                </ToastClose>
+            </Toast>
 
             <h2>"Multi-toast tab order"</h2>
             <button data-testid="add-multi-toast" on:click=move |_| set_multi_count.update(|c| *c += 1)>

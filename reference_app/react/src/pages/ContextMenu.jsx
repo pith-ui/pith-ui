@@ -42,6 +42,21 @@ export default function ContextMenuPage() {
 
                         <ContextMenu.Separator className="context-separator" />
 
+                        <ContextMenu.Item
+                            className="context-item"
+                            onSelect={() => setLastAction('Apple')}
+                        >
+                            Apple
+                        </ContextMenu.Item>
+                        <ContextMenu.Item
+                            className="context-item"
+                            onSelect={() => setLastAction('Banana')}
+                        >
+                            Banana
+                        </ContextMenu.Item>
+
+                        <ContextMenu.Separator className="context-separator" />
+
                         <ContextMenu.CheckboxItem
                             className="context-item"
                             checked={checked}

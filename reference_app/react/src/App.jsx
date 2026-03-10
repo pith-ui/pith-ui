@@ -1,4 +1,5 @@
 import {Routes, Route, Link} from 'react-router-dom';
+import AccessibleIcon from './pages/AccessibleIcon';
 import Accordion from './pages/Accordion';
 import AlertDialog from './pages/AlertDialog';
 import AspectRatio from './pages/AspectRatio';
@@ -13,6 +14,7 @@ import Form from './pages/Form';
 import Menu from './pages/Menu';
 import Menubar from './pages/Menubar';
 import HoverCard from './pages/HoverCard';
+import Label from './pages/Label';
 import NavigationMenu from './pages/NavigationMenu';
 import OneTimePasswordField from './pages/OneTimePasswordField';
 import PasswordToggleField from './pages/PasswordToggleField';
@@ -39,6 +41,9 @@ function Index() {
             <p>Add component pages as needed. Each route maps to a Radix primitive test fixture.</p>
             <nav>
                 <ul>
+                    <li>
+                        <Link to="/accessible-icon">Accessible Icon</Link>
+                    </li>
                     <li>
                         <Link to="/accordion">Accordion</Link>
                     </li>
@@ -68,6 +73,9 @@ function Index() {
                     </li>
                     <li>
                         <Link to="/hover-card">Hover Card</Link>
+                    </li>
+                    <li>
+                        <Link to="/label">Label</Link>
                     </li>
                     <li>
                         <Link to="/menu">Menu</Link>
@@ -139,6 +147,7 @@ export default function App() {
     return (
         <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/accessible-icon" element={<AccessibleIcon />} />
             <Route path="/accordion" element={<Accordion />} />
             <Route path="/alert-dialog" element={<AlertDialog />} />
             <Route path="/aspect-ratio" element={<AspectRatio />} />
@@ -153,6 +162,7 @@ export default function App() {
             <Route path="/menu" element={<Menu />} />
             <Route path="/menubar" element={<Menubar />} />
             <Route path="/hover-card" element={<HoverCard />} />
+            <Route path="/label" element={<Label />} />
             <Route path="/navigation-menu" element={<NavigationMenu />} />
             <Route path="/one-time-password-field" element={<OneTimePasswordField />} />
             <Route path="/password-toggle-field" element={<PasswordToggleField />} />

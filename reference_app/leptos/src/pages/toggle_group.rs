@@ -6,6 +6,8 @@ pub fn ToggleGroupPage() -> impl IntoView {
     let (type_value, set_type_value) = signal("single".to_string());
     let (orientation, set_orientation) = signal("horizontal".to_string());
     let (disabled, set_disabled) = signal(false);
+    let (single_value, set_single_value) = signal(Vec::<String>::new());
+    let (multiple_value, set_multiple_value) = signal(Vec::<String>::new());
 
     let toggle_type = Signal::derive(move || match type_value.get().as_str() {
         "multiple" => ToggleGroupType::Multiple,
@@ -28,6 +30,8 @@ pub fn ToggleGroupPage() -> impl IntoView {
                         disabled=disabled
                         attr:class="toggle-group-root"
                         attr:aria-label="Options"
+                        value=multiple_value.get()
+                        on_value_change=Callback::new(move |v: Vec<String>| set_multiple_value.set(v))
                     >
                         <ToggleGroupItem value="1" attr:class="toggle-group-item">
                             "Item 1"
@@ -48,6 +52,8 @@ pub fn ToggleGroupPage() -> impl IntoView {
                 disabled=disabled
                 attr:class="toggle-group-root"
                 attr:aria-label="Options"
+                value=single_value.get()
+                on_value_change=Callback::new(move |v: Vec<String>| set_single_value.set(v))
             >
                 <ToggleGroupItem value="1" attr:class="toggle-group-item">
                     "Item 1"
@@ -125,5 +131,33 @@ pub fn ToggleGroupPage() -> impl IntoView {
             />
             " disabled"
         </label>
+
+        <br />
+
+        <span data-testid="toggle-value">{move || {
+            if type_value.get() == "single" {
+                single_value.get().join(",")
+            } else {
+                multiple_value.get().join(",")
+            }
+        }}</span>
+        <button data-testid="set-item3" on:click=move |_| {
+            if type_value.get() == "single" {
+                set_single_value.set(vec!["3".to_string()]);
+            } else {
+                set_multiple_value.set(vec!["3".to_string()]);
+            }
+        }>
+            "set item 3"
+        </button>
+        <button data-testid="clear-value" on:click=move |_| {
+            if type_value.get() == "single" {
+                set_single_value.set(vec![]);
+            } else {
+                set_multiple_value.set(vec![]);
+            }
+        }>
+            "clear"
+        </button>
     }
 }

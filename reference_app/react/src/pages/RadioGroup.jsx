@@ -4,10 +4,17 @@ import '../../../shared/radio-group.css';
 
 export default function RadioGroupPage() {
     const [disabled, setDisabled] = useState(false);
+    const [value, setValue] = useState('');
 
     return (
         <>
-            <RadioGroup.Root className="radio-group-root" disabled={disabled} aria-label="Favourite pet">
+            <RadioGroup.Root
+                className="radio-group-root"
+                disabled={disabled}
+                aria-label="Favourite pet"
+                value={value}
+                onValueChange={setValue}
+            >
                 <label className="radio-group-label">
                     <RadioGroup.Item className="radio-group-item" value="cat">
                         <RadioGroup.Indicator className="radio-group-indicator" />
@@ -39,6 +46,16 @@ export default function RadioGroupPage() {
                 />{' '}
                 disabled
             </label>
+
+            <br />
+
+            <span data-testid="radio-value">{value}</span>
+            <button data-testid="set-rabbit" onClick={() => setValue('rabbit')}>
+                set rabbit
+            </button>
+            <button data-testid="clear-value" onClick={() => setValue('')}>
+                clear
+            </button>
         </>
     );
 }

@@ -349,4 +349,52 @@ describe('Accordion', () => {
             cy.findByRole('button', {name: 'Item 1'}).should('be.focused');
         });
     });
+
+    // ── 9. Controlled Mode ────────────────────────────────────
+
+    describe('controlled mode', () => {
+        function ctrlShouldBeOpen(itemName) {
+            cy.findByRole('button', {name: itemName}).should('have.attr', 'data-state', 'open');
+        }
+
+        function ctrlShouldBeClosed(itemName) {
+            cy.findByRole('button', {name: itemName}).should('have.attr', 'data-state', 'closed');
+        }
+
+        it('external control opens an accordion item', () => {
+            // accordion-msc-1
+            ctrlShouldBeClosed('Ctrl Item 1');
+            cy.findByTestId('controlled-open-item-1').click();
+            ctrlShouldBeOpen('Ctrl Item 1');
+            cy.findByTestId('controlled-value').should('have.text', 'ctrl-item-1');
+        });
+
+        it('external control closes an accordion item', () => {
+            // accordion-msc-1
+            cy.findByTestId('controlled-open-item-1').click();
+            ctrlShouldBeOpen('Ctrl Item 1');
+            cy.findByTestId('controlled-close-all').click();
+            ctrlShouldBeClosed('Ctrl Item 1');
+            cy.findByTestId('controlled-value').should('have.text', '');
+        });
+
+        it('clicking accordion trigger updates external state', () => {
+            // accordion-msc-1
+            cy.findByTestId('controlled-value').should('have.text', '');
+            cy.findByRole('button', {name: 'Ctrl Item 1'}).click();
+            cy.findByTestId('controlled-value').should('have.text', 'ctrl-item-1');
+        });
+
+        it('controlled value prop determines which item is open', () => {
+            // accordion-msc-1
+            cy.findByTestId('controlled-open-item-1').click();
+            ctrlShouldBeOpen('Ctrl Item 1');
+            ctrlShouldBeClosed('Ctrl Item 2');
+
+            cy.findByTestId('controlled-open-item-2').click();
+            ctrlShouldBeClosed('Ctrl Item 1');
+            ctrlShouldBeOpen('Ctrl Item 2');
+            cy.findByTestId('controlled-value').should('have.text', 'ctrl-item-2');
+        });
+    });
 });

@@ -224,4 +224,35 @@ describe('Radio Group', () => {
             cy.findByRole('radio', {name: 'Rabbit'}).should('be.disabled');
         });
     });
+
+    // ── 6. Controlled Mode ───────────────────────────────────
+
+    describe('controlled mode', () => {
+        it('clicking item updates external state', () => {
+            cy.findByTestId('radio-value').should('have.text', '');
+            cy.findByRole('radio', {name: 'Cat'}).click();
+            cy.findByTestId('radio-value').should('have.text', 'cat');
+        });
+
+        it('external state controls selection', () => {
+            shouldBeUnchecked('Rabbit');
+            cy.findByTestId('set-rabbit').click();
+            shouldBeChecked('Rabbit');
+        });
+
+        it('clearing external state deselects all', () => {
+            cy.findByRole('radio', {name: 'Cat'}).click();
+            shouldBeChecked('Cat');
+            cy.findByTestId('clear-value').click();
+            shouldBeUnchecked('Cat');
+            shouldBeUnchecked('Rabbit');
+        });
+
+        it('on_value_change fires with correct value on keyboard', () => {
+            cy.findByTestId('clear-value').click();
+            cy.findByRole('radio', {name: 'Cat'}).focus();
+            cy.realPress('Space');
+            cy.findByTestId('radio-value').should('have.text', 'cat');
+        });
+    });
 });

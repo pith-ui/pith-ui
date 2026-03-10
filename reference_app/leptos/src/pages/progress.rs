@@ -49,5 +49,13 @@ pub fn ProgressPage() -> impl IntoView {
         <button on:click=move |_| set_value.set(None)>
             "set indeterminate"
         </button>
+        " "
+        <button data-testid="set-negative" on:click=move |_| set_value.set(Some(-10.0))>
+            "set negative"
+        </button>
+        " "
+        <button data-testid="set-over-max" on:click=move |_| set_value.set(Some(200.0))>
+            "set over max"
+        </button>
     }
 }

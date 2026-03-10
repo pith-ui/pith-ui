@@ -20,9 +20,14 @@ pub fn FormPage() -> impl IntoView {
             let name = form_data.get("name").as_string().unwrap_or_default();
             let email = form_data.get("email").as_string().unwrap_or_default();
 
-            // Simulate server validation: name must not be "taken"
+            // Simulate async server validation: name must not be "taken"
+            // Uses set_timeout because on_clear_server_errors fires synchronously on submit,
+            // so a synchronous set would be immediately cleared.
             if name == "taken" {
-                set_server_errors_name.set(true);
+                set_timeout(
+                    move || set_server_errors_name.set(true),
+                    std::time::Duration::ZERO,
+                );
                 return;
             }
 
@@ -76,5 +81,41 @@ pub fn FormPage() -> impl IntoView {
         <pre data-testid="form-result">"Data: " {move || data.get()}</pre>
 
         <button data-testid="outside-button">"outside"</button>
+
+        <hr />
+        <h3>"ValidityState"</h3>
+        <Form attr:class="form-root" attr:data-testid="validity-form" on:submit=|e: web_sys::SubmitEvent| e.prevent_default()>
+            <FormField name="vs-name" attr:class="form-field">
+                <FormLabel attr:class="form-label">"VS Name"</FormLabel>
+                <FormControl attr:class="form-control" attr:r#type="text" attr:required="" attr:data-testid="vs-name-input" />
+                <FormValidityState children=Callback::new(move |validity: Option<Validity>| {
+                    let text = match validity {
+                        Some(v) => format!(
+                            "{{\"valueMissing\":{},\"valid\":{}}}",
+                            v.value_missing, v.valid
+                        ),
+                        None => "undefined".to_string(),
+                    };
+                    view! { <span data-testid="vs-name-validity">{text}</span> }.into_any()
+                }) />
+            </FormField>
+
+            <FormField name="vs-email" attr:class="form-field">
+                <FormLabel attr:class="form-label">"VS Email"</FormLabel>
+                <FormControl attr:class="form-control" attr:r#type="email" attr:data-testid="vs-email-input" />
+                <FormValidityState children=Callback::new(move |validity: Option<Validity>| {
+                    let text = match validity {
+                        Some(v) => format!(
+                            "{{\"typeMismatch\":{},\"valid\":{}}}",
+                            v.type_mismatch, v.valid
+                        ),
+                        None => "undefined".to_string(),
+                    };
+                    view! { <span data-testid="vs-email-validity">{text}</span> }.into_any()
+                }) />
+            </FormField>
+
+            <FormSubmit attr:class="form-submit" attr:data-testid="vs-submit">"Check Validity"</FormSubmit>
+        </Form>
     }
 }

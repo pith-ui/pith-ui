@@ -2,7 +2,7 @@ describe('Toolbar', () => {
     // ── Helpers ──────────────────────────────────────────────
 
     function getToolbar() {
-        return cy.findByRole('toolbar');
+        return cy.findByTestId('horizontal-toolbar');
     }
 
     function getButton(name) {
@@ -235,6 +235,132 @@ describe('Toolbar', () => {
             // Tab back in should focus the last focused item (Italic)
             cy.realPress(['Shift', 'Tab']);
             getButton('Italic').should('be.focused');
+        });
+    });
+
+    // ── 6. Disabled Button ────────────────────────────────────
+
+    describe('disabled button', () => {
+        it('disabled button has disabled attribute', () => {
+            // toolbar-dcnv-1
+            cy.findByTestId('disabled-button').should('be.disabled');
+        });
+
+        it('disabled button has native disabled attribute', () => {
+            // toolbar-dcnv-1
+            // Toolbar.Button renders a plain <button> with the native disabled attribute
+            // (unlike ToggleItem which adds data-disabled)
+            cy.findByTestId('disabled-button').should('have.attr', 'disabled');
+        });
+
+        it('disabled button is skipped by roving focus', () => {
+            // toolbar-dcnv-1
+            // Focus the last toggle item ("Right"), then press ArrowRight.
+            // The disabled button is the next item in DOM order, but roving
+            // focus should skip it and wrap around to the first item ("Bold").
+            getToggleItem('Right').focus();
+            cy.realPress('ArrowRight');
+            // The disabled "Disabled" button should be skipped
+            cy.findByTestId('disabled-button').should('not.be.focused');
+            getButton('Bold').should('be.focused');
+        });
+    });
+
+    // ── 7. RTL Direction ─────────────────────────────────────────
+
+    describe('RTL direction', () => {
+        it('RTL toolbar has data-orientation="horizontal"', () => {
+            // toolbar-dcnv-2
+            cy.findByTestId('rtl-toolbar').should('have.attr', 'data-orientation', 'horizontal');
+        });
+
+        it('ArrowLeft moves to next item in RTL toolbar', () => {
+            // toolbar-dcnv-2
+            // In RTL, ArrowLeft should move forward (next)
+            cy.findByTestId('rtl-toolbar').within(() => {
+                getButton('First').focus();
+                getButton('First').should('be.focused');
+                cy.realPress('ArrowLeft');
+                getButton('Second').should('be.focused');
+            });
+        });
+
+        it('ArrowRight moves to previous item in RTL toolbar', () => {
+            // toolbar-dcnv-2
+            // In RTL, ArrowRight should move backward (previous)
+            cy.findByTestId('rtl-toolbar').within(() => {
+                getButton('Second').focus();
+                getButton('Second').should('be.focused');
+                cy.realPress('ArrowRight');
+                getButton('First').should('be.focused');
+            });
+        });
+
+        it('ArrowLeft wraps from last to first in RTL', () => {
+            // toolbar-dcnv-2
+            cy.findByTestId('rtl-toolbar').within(() => {
+                getButton('Third').focus();
+                cy.realPress('ArrowLeft');
+                getButton('First').should('be.focused');
+            });
+        });
+
+        it('ArrowRight wraps from first to last in RTL', () => {
+            // toolbar-dcnv-2
+            cy.findByTestId('rtl-toolbar').within(() => {
+                getButton('First').focus();
+                cy.realPress('ArrowRight');
+                getButton('Third').should('be.focused');
+            });
+        });
+
+        it('Home and End still work in RTL', () => {
+            // toolbar-dcnv-2
+            cy.findByTestId('rtl-toolbar').within(() => {
+                getButton('Third').focus();
+                cy.realPress('Home');
+                getButton('First').should('be.focused');
+                cy.realPress('End');
+                getButton('Third').should('be.focused');
+            });
+        });
+    });
+
+    // ── 8. Vertical Orientation ───────────────────────────────
+
+    describe('vertical orientation', () => {
+        it('vertical toolbar has aria-orientation="vertical"', () => {
+            // toolbar-dcnv-3
+            cy.findByTestId('vertical-toolbar').should('have.attr', 'aria-orientation', 'vertical');
+        });
+
+        it('vertical toolbar has data-orientation="vertical"', () => {
+            // toolbar-dcnv-3
+            cy.findByTestId('vertical-toolbar').should('have.attr', 'data-orientation', 'vertical');
+        });
+
+        it('ArrowDown moves to next item in vertical toolbar', () => {
+            // toolbar-dcnv-3
+            // Focus the first item in the vertical toolbar, press ArrowDown,
+            // verify the next item receives focus.
+            cy.findByTestId('vertical-toolbar').within(() => {
+                getButton('VBold').focus();
+                getButton('VBold').should('be.focused');
+                cy.realPress('ArrowDown');
+                getButton('VItalic').should('be.focused');
+            });
+        });
+
+        it('ArrowUp moves to previous item in vertical toolbar', () => {
+            // toolbar-dcnv-3
+            // Focus the second item in the vertical toolbar, press ArrowUp,
+            // verify the first item receives focus.
+            cy.findByTestId('vertical-toolbar').within(() => {
+                getButton('VItalic').focus();
+                getButton('VItalic').should('be.focused');
+                cy.realPress('ArrowUp');
+                getButton('VBold').should('be.focused');
+            });
         });
     });
 });

@@ -225,6 +225,101 @@ describe('Scroll Area', () => {
         });
     });
 
+    // ── 6. Thumb Position Tracking ─────────────────────────────
+
+    describe('thumb position tracking', () => {
+        beforeEach(() => {
+            cy.findByLabelText('always').click();
+        });
+
+        it('thumb is near top when scrolled to top', () => {
+            cy.findByTestId('scroll-to-top').click();
+            getVerticalThumb().then(($thumb) => {
+                const thumbRect = $thumb[0].getBoundingClientRect();
+                getVerticalScrollbar().then(($scrollbar) => {
+                    const scrollbarRect = $scrollbar[0].getBoundingClientRect();
+                    // Thumb top should be very close to scrollbar top
+                    expect(thumbRect.top - scrollbarRect.top).to.be.lessThan(5);
+                });
+            });
+        });
+
+        it('thumb moves down when content is scrolled to bottom', () => {
+            getVerticalThumb().then(($thumb) => {
+                const initialTop = $thumb[0].getBoundingClientRect().top;
+                cy.findByTestId('scroll-to-bottom').click();
+                // Give scroll event time to propagate to thumb
+                getVerticalThumb().should(($thumb2) => {
+                    const newTop = $thumb2[0].getBoundingClientRect().top;
+                    expect(newTop).to.be.greaterThan(initialTop);
+                });
+            });
+        });
+
+        it('thumb is near bottom of scrollbar when scrolled to bottom', () => {
+            cy.findByTestId('scroll-to-bottom').click();
+            // Wait for scroll to propagate
+            cy.get('[data-radix-scroll-area-viewport]').should(($el) => {
+                expect($el[0].scrollTop).to.be.greaterThan(0);
+            });
+            getVerticalScrollbar().then(($scrollbar) => {
+                const scrollbarRect = $scrollbar[0].getBoundingClientRect();
+                getVerticalThumb().should(($thumb) => {
+                    const thumbRect = $thumb[0].getBoundingClientRect();
+                    // Thumb bottom should be close to scrollbar bottom
+                    expect(scrollbarRect.bottom - thumbRect.bottom).to.be.lessThan(5);
+                });
+            });
+        });
+
+        it('thumb returns to top after scrolling to top', () => {
+            cy.findByTestId('scroll-to-bottom').click();
+            getVerticalThumb().should(($thumb) => {
+                expect($thumb[0].getBoundingClientRect().top).to.be.greaterThan(0);
+            });
+            cy.findByTestId('scroll-to-top').click();
+            getVerticalThumb().then(($thumb) => {
+                const thumbRect = $thumb[0].getBoundingClientRect();
+                getVerticalScrollbar().then(($scrollbar) => {
+                    const scrollbarRect = $scrollbar[0].getBoundingClientRect();
+                    expect(thumbRect.top - scrollbarRect.top).to.be.lessThan(5);
+                });
+            });
+        });
+    });
+
+    // ── 7. Pointer Drag Scrolling ───────────────────────────────
+
+    describe('pointer drag scrolling', () => {
+        beforeEach(() => {
+            cy.findByLabelText('always').click();
+            // Ensure we start at the top
+            cy.findByTestId('scroll-to-top').click();
+            cy.get('[data-radix-scroll-area-viewport]').should(($el) => {
+                expect($el[0].scrollTop).to.equal(0);
+            });
+        });
+
+        it('dragging thumb down scrolls content down', () => {
+            getVerticalThumb().then(($thumb) => {
+                const thumbRect = $thumb[0].getBoundingClientRect();
+                const startX = thumbRect.left + thumbRect.width / 2;
+                const startY = thumbRect.top + thumbRect.height / 2;
+                const endY = startY + 50;
+
+                // Perform drag using realMouseDown, realMouseMove, realMouseUp
+                getVerticalThumb().realMouseDown({position: 'center'});
+                getVerticalThumb().realMouseMove(0, 50, {position: 'center'});
+                getVerticalThumb().realMouseUp();
+
+                // Content should have scrolled down
+                cy.get('[data-radix-scroll-area-viewport]').should(($el) => {
+                    expect($el[0].scrollTop).to.be.greaterThan(0);
+                });
+            });
+        });
+    });
+
     // ── Internal Styles ─────────────────────────────────────
 
     describe('internal styles', () => {

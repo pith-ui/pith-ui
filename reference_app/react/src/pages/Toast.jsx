@@ -8,6 +8,7 @@ export default function ToastPage() {
     const [count, setCount] = useState(0);
     const timerRef = useRef(0);
     const [showUncontrolled, setShowUncontrolled] = useState(false);
+    const [controlledOpen, setControlledOpen] = useState(false);
     const [multiCount, setMultiCount] = useState(0);
 
     function addToast() {
@@ -68,6 +69,24 @@ export default function ToastPage() {
             </button>
 
             {showUncontrolled && <UncontrolledToast />}
+
+            <h2>Controlled Mode</h2>
+            <label>
+                <input
+                    type="checkbox"
+                    checked={controlledOpen}
+                    onChange={(e) => setControlledOpen(e.target.checked)}
+                />{' '}
+                open controlled toast
+            </label>
+
+            <Toast.Root className="toast-root" open={controlledOpen} onOpenChange={setControlledOpen} duration={1000000}>
+                <Toast.Title className="toast-title">Controlled toast title</Toast.Title>
+                <Toast.Description className="toast-description">Controlled toast description</Toast.Description>
+                <Toast.Close className="toast-close" asChild>
+                    <button data-testid="controlled-toast-close">Close controlled</button>
+                </Toast.Close>
+            </Toast.Root>
 
             <h2>Multi-toast tab order</h2>
             <button data-testid="add-multi-toast" onClick={() => setMultiCount((c) => c + 1)}>

@@ -233,6 +233,58 @@ describe('Popover', () => {
         });
     });
 
+    // ── 7. PopoverAnchor ──────────────────────────────────────
+
+    describe('PopoverAnchor', () => {
+        // popover-dcnv-1
+
+        it('opens when trigger is clicked', () => {
+            cy.findByTestId('anchor-trigger').click();
+            cy.findByTestId('anchor-content').should('exist');
+        });
+
+        it('closes via close button', () => {
+            cy.findByTestId('anchor-trigger').click();
+            cy.findByTestId('anchor-content').should('exist');
+            cy.findByTestId('anchor-close').click();
+            cy.findByTestId('anchor-content').should('not.exist');
+        });
+
+        it('content positions near anchor, not trigger', () => {
+            // The trigger and anchor are 200px apart horizontally.
+            // The popover should position relative to the anchor element.
+            cy.findByTestId('anchor-trigger').then(($trigger) => {
+                const triggerRect = $trigger[0].getBoundingClientRect();
+
+                cy.findByTestId('anchor-trigger').click();
+                cy.findByTestId('anchor-content').should('exist');
+
+                cy.findByTestId('popover-anchor').then(($anchor) => {
+                    const anchorRect = $anchor[0].getBoundingClientRect();
+                    cy.findByTestId('anchor-content').then(($content) => {
+                        const contentRect = $content[0].getBoundingClientRect();
+                        const contentCenterX = contentRect.left + contentRect.width / 2;
+                        const anchorCenterX = anchorRect.left + anchorRect.width / 2;
+                        const triggerCenterX = triggerRect.left + triggerRect.width / 2;
+
+                        // Content should be closer to the anchor than to the trigger
+                        const distToAnchor = Math.abs(contentCenterX - anchorCenterX);
+                        const distToTrigger = Math.abs(contentCenterX - triggerCenterX);
+                        expect(distToAnchor).to.be.lessThan(distToTrigger);
+                    });
+                });
+            });
+        });
+
+        it('Escape closes and restores focus to trigger', () => {
+            cy.findByTestId('anchor-trigger').click();
+            cy.findByTestId('anchor-content').should('exist');
+            cy.realPress('Escape');
+            cy.findByTestId('anchor-content').should('not.exist');
+            cy.findByTestId('anchor-trigger').should('be.focused');
+        });
+    });
+
     // ── Internal Styles ─────────────────────────────────────
 
     describe('internal styles', () => {
@@ -256,6 +308,45 @@ describe('Popover', () => {
                 );
                 expect(value.trim()).to.not.be.empty;
             });
+        });
+    });
+
+    // ── 8. Controlled Mode ────────────────────────────────────
+
+    describe('controlled mode', () => {
+        it('external checkbox opens popover', () => {
+            // popover-msc-1
+            cy.findByTestId('controlled-content').should('not.exist');
+            cy.findByLabelText('open controlled').click();
+            cy.findByTestId('controlled-content').should('exist');
+        });
+
+        it('external control closes popover', () => {
+            // popover-msc-1
+            cy.findByLabelText('open controlled').click();
+            cy.findByTestId('controlled-content').should('exist');
+            // Use dedicated button to avoid outside-click dismiss racing with checkbox toggle
+            cy.findByTestId('controlled-external-close').click();
+            cy.findByTestId('controlled-content').should('not.exist');
+            cy.findByTestId('controlled-open-state').should('have.text', 'closed');
+        });
+
+        it('clicking trigger updates external state', () => {
+            // popover-msc-1
+            cy.findByLabelText('open controlled').should('not.be.checked');
+            cy.findByTestId('controlled-trigger').click();
+            cy.findByTestId('controlled-content').should('exist');
+            cy.findByLabelText('open controlled').should('be.checked');
+        });
+
+        it('closing via Escape updates external state', () => {
+            // popover-msc-1
+            cy.findByTestId('controlled-trigger').click();
+            cy.findByTestId('controlled-content').should('exist');
+            cy.findByLabelText('open controlled').should('be.checked');
+            cy.realPress('Escape');
+            cy.findByTestId('controlled-content').should('not.exist');
+            cy.findByLabelText('open controlled').should('not.be.checked');
         });
     });
 });

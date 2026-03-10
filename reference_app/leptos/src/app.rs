@@ -19,6 +19,7 @@ pub fn App() -> impl IntoView {
             <main>
                 <Routes fallback=|| "Not found.".into_view()>
                     <Route path=path!("/") view=Index />
+                    <Route path=path!("/accessible-icon") view=pages::accessible_icon::AccessibleIconPage />
                     <Route path=path!("/accordion") view=pages::accordion::AccordionPage />
                     <Route path=path!("/alert-dialog") view=pages::alert_dialog::AlertDialogPage />
                     <Route path=path!("/aspect-ratio") view=pages::aspect_ratio::AspectRatioPage />
@@ -33,6 +34,7 @@ pub fn App() -> impl IntoView {
                     <Route path=path!("/menu") view=pages::menu::MenuPage />
                     <Route path=path!("/menubar") view=pages::menubar::MenubarPage />
                     <Route path=path!("/hover-card") view=pages::hover_card::HoverCardPage />
+                    <Route path=path!("/label") view=pages::label::LabelPage />
                     <Route path=path!("/navigation-menu") view=pages::navigation_menu::NavigationMenuPage />
                     <Route path=path!("/one-time-password-field") view=pages::one_time_password_field::OneTimePasswordFieldPage />
                     <Route path=path!("/password-toggle-field") view=pages::password_toggle_field::PasswordToggleFieldPage />

@@ -65,6 +65,15 @@ describe('Select', () => {
         it('Trigger has aria-autocomplete="none"', () => {
             getTrigger().should('have.attr', 'aria-autocomplete', 'none');
         });
+
+        it('Trigger aria-controls references Content id when open', () => {
+            openSelect();
+            getTrigger()
+                .invoke('attr', 'aria-controls')
+                .then((controlsId) => {
+                    cy.findByRole('listbox').should('have.attr', 'id', controlsId);
+                });
+        });
     });
 
     // ── 2. Content Sizing ─────────────────────────────────────
@@ -233,6 +242,12 @@ describe('Select', () => {
             shouldBeOpen();
             cy.realPress('End');
             cy.findByRole('option', {name: 'Potato'}).should('have.attr', 'data-highlighted');
+        });
+
+        it('Tab does not close select (prevented)', () => {
+            openSelect();
+            cy.realPress('Tab');
+            shouldBeOpen();
         });
 
         it('ArrowDown skips disabled options', () => {
@@ -644,7 +659,37 @@ describe('Select', () => {
         });
     });
 
-    // ── 13. Controlled Value (Dual Selects) ─────────────────
+    // ── 13. Context Menu Suppression ─────────────────────────
+
+    describe('context menu suppression', () => {
+        it('right-click on content does not open context menu', () => {
+            openSelect();
+            // Trigger contextmenu event on the listbox and verify it is prevented
+            cy.findByRole('listbox').trigger('contextmenu');
+            // Select should still be open (contextmenu was suppressed)
+            shouldBeOpen();
+        });
+    });
+
+    // ── 14. Window Events ────────────────────────────────────
+
+    describe('window events', () => {
+        it('select closes on window resize', () => {
+            // select-bp-3
+            openSelect();
+            cy.window().trigger('resize');
+            shouldBeClosed();
+        });
+
+        it('select closes on window blur', () => {
+            // select-bp-3
+            openSelect();
+            cy.window().trigger('blur');
+            shouldBeClosed();
+        });
+    });
+
+    // ── 15. Controlled Value (Dual Selects) ─────────────────
 
     describe('controlled value', () => {
         it('readout shows initial controlled value', () => {

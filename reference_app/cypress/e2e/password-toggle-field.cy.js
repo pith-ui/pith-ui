@@ -61,6 +61,22 @@ describe('PasswordToggleField', () => {
         });
     });
 
+    // ── 1b. Input Attributes ─────────────────────────────────
+
+    describe('input attributes', () => {
+        it('input has autocomplete attribute', () => {
+            passwordInput().should('have.attr', 'autocomplete');
+        });
+
+        it('input has spellcheck="false"', () => {
+            passwordInput().should('have.attr', 'spellcheck', 'false');
+        });
+
+        it('input has autocapitalize="off"', () => {
+            passwordInput().should('have.attr', 'autocapitalize', 'off');
+        });
+    });
+
     // ── 2. Input Type Toggling ──────────────────────────────
 
     describe('input type', () => {

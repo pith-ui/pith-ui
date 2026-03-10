@@ -151,4 +151,61 @@ describe('Tooltip', () => {
             content().should('have.attr', 'data-align', 'center');
         });
     });
+
+    // ── 7. ARIA Attributes ────────────────────────────────────
+
+    describe('ARIA attributes', () => {
+        it('trigger has aria-describedby pointing to content when open', () => {
+            // tooltip-bp-1
+            trigger().focus();
+            shouldBeOpen();
+            trigger().should('have.attr', 'aria-describedby').and('not.be.empty');
+        });
+
+        it('trigger does not have aria-describedby when closed', () => {
+            // tooltip-bp-1
+            trigger().should('not.have.attr', 'aria-describedby');
+        });
+
+        it('a role="tooltip" element exists in the DOM when open', () => {
+            // tooltip-bp-2
+            trigger().focus();
+            shouldBeOpen();
+            cy.get('[role="tooltip"]').should('exist');
+        });
+
+        it('no role="tooltip" element exists when closed', () => {
+            // tooltip-bp-2
+            cy.get('[role="tooltip"]').should('not.exist');
+        });
+    });
+
+    // ── 8. Controlled Mode ────────────────────────────────────
+
+    describe('controlled mode', () => {
+        it('external checkbox opens tooltip', () => {
+            // tooltip-msc-1
+            cy.findByTestId('tooltip-content-controlled').should('not.exist');
+            cy.findByLabelText('open controlled').click();
+            cy.findByTestId('tooltip-content-controlled').should('exist');
+        });
+
+        it('external control closes tooltip', () => {
+            // tooltip-msc-1
+            cy.findByLabelText('open controlled').click();
+            cy.findByTestId('tooltip-content-controlled').should('exist');
+            // Use dedicated button to avoid click-outside dismiss racing with checkbox toggle
+            cy.findByTestId('controlled-external-close').click();
+            cy.findByTestId('tooltip-content-controlled').should('not.exist');
+            cy.findByTestId('controlled-open-state').should('have.text', 'closed');
+        });
+
+        it('hovering controlled trigger updates external checkbox', () => {
+            // tooltip-msc-1
+            cy.findByLabelText('open controlled').should('not.be.checked');
+            cy.findByTestId('tooltip-trigger-controlled').realHover();
+            cy.findByTestId('tooltip-content-controlled').should('exist');
+            cy.findByLabelText('open controlled').should('be.checked');
+        });
+    });
 });

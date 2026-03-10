@@ -288,4 +288,41 @@ describe('Slider', () => {
             shouldHaveValue(40);
         });
     });
+
+    // ── 7. Uncontrolled Mode ─────────────────────────────────
+
+    describe('uncontrolled mode', () => {
+        // slider-msc-1
+
+        function getUncontrolledThumb() {
+            return cy.findByRole('slider', {name: 'Uncontrolled volume'});
+        }
+
+        it('renders with default value', () => {
+            getUncontrolledThumb().should('have.attr', 'aria-valuenow', '30');
+        });
+
+        it('keyboard changes value without external state', () => {
+            getUncontrolledThumb().focus();
+            cy.realPress('ArrowRight');
+            getUncontrolledThumb().should('have.attr', 'aria-valuenow', '31');
+        });
+
+        it('Home sets value to min', () => {
+            getUncontrolledThumb().focus();
+            cy.realPress('Home');
+            getUncontrolledThumb().should('have.attr', 'aria-valuenow', '0');
+        });
+
+        it('End sets value to max', () => {
+            getUncontrolledThumb().focus();
+            cy.realPress('End');
+            getUncontrolledThumb().should('have.attr', 'aria-valuenow', '100');
+        });
+
+        it('has correct data attributes', () => {
+            cy.findByTestId('uncontrolled-slider').should('have.attr', 'data-orientation', 'horizontal');
+            getUncontrolledThumb().should('have.attr', 'data-orientation', 'horizontal');
+        });
+    });
 });

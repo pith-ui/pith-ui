@@ -25,7 +25,9 @@ export default function ProgressPage() {
 
             <button onClick={() => setValue((v) => (v != null ? Math.min(v + 10, 100) : 10))}>increment</button>{' '}
             <button onClick={() => setValue(100)}>set complete</button>{' '}
-            <button onClick={() => setValue(null)}>set indeterminate</button>
+            <button onClick={() => setValue(null)}>set indeterminate</button>{' '}
+            <button data-testid="set-negative" onClick={() => setValue(-10)}>set negative</button>{' '}
+            <button data-testid="set-over-max" onClick={() => setValue(200)}>set over max</button>
         </>
     );
 }

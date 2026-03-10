@@ -27,7 +27,7 @@ describe('Tabs', () => {
         });
 
         it('Triggers have role="tab"', () => {
-            cy.findAllByRole('tab').should('have.length', 3);
+            cy.findByTestId('uncontrolled-tabs-section').findAllByRole('tab').should('have.length', 3);
         });
 
         it('Active content has role="tabpanel"', () => {
@@ -336,6 +336,91 @@ describe('Tabs', () => {
                 const inlineStyle = $el[0].style.cssText;
                 expect(inlineStyle).to.not.contain('animation-duration');
             });
+        });
+    });
+
+    // ── 8. Force Mount ─────────────────────────────────────
+
+    describe('force mount', () => {
+        it('both force-mounted panels are in the DOM', () => {
+            cy.findByTestId('fm-content-1').should('exist');
+            cy.findByTestId('fm-content-2').should('exist');
+        });
+
+        it('active force-mounted panel has data-state="active"', () => {
+            cy.findByTestId('fm-content-1').should('have.attr', 'data-state', 'active');
+        });
+
+        it('inactive force-mounted panel has data-state="inactive"', () => {
+            cy.findByTestId('fm-content-2').should('have.attr', 'data-state', 'inactive');
+        });
+
+        it('data-state toggles when switching force-mounted tabs', () => {
+            cy.findByTestId('fm-content-1').should('have.attr', 'data-state', 'active');
+            cy.findByTestId('fm-content-2').should('have.attr', 'data-state', 'inactive');
+
+            cy.findByTestId('fm-trigger-2').click();
+
+            cy.findByTestId('fm-content-2').should('have.attr', 'data-state', 'active');
+            cy.findByTestId('fm-content-1').should('have.attr', 'data-state', 'inactive');
+        });
+
+        it('inactive force-mounted panel has role="tabpanel"', () => {
+            // Even inactive force-mounted panels maintain their tabpanel role
+            cy.findByTestId('fm-content-2').should('have.attr', 'role', 'tabpanel');
+        });
+    });
+
+    // ── 9. Controlled Mode ──────────────────────────────────
+
+    describe('controlled mode', () => {
+        it('external control changes active tab', () => {
+            // tabs-msc-1
+            // Initially Tab 1 is active
+            cy.findByTestId('controlled-tab-trigger-1').should('have.attr', 'data-state', 'active');
+            cy.findByTestId('controlled-tab-content-1').should('exist');
+
+            // Click external button to switch to Tab 3
+            cy.findByTestId('controlled-select-tab3').click();
+            cy.findByTestId('controlled-tab-trigger-3').should('have.attr', 'data-state', 'active');
+            cy.findByTestId('controlled-tab-trigger-1').should('have.attr', 'data-state', 'inactive');
+            cy.findByTestId('controlled-tab-content-3').should('contain.text', 'Controlled Content 3');
+
+            // Click external button to switch to Tab 2
+            cy.findByTestId('controlled-select-tab2').click();
+            cy.findByTestId('controlled-tab-trigger-2').should('have.attr', 'data-state', 'active');
+            cy.findByTestId('controlled-tab-trigger-3').should('have.attr', 'data-state', 'inactive');
+            cy.findByTestId('controlled-tab-content-2').should('contain.text', 'Controlled Content 2');
+        });
+
+        it('clicking tab trigger updates external state', () => {
+            // tabs-msc-1
+            // Initially the external value display shows ctab1
+            cy.findByTestId('controlled-value-display').should('have.text', 'ctab1');
+
+            // Click controlled Tab 3 trigger
+            cy.findByTestId('controlled-tab-trigger-3').click();
+            cy.findByTestId('controlled-value-display').should('have.text', 'ctab3');
+
+            // Click controlled Tab 2 trigger
+            cy.findByTestId('controlled-tab-trigger-2').click();
+            cy.findByTestId('controlled-value-display').should('have.text', 'ctab2');
+        });
+
+        it('consumer-driven value prop controls which tab is active', () => {
+            // tabs-msc-1
+            // Use external button to set Tab 2
+            cy.findByTestId('controlled-select-tab2').click();
+            cy.findByTestId('controlled-tab-trigger-2').should('have.attr', 'aria-selected', 'true');
+            cy.findByTestId('controlled-tab-trigger-1').should('have.attr', 'aria-selected', 'false');
+            cy.findByTestId('controlled-tab-trigger-3').should('have.attr', 'aria-selected', 'false');
+            cy.findByTestId('controlled-tab-content-2').should('exist');
+
+            // Switch back to Tab 1 via external button
+            cy.findByTestId('controlled-select-tab1').click();
+            cy.findByTestId('controlled-tab-trigger-1').should('have.attr', 'aria-selected', 'true');
+            cy.findByTestId('controlled-tab-trigger-2').should('have.attr', 'aria-selected', 'false');
+            cy.findByTestId('controlled-tab-content-1').should('exist');
         });
     });
 });

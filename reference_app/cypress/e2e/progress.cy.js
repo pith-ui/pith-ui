@@ -167,10 +167,26 @@ describe('Progress', () => {
             getRoot().should('have.attr', 'aria-valuenow', '10');
         });
 
-        it('indicator style width updates with value', () => {
-            getIndicator().should('have.css', 'width');
+        it('negative value becomes indeterminate', () => {
+            cy.findByTestId('set-negative').click();
+            getRoot().should('have.attr', 'data-state', 'indeterminate');
+            getRoot().should('not.have.attr', 'aria-valuenow');
+            getRoot().should('not.have.attr', 'data-value');
+        });
+
+        it('value exceeding max becomes indeterminate', () => {
+            cy.findByTestId('set-over-max').click();
+            getRoot().should('have.attr', 'data-state', 'indeterminate');
+            getRoot().should('not.have.attr', 'aria-valuenow');
+            getRoot().should('not.have.attr', 'data-value');
+        });
+
+        it('setting value to max transitions to complete state', () => {
+            // progress-dcnv-1: test behavioral contract (data attributes) instead of visual style
             cy.findByText('set complete').click();
-            getIndicator().invoke('attr', 'style').should('contain', '100%');
+            getRoot().should('have.attr', 'data-state', 'complete');
+            getRoot().should('have.attr', 'data-value', '100');
+            getRoot().should('have.attr', 'aria-valuenow', '100');
         });
     });
 });

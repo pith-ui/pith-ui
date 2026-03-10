@@ -27,12 +27,28 @@ describe('AspectRatio', () => {
             });
         });
 
-        it('wrapper has correct padding-bottom for 1:1 ratio', () => {
-            getWrapper('default-ratio').should('have.css', 'padding-bottom').and('match', /^[0-9]/);
+        it('wrapper has correct padding-bottom for 1:1 ratio (100%)', () => {
+            // aspect-ratio-dcnv-1: verify the mathematically correct value
+            // For ratio 1/1, padding-bottom = (1/1) * 100% = 100%
+            getWrapper('default-ratio').then(($el) => {
+                const wrapper = $el[0];
+                const parentWidth = wrapper.parentElement.getBoundingClientRect().width;
+                const paddingBottom = parseFloat(getComputedStyle(wrapper).paddingBottom);
+                // padding-bottom in px should equal parent width for 1:1 ratio
+                expect(paddingBottom).to.be.closeTo(parentWidth, 2);
+            });
         });
 
-        it('wrapper has correct padding-bottom for 16:9 ratio', () => {
-            getWrapper('custom-ratio').should('have.css', 'padding-bottom').and('match', /^[0-9]/);
+        it('wrapper has correct padding-bottom for 16:9 ratio (~56.25%)', () => {
+            // aspect-ratio-dcnv-1: verify the mathematically correct value
+            // For ratio 16/9, padding-bottom = (9/16) * 100% = 56.25%
+            getWrapper('custom-ratio').then(($el) => {
+                const wrapper = $el[0];
+                const parentWidth = wrapper.parentElement.getBoundingClientRect().width;
+                const paddingBottom = parseFloat(getComputedStyle(wrapper).paddingBottom);
+                const expectedPadding = parentWidth * (9 / 16);
+                expect(paddingBottom).to.be.closeTo(expectedPadding, 2);
+            });
         });
 
         it('wrapper has data-radix-aspect-ratio-wrapper attribute', () => {
@@ -92,7 +108,37 @@ describe('AspectRatio', () => {
         });
     });
 
-    // ── 4. Conflicting style does not override internal styles ──
+    // ── 4. asChild rendering ────────────────────────────────────
+
+    describe('asChild rendering', () => {
+        it('renders consumer element (img) instead of default div', () => {
+            cy.findByTestId('with-as-child').should('match', 'img');
+        });
+
+        it('consumer element has internal absolute positioning styles', () => {
+            cy.findByTestId('with-as-child').should('have.css', 'position', 'absolute');
+            cy.findByTestId('with-as-child').should('have.css', 'top', '0px');
+            cy.findByTestId('with-as-child').should('have.css', 'right', '0px');
+            cy.findByTestId('with-as-child').should('have.css', 'bottom', '0px');
+            cy.findByTestId('with-as-child').should('have.css', 'left', '0px');
+        });
+
+        it('consumer element retains its own attributes', () => {
+            cy.findByTestId('with-as-child').should('have.attr', 'alt', 'placeholder');
+        });
+
+        it('wrapper still has correct aspect ratio padding', () => {
+            getWrapper('with-as-child').then(($el) => {
+                const wrapper = $el[0];
+                const parentWidth = wrapper.parentElement.getBoundingClientRect().width;
+                const paddingBottom = parseFloat(getComputedStyle(wrapper).paddingBottom);
+                const expectedPadding = parentWidth * (9 / 16);
+                expect(paddingBottom).to.be.closeTo(expectedPadding, 2);
+            });
+        });
+    });
+
+    // ── 5. Conflicting style does not override internal styles ──
 
     describe('conflicting style override', () => {
         it('internal position: absolute wins over user position: relative', () => {

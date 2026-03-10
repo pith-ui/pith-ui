@@ -47,6 +47,27 @@ pub fn ContextMenuPage() -> impl IntoView {
 
                     <ContextMenuSeparator attr:class="context-separator" />
 
+                    <ContextMenuItem
+                        attr:class="context-item"
+                        on_select=Callback::new({
+                            let set_last_action = set_last_action.clone();
+                            move |_: web_sys::Event| set_last_action.set("Apple".into())
+                        })
+                    >
+                        "Apple"
+                    </ContextMenuItem>
+                    <ContextMenuItem
+                        attr:class="context-item"
+                        on_select=Callback::new({
+                            let set_last_action = set_last_action.clone();
+                            move |_: web_sys::Event| set_last_action.set("Banana".into())
+                        })
+                    >
+                        "Banana"
+                    </ContextMenuItem>
+
+                    <ContextMenuSeparator attr:class="context-separator" />
+
                     <ContextMenuCheckboxItem
                         attr:class="context-item"
                         checked=Signal::derive(move || CheckedState::from(checked.get()))

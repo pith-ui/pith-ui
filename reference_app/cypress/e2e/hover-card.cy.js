@@ -28,7 +28,19 @@ describe('Hover Card', () => {
         cy.visit('/hover-card');
     });
 
-    // ── 1. Data Attributes ──────────────────────────────────
+    // ── 1. Accessibility Semantics ──────────────────────────
+
+    describe('accessibility', () => {
+        it('Trigger renders as an anchor element', () => {
+            cy.findByTestId('hover-card-trigger').should('have.prop', 'tagName', 'A');
+        });
+
+        it('Trigger has href attribute (link semantics)', () => {
+            cy.findByTestId('hover-card-trigger').should('have.attr', 'href');
+        });
+    });
+
+    // ── 2. Data Attributes ──────────────────────────────────
 
     describe('data attributes', () => {
         it('Trigger has data-state="closed" initially', () => {
@@ -113,6 +125,70 @@ describe('Hover Card', () => {
             cy.findByTestId('hover-card-trigger').realHover();
             shouldBeOpen();
             cy.findByTestId('hover-card-content').should('have.attr', 'data-align', 'center');
+        });
+    });
+
+    // ── Controlled Mode ────────────────────────────────────
+
+    describe('controlled mode', () => {
+        beforeEach(() => {
+            cy.visit('/hover-card');
+            cy.findByLabelText('controlled').click({force: true});
+        });
+
+        it('opens via external state', () => {
+            cy.findByTestId('controlled-content').should('not.exist');
+            cy.findByTestId('open-controlled').click({force: true});
+            cy.findByTestId('controlled-content').should('exist');
+        });
+
+        it('closes via external state', () => {
+            cy.findByTestId('open-controlled').click({force: true});
+            cy.findByTestId('controlled-content').should('exist');
+            cy.findByTestId('close-controlled').click({force: true});
+            cy.findByTestId('controlled-content').should('not.exist');
+        });
+
+        it('on_open_change callback fires on hover', () => {
+            cy.findByTestId('controlled-state').should('have.text', 'closed');
+            cy.findByTestId('controlled-trigger').realHover();
+            cy.findByTestId('controlled-state').should('have.text', 'open');
+        });
+    });
+
+    // ── Delay Timing ──────────────────────────────────────────
+
+    describe('delay timing', () => {
+        // hover-card-bp-2
+
+        it('delayed hover card does not open immediately on hover', () => {
+            cy.findByTestId('delayed-trigger').realHover();
+            // With 500ms openDelay, content should NOT be visible immediately
+            cy.findByTestId('delayed-content').should('not.exist');
+        });
+
+        it('delayed hover card opens after openDelay', () => {
+            cy.findByTestId('delayed-trigger').realHover();
+            // Should eventually open after the 500ms delay
+            cy.findByTestId('delayed-content', {timeout: 5000}).should('exist');
+        });
+
+        it('delayed hover card does not close immediately on leave', () => {
+            cy.findByTestId('delayed-trigger').realHover();
+            cy.findByTestId('delayed-content', {timeout: 5000}).should('exist');
+            // Leave the trigger
+            pointerLeave('delayed-trigger');
+            // With 300ms closeDelay, content should still exist briefly
+            // (this assertion runs immediately, before the 300ms elapses)
+            cy.findByTestId('delayed-content').should('exist');
+        });
+
+        it('delayed hover card closes after closeDelay', () => {
+            cy.findByTestId('delayed-trigger').realHover();
+            cy.findByTestId('delayed-content', {timeout: 5000}).should('exist');
+            pointerLeave('delayed-trigger');
+            // Should eventually close after the 300ms delay
+            cy.findByTestId('delayed-content', {timeout: 5000}).should('not.exist');
         });
     });
 

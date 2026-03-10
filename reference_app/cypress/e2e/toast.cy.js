@@ -262,7 +262,285 @@ describe('Toast', () => {
         });
     });
 
-    // ── 8. Viewport Tab Order ───────────────────────────────
+    // ── 8. ARIA Attributes ─────────────────────────────────
+
+    describe('ARIA attributes', () => {
+        it('toast element is a list item inside viewport', () => {
+            // Radix renders each toast as an <li> inside the viewport <ol>
+            addToast();
+            shouldBeVisible();
+            cy.findByText('Toast title')
+                .closest('li')
+                .should('exist');
+        });
+
+        it('temporary announce region has role="status" and aria-live', () => {
+            // Radix creates a temporary visually-hidden announce element with
+            // role="status" and aria-live that disappears after ~1s
+            addToast();
+            // The announce element appears briefly in the DOM
+            cy.get('[role="status"]', {timeout: 5000}).should('exist');
+        });
+
+        it('viewport wrapper has role="region" and accessible label', () => {
+            // toast-bp-3
+            addToast();
+            shouldBeVisible();
+            // Radix wraps the viewport <ol> in a <div role="region" aria-label="...">
+            cy.findByTestId('toast-viewport')
+                .parent('[role="region"]')
+                .should('have.attr', 'aria-label')
+                .and('contain', 'Notifications');
+        });
+    });
+
+    // ── 9. Controlled Mode ───────────────────────────────────
+
+    describe('controlled mode', () => {
+        it('external checkbox opens controlled toast', () => {
+            // toast-msc-1
+            cy.findByText('Controlled toast title').should('not.exist');
+            cy.findByLabelText('open controlled toast').click();
+            cy.findByText('Controlled toast title').should('exist');
+        });
+
+        it('external checkbox closes controlled toast', () => {
+            // toast-msc-1
+            cy.findByLabelText('open controlled toast').click();
+            cy.findByText('Controlled toast title').should('exist');
+            cy.findByLabelText('open controlled toast').click();
+            cy.findByText('Controlled toast title').should('not.exist');
+        });
+
+        it('closing controlled toast via close button updates external state', () => {
+            // toast-msc-1
+            cy.findByLabelText('open controlled toast').click();
+            cy.findByText('Controlled toast title').should('exist');
+            cy.findByTestId('controlled-toast-close').click();
+            cy.findByText('Controlled toast title').should('not.exist');
+            cy.findByLabelText('open controlled toast').should('not.be.checked');
+        });
+    });
+
+    // ── 10. Pause/Resume on Hover ─────────────────────────────
+    //
+    // Hovering over the toast viewport pauses auto-dismiss timers.
+    // Moving the mouse away resumes them. cy.wait() is necessary
+    // here to prove the timer was actually paused.
+
+    describe('pause/resume on hover', () => {
+        it('hovering viewport pauses auto-dismiss timer', () => {
+            // toast-bp-1
+            cy.findByLabelText('auto-dismiss').click();
+            addToast();
+            shouldBeVisible();
+            // Hover the viewport to pause the timer
+            cy.findByTestId('toast-viewport').realHover();
+            // Wait longer than the 2000ms duration — toast should still be visible
+            cy.wait(3000); // eslint-disable-line cypress/no-unnecessary-waiting
+            shouldBeVisible();
+            // Move mouse to an outside element to resume the timer
+            cy.findByTestId('outside-button').realHover();
+            // Toast should eventually dismiss after the remaining duration
+            cy.findByText('Toast title', {timeout: 10000}).should('not.exist');
+            // Clean up
+            cy.findByLabelText('auto-dismiss').click();
+        });
+
+        it('focus on viewport pauses auto-dismiss timer', () => {
+            // toast-bp-1
+            cy.findByLabelText('auto-dismiss').click();
+            addToast();
+            shouldBeVisible();
+            // Focus the viewport to pause the timer
+            cy.findByTestId('toast-viewport').focus();
+            // Wait longer than the 2000ms duration — toast should still be visible
+            cy.wait(3000); // eslint-disable-line cypress/no-unnecessary-waiting
+            shouldBeVisible();
+            // Blur to resume
+            cy.findByTestId('outside-button').focus();
+            // Toast should eventually dismiss
+            cy.findByText('Toast title', {timeout: 10000}).should('not.exist');
+            // Clean up
+            cy.findByLabelText('auto-dismiss').click();
+        });
+    });
+
+    // ── 11. Swipe to Dismiss ────────────────────────────────
+
+    describe('swipe to dismiss', () => {
+        // Helper: simulate a right swipe on the toast element by dispatching pointer events.
+        // The toast provider has swipeDirection="right" and default swipeThreshold=50.
+        function swipeToast(direction, distance) {
+            const dx = direction === 'right' ? distance : direction === 'left' ? -distance : 0;
+            const dy = direction === 'down' ? distance : direction === 'up' ? -distance : 0;
+
+            cy.findByText('Toast title')
+                .closest('[data-swipe-direction]')
+                .then(($el) => {
+                    const rect = $el[0].getBoundingClientRect();
+                    const startX = rect.left + rect.width / 2;
+                    const startY = rect.top + rect.height / 2;
+
+                    // pointerdown
+                    $el[0].dispatchEvent(
+                        new PointerEvent('pointerdown', {
+                            clientX: startX,
+                            clientY: startY,
+                            button: 0,
+                            pointerId: 1,
+                            pointerType: 'mouse',
+                            bubbles: true,
+                            cancelable: true,
+                        }),
+                    );
+
+                    // pointermove (intermediate step to trigger swipe start)
+                    $el[0].dispatchEvent(
+                        new PointerEvent('pointermove', {
+                            clientX: startX + dx * 0.1,
+                            clientY: startY + dy * 0.1,
+                            pointerId: 1,
+                            pointerType: 'mouse',
+                            bubbles: true,
+                            cancelable: true,
+                        }),
+                    );
+
+                    // pointermove (full distance)
+                    $el[0].dispatchEvent(
+                        new PointerEvent('pointermove', {
+                            clientX: startX + dx,
+                            clientY: startY + dy,
+                            pointerId: 1,
+                            pointerType: 'mouse',
+                            bubbles: true,
+                            cancelable: true,
+                        }),
+                    );
+
+                    // pointerup
+                    $el[0].dispatchEvent(
+                        new PointerEvent('pointerup', {
+                            clientX: startX + dx,
+                            clientY: startY + dy,
+                            pointerId: 1,
+                            pointerType: 'mouse',
+                            bubbles: true,
+                            cancelable: true,
+                        }),
+                    );
+                });
+        }
+
+        it('swiping right beyond threshold dismisses toast', () => {
+            addToast();
+            shouldBeVisible();
+            swipeToast('right', 60);
+            shouldNotBeVisible();
+        });
+
+        it('swiping right below threshold does not dismiss toast', () => {
+            addToast();
+            shouldBeVisible();
+            // Swipe only 30px (below 50px threshold)
+            swipeToast('right', 30);
+            shouldBeVisible();
+        });
+
+        it('data-swipe attribute is set during swipe', () => {
+            addToast();
+            shouldBeVisible();
+            // Perform a partial swipe (won't dismiss) and check data-swipe is set
+            cy.findByText('Toast title')
+                .closest('[data-swipe-direction]')
+                .then(($el) => {
+                    const rect = $el[0].getBoundingClientRect();
+                    const startX = rect.left + rect.width / 2;
+                    const startY = rect.top + rect.height / 2;
+
+                    $el[0].dispatchEvent(
+                        new PointerEvent('pointerdown', {
+                            clientX: startX,
+                            clientY: startY,
+                            button: 0,
+                            pointerId: 1,
+                            pointerType: 'mouse',
+                            bubbles: true,
+                            cancelable: true,
+                        }),
+                    );
+
+                    // Move right to trigger swipe start
+                    $el[0].dispatchEvent(
+                        new PointerEvent('pointermove', {
+                            clientX: startX + 10,
+                            clientY: startY,
+                            pointerId: 1,
+                            pointerType: 'mouse',
+                            bubbles: true,
+                            cancelable: true,
+                        }),
+                    );
+                });
+
+            // During swipe, data-swipe should be set
+            cy.findByText('Toast title')
+                .closest('[data-swipe-direction]')
+                .should('have.attr', 'data-swipe');
+        });
+
+        it('CSS variable --radix-toast-swipe-move-x is set during swipe', () => {
+            addToast();
+            shouldBeVisible();
+            cy.findByText('Toast title')
+                .closest('[data-swipe-direction]')
+                .then(($el) => {
+                    const rect = $el[0].getBoundingClientRect();
+                    const startX = rect.left + rect.width / 2;
+                    const startY = rect.top + rect.height / 2;
+
+                    $el[0].dispatchEvent(
+                        new PointerEvent('pointerdown', {
+                            clientX: startX,
+                            clientY: startY,
+                            button: 0,
+                            pointerId: 1,
+                            pointerType: 'mouse',
+                            bubbles: true,
+                            cancelable: true,
+                        }),
+                    );
+
+                    $el[0].dispatchEvent(
+                        new PointerEvent('pointermove', {
+                            clientX: startX + 10,
+                            clientY: startY,
+                            pointerId: 1,
+                            pointerType: 'mouse',
+                            bubbles: true,
+                            cancelable: true,
+                        }),
+                    );
+
+                    $el[0].dispatchEvent(
+                        new PointerEvent('pointermove', {
+                            clientX: startX + 30,
+                            clientY: startY,
+                            pointerId: 1,
+                            pointerType: 'mouse',
+                            bubbles: true,
+                            cancelable: true,
+                        }),
+                    );
+
+                    const swipeMoveX = $el[0].style.getPropertyValue('--radix-toast-swipe-move-x');
+                    expect(swipeMoveX).to.match(/\d+px/);
+                });
+        });
+    });
+
+    // ── 12. Viewport Tab Order ───────────────────────────────
     //
     // Toast viewport manages its own tab order programmatically:
     // - Tab from before-viewport enters the most recently added toast first

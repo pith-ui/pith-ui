@@ -1,7 +1,10 @@
+import {useState} from 'react';
 import * as NavigationMenu from '@radix-ui/react-navigation-menu';
 import '../../../shared/navigation-menu.css';
 
 export default function NavigationMenuPage() {
+    const [controlledValue, setControlledValue] = useState('');
+
     return (
         <>
             <NavigationMenu.Root className="nav-root" data-testid="nav-root" delayDuration={0} skipDelayDuration={0}>
@@ -71,6 +74,63 @@ export default function NavigationMenuPage() {
             <br />
 
             <button data-testid="outside-element">outside</button>
+
+            <hr />
+
+            <h3>Controlled</h3>
+            <button data-testid="set-products" onClick={() => setControlledValue('c-products')}>
+                open products
+            </button>
+            <button data-testid="set-resources" onClick={() => setControlledValue('c-resources')}>
+                open resources
+            </button>
+            <button data-testid="close-all" onClick={() => setControlledValue('')}>
+                close all
+            </button>
+            <span data-testid="controlled-nav-value">{controlledValue || '(none)'}</span>
+
+            <NavigationMenu.Root
+                className="nav-root"
+                data-testid="controlled-nav-root"
+                value={controlledValue}
+                onValueChange={setControlledValue}
+                delayDuration={0}
+                skipDelayDuration={0}
+            >
+                <NavigationMenu.List className="nav-list">
+                    <NavigationMenu.Item className="nav-item" value="c-products">
+                        <NavigationMenu.Trigger className="nav-trigger" data-testid="controlled-products-trigger">
+                            CProducts
+                        </NavigationMenu.Trigger>
+                        <NavigationMenu.Content className="nav-content" data-testid="controlled-products-content">
+                            <ul className="nav-content-list">
+                                <li>
+                                    <NavigationMenu.Link className="nav-content-link" href="#">
+                                        CProduct A
+                                    </NavigationMenu.Link>
+                                </li>
+                            </ul>
+                        </NavigationMenu.Content>
+                    </NavigationMenu.Item>
+
+                    <NavigationMenu.Item className="nav-item" value="c-resources">
+                        <NavigationMenu.Trigger className="nav-trigger" data-testid="controlled-resources-trigger">
+                            CResources
+                        </NavigationMenu.Trigger>
+                        <NavigationMenu.Content className="nav-content" data-testid="controlled-resources-content">
+                            <ul className="nav-content-list">
+                                <li>
+                                    <NavigationMenu.Link className="nav-content-link" href="#">
+                                        CBlog
+                                    </NavigationMenu.Link>
+                                </li>
+                            </ul>
+                        </NavigationMenu.Content>
+                    </NavigationMenu.Item>
+                </NavigationMenu.List>
+
+                <NavigationMenu.Viewport className="nav-viewport" data-testid="controlled-nav-viewport" />
+            </NavigationMenu.Root>
         </>
     );
 }

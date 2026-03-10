@@ -108,6 +108,30 @@ describe('Toggle', () => {
         });
     });
 
+    // ── 5b. Callback Contract ─────────────────────────────────
+
+    describe('callback contract', () => {
+        it('on_pressed_change receives true when pressing', () => {
+            cy.findByTestId('pressed-state').should('have.text', 'false');
+            cy.findByRole('button', {name: 'toggle'}).click();
+            cy.findByTestId('pressed-state').should('have.text', 'true');
+        });
+
+        it('on_pressed_change receives false when unpressing', () => {
+            cy.findByRole('button', {name: 'toggle'}).click();
+            cy.findByTestId('pressed-state').should('have.text', 'true');
+            cy.findByRole('button', {name: 'toggle'}).click();
+            cy.findByTestId('pressed-state').should('have.text', 'false');
+        });
+
+        it('on_pressed_change fires on keyboard activation', () => {
+            cy.findByTestId('pressed-state').should('have.text', 'false');
+            cy.findByRole('button', {name: 'toggle'}).focus();
+            cy.realPress('Enter');
+            cy.findByTestId('pressed-state').should('have.text', 'true');
+        });
+    });
+
     // ── 6. Controlled Variant ───────────────────────────────
 
     describe('controlled variant', () => {

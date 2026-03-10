@@ -13,9 +13,11 @@ export default function FormPage() {
         const name = formData.get('name') || '';
         const email = formData.get('email') || '';
 
-        // Simulate server validation: name must not be "taken"
+        // Simulate async server validation: name must not be "taken"
+        // Uses setTimeout because onClearServerErrors fires synchronously after onSubmit,
+        // so synchronous setServerErrors would be immediately cleared by the batch.
         if (name === 'taken') {
-            setServerErrors({name: true});
+            setTimeout(() => setServerErrors({name: true}), 0);
             return;
         }
 
@@ -67,6 +69,37 @@ export default function FormPage() {
             >
                 outside
             </button>
+
+            <hr />
+
+            <h3>ValidityState</h3>
+            <Form.Root className="form-root" data-testid="validity-form" onSubmit={(e) => e.preventDefault()}>
+                <Form.Field name="vs-name" className="form-field">
+                    <Form.Label className="form-label">VS Name</Form.Label>
+                    <Form.Control className="form-control" type="text" required data-testid="vs-name-input" />
+                    <Form.ValidityState>
+                        {(validity) => (
+                            <span data-testid="vs-name-validity">
+                                {validity ? JSON.stringify({valueMissing: validity.valueMissing, valid: validity.valid}) : 'undefined'}
+                            </span>
+                        )}
+                    </Form.ValidityState>
+                </Form.Field>
+
+                <Form.Field name="vs-email" className="form-field">
+                    <Form.Label className="form-label">VS Email</Form.Label>
+                    <Form.Control className="form-control" type="email" data-testid="vs-email-input" />
+                    <Form.ValidityState>
+                        {(validity) => (
+                            <span data-testid="vs-email-validity">
+                                {validity ? JSON.stringify({typeMismatch: validity.typeMismatch, valid: validity.valid}) : 'undefined'}
+                            </span>
+                        )}
+                    </Form.ValidityState>
+                </Form.Field>
+
+                <Form.Submit className="form-submit" data-testid="vs-submit">Check Validity</Form.Submit>
+            </Form.Root>
         </>
     );
 }

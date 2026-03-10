@@ -7,11 +7,18 @@ export default function DropdownMenuPage() {
     const [checked, setChecked] = useState(false);
     const [radioValue, setRadioValue] = useState('radio1');
     const [disabled, setDisabled] = useState(false);
+    const [controlledOpen, setControlledOpen] = useState(false);
+    const [triggerClickCount, setTriggerClickCount] = useState(0);
 
     return (
         <>
             <DropdownMenu.Root>
-                <DropdownMenu.Trigger className="dropdown-trigger">open</DropdownMenu.Trigger>
+                <DropdownMenu.Trigger
+                    className="dropdown-trigger"
+                    onClick={() => setTriggerClickCount((c) => c + 1)}
+                >
+                    open
+                </DropdownMenu.Trigger>
                 <DropdownMenu.Portal>
                     <DropdownMenu.Content className="dropdown-content" sideOffset={5}>
                         <DropdownMenu.Label className="dropdown-label">Actions</DropdownMenu.Label>
@@ -114,8 +121,49 @@ export default function DropdownMenuPage() {
             <br />
             <br />
 
+            <span data-testid="trigger-click-count">{triggerClickCount}</span>
+            <br />
             <button data-testid="outside-button">outside</button>
             <input data-testid="outside-input" placeholder="name" />
+
+            <br />
+            <br />
+            <hr />
+
+            <h3>Controlled</h3>
+
+            <label>
+                <input
+                    type="checkbox"
+                    data-testid="controlled-open-checkbox"
+                    checked={controlledOpen}
+                    onChange={(e) => setControlledOpen(e.target.checked)}
+                />{' '}
+                open
+            </label>
+            <button
+                type="button"
+                data-testid="controlled-external-close"
+                onClick={() => setControlledOpen(false)}
+            >
+                external close
+            </button>
+            <span data-testid="controlled-open-state">{controlledOpen ? 'open' : 'closed'}</span>
+
+            <br />
+            <br />
+
+            <DropdownMenu.Root open={controlledOpen} onOpenChange={setControlledOpen}>
+                <DropdownMenu.Trigger className="controlled-dropdown-trigger" data-testid="controlled-dropdown-trigger">
+                    controlled open
+                </DropdownMenu.Trigger>
+                <DropdownMenu.Portal>
+                    <DropdownMenu.Content className="dropdown-content" data-testid="controlled-dropdown-content" sideOffset={5}>
+                        <DropdownMenu.Item className="dropdown-item">Controlled Item 1</DropdownMenu.Item>
+                        <DropdownMenu.Item className="dropdown-item">Controlled Item 2</DropdownMenu.Item>
+                    </DropdownMenu.Content>
+                </DropdownMenu.Portal>
+            </DropdownMenu.Root>
         </>
     );
 }

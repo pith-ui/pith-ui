@@ -144,7 +144,160 @@ describe('Form', () => {
         });
     });
 
-    // ── 4. Form Submission ──────────────────────────────────
+    // ── 4. FormValidityState ────────────────────────────────
+
+    describe('FormValidityState', () => {
+        it('validity is undefined before any validation', () => {
+            cy.findByTestId('vs-name-validity').should('have.text', 'undefined');
+        });
+
+        it('exposes valueMissing when required field is empty', () => {
+            cy.findByTestId('vs-submit').click();
+            cy.findByTestId('vs-name-validity').should('contain.text', '"valueMissing":true');
+            cy.findByTestId('vs-name-validity').should('contain.text', '"valid":false');
+        });
+
+        it('exposes valid:true when field has valid value', () => {
+            cy.findByTestId('vs-name-input').type('Alice');
+            cy.findByTestId('vs-submit').click();
+            cy.findByTestId('vs-name-validity').should('contain.text', '"valueMissing":false');
+            cy.findByTestId('vs-name-validity').should('contain.text', '"valid":true');
+        });
+
+        it('exposes typeMismatch for invalid email', () => {
+            cy.findByTestId('vs-email-input').type('not-an-email');
+            cy.findByTestId('vs-name-input').type('Alice');
+            cy.findByTestId('vs-submit').click();
+            cy.findByTestId('vs-email-validity').should('contain.text', '"typeMismatch":true');
+            cy.findByTestId('vs-email-validity').should('contain.text', '"valid":false');
+        });
+
+        it('updates to valid after correcting email', () => {
+            cy.findByTestId('vs-email-input').type('bad');
+            cy.findByTestId('vs-name-input').type('Alice');
+            cy.findByTestId('vs-submit').click();
+            cy.findByTestId('vs-email-validity').should('contain.text', '"valid":false');
+
+            cy.findByTestId('vs-email-input').clear().type('valid@email.com');
+            cy.findByTestId('vs-submit').click();
+            cy.findByTestId('vs-email-validity').should('contain.text', '"valid":true');
+        });
+    });
+
+    // ── 5. Server Validation ─────────────────────────────────
+
+    describe('server validation', () => {
+        it('serverInvalid sets data-invalid on the field', () => {
+            getNameInput().type('taken');
+            getEmailInput().type('test@example.com');
+            getSubmitButton().click();
+
+            // The name field should be server-invalid
+            cy.get('.form-field').first().should('have.attr', 'data-invalid');
+        });
+
+        it('serverInvalid sets aria-invalid on the control', () => {
+            getNameInput().type('taken');
+            getEmailInput().type('test@example.com');
+            getSubmitButton().click();
+
+            getNameInput().should('have.attr', 'aria-invalid', 'true');
+        });
+
+        it('server error message is displayed', () => {
+            getNameInput().type('taken');
+            getEmailInput().type('test@example.com');
+            getSubmitButton().click();
+
+            cy.findByText('Name is already taken').should('exist');
+        });
+
+        it('server error message is linked via aria-describedby', () => {
+            getNameInput().type('taken');
+            getEmailInput().type('test@example.com');
+            getSubmitButton().click();
+
+            getNameInput()
+                .invoke('attr', 'aria-describedby')
+                .then((describedBy) => {
+                    expect(describedBy).to.not.be.empty;
+                    const ids = describedBy.split(' ');
+                    // At least one ID should correspond to the server error message
+                    let found = false;
+                    ids.forEach((id) => {
+                        cy.get(`#${id}`).then(($el) => {
+                            if ($el.text().includes('Name is already taken')) {
+                                found = true;
+                            }
+                        });
+                    });
+                    cy.then(() => expect(found).to.be.true);
+                });
+        });
+
+        it('onClearServerErrors fires on re-submit, clearing server errors', () => {
+            getNameInput().type('taken');
+            getEmailInput().type('test@example.com');
+            getSubmitButton().click();
+
+            // Server error should be present
+            cy.findByText('Name is already taken').should('exist');
+
+            // Fix the name and re-submit — onClearServerErrors fires on submit,
+            // clearing old server errors before the new onSubmit runs
+            getNameInput().clear().type('Alice');
+            getSubmitButton().click();
+            cy.findByText('Name is already taken').should('not.exist');
+            getFormResult().should('contain.text', 'Alice');
+        });
+
+        it('onClearServerErrors fires on reset', () => {
+            getNameInput().type('taken');
+            getEmailInput().type('test@example.com');
+            getSubmitButton().click();
+
+            // Server error should be present
+            cy.findByText('Name is already taken').should('exist');
+
+            // Reset the form — onClearServerErrors fires on reset
+            getResetButton().click();
+            cy.findByText('Name is already taken').should('not.exist');
+        });
+
+        it('form does not submit when server validation fails', () => {
+            getNameInput().type('taken');
+            getEmailInput().type('test@example.com');
+            getSubmitButton().click();
+
+            // Form result should still be empty (server rejected)
+            getFormResult().should('contain.text', 'Data: {}');
+        });
+    });
+
+    // ── 6. Custom Messages ────────────────────────────────────
+
+    describe('custom messages', () => {
+        it('consumer-provided message overrides default validation text', () => {
+            // Submit empty form to trigger validation
+            getSubmitButton().click();
+
+            // The custom message "Name is required" should appear (not the default "This value is missing")
+            cy.findByText('Name is required').should('exist');
+            cy.findByText('This value is missing').should('not.exist');
+        });
+
+        it('consumer-provided email message overrides default', () => {
+            getNameInput().type('Alice');
+            getEmailInput().type('not-an-email');
+            getSubmitButton().click();
+
+            // Custom message should appear, not the default
+            cy.findByText('Please enter a valid email').should('exist');
+            cy.findByText('This value is not valid').should('not.exist');
+        });
+    });
+
+    // ── 7. Form Submission ──────────────────────────────────
 
     describe('form submission', () => {
         it('submit button has type="submit"', () => {

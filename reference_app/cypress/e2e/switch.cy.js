@@ -138,6 +138,15 @@ describe('Switch', () => {
         });
     });
 
+    // ── 5b. Required Variant ──────────────────────────────────
+
+    describe('required variant', () => {
+        it('has aria-required="true" when required', () => {
+            cy.findByLabelText('required').click();
+            cy.findByRole('switch', {name: 'airplane mode'}).should('have.attr', 'aria-required', 'true');
+        });
+    });
+
     // ── 6. Controlled Variant ───────────────────────────────
 
     describe('controlled variant', () => {

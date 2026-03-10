@@ -33,6 +33,25 @@ export default function SliderPage() {
             <br />
             <br />
 
+            <hr />
+
+            <h3>Uncontrolled</h3>
+            <Slider.Root
+                className="slider-root"
+                defaultValue={[30]}
+                min={0}
+                max={100}
+                step={1}
+                data-testid="uncontrolled-slider"
+            >
+                <Slider.Track className="slider-track">
+                    <Slider.Range className="slider-range" />
+                </Slider.Track>
+                <Slider.Thumb className="slider-thumb" aria-label="Uncontrolled volume" data-testid="uncontrolled-thumb" />
+            </Slider.Root>
+
+            <hr />
+
             <label>
                 <input
                     type="checkbox"

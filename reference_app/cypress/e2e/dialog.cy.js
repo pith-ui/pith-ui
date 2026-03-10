@@ -61,6 +61,25 @@ describe('Dialog', () => {
         });
     });
 
+    // ── 1b. aria-hidden on outside elements ─────────────────
+
+    describe('aria-hidden isolation', () => {
+        it('outside elements get aria-hidden when modal dialog is open', () => {
+            cy.findByText('open').click();
+            shouldBeOpen();
+            // The app root or other siblings should be hidden from assistive tech
+            cy.findByText('open').closest('[aria-hidden="true"]').should('exist');
+        });
+
+        it('aria-hidden is removed when modal dialog closes', () => {
+            cy.findByText('open').click();
+            shouldBeOpen();
+            cy.realPress('Escape');
+            shouldBeClosed();
+            cy.findByText('open').closest('[aria-hidden]').should('not.exist');
+        });
+    });
+
     // ── 2. Data Attributes ──────────────────────────────────
 
     describe('data attributes', () => {
@@ -287,7 +306,144 @@ describe('Dialog', () => {
         });
     });
 
-    // ── 8. Internal Styles ──────────────────────────────────
+    // ── 7. Controlled Mode ──────────────────────────────────
+
+    describe('controlled mode', () => {
+        function controlledShouldBeOpen() {
+            cy.findByTestId('controlled-dialog-content').should('exist');
+        }
+
+        function controlledShouldBeClosed() {
+            cy.findByTestId('controlled-dialog-content').should('not.exist');
+        }
+
+        it('external checkbox opens dialog', () => {
+            // dialog-msc-1
+            controlledShouldBeClosed();
+            cy.findByTestId('controlled-dialog-checkbox').check();
+            controlledShouldBeOpen();
+        });
+
+        it('external control closes dialog', () => {
+            // dialog-msc-1
+            cy.findByTestId('controlled-dialog-checkbox').check();
+            controlledShouldBeOpen();
+            // Use a dedicated button since the modal overlay blocks checkbox interaction
+            cy.findByTestId('controlled-dialog-external-close').click({force: true});
+            controlledShouldBeClosed();
+            cy.findByTestId('controlled-dialog-state').should('have.text', 'closed');
+        });
+
+        it('trigger opens controlled dialog', () => {
+            // dialog-msc-1
+            controlledShouldBeClosed();
+            cy.findByTestId('controlled-dialog-trigger').click();
+            controlledShouldBeOpen();
+            // External checkbox should reflect open state
+            cy.findByTestId('controlled-dialog-checkbox').should('be.checked');
+        });
+
+        it('closing dialog via close button updates external state', () => {
+            // dialog-msc-1
+            cy.findByTestId('controlled-dialog-trigger').click();
+            controlledShouldBeOpen();
+            cy.findByTestId('controlled-dialog-close').click();
+            controlledShouldBeClosed();
+            cy.findByTestId('controlled-dialog-checkbox').should('not.be.checked');
+        });
+
+        it('closing dialog via Escape updates external state', () => {
+            // dialog-msc-1
+            cy.findByTestId('controlled-dialog-trigger').click();
+            controlledShouldBeOpen();
+            cy.realPress('Escape');
+            controlledShouldBeClosed();
+            cy.findByTestId('controlled-dialog-checkbox').should('not.be.checked');
+        });
+    });
+
+    // ── 8. Callback Contracts ─────────────────────────────────
+
+    describe('callback contracts', () => {
+        // dialog-dcnv-1
+
+        function openCallbackDialog() {
+            cy.findByTestId('clear-event-log').click();
+            cy.findByTestId('callback-trigger').click();
+            cy.findByTestId('callback-content').should('exist');
+        }
+
+        function callbackDialogShouldBeClosed() {
+            cy.findByTestId('callback-content').should('not.exist');
+        }
+
+        function callbackDialogShouldBeOpen() {
+            cy.findByTestId('callback-content').should('exist');
+        }
+
+        it('onOpenAutoFocus fires when dialog opens', () => {
+            openCallbackDialog();
+            cy.findByTestId('event-log').should('contain.text', 'openAutoFocus');
+            cy.findByTestId('callback-close').click();
+            callbackDialogShouldBeClosed();
+        });
+
+        it('onCloseAutoFocus fires when dialog closes via close button', () => {
+            openCallbackDialog();
+            cy.findByTestId('callback-close').click();
+            callbackDialogShouldBeClosed();
+            cy.findByTestId('event-log').should('contain.text', 'closeAutoFocus');
+        });
+
+        it('onEscapeKeyDown fires on Escape', () => {
+            openCallbackDialog();
+            cy.realPress('Escape');
+            callbackDialogShouldBeClosed();
+            cy.findByTestId('event-log').should('contain.text', 'escapeKeyDown');
+        });
+
+        it('onEscapeKeyDown with preventDefault keeps dialog open', () => {
+            cy.findByTestId('prevent-escape').click();
+            openCallbackDialog();
+            cy.realPress('Escape');
+            // Dialog should remain open because we prevented default
+            callbackDialogShouldBeOpen();
+            cy.findByTestId('event-log').should('contain.text', 'escapeKeyDown');
+            // Clean up: uncheck prevent escape via force, then close
+            cy.findByTestId('callback-close').click();
+            callbackDialogShouldBeClosed();
+            cy.findByTestId('prevent-escape').click();
+        });
+
+        it('onPointerDownOutside fires on outside click', () => {
+            openCallbackDialog();
+            cy.findByTestId('callback-overlay').realClick({position: {x: 10, y: 10}});
+            callbackDialogShouldBeClosed();
+            cy.findByTestId('event-log').should('contain.text', 'pointerDownOutside');
+        });
+
+        it('onInteractOutside fires on outside click', () => {
+            openCallbackDialog();
+            cy.findByTestId('callback-overlay').realClick({position: {x: 10, y: 10}});
+            callbackDialogShouldBeClosed();
+            cy.findByTestId('event-log').should('contain.text', 'interactOutside');
+        });
+
+        it('onPointerDownOutside with preventDefault keeps dialog open', () => {
+            cy.findByTestId('prevent-outside-click').click();
+            openCallbackDialog();
+            cy.findByTestId('callback-overlay').realClick({position: {x: 10, y: 10}});
+            // Dialog should remain open because we prevented default
+            callbackDialogShouldBeOpen();
+            cy.findByTestId('event-log').should('contain.text', 'pointerDownOutside');
+            // Clean up: close via close button
+            cy.findByTestId('callback-close').click();
+            callbackDialogShouldBeClosed();
+            cy.findByTestId('prevent-outside-click').click();
+        });
+    });
+
+    // ── 9. Internal Styles ──────────────────────────────────
 
     describe('internal styles', () => {
         it('overlay has pointer-events: auto', () => {

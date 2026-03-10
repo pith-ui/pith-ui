@@ -76,9 +76,11 @@ describe('Avatar', () => {
         });
 
         it('does not show delayed fallback immediately', () => {
-            // Visit fresh to catch the delay
+            // Visit fresh to catch the initial state before delay
             cy.visit('/avatar');
-            // The delayed fallback should eventually appear
+            // Immediately after load, the delayed fallback should NOT be visible
+            getAvatar('delayed').should('not.contain.text', 'DI');
+            // After the delay elapses, the fallback should appear
             getAvatar('delayed').should('contain.text', 'DI');
         });
     });

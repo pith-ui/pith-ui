@@ -46,5 +46,10 @@ pub fn TogglePage() -> impl IntoView {
             />
             " pressed"
         </label>
+
+        <br />
+        <span data-testid="pressed-state">
+            {move || if pressed.get() { "true" } else { "false" }}
+        </span>
     }
 }

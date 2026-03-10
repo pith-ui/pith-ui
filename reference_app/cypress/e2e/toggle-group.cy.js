@@ -306,7 +306,64 @@ describe('Toggle Group', () => {
         });
     });
 
-    // ── 8. Disabled Variant ─────────────────────────────────
+    // ── 8. Controlled Mode ──────────────────────────────────
+
+    describe('controlled mode', () => {
+        it('clicking item updates external state (single)', () => {
+            cy.findByTestId('toggle-value').should('have.text', '');
+            getItem('Item 1').click();
+            cy.findByTestId('toggle-value').should('have.text', '1');
+        });
+
+        it('external state controls selection (single)', () => {
+            shouldBeOff('Item 3');
+            cy.findByTestId('set-item3').click();
+            shouldBeOn('Item 3');
+        });
+
+        it('clearing external state deselects all (single)', () => {
+            getItem('Item 1').click();
+            shouldBeOn('Item 1');
+            cy.findByTestId('clear-value').click();
+            shouldBeOff('Item 1');
+        });
+
+        it('clicking item updates external state (multiple)', () => {
+            cy.findByLabelText('multiple').click();
+            cy.findByTestId('toggle-value').should('have.text', '');
+            getItem('Item 1').click();
+            cy.findByTestId('toggle-value').should('have.text', '1');
+            getItem('Item 3').click();
+            cy.findByTestId('toggle-value').should('have.text', '1,3');
+        });
+
+        it('external state controls selection (multiple)', () => {
+            cy.findByLabelText('multiple').click();
+            shouldBeOff('Item 3');
+            cy.findByTestId('set-item3').click();
+            shouldBeOn('Item 3');
+        });
+
+        it('clearing external state deselects all (multiple)', () => {
+            cy.findByLabelText('multiple').click();
+            getItem('Item 1').click();
+            getItem('Item 3').click();
+            shouldBeOn('Item 1');
+            shouldBeOn('Item 3');
+            cy.findByTestId('clear-value').click();
+            shouldBeOff('Item 1');
+            shouldBeOff('Item 3');
+        });
+
+        it('on_value_change fires with correct value on keyboard (single)', () => {
+            cy.findByTestId('clear-value').click();
+            getItem('Item 1').focus();
+            cy.realPress('Enter');
+            cy.findByTestId('toggle-value').should('have.text', '1');
+        });
+    });
+
+    // ── 9. Disabled Variant ─────────────────────────────────
 
     describe('disabled variant', () => {
         beforeEach(() => {

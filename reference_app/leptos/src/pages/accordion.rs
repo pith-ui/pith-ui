@@ -127,5 +127,72 @@ pub fn AccordionPage() -> impl IntoView {
             />
             " collapsible"
         </label>
+
+        <br />
+        <br />
+
+        <ControlledAccordion />
+    }
+}
+
+#[component]
+fn ControlledAccordion() -> impl IntoView {
+    let (controlled_value, set_controlled_value) = signal(String::new());
+
+    view! {
+        <h2 data-testid="controlled-heading">"Controlled Accordion"</h2>
+
+        <div data-testid="controlled-value">{move || controlled_value.get()}</div>
+
+        <button
+            data-testid="controlled-open-item-1"
+            on:click=move |_| set_controlled_value.set("ctrl-item-1".to_string())
+        >
+            "Open Item 1"
+        </button>
+        <button
+            data-testid="controlled-open-item-2"
+            on:click=move |_| set_controlled_value.set("ctrl-item-2".to_string())
+        >
+            "Open Item 2"
+        </button>
+        <button
+            data-testid="controlled-close-all"
+            on:click=move |_| set_controlled_value.set(String::new())
+        >
+            "Close All"
+        </button>
+
+        <Accordion
+            r#type=AccordionType::Single
+            collapsible=true
+            value=controlled_value
+            on_value_change=Callback::new(move |val: String| {
+                set_controlled_value.set(val);
+            })
+            attr:class="accordion-root"
+            attr:data-testid="controlled-accordion-root"
+        >
+            <AccordionItem
+                value="ctrl-item-1".to_string()
+                attr:class="accordion-item"
+                attr:data-testid="ctrl-item-1"
+            >
+                <AccordionHeader attr:class="accordion-header">
+                    <AccordionTrigger attr:class="accordion-trigger">"Ctrl Item 1"</AccordionTrigger>
+                </AccordionHeader>
+                <AccordionContent attr:class="accordion-content">"Controlled Content 1"</AccordionContent>
+            </AccordionItem>
+            <AccordionItem
+                value="ctrl-item-2".to_string()
+                attr:class="accordion-item"
+                attr:data-testid="ctrl-item-2"
+            >
+                <AccordionHeader attr:class="accordion-header">
+                    <AccordionTrigger attr:class="accordion-trigger">"Ctrl Item 2"</AccordionTrigger>
+                </AccordionHeader>
+                <AccordionContent attr:class="accordion-content">"Controlled Content 2"</AccordionContent>
+            </AccordionItem>
+        </Accordion>
     }
 }

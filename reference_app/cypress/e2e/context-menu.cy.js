@@ -40,6 +40,42 @@ describe('Context Menu', () => {
             openMenu();
             cy.findAllByRole('menuitemradio').should('have.length', 2);
         });
+
+        it('Content has aria-orientation="vertical"', () => {
+            openMenu();
+            cy.findByRole('menu').should('have.attr', 'aria-orientation', 'vertical');
+        });
+
+        it('CheckboxItem has aria-checked attribute', () => {
+            openMenu();
+            cy.findByRole('menuitemcheckbox').should('have.attr', 'aria-checked', 'false');
+            cy.findByRole('menuitemcheckbox').click();
+            openMenu();
+            cy.findByRole('menuitemcheckbox').should('have.attr', 'aria-checked', 'true');
+        });
+
+        it('RadioItem has aria-checked attribute', () => {
+            openMenu();
+            cy.findAllByRole('menuitemradio').eq(0).should('have.attr', 'aria-checked', 'true');
+            cy.findAllByRole('menuitemradio').eq(1).should('have.attr', 'aria-checked', 'false');
+            cy.findAllByRole('menuitemradio').eq(1).click();
+            openMenu();
+            cy.findAllByRole('menuitemradio').eq(0).should('have.attr', 'aria-checked', 'false');
+            cy.findAllByRole('menuitemradio').eq(1).should('have.attr', 'aria-checked', 'true');
+        });
+
+        it('SubTrigger has aria-haspopup="menu"', () => {
+            openMenu();
+            cy.findByText('Submenu →').should('have.attr', 'aria-haspopup', 'menu');
+        });
+
+        it('SubTrigger has aria-expanded reflecting submenu state', () => {
+            openMenu();
+            cy.findByText('Submenu →').should('have.attr', 'aria-expanded', 'false');
+            cy.findByText('Submenu →').realHover();
+            cy.findByText('Sub item 1').should('exist');
+            cy.findByText('Submenu →').should('have.attr', 'aria-expanded', 'true');
+        });
     });
 
     // ── 2. Data Attributes ──────────────────────────────────
@@ -169,6 +205,40 @@ describe('Context Menu', () => {
             cy.findByText('Item 1').should('have.attr', 'data-highlighted');
             cy.realPress('ArrowDown');
             // Should skip Item 2 (disabled) and go to Item 3
+            cy.findByText('Item 3').should('have.attr', 'data-highlighted');
+        });
+
+        it('Tab key does not move focus out of menu', () => {
+            openMenu();
+            cy.findByText('Item 1').realHover();
+            cy.findByText('Item 1').should('have.attr', 'data-highlighted');
+            cy.realPress('Tab');
+            shouldBeOpen();
+        });
+    });
+
+    // ── Typeahead Search ──────────────────────────────────────
+
+    describe('typeahead search', () => {
+        it('typing a character highlights matching item', () => {
+            openMenu();
+            cy.realPress('A');
+            cy.findByText('Apple').should('have.attr', 'data-highlighted');
+        });
+
+        it('typing a different character highlights different item', () => {
+            openMenu();
+            cy.realPress('B');
+            cy.findByText('Banana').should('have.attr', 'data-highlighted');
+        });
+
+        it('repeated character cycles through matching items', () => {
+            openMenu();
+            cy.realPress('I');
+            cy.findByText('Item 1').should('have.attr', 'data-highlighted');
+            cy.realPress('I');
+            cy.findByText('Item 2').should('have.attr', 'data-highlighted');
+            cy.realPress('I');
             cy.findByText('Item 3').should('have.attr', 'data-highlighted');
         });
     });

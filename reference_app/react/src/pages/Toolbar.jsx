@@ -7,7 +7,7 @@ export default function ToolbarPage() {
 
     return (
         <>
-            <Toolbar.Root className="toolbar-root" aria-label="Formatting tools">
+            <Toolbar.Root className="toolbar-root" aria-label="Formatting tools" data-testid="horizontal-toolbar">
                 <Toolbar.Button className="toolbar-button" onClick={() => setActionOutput('Bold clicked')}>
                     Bold
                 </Toolbar.Button>
@@ -34,12 +34,46 @@ export default function ToolbarPage() {
                         Right
                     </Toolbar.ToggleItem>
                 </Toolbar.ToggleGroup>
+
+                <Toolbar.Button className="toolbar-button" data-testid="disabled-button" disabled>
+                    Disabled
+                </Toolbar.Button>
             </Toolbar.Root>
 
             <br />
             <br />
 
             <div data-testid="action-output">{actionOutput}</div>
+
+            <br />
+            <br />
+
+            <Toolbar.Root
+                orientation="vertical"
+                className="toolbar-root"
+                aria-label="Vertical tools"
+                data-testid="vertical-toolbar"
+            >
+                <Toolbar.Button className="toolbar-button">VBold</Toolbar.Button>
+                <Toolbar.Button className="toolbar-button">VItalic</Toolbar.Button>
+                <Toolbar.Button className="toolbar-button">VUnderline</Toolbar.Button>
+            </Toolbar.Root>
+
+            <br />
+            <br />
+
+            <div dir="rtl">
+                <Toolbar.Root
+                    dir="rtl"
+                    className="toolbar-root"
+                    aria-label="RTL tools"
+                    data-testid="rtl-toolbar"
+                >
+                    <Toolbar.Button className="toolbar-button">First</Toolbar.Button>
+                    <Toolbar.Button className="toolbar-button">Second</Toolbar.Button>
+                    <Toolbar.Button className="toolbar-button">Third</Toolbar.Button>
+                </Toolbar.Root>
+            </div>
         </>
     );
 }

@@ -260,4 +260,45 @@ describe('AlertDialog', () => {
             cy.findByRole('button', { name: 'confirm' }).should('be.focused');
         });
     });
+
+    // ── 6. Controlled Mode ──────────────────────────────────
+
+    describe('controlled mode', () => {
+        it('external checkbox opens alert dialog', () => {
+            cy.findByTestId('controlled-content').should('not.exist');
+            cy.findByTestId('controlled-checkbox').check();
+            cy.findByTestId('controlled-content').should('exist');
+        });
+
+        it('external control closes alert dialog', () => {
+            cy.findByTestId('controlled-checkbox').check();
+            cy.findByTestId('controlled-content').should('exist');
+            cy.findByTestId('controlled-external-close').click({force: true});
+            cy.findByTestId('controlled-content').should('not.exist');
+            cy.findByTestId('controlled-state').should('have.text', 'closed');
+        });
+
+        it('trigger opens controlled alert dialog', () => {
+            cy.findByTestId('controlled-content').should('not.exist');
+            cy.findByTestId('controlled-trigger').click();
+            cy.findByTestId('controlled-content').should('exist');
+            cy.findByTestId('controlled-checkbox').should('be.checked');
+        });
+
+        it('closing via cancel updates external state', () => {
+            cy.findByTestId('controlled-trigger').click();
+            cy.findByTestId('controlled-content').should('exist');
+            cy.findByTestId('controlled-cancel').click();
+            cy.findByTestId('controlled-content').should('not.exist');
+            cy.findByTestId('controlled-checkbox').should('not.be.checked');
+        });
+
+        it('closing via Escape updates external state', () => {
+            cy.findByTestId('controlled-trigger').click();
+            cy.findByTestId('controlled-content').should('exist');
+            cy.realPress('Escape');
+            cy.findByTestId('controlled-content').should('not.exist');
+            cy.findByTestId('controlled-checkbox').should('not.be.checked');
+        });
+    });
 });

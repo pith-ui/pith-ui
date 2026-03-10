@@ -469,7 +469,86 @@ describe('Dropdown Menu', () => {
         });
     });
 
+    // ── 11. Controlled Mode ─────────────────────────────────
+
+    describe('controlled mode', () => {
+        function getControlledTrigger() {
+            return cy.findByTestId('controlled-dropdown-trigger');
+        }
+
+        function getControlledContent() {
+            return cy.findByTestId('controlled-dropdown-content');
+        }
+
+        function getOpenCheckbox() {
+            return cy.findByTestId('controlled-open-checkbox');
+        }
+
+        function controlledShouldBeOpen() {
+            getControlledContent().should('exist');
+        }
+
+        function controlledShouldBeClosed() {
+            getControlledContent().should('not.exist');
+        }
+
+        it('external checkbox opens dropdown menu', () => {
+            // dropdown-menu-msc-1
+            controlledShouldBeClosed();
+            getOpenCheckbox().click();
+            controlledShouldBeOpen();
+        });
+
+        it('external control closes dropdown menu', () => {
+            // dropdown-menu-msc-1
+            getOpenCheckbox().click();
+            controlledShouldBeOpen();
+            // Use dedicated button since modal overlay blocks checkbox interaction
+            cy.findByTestId('controlled-external-close').click({force: true});
+            controlledShouldBeClosed();
+            cy.findByTestId('controlled-open-state').should('have.text', 'closed');
+        });
+
+        it('clicking trigger updates external state', () => {
+            // dropdown-menu-msc-1
+            getOpenCheckbox().should('not.be.checked');
+            getControlledTrigger().click();
+            controlledShouldBeOpen();
+            getOpenCheckbox().should('be.checked');
+        });
+
+        it('closing via Escape updates external state', () => {
+            // dropdown-menu-msc-1
+            getControlledTrigger().click();
+            controlledShouldBeOpen();
+            getOpenCheckbox().should('be.checked');
+            cy.realPress('Escape');
+            controlledShouldBeClosed();
+            getOpenCheckbox().should('not.be.checked');
+        });
+    });
+
     // ── Internal Styles ─────────────────────────────────────
+
+    describe('event handler composition', () => {
+        it('consumer onClick on trigger fires alongside internal handler', () => {
+            // Read the initial click count
+            cy.findByTestId('trigger-click-count')
+                .invoke('text')
+                .then((initialCount) => {
+                    const startCount = parseInt(initialCount, 10);
+
+                    // Click the trigger — both consumer's onClick and internal toggle should fire
+                    cy.findByRole('button', {name: 'open'}).click();
+
+                    // Consumer handler fired (counter incremented)
+                    cy.findByTestId('trigger-click-count').should('have.text', String(startCount + 1));
+
+                    // Internal handler fired (menu opened)
+                    cy.findByRole('menu').should('exist');
+                });
+        });
+    });
 
     describe('internal styles', () => {
         it('content has --radix-dropdown-menu-content-available-width', () => {

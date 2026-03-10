@@ -31,10 +31,30 @@ pub fn OneTimePasswordFieldPage() -> impl IntoView {
         set_submitted.set(String::new());
     };
 
+    let (uncontrolled_submitted, set_uncontrolled_submitted) = signal(String::new());
+    let uncontrolled_on_submit = move |event: web_sys::SubmitEvent| {
+        event.prevent_default();
+
+        let form = event.target().and_then(|t| {
+            use web_sys::wasm_bindgen::JsCast;
+            t.dyn_into::<web_sys::HtmlFormElement>().ok()
+        });
+
+        if let Some(form) = form
+            && let Ok(form_data) = web_sys::FormData::new_with_form(&form)
+        {
+            let code = form_data.get("uncontrolled-code").as_string().unwrap_or_default();
+            set_uncontrolled_submitted.set(format!("Submitted: {code}"));
+        }
+    };
+
+    let (auto_submitted, set_auto_submitted) = signal(String::new());
+
     view! {
         <form on:submit=on_submit on:reset=on_reset>
             <OneTimePasswordField
                 attr:class="otp-root"
+                attr:data-testid="main-otp-root"
                 value=Signal::derive(move || Some(value.get()))
                 on_value_change=Callback::new(move |v: String| set_value.set(v))
                 disabled=Signal::derive(move || disabled.get())
@@ -88,5 +108,84 @@ pub fn OneTimePasswordFieldPage() -> impl IntoView {
         </div>
 
         <button data-testid="outside">"outside"</button>
+
+        <div aria-hidden="true">
+            <hr />
+            <h3>"Uncontrolled"</h3>
+            <form on:submit=uncontrolled_on_submit>
+                <OneTimePasswordField
+                    attr:class="otp-root"
+                    attr:data-testid="uncontrolled-root"
+                    default_value="12"
+                    name="uncontrolled-code"
+                >
+                    <OneTimePasswordFieldInput />
+                    <OneTimePasswordFieldInput />
+                    <OneTimePasswordFieldInput />
+                    <OneTimePasswordFieldInput />
+                    <OneTimePasswordFieldHiddenInput />
+                </OneTimePasswordField>
+                <button type="submit" data-testid="uncontrolled-submit">"submit"</button>
+                <pre data-testid="uncontrolled-result">{move || uncontrolled_submitted.get()}</pre>
+            </form>
+
+            <hr />
+            <h3>"Password Type"</h3>
+            <OneTimePasswordField
+                attr:class="otp-root"
+                attr:data-testid="password-root"
+                r#type=InputType::Password
+            >
+                <OneTimePasswordFieldInput />
+                <OneTimePasswordFieldInput />
+                <OneTimePasswordFieldInput />
+                <OneTimePasswordFieldInput />
+                <OneTimePasswordFieldHiddenInput />
+            </OneTimePasswordField>
+
+            <hr />
+            <h3>"Placeholder"</h3>
+            <OneTimePasswordField
+                attr:class="otp-root"
+                attr:data-testid="placeholder-root"
+                placeholder="○○○○"
+            >
+                <OneTimePasswordFieldInput />
+                <OneTimePasswordFieldInput />
+                <OneTimePasswordFieldInput />
+                <OneTimePasswordFieldInput />
+                <OneTimePasswordFieldHiddenInput />
+            </OneTimePasswordField>
+
+            <hr />
+            <h3>"AutoSubmit"</h3>
+            <OneTimePasswordField
+                attr:class="otp-root"
+                attr:data-testid="autosubmit-root"
+                auto_submit=true
+                on_auto_submit=Callback::new(move |v: String| set_auto_submitted.set(format!("AutoSubmitted: {v}")))
+            >
+                <OneTimePasswordFieldInput />
+                <OneTimePasswordFieldInput />
+                <OneTimePasswordFieldInput />
+                <OneTimePasswordFieldInput />
+                <OneTimePasswordFieldHiddenInput />
+            </OneTimePasswordField>
+            <pre data-testid="autosubmit-result">{move || auto_submitted.get()}</pre>
+
+            <hr />
+            <h3>"AutoComplete"</h3>
+            <OneTimePasswordField
+                attr:class="otp-root"
+                attr:data-testid="autocomplete-root"
+                auto_complete=AutoComplete::OneTimeCode
+            >
+                <OneTimePasswordFieldInput />
+                <OneTimePasswordFieldInput />
+                <OneTimePasswordFieldInput />
+                <OneTimePasswordFieldInput />
+                <OneTimePasswordFieldHiddenInput />
+            </OneTimePasswordField>
+        </div>
     }
 }

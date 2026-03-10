@@ -61,6 +61,45 @@ export default function AccordionPage() {
                 />{' '}
                 collapsible
             </label>
+
+            <br />
+            <br />
+
+            <ControlledAccordion />
+        </>
+    );
+}
+
+function ControlledAccordion() {
+    const [controlledValue, setControlledValue] = useState('');
+    return (
+        <>
+            <h2 data-testid="controlled-heading">Controlled Accordion</h2>
+            <div data-testid="controlled-value">{controlledValue}</div>
+            <button data-testid="controlled-open-item-1" onClick={() => setControlledValue('ctrl-item-1')}>Open Item 1</button>
+            <button data-testid="controlled-open-item-2" onClick={() => setControlledValue('ctrl-item-2')}>Open Item 2</button>
+            <button data-testid="controlled-close-all" onClick={() => setControlledValue('')}>Close All</button>
+            <Accordion.Root
+                type="single"
+                collapsible
+                value={controlledValue}
+                onValueChange={setControlledValue}
+                className="accordion-root"
+                data-testid="controlled-accordion-root"
+            >
+                <Accordion.Item value="ctrl-item-1" className="accordion-item" data-testid="ctrl-item-1">
+                    <Accordion.Header className="accordion-header">
+                        <Accordion.Trigger className="accordion-trigger">Ctrl Item 1</Accordion.Trigger>
+                    </Accordion.Header>
+                    <Accordion.Content className="accordion-content">Controlled Content 1</Accordion.Content>
+                </Accordion.Item>
+                <Accordion.Item value="ctrl-item-2" className="accordion-item" data-testid="ctrl-item-2">
+                    <Accordion.Header className="accordion-header">
+                        <Accordion.Trigger className="accordion-trigger">Ctrl Item 2</Accordion.Trigger>
+                    </Accordion.Header>
+                    <Accordion.Content className="accordion-content">Controlled Content 2</Accordion.Content>
+                </Accordion.Item>
+            </Accordion.Root>
         </>
     );
 }

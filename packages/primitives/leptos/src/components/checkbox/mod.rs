@@ -228,8 +228,8 @@ pub fn CheckboxIndicator(
     let styled_ref = use_internal_styles(node_ref, &[("pointer-events", "none")]);
 
     view! {
-        <AttributeInterceptor let:attrs>
-            <Presence present=present node_ref=node_ref>
+        <Presence present=present node_ref=node_ref>
+            <AttributeInterceptor let:attrs>
                 <Primitive
                     element=html::span
                     as_child=as_child
@@ -240,8 +240,8 @@ pub fn CheckboxIndicator(
                 >
                     {children.with_value(|children| children.as_ref().map(|children| children()))}
                 </Primitive>
-            </Presence>
-        </AttributeInterceptor>
+            </AttributeInterceptor>
+        </Presence>
     }
 }
 
