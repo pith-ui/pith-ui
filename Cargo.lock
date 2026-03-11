@@ -2372,6 +2372,7 @@ dependencies = [
  "leptos-node-ref",
  "leptos_router",
  "log",
+ "radix-leptos-icons",
  "radix-leptos-primitives",
  "web-sys",
 ]

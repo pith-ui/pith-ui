@@ -2,7 +2,12 @@ use std::marker::PhantomData;
 use std::{collections::HashMap, fmt::Debug};
 
 use crate::support::compose_refs::use_composed_refs;
-use leptos::{html, prelude::*};
+use leptos::{
+    context::Provider,
+    html,
+    prelude::*,
+    tachys::html::node_ref::NodeRefContainer,
+};
 use leptos_node_ref::{AnyNodeRef, any_node_ref};
 use nanoid::nanoid;
 use send_wrapper::SendWrapper;
@@ -71,16 +76,16 @@ pub fn CollectionProvider<ItemData: Clone + Send + Sync + 'static>(
     item_data_type: Option<PhantomData<ItemData>>,
     children: ChildrenFn,
 ) -> impl IntoView {
-    let children = StoredValue::new(children);
-
     let context_value = CollectionContextValue::<ItemData> {
         collection_ref: AnyNodeRef::new(),
         item_map: RwSignal::new(HashMap::new()),
     };
 
-    provide_context(context_value);
-
-    children.with_value(|children| children())
+    view! {
+        <Provider value=context_value>
+            {children()}
+        </Provider>
+    }
 }
 
 const ITEM_DATA_ATTR: &str = "data-radix-collection-item";
@@ -97,6 +102,14 @@ pub fn CollectionSlot<ItemData: Clone + Send + Sync + 'static>(
 
     let context = expect_context::<CollectionContextValue<ItemData>>();
     let composed_ref = use_composed_refs(vec![node_ref, context.collection_ref]);
+
+    // Fallback: if node_ref is set externally (e.g. by an inner component's own
+    // node_ref mechanism through deep as_child chains), propagate to collection_ref.
+    Effect::new(move |_| {
+        if let Some(el) = node_ref.get() {
+            NodeRefContainer::<html::Div>::load(context.collection_ref, &el);
+        }
+    });
 
     children
         .with_value(|children| children())
@@ -135,6 +148,15 @@ pub fn CollectionItemSlot<ItemData: Clone + Debug + Send + Sync + 'static>(
         }
     });
 
+    // Fallback: if node_ref is set externally (e.g. by an inner component's own
+    // node_ref mechanism through deep as_child chains), propagate to item_ref
+    // so the item_map entry has the actual DOM element.
+    Effect::new(move |_| {
+        if let Some(el) = node_ref.get() {
+            NodeRefContainer::<html::Div>::load(item_ref, &el);
+        }
+    });
+
     Owner::on_cleanup(move || {
         context.item_map.update(|item_map| {
             item_map.remove(&id_for_cleanup);
@@ -143,21 +165,8 @@ pub fn CollectionItemSlot<ItemData: Clone + Debug + Send + Sync + 'static>(
 
     children
         .with_value(|children| children())
-        .add_any_attr(leptos::attr::custom::custom_attribute(
-            "data-radix-collection-item",
-            "",
-        ))
+        .add_any_attr(leptos::attr::custom::custom_attribute(ITEM_DATA_ATTR, ""))
         .add_any_attr(any_node_ref::<html::Div, _>(composed_ref))
-}
-
-fn node_list_to_vec(node_list: web_sys::NodeList) -> Vec<web_sys::Node> {
-    let mut nodes = vec![];
-    for n in 0..node_list.length() {
-        if let Some(node) = node_list.item(n) {
-            nodes.push(node);
-        }
-    }
-    nodes
 }
 
 pub fn use_collection<ItemData: Clone + Send + Sync + 'static>()
@@ -165,41 +174,31 @@ pub fn use_collection<ItemData: Clone + Send + Sync + 'static>()
     let context = expect_context::<CollectionContextValue<ItemData>>();
 
     let get_items = move || {
-        let collection_node = context.collection_ref.get_untracked();
-        if let Some(collection_node) = collection_node {
-            let element: &web_sys::Element = (*collection_node).unchecked_ref();
-            let ordered_nodes = node_list_to_vec(
-                element
-                    .query_selector_all(format!("[{ITEM_DATA_ATTR}]").as_str())
-                    .expect("Node should be queried."),
-            );
-
+        if context.collection_ref.get_untracked().is_some() {
             let mut ordered_items = context
                 .item_map
                 .get_untracked()
                 .into_values()
                 .collect::<Vec<_>>();
-            ordered_items.sort_by(|a, b| {
-                let index_a = ordered_nodes.iter().position(|node| {
-                    a.r#ref
-                        .get_untracked()
-                        .map(|el| {
-                            let n: &web_sys::Node = (*el).unchecked_ref();
-                            node == n
-                        })
-                        .unwrap_or(false)
-                });
-                let index_b = ordered_nodes.iter().position(|node| {
-                    b.r#ref
-                        .get_untracked()
-                        .map(|el| {
-                            let n: &web_sys::Node = (*el).unchecked_ref();
-                            node == n
-                        })
-                        .unwrap_or(false)
-                });
 
-                index_a.cmp(&index_b)
+            ordered_items.sort_by(|a, b| {
+                match (a.r#ref.get_untracked(), b.r#ref.get_untracked()) {
+                    (Some(el_a), Some(el_b)) => {
+                        let node_a: &web_sys::Node = (*el_a).unchecked_ref();
+                        let node_b: &web_sys::Node = (*el_b).unchecked_ref();
+                        let position = node_a.compare_document_position(node_b);
+                        if position & web_sys::Node::DOCUMENT_POSITION_FOLLOWING != 0 {
+                            std::cmp::Ordering::Less
+                        } else if position & web_sys::Node::DOCUMENT_POSITION_PRECEDING != 0 {
+                            std::cmp::Ordering::Greater
+                        } else {
+                            std::cmp::Ordering::Equal
+                        }
+                    }
+                    (Some(_), None) => std::cmp::Ordering::Less,
+                    (None, Some(_)) => std::cmp::Ordering::Greater,
+                    (None, None) => std::cmp::Ordering::Equal,
+                }
             });
 
             ordered_items

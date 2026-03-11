@@ -132,6 +132,11 @@ describe('Hover Card', () => {
 
     describe('controlled mode', () => {
         beforeEach(() => {
+            // Move mouse to a neutral position so the stale CDP mouse position from
+            // previous tests doesn't hover over the uncontrolled trigger on page load
+            // (which would open its popup with 0ms delay and overlap the controlled
+            // section below).
+            cy.findByTestId('outside-element').realHover();
             cy.visit('/hover-card');
             cy.findByLabelText('controlled').click({force: true});
         });

@@ -157,9 +157,6 @@ fn OneTimePasswordFieldImpl(
 
     let value_vec = Signal::derive(move || value_signal.get().unwrap_or_default());
 
-    let get_items: StoredValue<SendWrapper<Box<dyn Fn() -> Vec<CollectionItemValue<ItemData>>>>> =
-        StoredValue::new(use_collection::<ItemData>());
-
     let hidden_input_ref = AnyNodeRef::new();
     let root_ref = AnyNodeRef::new();
     let composed_refs = use_composed_refs(vec![node_ref, root_ref]);
@@ -175,10 +172,8 @@ fn OneTimePasswordFieldImpl(
             let input: &web_sys::HtmlInputElement = node.deref().unchecked_ref();
             input.form()
         } else {
-            let items = get_items.with_value(|f| f());
-            let first = items.first()?;
-            let el = collection_element(first)?;
-            el.form()
+            let inputs = query_otp_inputs(root_ref);
+            inputs.first()?.form()
         }
     };
 
@@ -190,21 +185,24 @@ fn OneTimePasswordFieldImpl(
         })));
 
     // dispatch function handles all value update actions
+    // Uses DOM queries on root_ref instead of the Collection infrastructure,
+    // because the generic Collection context doesn't scope correctly when
+    // multiple OTP components exist on the same page.
     let dispatch: StoredValue<SendWrapper<Box<dyn Fn(UpdateAction)>>> =
         StoredValue::new(SendWrapper::new(Box::new(move |action: UpdateAction| {
-            let items = get_items.with_value(|f| f());
+            let inputs = query_otp_inputs(root_ref);
             let current_value = value_vec.get_untracked();
+            let size = inputs.len();
 
             match action {
                 UpdateAction::SetChar { index, char } => {
-                    let current_target =
-                        collection_at(&items, index as isize).and_then(collection_element);
+                    let current_target = otp_input_at(&inputs, index as isize);
 
                     if current_value.get(index).is_some_and(|v| *v == char) {
                         // Same value — just move to next
-                        if let Some(ct) = &current_target {
-                            let next = collection_from(&items, ct, 1).and_then(collection_element);
-                            focus_input(next.as_ref());
+                        if let Some(ct) = current_target {
+                            let next = otp_input_from(&inputs, ct, 1);
+                            focus_input(next);
                         }
                         return;
                     }
@@ -226,18 +224,16 @@ fn OneTimePasswordFieldImpl(
                         }
                     }
 
-                    let size = items.len();
-
-                    if current_value.len() >= size {
+                    if current_value.len() >= size && size > 0 {
                         // Replace current value; move to next input
                         let mut new_value = current_value.clone();
                         if index < new_value.len() {
                             new_value[index] = char;
                         }
                         set_value.run(Some(new_value));
-                        if let Some(ct) = &current_target {
-                            let next = collection_from(&items, ct, 1).and_then(collection_element);
-                            focus_input(next.as_ref());
+                        if let Some(ct) = current_target {
+                            let next = otp_input_from(&inputs, ct, 1);
+                            focus_input(next);
                         }
                         return;
                     }
@@ -249,16 +245,16 @@ fn OneTimePasswordFieldImpl(
                     }
                     new_value[index] = char;
 
-                    let last_element = collection_at(&items, -1).and_then(collection_element);
+                    let last_element = otp_input_at(&inputs, -1);
 
                     set_value.run(Some(new_value));
 
-                    if current_target.as_ref() != last_element.as_ref() {
-                        if let Some(ct) = &current_target {
-                            let next = collection_from(&items, ct, 1).and_then(collection_element);
-                            focus_input(next.as_ref());
+                    if current_target != last_element {
+                        if let Some(ct) = current_target {
+                            let next = otp_input_from(&inputs, ct, 1);
+                            focus_input(next);
                         }
-                    } else if let Some(ct) = &current_target {
+                    } else if let Some(ct) = current_target {
                         ct.select();
                     }
                 }
@@ -277,20 +273,18 @@ fn OneTimePasswordFieldImpl(
                         .map(|(_, v)| v.clone())
                         .collect();
 
-                    let current_target =
-                        collection_at(&items, index as isize).and_then(collection_element);
-                    let previous = current_target.as_ref().and_then(|ct| {
-                        collection_from(&items, ct, -1).and_then(collection_element)
-                    });
+                    let current_target = otp_input_at(&inputs, index as isize);
+                    let previous = current_target
+                        .and_then(|ct| otp_input_from(&inputs, ct, -1));
 
                     set_value.run(Some(new_value));
 
                     match reason {
                         ClearCharReason::Backspace => {
-                            focus_input(previous.as_ref());
+                            focus_input(previous);
                         }
                         ClearCharReason::Delete | ClearCharReason::Cut => {
-                            focus_input(current_target.as_ref());
+                            focus_input(current_target);
                         }
                     }
                 }
@@ -303,8 +297,8 @@ fn OneTimePasswordFieldImpl(
                     match reason {
                         ClearReason::Backspace | ClearReason::Delete => {
                             set_value.run(Some(vec![]));
-                            let first = collection_at(&items, 0).and_then(collection_element);
-                            focus_input(first.as_ref());
+                            let first = otp_input_at(&inputs, 0);
+                            focus_input(first);
                         }
                         ClearReason::Reset => {
                             set_value.run(Some(vec![]));
@@ -322,8 +316,8 @@ fn OneTimePasswordFieldImpl(
 
                     let focus_index = new_value.len() as isize - 1;
                     set_value.run(Some(new_value));
-                    let target = collection_at(&items, focus_index).and_then(collection_element);
-                    focus_input(target.as_ref());
+                    let target = otp_input_at(&inputs, focus_index);
+                    focus_input(target);
                 }
             }
         })));
@@ -366,6 +360,7 @@ fn OneTimePasswordFieldImpl(
     });
 
     // Auto-submit effect
+    let input_count: RwSignal<usize> = RwSignal::new(0);
     let prev_joined: RwSignal<String> = RwSignal::new(String::new());
     Effect::new(move |_| {
         let current = value_vec.get();
@@ -376,8 +371,7 @@ fn OneTimePasswordFieldImpl(
             return;
         }
 
-        let items = get_items.with_value(|f| f());
-        let size = items.len();
+        let size = input_count.get();
 
         if auto_submit_sig.get() && current.iter().all(|c| !c.is_empty()) && current.len() == size {
             if let Some(on_auto_submit) = on_auto_submit {
@@ -404,11 +398,14 @@ fn OneTimePasswordFieldImpl(
         user_action,
         sanitize_value: sanitize_value_fn,
         hidden_input_ref,
+        root_ref,
+        index_counter: StoredValue::new(std::sync::atomic::AtomicUsize::new(0)),
+        input_count,
     };
 
     view! {
         <Provider value=context_value>
-            <CollectionSlot item_data_type=ITEM_DATA_PHANTOM>
+            <CollectionSlot item_data_type=ITEM_DATA_PHANTOM node_ref=root_ref>
                 <RovingFocusGroup
                     as_child=true
                     orientation=orientation_sig

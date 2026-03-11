@@ -49,11 +49,8 @@ pub fn Progress(
             .filter(|&m| is_valid_max_number(m))
             .unwrap_or(DEFAULT_MAX)
     });
-    let value = Signal::derive(move || {
-        value
-            .get()
-            .filter(|&v| is_valid_value_number(v, max.get()))
-    });
+    let value =
+        Signal::derive(move || value.get().filter(|&v| is_valid_value_number(v, max.get())));
 
     let value_label = Signal::derive(move || {
         value.get().map(|v| match get_value_label {

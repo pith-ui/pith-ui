@@ -1,5 +1,4 @@
 use crate::support::compose_refs::use_composed_refs;
-use crate::support::use_internal_styles::use_internal_styles_effect;
 use crate::support::dismissable_layer::DismissableLayer;
 use crate::support::popper::{
     Align, Padding, Popper, PopperAnchor, PopperArrow, PopperContent, Side, Sticky,
@@ -9,6 +8,7 @@ use crate::support::portal::{ScopedPortal, resolve_force_mount};
 use crate::support::presence::Presence;
 use crate::support::primitive::{Primitive, compose_callbacks, open_closed_state};
 use crate::support::use_controllable_state::{UseControllableStateParams, use_controllable_state};
+use crate::support::use_internal_styles::use_internal_styles_effect;
 use leptos::{
     attribute_interceptor::AttributeInterceptor, context::Provider, ev, html, prelude::*,
 };

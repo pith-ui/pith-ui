@@ -21,31 +21,21 @@ pub fn OneTimePasswordFieldInput(
     let _children = children;
 
     let context = expect_context::<OneTimePasswordFieldContextValue>();
-    let get_items: StoredValue<SendWrapper<Box<dyn Fn() -> Vec<CollectionItemValue<ItemData>>>>> =
-        StoredValue::new(use_collection::<ItemData>());
 
     let input_ref = AnyNodeRef::new();
-    let (element, set_element) = signal::<Option<SendWrapper<web_sys::HtmlInputElement>>>(None);
     let composed_input_ref = use_composed_refs(vec![node_ref, input_ref]);
 
-    // Track element from ref
-    Effect::new(move |_| {
-        if let Some(node) = input_ref.get() {
-            let el: web_sys::HtmlInputElement = node.deref().clone().unchecked_into();
-            set_element.set(Some(SendWrapper::new(el)));
-        }
+    // Assign a sequential index from the counter during component creation.
+    // This avoids relying on the collection (populated asynchronously via Effects)
+    // for index resolution.
+    let auto_index = context.index_counter.with_value(|counter| {
+        let idx = counter.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+        context.input_count.set(idx + 1);
+        idx
     });
 
     let resolved_index = Signal::derive(move || {
-        if let Some(idx) = index.get() {
-            idx
-        } else if let Some(el) = element.get() {
-            let items = get_items.with_value(|f| f());
-            let html_el: &web_sys::HtmlElement = el.unchecked_ref();
-            collection_index_of(&items, html_el).unwrap_or(0)
-        } else {
-            0
-        }
+        index.get().unwrap_or(auto_index)
     });
 
     let char_value = Signal::derive(move || {
@@ -56,8 +46,7 @@ pub fn OneTimePasswordFieldInput(
     let total_value = Signal::derive(move || context.value.get().join("").trim().to_string());
 
     let last_selectable_index = Signal::derive(move || {
-        let items = get_items.with_value(|f| f());
-        let size = items.len();
+        let size = context.input_count.get();
         let len = total_value.get().len();
         len.min(size.saturating_sub(1))
     });
@@ -79,7 +68,7 @@ pub fn OneTimePasswordFieldInput(
         }
     });
 
-    let collection_size = Signal::derive(move || get_items.with_value(|f| f()).len());
+    let collection_size = Signal::derive(move || context.input_count.get());
 
     let aria_label = Signal::derive(move || {
         format!(
@@ -97,14 +86,8 @@ pub fn OneTimePasswordFieldInput(
             .map(|ctx| ctx.has_tab_stop.get())
             .unwrap_or(false)
     });
-    let is_current_tab_stop_ctx = Signal::derive(move || {
-        use_context::<RovingFocusGroupItemContext>()
-            .map(|ctx| ctx.is_current_tab_stop.get())
-            .unwrap_or(false)
-    });
-
     view! {
-        <CollectionItemSlot item_data_type=ITEM_DATA_PHANTOM item_data=item_data>
+        <CollectionItemSlot item_data_type=ITEM_DATA_PHANTOM item_data=item_data node_ref=input_ref>
             <RovingFocusGroupItem
                 as_child=true
                 focusable=Signal::derive(move || !context.disabled.get() && is_focusable.get())
@@ -112,7 +95,6 @@ pub fn OneTimePasswordFieldInput(
             >
                 <OneTimePasswordFieldInputInner
                     context=context
-                    get_items=get_items
                     composed_input_ref=composed_input_ref
                     resolved_index=resolved_index
                     char_value=char_value
@@ -122,7 +104,6 @@ pub fn OneTimePasswordFieldInput(
                     collection_size=collection_size
                     aria_label=aria_label
                     has_tab_stop=has_tab_stop
-                    is_current_tab_stop_ctx=is_current_tab_stop_ctx
                     on_invalid_change=on_invalid_change
                     on_focus=on_focus
                     on_cut=on_cut
@@ -142,7 +123,6 @@ pub fn OneTimePasswordFieldInput(
 #[component]
 fn OneTimePasswordFieldInputInner(
     context: OneTimePasswordFieldContextValue,
-    get_items: StoredValue<SendWrapper<Box<dyn Fn() -> Vec<CollectionItemValue<ItemData>>>>>,
     composed_input_ref: AnyNodeRef,
     resolved_index: Signal<usize>,
     char_value: Signal<String>,
@@ -152,7 +132,6 @@ fn OneTimePasswordFieldInputInner(
     collection_size: Signal<usize>,
     aria_label: Signal<String>,
     has_tab_stop: Signal<bool>,
-    is_current_tab_stop_ctx: Signal<bool>,
     on_invalid_change: Option<Callback<String>>,
     on_focus: Option<Callback<ev::FocusEvent>>,
     on_cut: Option<Callback<ev::ClipboardEvent>>,
@@ -162,9 +141,15 @@ fn OneTimePasswordFieldInputInner(
     on_pointer_down: Option<Callback<ev::PointerEvent>>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
 ) -> impl IntoView {
+    let is_current_tab_stop = Signal::derive(move || {
+        use_context::<RovingFocusGroupItemContext>()
+            .map(|ctx| ctx.is_current_tab_stop.get())
+            .unwrap_or(false)
+    });
+
     let supports_auto_complete = Signal::derive(move || {
         if has_tab_stop.get() {
-            is_current_tab_stop_ctx.get()
+            is_current_tab_stop.get()
         } else {
             resolved_index.get() == 0
         }
@@ -253,8 +238,10 @@ fn OneTimePasswordFieldInputInner(
                     .expect("Event should have current target")
                     .unchecked_into();
                 let value = target.value();
+                let window = web_sys::window().expect("Window should exist");
+
+                // Password manager auto-fill: value has multiple characters
                 if value.len() > 1 {
-                    // Password manager auto-fill
                     event.prevent_default();
                     user_action.set(Some(KeyboardActionDetails::AutocompletePaste));
                     dispatch.with_value(|d| d(UpdateAction::Paste { value }));
@@ -262,23 +249,17 @@ fn OneTimePasswordFieldInputInner(
                     let cb = web_sys::wasm_bindgen::closure::Closure::once_into_js(move || {
                         user_action.set(None);
                     });
-                    let _ = web_sys::window()
-                        .expect("Window should exist")
+                    let _ = window
                         .set_timeout_with_callback_and_timeout_and_arguments_0(
                             cb.unchecked_ref(),
                             10,
                         );
+                    return;
                 }
-            })), None)
-            on:change=compose_callbacks(on_change, Some(Callback::new(move |event: ev::Event| {
-                let target: web_sys::HtmlInputElement = event.target()
-                    .expect("Event should have target")
-                    .unchecked_into();
-                let value = target.value();
-                event.prevent_default();
+
+                // Check for pending user action from keydown/cut
                 let action = user_action.get_untracked();
                 user_action.set(None);
-
                 let index = resolved_index.get_untracked();
 
                 if let Some(action) = action {
@@ -291,11 +272,12 @@ fn OneTimePasswordFieldInputInner(
                             return;
                         }
                         KeyboardActionDetails::AutocompletePaste => {
-                            // Already handled in input handler
+                            // Already handled above
                             return;
                         }
                         KeyboardActionDetails::Keydown { key, meta_key, ctrl_key } => {
                             if key == KeydownKey::Char {
+                                // Character was dispatched directly in keydown; ignore
                                 return;
                             }
                             let is_clearing = key == KeydownKey::Backspace && (meta_key || ctrl_key);
@@ -318,26 +300,19 @@ fn OneTimePasswordFieldInputInner(
                     }
                 }
 
-                // Skip if the DOM value already matches the signal value.
-                // This prevents spurious dispatches when `prop:value` marks the
-                // input as dirty and `change` fires on blur (e.g., Tab key).
-                if value == char_value.get_untracked() {
-                    return;
-                }
-
-                // Only update if valid
+                // Default path: process based on validity
+                event.prevent_default();
                 if target.validity().valid() {
                     if value.is_empty() {
                         let mut reason = ClearCharReason::Backspace;
-                        // Check native InputEvent inputType
-                        if let Ok(input_event) = event.clone().dyn_into::<web_sys::InputEvent>()
-                            && let Some(input_type) = input_event.input_type().into() {
-                                match input_type.as_str() {
-                                    "deleteContentBackward" => reason = ClearCharReason::Backspace,
-                                    "deleteByCut" => reason = ClearCharReason::Cut,
-                                    _ => {}
-                                }
+                        if let Some(input_event) = event.dyn_ref::<web_sys::InputEvent>() {
+                            let input_type = input_event.input_type();
+                            match input_type.as_str() {
+                                "deleteContentBackward" => reason = ClearCharReason::Backspace,
+                                "deleteByCut" => reason = ClearCharReason::Cut,
+                                _ => {}
                             }
+                        }
                         dispatch.with_value(|d| d(UpdateAction::ClearChar {
                             index,
                             reason,
@@ -360,19 +335,22 @@ fn OneTimePasswordFieldInputInner(
                                 target_clone.select();
                             }
                     });
-                    let _ = web_sys::window()
-                        .expect("Window should exist")
-                        .request_animation_frame(cb.unchecked_ref());
+                    let _ = window.request_animation_frame(cb.unchecked_ref());
                 }
             })), None)
+            on:change=move |event: ev::Event| {
+                if let Some(on_change) = on_change {
+                    on_change.run(event);
+                }
+            }
             on:keydown=compose_callbacks(on_key_down, Some(Callback::new(move |event: ev::KeyboardEvent| {
                 let index = resolved_index.get_untracked();
-                let items = get_items.with_value(|f| f());
+                let inputs = query_otp_inputs(context.root_ref);
                 let key = event.key();
+                let window = web_sys::window().expect("Window should exist");
 
                 match key.as_str() {
                     "Clear" | "Delete" | "Backspace" => {
-                        event.prevent_default();
                         let current_value = event.current_target()
                             .map(|ct| ct.unchecked_into::<web_sys::HtmlInputElement>().value())
                             .unwrap_or_default();
@@ -384,6 +362,7 @@ fn OneTimePasswordFieldInputInner(
                         };
 
                         if current_value.is_empty() {
+                            // Empty input: no change event will fire, handle directly
                             if keydown_key == KeydownKey::Delete {
                                 return;
                             }
@@ -393,109 +372,48 @@ fn OneTimePasswordFieldInputInner(
                                     reason: ClearReason::Backspace,
                                 }));
                             } else {
+                                // Focus previous input via rAF
                                 let element = event.current_target()
                                     .map(|ct| ct.unchecked_into::<web_sys::HtmlElement>());
                                 if let Some(el) = element {
-                                    let prev = collection_from(&items, &el, -1)
-                                        .and_then(collection_element);
-                                    focus_input(prev.as_ref());
+                                    let prev = otp_input_from(&inputs, &el, -1).cloned();
+                                    let cb = web_sys::wasm_bindgen::closure::Closure::once_into_js(move || {
+                                        focus_input(prev.as_ref());
+                                    });
+                                    let _ = window.request_animation_frame(cb.unchecked_ref());
                                 }
                             }
                         } else {
-                            let is_clearing = (keydown_key == KeydownKey::Backspace && (event.meta_key() || event.ctrl_key()))
-                                || keydown_key == KeydownKey::Clear;
-                            if is_clearing {
-                                dispatch.with_value(|d| d(UpdateAction::Clear {
-                                    reason: ClearReason::Backspace,
-                                }));
-                            } else {
-                                let reason = match keydown_key {
-                                    KeydownKey::Delete => ClearCharReason::Delete,
-                                    _ => ClearCharReason::Backspace,
-                                };
-                                dispatch.with_value(|d| d(UpdateAction::ClearChar {
-                                    index,
-                                    reason,
-                                }));
-                            }
+                            // Filled input: let browser clear the value, on:input handles dispatch
+                            user_action.set(Some(KeyboardActionDetails::Keydown {
+                                key: keydown_key,
+                                meta_key: event.meta_key(),
+                                ctrl_key: event.ctrl_key(),
+                            }));
+                            let user_action = user_action;
+                            let cb = web_sys::wasm_bindgen::closure::Closure::once_into_js(move || {
+                                user_action.set(None);
+                            });
+                            let _ = window
+                                .set_timeout_with_callback_and_timeout_and_arguments_0(
+                                    cb.unchecked_ref(),
+                                    10,
+                                );
                         }
                     }
                     "Enter" => {
                         event.prevent_default();
                         context.attempt_submit.with_value(|f| f());
                     }
-                    "ArrowRight" | "ArrowLeft" => {
-                        if context.orientation.get() == Orientation::Horizontal {
-                            event.prevent_default();
-                            // Stop the RovingFocusGroup from also handling arrow keys,
-                            // since its collection data may be stale.
-                            event.stop_immediate_propagation();
-                            let direction: isize = if key == "ArrowRight" { 1 } else { -1 };
-                            let element = event.current_target()
-                                .map(|ct| ct.unchecked_into::<web_sys::HtmlElement>());
-                            if let Some(el) = element {
-                                let next = collection_from(&items, &el, direction)
-                                    .and_then(collection_element);
-                                if let Some(next_input) = &next {
-                                    let next_idx = collection_index_of(
-                                        &items,
-                                        next_input.unchecked_ref(),
-                                    )
-                                    .unwrap_or(usize::MAX);
-                                    if next_idx <= last_selectable_index.get_untracked() {
-                                        // Defer focus to a microtask so it runs after all
-                                        // synchronous handlers (including RovingFocusGroup).
-                                        let next_el = next_input.clone();
-                                        let window = web_sys::window().expect("Window should exist");
-                                        let cb = web_sys::wasm_bindgen::closure::Closure::once_into_js(move || {
-                                            focus_input(Some(&next_el));
-                                        });
-                                        window.queue_microtask(cb.unchecked_ref());
-                                    }
-                                }
-                            }
-                        } else {
-                            // In vertical orientation, prevent ArrowLeft/ArrowRight
-                            // from deselecting the input value.
-                            event.prevent_default();
-                        }
-                    }
                     "ArrowDown" | "ArrowUp" => {
                         if context.orientation.get() == Orientation::Horizontal {
-                            // In horizontal orientation, prevent ArrowUp/ArrowDown
-                            // from deselecting the input value.
+                            // Prevent up/down from deselecting the input value
                             event.prevent_default();
-                        } else {
-                            event.prevent_default();
-                            event.stop_immediate_propagation();
-                            let direction: isize = if key == "ArrowDown" { 1 } else { -1 };
-                            let element = event.current_target()
-                                .map(|ct| ct.unchecked_into::<web_sys::HtmlElement>());
-                            if let Some(el) = element {
-                                let next = collection_from(&items, &el, direction)
-                                    .and_then(collection_element);
-                                if let Some(next_input) = &next {
-                                    let next_idx = collection_index_of(
-                                        &items,
-                                        next_input.unchecked_ref(),
-                                    )
-                                    .unwrap_or(usize::MAX);
-                                    if next_idx <= last_selectable_index.get_untracked() {
-                                        let next_el = next_input.clone();
-                                        let window = web_sys::window().expect("Window should exist");
-                                        let cb = web_sys::wasm_bindgen::closure::Closure::once_into_js(move || {
-                                            focus_input(Some(&next_el));
-                                        });
-                                        window.queue_microtask(cb.unchecked_ref());
-                                    }
-                                }
-                            }
                         }
+                        // In vertical orientation, RovingFocusGroup handles navigation
                     }
                     _ => {
                         // Only handle single printable characters without modifier keys.
-                        // Modifier keys indicate keyboard shortcuts (e.g. Cmd+V for paste)
-                        // which must not be intercepted.
                         let is_single_char = key.chars().count() == 1 && key != " ";
                         if !is_single_char || event.meta_key() || event.ctrl_key() || event.alt_key() {
                             return;
@@ -505,28 +423,18 @@ fn OneTimePasswordFieldInputInner(
                             .map(|ct| ct.unchecked_into::<web_sys::HtmlInputElement>().value())
                             .unwrap_or_default();
 
-                        if current_value.is_empty() {
-                            // Typing into empty input — dispatch directly
-                            event.prevent_default();
-                            dispatch.with_value(|d| d(UpdateAction::SetChar {
-                                char: key,
-                                index,
-                            }));
-                        } else if current_value == key {
-                            // Same value as key press — focus next
+                        if current_value == key {
+                            // Same value as key press — no change event will fire.
+                            // Focus the next input.
                             event.prevent_default();
                             let element = event.current_target()
                                 .map(|ct| ct.unchecked_into::<web_sys::HtmlElement>());
                             if let Some(el) = element {
-                                let next = collection_from(&items, &el, 1)
-                                    .and_then(collection_element);
-                                focus_input(next.as_ref().map(|e| {
-                                    e.unchecked_ref::<web_sys::HtmlInputElement>()
-                                }));
+                                let next = otp_input_from(&inputs, &el, 1);
+                                focus_input(next);
                             }
-                        } else {
-                            // Different value on filled input
-                            event.prevent_default();
+                        } else if !current_value.is_empty() {
+                            // Filled with different value and not selected — overflow
                             let ct = event.current_target()
                                 .map(|ct| ct.unchecked_into::<web_sys::HtmlInputElement>());
                             if let Some(input) = ct {
@@ -534,22 +442,13 @@ fn OneTimePasswordFieldInputInner(
                                 let sel_end = input.selection_end().ok().flatten().unwrap_or(0);
                                 let is_selected = sel_start == 0 && sel_end > 0;
 
-                                if is_selected {
-                                    // Replace selected value
-                                    dispatch.with_value(|d| d(UpdateAction::SetChar {
-                                        char: key,
-                                        index,
-                                    }));
-                                } else {
-                                    // Cursor at specific position — set for current or next index
+                                if !is_selected {
                                     let html_el: web_sys::HtmlElement = input.clone().unchecked_into();
-                                    let next_input = collection_from(&items, &html_el, 1)
-                                        .and_then(collection_element);
-                                    let last_input = collection_at(&items, -1)
-                                        .and_then(collection_element);
+                                    let next_input = otp_input_from(&inputs, &html_el, 1);
+                                    let last_input = otp_input_at(&inputs, -1);
 
-                                    if next_input.as_ref() != last_input.as_ref()
-                                        && last_input.as_ref().map(|e| e.unchecked_ref::<web_sys::HtmlElement>() != &html_el).unwrap_or(true)
+                                    if next_input != last_input
+                                        && last_input.map(|e| e.unchecked_ref::<web_sys::HtmlElement>() != &html_el).unwrap_or(true)
                                     {
                                         if sel_start == 0 {
                                             dispatch.with_value(|d| d(UpdateAction::SetChar {
@@ -562,20 +461,38 @@ fn OneTimePasswordFieldInputInner(
                                                 index: index + 1,
                                             }));
                                         }
+
+                                        user_action.set(Some(KeyboardActionDetails::Keydown {
+                                            key: KeydownKey::Char,
+                                            meta_key: event.meta_key(),
+                                            ctrl_key: event.ctrl_key(),
+                                        }));
+                                        let user_action = user_action;
+                                        let cb = web_sys::wasm_bindgen::closure::Closure::once_into_js(move || {
+                                            user_action.set(None);
+                                        });
+                                        let _ = window
+                                            .set_timeout_with_callback_and_timeout_and_arguments_0(
+                                                cb.unchecked_ref(),
+                                                10,
+                                            );
                                     }
                                 }
+                                // If selected, browser will replace the selected text
+                                // and on:input will handle the SET_CHAR dispatch
                             }
                         }
+                        // If empty, let browser insert the character.
+                        // on:input will handle the SET_CHAR dispatch.
                     }
                 }
             })), None)
             on:pointerdown=compose_callbacks(on_pointer_down, Some(Callback::new(move |event: ev::PointerEvent| {
                 event.prevent_default();
                 let last = last_selectable_index.get_untracked();
-                let items = get_items.with_value(|f| f());
-                let element = collection_at(&items, last as isize)
-                    .and_then(collection_element);
-                focus_input(element.as_ref());
+                let inputs = query_otp_inputs(context.root_ref);
+                let element = otp_input_at(&inputs, last as isize);
+                focus_input(element);
             })), None)
         >
             {()}

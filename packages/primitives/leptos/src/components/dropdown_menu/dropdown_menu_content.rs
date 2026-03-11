@@ -62,13 +62,31 @@ pub fn DropdownMenuContent(
     let on_pointer_down_outside = wrap_callback(on_pointer_down_outside);
     let on_focus_outside = wrap_callback(on_focus_outside);
 
-    let styled_ref = use_internal_styles(node_ref, &[
-        ("--radix-dropdown-menu-content-transform-origin", "var(--radix-popper-transform-origin)"),
-        ("--radix-dropdown-menu-content-available-width", "var(--radix-popper-available-width)"),
-        ("--radix-dropdown-menu-content-available-height", "var(--radix-popper-available-height)"),
-        ("--radix-dropdown-menu-trigger-width", "var(--radix-popper-anchor-width)"),
-        ("--radix-dropdown-menu-trigger-height", "var(--radix-popper-anchor-height)"),
-    ]);
+    let styled_ref = use_internal_styles(
+        node_ref,
+        &[
+            (
+                "--radix-dropdown-menu-content-transform-origin",
+                "var(--radix-popper-transform-origin)",
+            ),
+            (
+                "--radix-dropdown-menu-content-available-width",
+                "var(--radix-popper-available-width)",
+            ),
+            (
+                "--radix-dropdown-menu-content-available-height",
+                "var(--radix-popper-available-height)",
+            ),
+            (
+                "--radix-dropdown-menu-trigger-width",
+                "var(--radix-popper-anchor-width)",
+            ),
+            (
+                "--radix-dropdown-menu-trigger-height",
+                "var(--radix-popper-anchor-height)",
+            ),
+        ],
+    );
 
     view! {
         <MenuContent
@@ -428,13 +446,31 @@ pub fn DropdownMenuSubContent(
     let on_escape_key_down = wrap_callback(on_escape_key_down);
     let on_focus_outside = wrap_callback(on_focus_outside);
 
-    let styled_ref = use_internal_styles(node_ref, &[
-        ("--radix-dropdown-menu-content-transform-origin", "var(--radix-popper-transform-origin)"),
-        ("--radix-dropdown-menu-content-available-width", "var(--radix-popper-available-width)"),
-        ("--radix-dropdown-menu-content-available-height", "var(--radix-popper-available-height)"),
-        ("--radix-dropdown-menu-trigger-width", "var(--radix-popper-anchor-width)"),
-        ("--radix-dropdown-menu-trigger-height", "var(--radix-popper-anchor-height)"),
-    ]);
+    let styled_ref = use_internal_styles(
+        node_ref,
+        &[
+            (
+                "--radix-dropdown-menu-content-transform-origin",
+                "var(--radix-popper-transform-origin)",
+            ),
+            (
+                "--radix-dropdown-menu-content-available-width",
+                "var(--radix-popper-available-width)",
+            ),
+            (
+                "--radix-dropdown-menu-content-available-height",
+                "var(--radix-popper-available-height)",
+            ),
+            (
+                "--radix-dropdown-menu-trigger-width",
+                "var(--radix-popper-anchor-width)",
+            ),
+            (
+                "--radix-dropdown-menu-trigger-height",
+                "var(--radix-popper-anchor-height)",
+            ),
+        ],
+    );
 
     view! {
         <MenuSubContent

@@ -20,30 +20,8 @@ pub fn NavigationMenuIndicator(
 
     let presence_ref = AnyNodeRef::new();
 
-    // Capture user attributes (e.g., data-testid, class) from a hidden span for forwarding.
-    let indicator_attr_capture_ref = AnyNodeRef::new();
+    // Capture user attributes (e.g., data-testid, class) via AttributeInterceptor for forwarding.
     let indicator_captured_attrs: StoredValue<Vec<(String, String)>> = StoredValue::new(vec![]);
-
-    Effect::new(move |_| {
-        if let Some(el) = indicator_attr_capture_ref.get() {
-            let el: web_sys::Element = el.unchecked_into();
-            let attrs = el.attributes();
-            let mut user_attrs = vec![];
-            for i in 0..attrs.length() {
-                if let Some(attr) = attrs.item(i) {
-                    let name = attr.name();
-                    if matches!(name.as_str(), "style" | "hidden" | "aria-hidden") {
-                        continue;
-                    }
-                    user_attrs.push((name, attr.value()));
-                }
-            }
-            for (name, _) in &user_attrs {
-                el.remove_attribute(name).ok();
-            }
-            indicator_captured_attrs.set_value(user_attrs);
-        }
-    });
 
     // Apply captured attrs to the indicator element after mount
     Effect::new(move |_| {
@@ -110,10 +88,12 @@ pub fn NavigationMenuIndicator(
         }
     });
 
-    // Only the hidden attr-capture span renders in the component tree.
-    // The actual indicator content is portaled into the indicator track wrapper div.
+    // AttributeInterceptor captures user attrs; the actual indicator content is portaled
+    // into the indicator track wrapper div.
     view! {
-        <span node_ref=indicator_attr_capture_ref hidden=true aria-hidden="true" style="display:none" />
+        <AttributeInterceptor let:attrs>
+            {indicator_captured_attrs.set_value(extract_attrs(attrs))}
+        </AttributeInterceptor>
     }
 }
 

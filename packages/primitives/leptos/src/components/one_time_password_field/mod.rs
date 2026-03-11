@@ -2,7 +2,7 @@ use std::marker::PhantomData;
 use std::ops::Deref;
 
 use crate::support::collection::{
-    CollectionItemSlot, CollectionItemValue, CollectionProvider, CollectionSlot, use_collection,
+    CollectionItemSlot, CollectionProvider, CollectionSlot,
 };
 use crate::support::compose_refs::use_composed_refs;
 use crate::support::direction::{Direction, use_direction};
@@ -165,59 +165,6 @@ struct ItemData;
 const ITEM_DATA_PHANTOM: PhantomData<ItemData> = PhantomData;
 
 /* -------------------------------------------------------------------------------------------------
- * Collection helpers
- * -----------------------------------------------------------------------------------------------*/
-
-fn collection_at(
-    items: &[CollectionItemValue<ItemData>],
-    index: isize,
-) -> Option<&CollectionItemValue<ItemData>> {
-    if index < 0 {
-        let actual = items.len() as isize + index;
-        if actual >= 0 {
-            items.get(actual as usize)
-        } else {
-            None
-        }
-    } else {
-        items.get(index as usize)
-    }
-}
-
-fn collection_index_of(
-    items: &[CollectionItemValue<ItemData>],
-    element: &web_sys::HtmlElement,
-) -> Option<usize> {
-    items.iter().position(|item| {
-        item.r#ref
-            .get()
-            .is_some_and(|el| *el.deref().unchecked_ref::<web_sys::HtmlElement>() == *element)
-    })
-}
-
-fn collection_from<'a>(
-    items: &'a [CollectionItemValue<ItemData>],
-    element: &web_sys::HtmlElement,
-    direction: isize,
-) -> Option<&'a CollectionItemValue<ItemData>> {
-    let index = collection_index_of(items, element)?;
-    let new_index = index as isize + direction;
-    if new_index >= 0 && (new_index as usize) < items.len() {
-        Some(&items[new_index as usize])
-    } else {
-        None
-    }
-}
-
-fn collection_element(item: &CollectionItemValue<ItemData>) -> Option<web_sys::HtmlInputElement> {
-    item.r#ref.get().map(|el| {
-        el.deref()
-            .unchecked_ref::<web_sys::HtmlInputElement>()
-            .clone()
-    })
-}
-
-/* -------------------------------------------------------------------------------------------------
  * Context
  * -----------------------------------------------------------------------------------------------*/
 
@@ -240,6 +187,75 @@ struct OneTimePasswordFieldContextValue {
     user_action: RwSignal<Option<KeyboardActionDetails>>,
     sanitize_value: StoredValue<SendWrapper<Box<dyn Fn(String) -> Vec<String>>>>,
     hidden_input_ref: AnyNodeRef,
+    root_ref: AnyNodeRef,
+    /// Auto-incrementing counter for assigning sequential indices to inputs.
+    /// Each `OneTimePasswordFieldInput` reads and increments this during creation.
+    /// The final value equals the total number of inputs.
+    index_counter: StoredValue<std::sync::atomic::AtomicUsize>,
+    /// Total number of input slots, set after all inputs have been created.
+    input_count: RwSignal<usize>,
+}
+
+/* -------------------------------------------------------------------------------------------------
+ * DOM-based input query helpers
+ *
+ * The generic Collection infrastructure uses `provide_context`/`expect_context` keyed by type.
+ * When multiple OTP components exist on the same page, all `CollectionItemSlot` instances
+ * resolve to the LAST provider, making the collection unusable for per-instance item tracking.
+ *
+ * Instead, we query the DOM directly for `[data-radix-otp-input]` elements within the root.
+ * This is scoped correctly because each OTP root contains only its own inputs.
+ * -----------------------------------------------------------------------------------------------*/
+
+fn query_otp_inputs(root_ref: AnyNodeRef) -> Vec<web_sys::HtmlInputElement> {
+    root_ref
+        .get_untracked()
+        .map(|node| {
+            let element: &web_sys::Element = node.deref().unchecked_ref();
+            let list = element
+                .query_selector_all("[data-radix-otp-input]")
+                .expect("querySelectorAll should succeed");
+            let mut inputs = Vec::with_capacity(list.length() as usize);
+            for i in 0..list.length() {
+                if let Some(el) = list.item(i) {
+                    inputs.push(el.unchecked_into::<web_sys::HtmlInputElement>());
+                }
+            }
+            inputs
+        })
+        .unwrap_or_default()
+}
+
+fn otp_input_at(
+    inputs: &[web_sys::HtmlInputElement],
+    index: isize,
+) -> Option<&web_sys::HtmlInputElement> {
+    if index < 0 {
+        let actual = inputs.len() as isize + index;
+        if actual >= 0 {
+            inputs.get(actual as usize)
+        } else {
+            None
+        }
+    } else {
+        inputs.get(index as usize)
+    }
+}
+
+fn otp_input_from<'a>(
+    inputs: &'a [web_sys::HtmlInputElement],
+    element: &web_sys::HtmlElement,
+    direction: isize,
+) -> Option<&'a web_sys::HtmlInputElement> {
+    let index = inputs
+        .iter()
+        .position(|input| *input.unchecked_ref::<web_sys::HtmlElement>() == *element)?;
+    let new_index = index as isize + direction;
+    if new_index >= 0 && (new_index as usize) < inputs.len() {
+        Some(&inputs[new_index as usize])
+    } else {
+        None
+    }
 }
 
 /* -------------------------------------------------------------------------------------------------
@@ -260,10 +276,18 @@ fn focus_input(element: Option<&web_sys::HtmlInputElement>) {
         .and_then(|doc| doc.active_element())
         && active == *element.unchecked_ref::<web_sys::Element>()
     {
-        // Already focused — select in next frame
+        // Already focused — select in next frame.
+        // Guard: only call .select() if the element is still focused,
+        // since focus may have moved (e.g., Tab was pressed before the rAF fires).
         let el = element.clone();
         let cb = web_sys::wasm_bindgen::closure::Closure::once_into_js(move || {
-            el.select();
+            if let Some(active) = el
+                .owner_document()
+                .and_then(|doc| doc.active_element())
+                && active == *el.unchecked_ref::<web_sys::Element>()
+            {
+                el.select();
+            }
         });
         let _ = web_sys::window()
             .expect("Window should exist")
@@ -277,8 +301,25 @@ fn focus_input(element: Option<&web_sys::HtmlInputElement>) {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::support::collection::CollectionItemValue;
 
-    // ── Helper to build a collection of N items ─────────────
+    // ── Collection helpers ─────────────────────────────────
+
+    fn collection_at(
+        items: &[CollectionItemValue<ItemData>],
+        index: isize,
+    ) -> Option<&CollectionItemValue<ItemData>> {
+        if index < 0 {
+            let actual = items.len() as isize + index;
+            if actual >= 0 {
+                items.get(actual as usize)
+            } else {
+                None
+            }
+        } else {
+            items.get(index as usize)
+        }
+    }
 
     fn make_items(n: usize) -> Vec<CollectionItemValue<ItemData>> {
         let owner = Owner::new();

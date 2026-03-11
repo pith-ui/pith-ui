@@ -1,6 +1,5 @@
 use crate::support::aria_hidden::{hide_others, unhide_others};
 use crate::support::compose_refs::use_composed_refs;
-use crate::support::use_internal_styles::use_internal_styles;
 use crate::support::dismissable_layer::DismissableLayer;
 use crate::support::focus_guards::use_focus_guards;
 use crate::support::focus_scope::FocusScope;
@@ -14,6 +13,7 @@ use crate::support::presence::Presence;
 use crate::support::primitive::{Primitive, compose_callbacks, open_closed_state, prop_or_default};
 use crate::support::scroll_lock::use_body_scroll_lock;
 use crate::support::use_controllable_state::{UseControllableStateParams, use_controllable_state};
+use crate::support::use_internal_styles::use_internal_styles;
 use leptos::{
     attribute_interceptor::AttributeInterceptor, context::Provider, ev, html, prelude::*,
 };

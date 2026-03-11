@@ -45,58 +45,11 @@ pub fn NavigationMenuContent(
     // inline before the viewport Effect fires.
     let has_viewport = Signal::derive(move || context.has_viewport_component.get());
 
-    // Capture user attributes (e.g., data-testid, class) from a hidden span so they can be
-    // forwarded to the viewport rendering path. In React, these are spread via {...contentProps};
-    // in Leptos, user attrs from add_any_attr bypass child components and land on the first DOM
-    // element, which we use as a capture target.
-    let attr_capture_ref = AnyNodeRef::new();
+    // Capture user attributes (e.g., data-testid, class) via AttributeInterceptor so they can
+    // be forwarded to the viewport rendering path (extra_attrs). AttributeInterceptor intercepts
+    // attrs at the type-composition level — BEFORE any DOM element is created — eliminating
+    // timing issues with the old hidden-span approach.
     let captured_attrs: StoredValue<Vec<(String, String)>> = StoredValue::new(vec![]);
-
-    Effect::new(move |_| {
-        if let Some(el) = attr_capture_ref.get() {
-            let el: web_sys::Element = el.unchecked_into();
-            let attrs = el.attributes();
-            let mut user_attrs = vec![];
-            for i in 0..attrs.length() {
-                if let Some(attr) = attrs.item(i) {
-                    let name = attr.name();
-                    // Skip the hidden span's own structural attributes
-                    if matches!(name.as_str(), "hidden" | "aria-hidden") {
-                        continue;
-                    }
-                    if name == "style" {
-                        // The span has its own style="display:none". Extract only
-                        // the user-contributed style properties (e.g., grid-template-columns,
-                        // width) by stripping the span's "display: none".
-                        let value = attr.value();
-                        let user_style: String = value
-                            .split(';')
-                            .map(|s| s.trim())
-                            .filter(|prop| {
-                                if prop.is_empty() {
-                                    return false;
-                                }
-                                let normalized = prop.to_lowercase().replace(' ', "");
-                                normalized != "display:none"
-                            })
-                            .collect::<Vec<_>>()
-                            .join("; ");
-                        if !user_style.is_empty() {
-                            user_attrs.push(("style".to_string(), user_style));
-                        }
-                        continue;
-                    }
-                    user_attrs.push((name, attr.value()));
-                }
-            }
-            // Remove captured attrs from the span to prevent DOM query conflicts
-            // (e.g., findByTestId finding the hidden span instead of the actual content)
-            for (name, _) in &user_attrs {
-                el.remove_attribute(name).ok();
-            }
-            captured_attrs.set_value(user_attrs);
-        }
-    });
 
     Effect::new(move |_| {
         if has_viewport.get() {
@@ -144,49 +97,49 @@ pub fn NavigationMenuContent(
     let presence_ref = AnyNodeRef::new();
 
     view! {
-        // Hidden span captures user attrs (e.g., data-testid) via add_any_attr propagation.
-        // Being the first DOM element in the view, it receives attrs that would otherwise be
-        // lost when the inline Presence is not present (viewport mode).
-        <span node_ref=attr_capture_ref hidden=true aria-hidden="true" style="display:none" />
-        <Presence present=present node_ref=presence_ref>
-            <NavigationMenuContentImpl
-                value=item_value.get_value()
-                trigger_ref=trigger_ref
-                focus_proxy_ref=focus_proxy_ref
-                was_escape_close_ref=was_escape_close_ref
-                on_content_focus_outside=on_content_focus_outside
-                on_root_content_close=on_root_content_close
-                as_child=as_child
-                node_ref=composed_refs
-                presence_ref=presence_ref
-                on_pointer_enter=Callback::new(compose_callbacks(
-                    on_pointer_enter,
-                    Some(Callback::new(move |_: ev::PointerEvent| {
-                        context.on_content_enter.run(());
-                    })),
-                    None,
-                ))
-                on_pointer_leave=Callback::new(compose_callbacks(
-                    on_pointer_leave,
-                    Some(Callback::new(move |event: ev::PointerEvent| {
-                        if event.pointer_type() == "mouse" {
-                            context.on_content_leave.run(());
-                        }
-                    })),
-                    None,
-                ))
-                on_escape_key_down=on_escape_key_down.unwrap_or(Callback::new(|_| {}))
-                on_focus_outside=on_focus_outside.unwrap_or(Callback::new(|_| {}))
-                on_pointer_down_outside=on_pointer_down_outside.unwrap_or(Callback::new(|_| {}))
-                on_interact_outside=on_interact_outside.unwrap_or(Callback::new(|_| {}))
-                attr:data-state=move || get_open_state(open.get())
-                style:pointer-events=move || {
-                    if !open.get() && context.is_root_menu { Some("none") } else { None }
-                }
-            >
-                {children.with_value(|children| children.as_ref().map(|children| children()))}
-            </NavigationMenuContentImpl>
-        </Presence>
+        <AttributeInterceptor let:attrs>
+            // Extract user attrs for viewport forwarding, then pass through to inline Presence.
+            {captured_attrs.set_value(extract_attrs(attrs.clone()))}
+            <Presence present=present node_ref={presence_ref} {..attrs}>
+                <NavigationMenuContentImpl
+                    value=item_value.get_value()
+                    trigger_ref=trigger_ref
+                    focus_proxy_ref=focus_proxy_ref
+                    was_escape_close_ref=was_escape_close_ref
+                    on_content_focus_outside=on_content_focus_outside
+                    on_root_content_close=on_root_content_close
+                    as_child=as_child
+                    node_ref=composed_refs
+                    presence_ref=presence_ref
+                    on_pointer_enter=Callback::new(compose_callbacks(
+                        on_pointer_enter,
+                        Some(Callback::new(move |_: ev::PointerEvent| {
+                            context.on_content_enter.run(());
+                        })),
+                        None,
+                    ))
+                    on_pointer_leave=Callback::new(compose_callbacks(
+                        on_pointer_leave,
+                        Some(Callback::new(move |event: ev::PointerEvent| {
+                            if event.pointer_type() == "mouse" {
+                                context.on_content_leave.run(());
+                            }
+                        })),
+                        None,
+                    ))
+                    on_escape_key_down=on_escape_key_down.unwrap_or(Callback::new(|_| {}))
+                    on_focus_outside=on_focus_outside.unwrap_or(Callback::new(|_| {}))
+                    on_pointer_down_outside=on_pointer_down_outside.unwrap_or(Callback::new(|_| {}))
+                    on_interact_outside=on_interact_outside.unwrap_or(Callback::new(|_| {}))
+                    attr:data-state=move || get_open_state(open.get())
+                    style:pointer-events=move || {
+                        if !open.get() && context.is_root_menu { Some("none") } else { None }
+                    }
+                >
+                    {children.with_value(|children| children.as_ref().map(|children| children()))}
+                </NavigationMenuContentImpl>
+            </Presence>
+        </AttributeInterceptor>
     }
 }
 

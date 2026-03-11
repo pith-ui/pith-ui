@@ -154,17 +154,35 @@ fn SelectContentImpl(
     let content_ref = AnyNodeRef::new();
     let viewport_ref = AnyNodeRef::new();
     let composed_refs = use_composed_refs(vec![node_ref, content_ref]);
-    let popper_styled_refs = use_internal_styles(composed_refs, &[
-        ("display", "flex"),
-        ("flex-direction", "column"),
-        ("outline", "none"),
-        ("box-sizing", "border-box"),
-        ("--radix-select-content-transform-origin", "var(--radix-popper-transform-origin)"),
-        ("--radix-select-content-available-width", "var(--radix-popper-available-width)"),
-        ("--radix-select-content-available-height", "var(--radix-popper-available-height)"),
-        ("--radix-select-trigger-width", "var(--radix-popper-anchor-width)"),
-        ("--radix-select-trigger-height", "var(--radix-popper-anchor-height)"),
-    ]);
+    let popper_styled_refs = use_internal_styles(
+        composed_refs,
+        &[
+            ("display", "flex"),
+            ("flex-direction", "column"),
+            ("outline", "none"),
+            ("box-sizing", "border-box"),
+            (
+                "--radix-select-content-transform-origin",
+                "var(--radix-popper-transform-origin)",
+            ),
+            (
+                "--radix-select-content-available-width",
+                "var(--radix-popper-available-width)",
+            ),
+            (
+                "--radix-select-content-available-height",
+                "var(--radix-popper-available-height)",
+            ),
+            (
+                "--radix-select-trigger-width",
+                "var(--radix-popper-anchor-width)",
+            ),
+            (
+                "--radix-select-trigger-height",
+                "var(--radix-popper-anchor-height)",
+            ),
+        ],
+    );
 
     let _get_items = StoredValue::new(use_collection::<SelectItemData>());
     let (is_positioned, set_is_positioned) = signal(false);
@@ -320,14 +338,10 @@ fn SelectContentImpl(
             context.on_open_change.run(false);
         }));
         let window = web_sys::window().expect("Window should exist.");
-        let _ = window.add_event_listener_with_callback(
-            "blur",
-            close_blur.as_ref().unchecked_ref(),
-        );
-        let _ = window.add_event_listener_with_callback(
-            "resize",
-            close_resize.as_ref().unchecked_ref(),
-        );
+        let _ =
+            window.add_event_listener_with_callback("blur", close_blur.as_ref().unchecked_ref());
+        let _ = window
+            .add_event_listener_with_callback("resize", close_resize.as_ref().unchecked_ref());
 
         on_cleanup(move || {
             if let Some(win) = web_sys::window() {

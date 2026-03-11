@@ -1539,8 +1539,8 @@
     "id": "hover-card-msc-bug-1",
     "component": "hover-card",
     "principle": "Make State Controllable",
-    "description": "Leptos HoverCard controlled mode: on_open_change callback does not fire when hovering over the trigger. The controlled hover card can be opened/closed via external state (open prop), but hovering the trigger does not invoke on_open_change. This means consumers using controlled mode cannot receive hover events. React reference correctly fires onOpenChange on hover. E2E test: hover-card.cy.js \"on_open_change callback fires on hover\".",
-    "status": "open",
+    "description": "Root cause: CDP mouse position from previous Cypress tests persisted across page loads, causing the uncontrolled hover card popup (0ms delay) to open on WASM render and overlap the controlled trigger. realHover() sent pointer events to the popup instead of the trigger. Fix: added mouse repositioning in controlled mode beforeEach to prevent stale mouse position from triggering the uncontrolled card.",
+    "status": "complete",
     "blockers": []
   },
   {

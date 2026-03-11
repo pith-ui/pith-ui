@@ -3,8 +3,8 @@ use std::fmt::{Display, Formatter};
 use crate::support::compose_refs::use_composed_refs;
 use crate::support::presence::Presence;
 use crate::support::primitive::{Primitive, compose_callbacks, data_attr, prop_or};
-use crate::support::use_internal_styles::use_internal_styles;
 use crate::support::use_controllable_state::{UseControllableStateParams, use_controllable_state};
+use crate::support::use_internal_styles::use_internal_styles;
 use crate::support::use_previous::use_previous;
 use crate::support::use_size::use_size;
 use leptos::{

@@ -469,13 +469,31 @@ fn PopoverContentImpl(
     let children = StoredValue::new(children);
 
     let context = expect_context::<PopoverContextValue>();
-    let composed_refs = use_internal_styles(node_ref, &[
-        ("--radix-popover-content-transform-origin", "var(--radix-popper-transform-origin)"),
-        ("--radix-popover-content-available-width", "var(--radix-popper-available-width)"),
-        ("--radix-popover-content-available-height", "var(--radix-popper-available-height)"),
-        ("--radix-popover-trigger-width", "var(--radix-popper-anchor-width)"),
-        ("--radix-popover-trigger-height", "var(--radix-popper-anchor-height)"),
-    ]);
+    let composed_refs = use_internal_styles(
+        node_ref,
+        &[
+            (
+                "--radix-popover-content-transform-origin",
+                "var(--radix-popper-transform-origin)",
+            ),
+            (
+                "--radix-popover-content-available-width",
+                "var(--radix-popper-available-width)",
+            ),
+            (
+                "--radix-popover-content-available-height",
+                "var(--radix-popper-available-height)",
+            ),
+            (
+                "--radix-popover-trigger-width",
+                "var(--radix-popper-anchor-width)",
+            ),
+            (
+                "--radix-popover-trigger-height",
+                "var(--radix-popper-anchor-height)",
+            ),
+        ],
+    );
 
     // Make sure the whole tree has focus guards as our `Popover` may be
     // the last element in the DOM (because of the `Portal`)
