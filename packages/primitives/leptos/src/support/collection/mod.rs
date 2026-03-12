@@ -134,6 +134,21 @@ pub fn CollectionItemSlot<ItemData: Clone + Debug + Send + Sync + 'static>(
     let composed_ref = use_composed_refs(vec![node_ref, item_ref]);
     let context = expect_context::<CollectionContextValue<ItemData>>();
 
+    // Register eagerly so items are available during SSR.
+    // The NodeRef will be empty during SSR, but item metadata and count are correct.
+    // On the client, the effect below re-registers when item_data changes reactively.
+    if let Some(data) = item_data.get_untracked() {
+        context.item_map.update(|item_map| {
+            item_map.insert(
+                id,
+                CollectionItemValue {
+                    r#ref: item_ref,
+                    data,
+                },
+            );
+        });
+    }
+
     Effect::new(move |_| {
         if let Some(item_data) = item_data.get() {
             context.item_map.update(|item_map| {
@@ -174,37 +189,35 @@ pub fn use_collection<ItemData: Clone + Send + Sync + 'static>()
     let context = expect_context::<CollectionContextValue<ItemData>>();
 
     let get_items = move || {
-        if context.collection_ref.get_untracked().is_some() {
-            let mut ordered_items = context
-                .item_map
-                .get_untracked()
-                .into_values()
-                .collect::<Vec<_>>();
+        let mut ordered_items = context
+            .item_map
+            .get_untracked()
+            .into_values()
+            .collect::<Vec<_>>();
 
-            ordered_items.sort_by(|a, b| {
-                match (a.r#ref.get_untracked(), b.r#ref.get_untracked()) {
-                    (Some(el_a), Some(el_b)) => {
-                        let node_a: &web_sys::Node = (*el_a).unchecked_ref();
-                        let node_b: &web_sys::Node = (*el_b).unchecked_ref();
-                        let position = node_a.compare_document_position(node_b);
-                        if position & web_sys::Node::DOCUMENT_POSITION_FOLLOWING != 0 {
-                            std::cmp::Ordering::Less
-                        } else if position & web_sys::Node::DOCUMENT_POSITION_PRECEDING != 0 {
-                            std::cmp::Ordering::Greater
-                        } else {
-                            std::cmp::Ordering::Equal
-                        }
+        // Sort by DOM position. During SSR all refs are None, so the sort is
+        // a no-op and items retain their HashMap iteration order.
+        ordered_items.sort_by(|a, b| {
+            match (a.r#ref.get_untracked(), b.r#ref.get_untracked()) {
+                (Some(el_a), Some(el_b)) => {
+                    let node_a: &web_sys::Node = (*el_a).unchecked_ref();
+                    let node_b: &web_sys::Node = (*el_b).unchecked_ref();
+                    let position = node_a.compare_document_position(node_b);
+                    if position & web_sys::Node::DOCUMENT_POSITION_FOLLOWING != 0 {
+                        std::cmp::Ordering::Less
+                    } else if position & web_sys::Node::DOCUMENT_POSITION_PRECEDING != 0 {
+                        std::cmp::Ordering::Greater
+                    } else {
+                        std::cmp::Ordering::Equal
                     }
-                    (Some(_), None) => std::cmp::Ordering::Less,
-                    (None, Some(_)) => std::cmp::Ordering::Greater,
-                    (None, None) => std::cmp::Ordering::Equal,
                 }
-            });
+                (Some(_), None) => std::cmp::Ordering::Less,
+                (None, Some(_)) => std::cmp::Ordering::Greater,
+                (None, None) => std::cmp::Ordering::Equal,
+            }
+        });
 
-            ordered_items
-        } else {
-            vec![]
-        }
+        ordered_items
     };
 
     SendWrapper::new(Box::new(get_items))
