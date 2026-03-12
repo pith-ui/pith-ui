@@ -2,7 +2,7 @@ use std::marker::PhantomData;
 use std::ops::Deref;
 
 use crate::support::collection::{
-    CollectionItemSlot, CollectionProvider, CollectionSlot,
+    CollectionItemSlot, CollectionItemValue, CollectionProvider, CollectionSlot, use_collection,
 };
 use crate::support::compose_refs::use_composed_refs;
 use crate::support::direction::{Direction, use_direction};
@@ -187,7 +187,7 @@ struct OneTimePasswordFieldContextValue {
     user_action: RwSignal<Option<KeyboardActionDetails>>,
     sanitize_value: StoredValue<SendWrapper<Box<dyn Fn(String) -> Vec<String>>>>,
     hidden_input_ref: AnyNodeRef,
-    root_ref: AnyNodeRef,
+    get_items: StoredValue<SendWrapper<Box<dyn Fn() -> Vec<CollectionItemValue<ItemData>>>>>,
     /// Auto-incrementing counter for assigning sequential indices to inputs.
     /// Each `OneTimePasswordFieldInput` reads and increments this during creation.
     /// The final value equals the total number of inputs.
@@ -196,34 +196,15 @@ struct OneTimePasswordFieldContextValue {
     input_count: RwSignal<usize>,
 }
 
-/* -------------------------------------------------------------------------------------------------
- * DOM-based input query helpers
- *
- * The generic Collection infrastructure uses `provide_context`/`expect_context` keyed by type.
- * When multiple OTP components exist on the same page, all `CollectionItemSlot` instances
- * resolve to the LAST provider, making the collection unusable for per-instance item tracking.
- *
- * Instead, we query the DOM directly for `[data-radix-otp-input]` elements within the root.
- * This is scoped correctly because each OTP root contains only its own inputs.
- * -----------------------------------------------------------------------------------------------*/
-
-fn query_otp_inputs(root_ref: AnyNodeRef) -> Vec<web_sys::HtmlInputElement> {
-    root_ref
-        .get_untracked()
-        .map(|node| {
-            let element: &web_sys::Element = node.deref().unchecked_ref();
-            let list = element
-                .query_selector_all("[data-radix-otp-input]")
-                .expect("querySelectorAll should succeed");
-            let mut inputs = Vec::with_capacity(list.length() as usize);
-            for i in 0..list.length() {
-                if let Some(el) = list.item(i) {
-                    inputs.push(el.unchecked_into::<web_sys::HtmlInputElement>());
-                }
-            }
-            inputs
+fn collection_inputs(items: &[CollectionItemValue<ItemData>]) -> Vec<web_sys::HtmlInputElement> {
+    items
+        .iter()
+        .filter_map(|item| {
+            item.r#ref
+                .get_untracked()
+                .map(|node| node.deref().clone().unchecked_into())
         })
-        .unwrap_or_default()
+        .collect()
 }
 
 fn otp_input_at(
@@ -301,7 +282,6 @@ fn focus_input(element: Option<&web_sys::HtmlInputElement>) {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::support::collection::CollectionItemValue;
 
     // ── Collection helpers ─────────────────────────────────
 

@@ -345,7 +345,7 @@ fn OneTimePasswordFieldInputInner(
             }
             on:keydown=compose_callbacks(on_key_down, Some(Callback::new(move |event: ev::KeyboardEvent| {
                 let index = resolved_index.get_untracked();
-                let inputs = query_otp_inputs(context.root_ref);
+                let inputs = context.get_items.with_value(|g| collection_inputs(&g()));
                 let key = event.key();
                 let window = web_sys::window().expect("Window should exist");
 
@@ -490,7 +490,7 @@ fn OneTimePasswordFieldInputInner(
             on:pointerdown=compose_callbacks(on_pointer_down, Some(Callback::new(move |event: ev::PointerEvent| {
                 event.prevent_default();
                 let last = last_selectable_index.get_untracked();
-                let inputs = query_otp_inputs(context.root_ref);
+                let inputs = context.get_items.with_value(|g| collection_inputs(&g()));
                 let element = otp_input_at(&inputs, last as isize);
                 focus_input(element);
             })), None)

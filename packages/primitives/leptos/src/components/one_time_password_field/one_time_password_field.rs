@@ -159,6 +159,8 @@ fn OneTimePasswordFieldImpl(
 
     let hidden_input_ref = AnyNodeRef::new();
     let root_ref = AnyNodeRef::new();
+    let get_items_fn = use_collection::<ItemData>();
+    let get_items = StoredValue::new(get_items_fn);
     let composed_refs = use_composed_refs(vec![node_ref, root_ref]);
 
     let user_action: RwSignal<Option<KeyboardActionDetails>> = RwSignal::new(None);
@@ -172,7 +174,7 @@ fn OneTimePasswordFieldImpl(
             let input: &web_sys::HtmlInputElement = node.deref().unchecked_ref();
             input.form()
         } else {
-            let inputs = query_otp_inputs(root_ref);
+            let inputs = get_items.with_value(|g| collection_inputs(&g()));
             inputs.first()?.form()
         }
     };
@@ -184,13 +186,9 @@ fn OneTimePasswordFieldImpl(
             }
         })));
 
-    // dispatch function handles all value update actions
-    // Uses DOM queries on root_ref instead of the Collection infrastructure,
-    // because the generic Collection context doesn't scope correctly when
-    // multiple OTP components exist on the same page.
     let dispatch: StoredValue<SendWrapper<Box<dyn Fn(UpdateAction)>>> =
         StoredValue::new(SendWrapper::new(Box::new(move |action: UpdateAction| {
-            let inputs = query_otp_inputs(root_ref);
+            let inputs = get_items.with_value(|g| collection_inputs(&g()));
             let current_value = value_vec.get_untracked();
             let size = inputs.len();
 
@@ -398,7 +396,7 @@ fn OneTimePasswordFieldImpl(
         user_action,
         sanitize_value: sanitize_value_fn,
         hidden_input_ref,
-        root_ref,
+        get_items,
         index_counter: StoredValue::new(std::sync::atomic::AtomicUsize::new(0)),
         input_count,
     };

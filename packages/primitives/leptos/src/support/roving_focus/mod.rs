@@ -3,7 +3,7 @@ use std::marker::PhantomData;
 use std::{fmt::Display, ops::Deref};
 
 use crate::support::collection::{
-    CollectionItemSlot, CollectionProvider, CollectionSlot,
+    CollectionItemSlot, CollectionProvider, CollectionSlot, use_collection,
 };
 use crate::support::compose_refs::use_composed_refs;
 use crate::support::direction::{Direction, use_direction};
@@ -24,7 +24,6 @@ use web_sys::{
 const ENTRY_FOCUS: &str = "rovingFocusGroup.onEntryFocus";
 
 #[derive(Clone, Debug)]
-#[allow(dead_code)]
 struct ItemData {
     id: String,
     focusable: bool,
@@ -76,7 +75,6 @@ struct RovingContextValue {
     on_item_shift_tab: Callback<()>,
     on_focusable_item_add: Callback<()>,
     on_focusable_item_remove: Callback<()>,
-    group_ref: AnyNodeRef,
 }
 
 #[component]
@@ -148,6 +146,7 @@ fn RovingFocusGroupImpl(
     let r#loop = prop_or_default(r#loop);
 
     let group_ref = AnyNodeRef::new();
+    let get_items = StoredValue::new(use_collection::<ItemData>());
     let composed_refs = use_composed_refs(vec![node_ref, group_ref]);
     let direction = use_direction(dir);
     let (current_tab_stop_id, set_current_tab_stop_id) =
@@ -220,7 +219,6 @@ fn RovingFocusGroupImpl(
             let _ = set_focusable_items_count
                 .try_update(|focusable_items_count| *focusable_items_count -= 1);
         }),
-        group_ref,
     };
 
     let public_group_context = RovingFocusGroupContext {
@@ -263,22 +261,28 @@ fn RovingFocusGroupImpl(
                             event.current_target().expect("Event should have current target.").dispatch_event(&entry_focus_event).expect("Entry focus event should be dispatched.");
 
                             if !entry_focus_event.default_prevented() {
-                                let rfg_items = query_rfg_items(group_ref);
-                                let focusable_items: Vec<&RfgItemInfo> = rfg_items.iter().filter(|item| item.focusable).collect();
-                                let active_item = focusable_items.iter().find(|item| item.active);
-                                let current_item = focusable_items.iter().find(|item| {
-                                    current_tab_stop_id.get().is_some_and(|current_id| current_id == item.id)
-                                });
+                                let items = get_items.with_value(|g| g());
+                                let mut candidate_nodes: Vec<web_sys::HtmlElement> = Vec::new();
+                                let mut active_node: Option<web_sys::HtmlElement> = None;
+                                let mut current_node: Option<web_sys::HtmlElement> = None;
 
-                                let mut candidate_nodes: Vec<web_sys::HtmlElement> = focusable_items
-                                    .iter()
-                                    .map(|item| item.element.clone())
-                                    .collect();
-                                if let Some(active_item) = active_item {
-                                    candidate_nodes.insert(0, active_item.element.clone());
+                                for item in items.iter().filter(|item| item.data.focusable) {
+                                    if let Some(node) = item.r#ref.get_untracked() {
+                                        let el: web_sys::HtmlElement = node.deref().clone().unchecked_into();
+                                        if item.data.active {
+                                            active_node = Some(el.clone());
+                                        }
+                                        if current_tab_stop_id.get().is_some_and(|current_id| current_id == item.data.id) {
+                                            current_node = Some(el.clone());
+                                        }
+                                        candidate_nodes.push(el);
+                                    }
                                 }
-                                if let Some(current_item) = current_item {
-                                    candidate_nodes.insert(0, current_item.element.clone());
+                                if let Some(el) = active_node {
+                                    candidate_nodes.insert(0, el);
+                                }
+                                if let Some(el) = current_node {
+                                    candidate_nodes.insert(0, el);
                                 }
                                 focus_first(candidate_nodes, prevent_scroll_on_entry_focus.get());
                             }
@@ -319,6 +323,7 @@ pub fn RovingFocusGroupItem(
     let auto_id = use_id(None);
     let id = Signal::derive(move || tab_stop_id.get().unwrap_or(auto_id.get()));
     let context = expect_context::<RovingContextValue>();
+    let get_items = StoredValue::new(use_collection::<ItemData>());
     let is_current_tab_stop = Signal::derive(move || {
         context
             .current_tab_stop_id
@@ -366,10 +371,6 @@ pub fn RovingFocusGroupItem(
                         false => "-1",
                     }
                     attr:data-orientation=move || context.orientation.get().map(|o| o.to_string())
-                    attr:data-radix-rfg-item=""
-                    attr:data-radix-rfg-id=move || id.get()
-                    attr:data-radix-rfg-focusable=move || focusable.get().to_string()
-                    attr:data-radix-rfg-active=move || active.get().to_string()
                     on:mousedown=compose_callbacks(on_mouse_down, Some(Callback::new(move |event: ev::MouseEvent| {
                         // We prevent focusing non-focusable items on `mousedown`.
                         // Even though the item has `tabindex="-1"`, that only means take it out of the tab order.
@@ -425,11 +426,11 @@ pub fn RovingFocusGroupItem(
 
                             event.prevent_default();
 
-                            let rfg_items = query_rfg_items(context.group_ref);
-                            let mut candidate_nodes: Vec<web_sys::HtmlElement> = rfg_items
-                                .into_iter()
-                                .filter(|item| item.focusable)
-                                .map(|item| item.element)
+                            let items = get_items.with_value(|g| g());
+                            let mut candidate_nodes: Vec<web_sys::HtmlElement> = items
+                                .iter()
+                                .filter(|item| item.data.focusable)
+                                .filter_map(|item| item.r#ref.get_untracked().map(|node| node.deref().clone().unchecked_into()))
                                 .collect();
 
                             if focus_intent == FocusIntent::Last {
@@ -463,59 +464,6 @@ pub fn RovingFocusGroupItem(
             </Provider>
         </CollectionItemSlot>
     }
-}
-
-/* -------------------------------------------------------------------------------------------------
- * DOM-based item query helpers
- *
- * The generic Collection infrastructure uses `provide_context`/`expect_context` keyed by type.
- * When multiple RovingFocusGroup instances exist on the same page (e.g. multiple OTP components),
- * all `CollectionItemSlot` instances resolve to the LAST provider, making the collection unusable
- * for per-instance item tracking.
- *
- * Instead, we query the DOM directly for `[data-radix-rfg-item]` elements within the group root.
- * This is scoped correctly because each RFG group element contains only its own items.
- * -----------------------------------------------------------------------------------------------*/
-
-struct RfgItemInfo {
-    element: web_sys::HtmlElement,
-    id: String,
-    focusable: bool,
-    active: bool,
-}
-
-fn query_rfg_items(group_ref: AnyNodeRef) -> Vec<RfgItemInfo> {
-    group_ref
-        .get_untracked()
-        .map(|node| {
-            let element: &web_sys::Element = node.deref().unchecked_ref();
-            let list = element
-                .query_selector_all("[data-radix-rfg-item]")
-                .expect("querySelectorAll should succeed");
-            let mut items = Vec::with_capacity(list.length() as usize);
-            for i in 0..list.length() {
-                if let Some(el) = list.item(i) {
-                    let html_el: web_sys::HtmlElement = el.unchecked_into();
-                    let id = html_el
-                        .get_attribute("data-radix-rfg-id")
-                        .unwrap_or_default();
-                    let focusable = html_el
-                        .get_attribute("data-radix-rfg-focusable")
-                        .is_some_and(|v| v == "true");
-                    let active = html_el
-                        .get_attribute("data-radix-rfg-active")
-                        .is_some_and(|v| v == "true");
-                    items.push(RfgItemInfo {
-                        element: html_el,
-                        id,
-                        focusable,
-                        active,
-                    });
-                }
-            }
-            items
-        })
-        .unwrap_or_default()
 }
 
 fn get_direction_aware_key(key: String, dir: Option<Direction>) -> String {
