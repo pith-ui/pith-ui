@@ -614,11 +614,18 @@ describe('Menu', () => {
         });
     });
 
-    // ── Internal Styles ─────────────────────────────────────
+    // ── Attribute Forwarding (styles) ─────────────────────
 
-    describe('internal styles', () => {
-        it('menu content has outline: none', () => {
-            getMenu().should('have.css', 'outline-style', 'none');
+    describe('attribute forwarding (styles)', () => {
+        it('non-conflicting user styles merge with internal styles', () => {
+            getMenu().should('have.css', 'background-color', 'rgb(255, 99, 71)');
+        });
+
+        it('conflicting user styles override internal styles', () => {
+            // User set outline: 2px solid rgb(255, 0, 0), overriding internal outline: none
+            getMenu()
+                .should('have.css', 'outline-style', 'solid')
+                .and('have.css', 'outline-color', 'rgb(255, 0, 0)');
         });
     });
 });

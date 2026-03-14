@@ -572,24 +572,17 @@ describe('Dropdown Menu', () => {
         });
     });
 
-    describe('internal styles', () => {
-        it('content has --radix-dropdown-menu-content-available-width', () => {
-            openMenu();
-            cy.findByRole('menu').then(($el) => {
-                const value = getComputedStyle($el[0]).getPropertyValue(
-                    '--radix-dropdown-menu-content-available-width'
-                );
-                expect(value.trim()).to.not.be.empty;
-            });
-        });
+    // ── Attribute Forwarding (styles) ─────────────────────
 
-        it('content has --radix-dropdown-menu-content-available-height', () => {
+    describe('attribute forwarding (styles)', () => {
+        it('internal CSS variables are set', () => {
             openMenu();
             cy.findByRole('menu').then(($el) => {
-                const value = getComputedStyle($el[0]).getPropertyValue(
-                    '--radix-dropdown-menu-content-available-height'
-                );
-                expect(value.trim()).to.not.be.empty;
+                const style = getComputedStyle($el[0]);
+                const availW = style.getPropertyValue('--radix-dropdown-menu-content-available-width');
+                const availH = style.getPropertyValue('--radix-dropdown-menu-content-available-height');
+                expect(availW.trim()).to.not.be.empty;
+                expect(availH.trim()).to.not.be.empty;
             });
         });
     });

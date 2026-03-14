@@ -285,32 +285,6 @@ describe('Popover', () => {
         });
     });
 
-    // ── Internal Styles ─────────────────────────────────────
-
-    describe('internal styles', () => {
-        it('content has --radix-popover-content-available-width', () => {
-            cy.findByText('open').click();
-            shouldBeOpen();
-            cy.findByRole('dialog').then(($el) => {
-                const value = getComputedStyle($el[0]).getPropertyValue(
-                    '--radix-popover-content-available-width'
-                );
-                expect(value.trim()).to.not.be.empty;
-            });
-        });
-
-        it('content has --radix-popover-content-available-height', () => {
-            cy.findByText('open').click();
-            shouldBeOpen();
-            cy.findByRole('dialog').then(($el) => {
-                const value = getComputedStyle($el[0]).getPropertyValue(
-                    '--radix-popover-content-available-height'
-                );
-                expect(value.trim()).to.not.be.empty;
-            });
-        });
-    });
-
     // ── Attribute Forwarding & Style Merging ────────────────
 
     describe('attribute forwarding and style merging', () => {
@@ -335,19 +309,27 @@ describe('Popover', () => {
                 .should('have.class', 'popover-close')
                 .and('have.attr', 'data-custom', 'popover-close-custom');
         });
+    });
 
-        it('user style on Content coexists with internal CSS custom properties', () => {
+    // ── Attribute Forwarding (styles) ─────────────────────
+
+    describe('attribute forwarding (styles)', () => {
+        it('internal CSS variables are set', () => {
             cy.findByText('open').click();
             shouldBeOpen();
-            cy.findByRole('dialog')
-                .should('have.css', 'color', 'rgb(255, 0, 0)')
-                .then(($el) => {
-                    const style = getComputedStyle($el[0]);
-                    const availW = style.getPropertyValue('--radix-popover-content-available-width');
-                    const availH = style.getPropertyValue('--radix-popover-content-available-height');
-                    expect(availW.trim()).to.not.be.empty;
-                    expect(availH.trim()).to.not.be.empty;
-                });
+            cy.findByRole('dialog').then(($el) => {
+                const style = getComputedStyle($el[0]);
+                const availW = style.getPropertyValue('--radix-popover-content-available-width');
+                const availH = style.getPropertyValue('--radix-popover-content-available-height');
+                expect(availW.trim()).to.not.be.empty;
+                expect(availH.trim()).to.not.be.empty;
+            });
+        });
+
+        it('non-conflicting user styles merge with internal styles', () => {
+            cy.findByText('open').click();
+            shouldBeOpen();
+            cy.findByRole('dialog').should('have.css', 'color', 'rgb(255, 0, 0)');
         });
     });
 

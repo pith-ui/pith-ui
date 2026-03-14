@@ -20,6 +20,7 @@ pub fn HoverCardPage() -> impl IntoView {
                     attr:class="hover-card-content"
                     side_offset=5.0
                     attr:data-testid="hover-card-content"
+                    attr:style="background: tomato"
                 >
                     <p>"Hover card content"</p>
                     <p>"Supplementary information"</p>

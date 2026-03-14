@@ -308,7 +308,7 @@ export function SelectForcedOpenPage() {
                         <Select.Icon className="select-icon">▼</Select.Icon>
                     </Select.Trigger>
                     <Select.Portal>
-                        <Select.Content className="select-content" data-testid="forced-content" position="popper" sideOffset={4}>
+                        <Select.Content className="select-content" data-testid="forced-content" position="popper" sideOffset={4} style={{background: 'tomato'}}>
                             <Select.Viewport className="select-viewport">
                                 <Select.Item className="select-item" value="apple">
                                     <Select.ItemIndicator className="select-indicator">✓</Select.ItemIndicator>

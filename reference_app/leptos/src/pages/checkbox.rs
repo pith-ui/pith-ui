@@ -64,7 +64,7 @@ pub fn CheckboxPage() -> impl IntoView {
             <CheckboxIndicator
                 attr:class="checkbox-indicator"
                 attr:data-testid="styled-indicator"
-                attr:style="background: tomato"
+                attr:style="background: tomato; pointer-events: auto"
             >
                 "\u{2713}"
             </CheckboxIndicator>

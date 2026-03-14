@@ -24,7 +24,7 @@ export default function MenuPage() {
             <br /><br />
             <Menu.Root open={true} modal={false}>
                 <Menu.Anchor className="menu-anchor">Anchor</Menu.Anchor>
-                <Menu.Content className="menu-content" sideOffset={5}>
+                <Menu.Content className="menu-content" sideOffset={5} style={{background: 'tomato', outline: '2px solid rgb(255, 0, 0)'}}>
                     <Menu.Group>
                         <Menu.Label className="menu-label">Fruits</Menu.Label>
                         <Menu.Item className="menu-item" onSelect={() => setLastAction('Apple')}>

@@ -130,9 +130,9 @@ describe('Select (forced open)', () => {
         });
     });
 
-    // ── Internal Styles ─────────────────────────────────────
+    // ── Attribute Forwarding (styles) ─────────────────────
 
-    describe('internal styles', () => {
+    describe('attribute forwarding (styles)', () => {
         it('SelectValue has pointer-events: none', () => {
             // The SelectValue span is inside the trigger
             cy.get('[data-testid="forced-trigger"]')
@@ -141,16 +141,13 @@ describe('Select (forced open)', () => {
                 .should('have.css', 'pointer-events', 'none');
         });
 
-        it('SelectContent (popper) has display: flex and flex-direction: column', () => {
+        it('SelectContent (popper) has internal layout styles', () => {
             cy.get('[data-testid="forced-content"]').should('have.css', 'display', 'flex');
             cy.get('[data-testid="forced-content"]').should(
                 'have.css',
                 'flex-direction',
                 'column'
             );
-        });
-
-        it('SelectContent (popper) has outline: none and box-sizing: border-box', () => {
             cy.get('[data-testid="forced-content"]').should(
                 'have.css',
                 'outline-style',
@@ -163,12 +160,21 @@ describe('Select (forced open)', () => {
             );
         });
 
-        it('SelectContent (popper) has --radix-select-content-available-width', () => {
+        it('SelectContent (popper) non-conflicting user styles merge with internal styles', () => {
+            cy.get('[data-testid="forced-content"]').should(
+                'have.css',
+                'background-color',
+                'rgb(255, 99, 71)'
+            );
+        });
+
+        it('SelectContent (popper) internal CSS variables are set alongside user styles', () => {
             cy.get('[data-testid="forced-content"]').then(($el) => {
-                const value = getComputedStyle($el[0]).getPropertyValue(
-                    '--radix-select-content-available-width'
-                );
-                expect(value.trim()).to.not.be.empty;
+                const style = getComputedStyle($el[0]);
+                const availW = style.getPropertyValue('--radix-select-content-available-width');
+                const availH = style.getPropertyValue('--radix-select-content-available-height');
+                expect(availW.trim()).to.not.be.empty;
+                expect(availH.trim()).to.not.be.empty;
             });
         });
 

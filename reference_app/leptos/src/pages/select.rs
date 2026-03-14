@@ -336,7 +336,7 @@ pub fn SelectForcedOpenPage() -> impl IntoView {
                     <SelectIcon attr:class="select-icon">"▼"</SelectIcon>
                 </SelectTrigger>
                 <SelectPortal>
-                    <SelectContent attr:class="select-content" attr:data-testid="forced-content" position="popper" side_offset=4.0>
+                    <SelectContent attr:class="select-content" attr:data-testid="forced-content" position="popper" side_offset=4.0 attr:style="background: tomato">
                         <SelectViewport attr:class="select-viewport">
                             <SelectItem attr:class="select-item" value="apple">
                                 <SelectItemIndicator attr:class="select-indicator">"✓"</SelectItemIndicator>

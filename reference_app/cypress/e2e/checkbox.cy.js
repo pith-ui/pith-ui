@@ -150,22 +150,28 @@ describe('Checkbox', () => {
         });
     });
 
-    // ── 6. Internal Styles ──────────────────────────────────
+    // ── 6. Attribute Forwarding (styles) ─────────────────────
 
-    describe('internal styles', () => {
-        it('indicator has pointer-events: none', () => {
+    describe('attribute forwarding (styles)', () => {
+        it('indicator has pointer-events: none by default', () => {
             cy.findByRole('checkbox', {name: 'accept terms'}).click();
             cy.findByRole('checkbox', {name: 'accept terms'})
                 .find('span')
                 .should('have.css', 'pointer-events', 'none');
         });
 
-        it('user background coexists with internal pointer-events on styled indicator', () => {
+        it('non-conflicting user styles merge with internal styles', () => {
             cy.findByTestId('styled-indicator').should(
                 'have.css',
                 'background-color',
                 'rgb(255, 99, 71)'
             );
+        });
+
+        it('conflicting user styles override internal styles', () => {
+            // styled-indicator has pointer-events: auto set by user,
+            // which should override the internal pointer-events: none
+            cy.findByTestId('styled-indicator').should('have.css', 'pointer-events', 'auto');
         });
 
         it('style attribute on Checkbox root is forwarded to the inner button', () => {
@@ -179,8 +185,7 @@ describe('Checkbox', () => {
         it('style attribute on CheckboxIndicator is forwarded to the inner span', () => {
             cy.get('#style-forwarded-indicator')
                 .should('have.css', 'color', 'rgb(0, 0, 255)')
-                .and('have.css', 'font-size', '24px')
-                .and('have.css', 'pointer-events', 'none');
+                .and('have.css', 'font-size', '24px');
         });
     });
 

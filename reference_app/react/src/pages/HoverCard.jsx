@@ -13,7 +13,7 @@ export default function HoverCardPage() {
                     trigger
                 </HoverCard.Trigger>
                 <HoverCard.Portal>
-                    <HoverCard.Content className="hover-card-content" sideOffset={5} data-testid="hover-card-content">
+                    <HoverCard.Content className="hover-card-content" sideOffset={5} data-testid="hover-card-content" style={{background: 'tomato'}}>
                         <p>Hover card content</p>
                         <p>Supplementary information</p>
                         <HoverCard.Arrow className="hover-card-arrow" width={20} height={10} />

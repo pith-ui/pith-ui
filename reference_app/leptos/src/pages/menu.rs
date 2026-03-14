@@ -32,7 +32,7 @@ pub fn MenuPage() -> impl IntoView {
         <Menu open=true modal=false>
             <MenuAnchor attr:class="menu-anchor">"Anchor"</MenuAnchor>
             <MenuPortal>
-                <MenuContent attr:class="menu-content">
+                <MenuContent attr:class="menu-content" attr:style="background: tomato; outline: 2px solid rgb(255, 0, 0)">
                     <MenuGroup>
                         <MenuLabel attr:class="menu-label">"Fruits"</MenuLabel>
                         <MenuItem

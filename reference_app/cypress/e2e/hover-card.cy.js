@@ -197,29 +197,29 @@ describe('Hover Card', () => {
         });
     });
 
-    // ── Internal Styles ─────────────────────────────────────
+    // ── Attribute Forwarding (styles) ─────────────────────
 
-    describe('internal styles', () => {
-        it('content has --radix-hover-card-content-available-width', () => {
+    describe('attribute forwarding (styles)', () => {
+        it('internal CSS variables are set', () => {
             cy.findByTestId('hover-card-trigger').realHover();
             shouldBeOpen();
             cy.findByTestId('hover-card-content').then(($el) => {
-                const value = getComputedStyle($el[0]).getPropertyValue(
-                    '--radix-hover-card-content-available-width'
-                );
-                expect(value.trim()).to.not.be.empty;
+                const style = getComputedStyle($el[0]);
+                const availW = style.getPropertyValue('--radix-hover-card-content-available-width');
+                const availH = style.getPropertyValue('--radix-hover-card-content-available-height');
+                expect(availW.trim()).to.not.be.empty;
+                expect(availH.trim()).to.not.be.empty;
             });
         });
 
-        it('content has --radix-hover-card-content-available-height', () => {
+        it('non-conflicting user styles merge with internal styles', () => {
             cy.findByTestId('hover-card-trigger').realHover();
             shouldBeOpen();
-            cy.findByTestId('hover-card-content').then(($el) => {
-                const value = getComputedStyle($el[0]).getPropertyValue(
-                    '--radix-hover-card-content-available-height'
-                );
-                expect(value.trim()).to.not.be.empty;
-            });
+            cy.findByTestId('hover-card-content').should(
+                'have.css',
+                'background-color',
+                'rgb(255, 99, 71)'
+            );
         });
     });
 });

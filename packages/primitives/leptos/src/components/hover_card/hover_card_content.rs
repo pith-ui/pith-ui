@@ -311,26 +311,32 @@ fn HoverCardContentImpl(
     let on_dismiss = context.on_dismiss;
 
     let composed_refs = use_internal_styles_effect(composed_refs, move |style| {
-        let _ = style.set_property(
-            "--radix-hover-card-content-transform-origin",
-            "var(--radix-popper-transform-origin)",
-        );
-        let _ = style.set_property(
-            "--radix-hover-card-content-available-width",
-            "var(--radix-popper-available-width)",
-        );
-        let _ = style.set_property(
-            "--radix-hover-card-content-available-height",
-            "var(--radix-popper-available-height)",
-        );
-        let _ = style.set_property(
-            "--radix-hover-card-trigger-width",
-            "var(--radix-popper-anchor-width)",
-        );
-        let _ = style.set_property(
-            "--radix-hover-card-trigger-height",
-            "var(--radix-popper-anchor-height)",
-        );
+        for (name, value) in [
+            (
+                "--radix-hover-card-content-transform-origin",
+                "var(--radix-popper-transform-origin)",
+            ),
+            (
+                "--radix-hover-card-content-available-width",
+                "var(--radix-popper-available-width)",
+            ),
+            (
+                "--radix-hover-card-content-available-height",
+                "var(--radix-popper-available-height)",
+            ),
+            (
+                "--radix-hover-card-trigger-width",
+                "var(--radix-popper-anchor-width)",
+            ),
+            (
+                "--radix-hover-card-trigger-height",
+                "var(--radix-popper-anchor-height)",
+            ),
+        ] {
+            if style.get_property_value(name).unwrap_or_default().is_empty() {
+                let _ = style.set_property(name, value);
+            }
+        }
         if contain_selection.get() {
             let _ = style.set_property("user-select", "text");
             let _ = style.set_property("-webkit-user-select", "text");

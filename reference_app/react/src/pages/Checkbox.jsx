@@ -41,7 +41,7 @@ export default function CheckboxPage() {
                 <Checkbox.Indicator
                     className="checkbox-indicator"
                     data-testid="styled-indicator"
-                    style={{background: 'tomato'}}
+                    style={{background: 'tomato', pointerEvents: 'auto'}}
                 >
                     ✓
                 </Checkbox.Indicator>
