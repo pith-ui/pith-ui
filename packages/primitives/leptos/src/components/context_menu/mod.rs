@@ -1,7 +1,8 @@
 pub use crate::menu::CheckedState;
 use crate::menu::*;
 use crate::support::primitive::{
-    Primitive, compose_callbacks, data_attr, prop_or, prop_or_default, wrap_callback,
+    Primitive, adapt_callback, compose_callbacks, data_attr, prop_or, prop_or_default,
+    wrap_callback,
 };
 use crate::support::use_controllable_state::{UseControllableStateParams, use_controllable_state};
 use leptos::{context::Provider, ev, html, prelude::*};

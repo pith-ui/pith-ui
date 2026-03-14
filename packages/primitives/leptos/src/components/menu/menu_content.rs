@@ -833,16 +833,16 @@ pub(super) fn MenuContentImpl(
                         prevent_scroll_on_entry_focus=true
                     >
                         <PopperContent
-                            side=Signal::derive(move || side.get().unwrap_or(PopperSide::Bottom))
-                            side_offset=Signal::derive(move || side_offset.get().unwrap_or(0.0))
-                            align=Signal::derive(move || align.get().unwrap_or(Align::Center))
-                            align_offset=Signal::derive(move || align_offset.get().unwrap_or(0.0))
-                            avoid_collisions=Signal::derive(move || avoid_collisions.get().unwrap_or(true))
+                            side=prop_or(side, PopperSide::Bottom)
+                            side_offset=prop_or(side_offset, 0.0)
+                            align=prop_or(align, Align::Center)
+                            align_offset=prop_or(align_offset, 0.0)
+                            avoid_collisions=prop_or(avoid_collisions, true)
                             collision_boundary=Signal::derive(move || collision_boundary.get().unwrap_or_else(|| SendWrapper::new(vec![])))
-                            collision_padding=Signal::derive(move || collision_padding.get().unwrap_or(Padding::All(0.0)))
-                            arrow_padding=Signal::derive(move || arrow_padding.get().unwrap_or(0.0))
-                            sticky=Signal::derive(move || sticky.get().unwrap_or(Sticky::Partial))
-                            hide_when_detached=Signal::derive(move || hide_when_detached.get().unwrap_or(false))
+                            collision_padding=prop_or(collision_padding, Padding::All(0.0))
+                            arrow_padding=prop_or(arrow_padding, 0.0)
+                            sticky=prop_or(sticky, Sticky::Partial)
+                            hide_when_detached=prop_or(hide_when_detached, false)
                             dir=Signal::derive(move || Some(root_context.dir.get().to_string()))
                             as_child=as_child
                             node_ref=composed_refs

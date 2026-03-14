@@ -1,6 +1,6 @@
 use crate::support::compose_refs::use_composed_refs;
 use crate::support::id::use_id;
-use crate::support::primitive::{Primitive, VoidPrimitive, compose_callbacks};
+use crate::support::primitive::{Primitive, VoidPrimitive, adapt_callback, compose_callbacks};
 use crate::support::use_controllable_state::{UseControllableStateParams, use_controllable_state};
 use leptos::{
     attribute_interceptor::AttributeInterceptor, context::Provider, ev, html, prelude::*,

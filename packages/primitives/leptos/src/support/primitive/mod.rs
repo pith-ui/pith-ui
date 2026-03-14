@@ -96,6 +96,16 @@ pub fn data_attr(signal: Signal<bool>) -> impl Fn() -> Option<&'static str> + Se
     move || signal.get().then_some("")
 }
 
+pub fn adapt_callback<T: 'static>(cb: Option<Callback<T>>) -> Option<Callback<Option<T>>> {
+    cb.map(|cb| {
+        Callback::new(move |value: Option<T>| {
+            if let Some(value) = value {
+                cb.run(value);
+            }
+        })
+    })
+}
+
 pub fn compose_callbacks<E>(
     original_handler: Option<Callback<E>>,
     our_handler: Option<Callback<E>>,
@@ -172,6 +182,33 @@ mod tests {
             // Should not panic
             wrapped.run(0);
         });
+    }
+
+    // ── adapt_callback ───────────────────────────────────────
+
+    #[test]
+    fn adapt_callback_some_forwards_value() {
+        with_owner(|| {
+            let cb = Callback::new(|v: i32| assert_eq!(v, 42));
+            let adapted = adapt_callback(Some(cb)).unwrap();
+            adapted.run(Some(42));
+        });
+    }
+
+    #[test]
+    fn adapt_callback_some_ignores_none() {
+        with_owner(|| {
+            let cb = Callback::new(|_: i32| panic!("should not be called"));
+            let adapted = adapt_callback(Some(cb)).unwrap();
+            // Should not panic
+            adapted.run(None);
+        });
+    }
+
+    #[test]
+    fn adapt_callback_none_returns_none() {
+        let result: Option<Callback<Option<i32>>> = adapt_callback(None);
+        assert!(result.is_none());
     }
 
     // ── prop_or ─────────────────────────────────────────────

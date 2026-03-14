@@ -11,7 +11,8 @@ use crate::support::compose_refs::use_composed_refs;
 use crate::support::direction::{Direction, use_direction};
 use crate::support::id::use_id;
 use crate::support::primitive::{
-    Primitive, compose_callbacks, data_attr, prop_or, prop_or_default, wrap_callback,
+    Primitive, adapt_callback, compose_callbacks, data_attr, prop_or, prop_or_default,
+    wrap_callback,
 };
 use crate::support::roving_focus::{Orientation, RovingFocusGroup, RovingFocusGroupItem};
 use crate::support::use_controllable_state::{UseControllableStateParams, use_controllable_state};

@@ -2,7 +2,7 @@ use crate::support::compose_refs::use_composed_refs;
 use crate::support::id::use_id;
 use crate::support::presence::use_presence;
 use crate::support::primitive::{
-    Primitive, compose_callbacks, data_attr, open_closed_state, prop_or_default,
+    Primitive, adapt_callback, compose_callbacks, data_attr, open_closed_state, prop_or_default,
 };
 use crate::support::use_controllable_state::{UseControllableStateParams, use_controllable_state};
 use leptos::{
@@ -41,13 +41,7 @@ pub fn Collapsible(
     let (open_signal, set_open) = use_controllable_state(UseControllableStateParams {
         prop: open,
         default_prop: default_open,
-        on_change: on_open_change.map(|on_open_change| {
-            Callback::new(move |value: Option<bool>| {
-                if let Some(value) = value {
-                    on_open_change.run(value);
-                }
-            })
-        }),
+        on_change: adapt_callback(on_open_change),
     });
     let open = Signal::derive(move || open_signal.get().unwrap_or(false));
 

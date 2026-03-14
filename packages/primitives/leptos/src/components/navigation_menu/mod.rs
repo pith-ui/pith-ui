@@ -13,7 +13,7 @@ use crate::support::direction::{Direction, use_direction};
 use crate::support::dismissable_layer::DismissableLayer;
 use crate::support::id::use_id;
 use crate::support::presence::Presence;
-use crate::support::primitive::{Primitive, compose_callbacks, prop_or};
+use crate::support::primitive::{Primitive, adapt_callback, compose_callbacks, open_closed_state, prop_or};
 use crate::support::use_controllable_state::{UseControllableStateParams, use_controllable_state};
 use crate::support::use_previous::use_previous;
 use crate::support::visually_hidden::VisuallyHidden;
@@ -170,10 +170,6 @@ pub struct ContentData {
 /* -------------------------------------------------------------------------------------------------
  * Helper functions
  * -----------------------------------------------------------------------------------------------*/
-
-fn get_open_state(open: bool) -> &'static str {
-    if open { "open" } else { "closed" }
-}
 
 fn compute_motion_attribute(
     values: &[String],
@@ -419,16 +415,16 @@ mod tests {
         items.iter().map(|s| s.to_string()).collect()
     }
 
-    // ── get_open_state ──────────────────────────────────────
+    // ── open_closed_state ──────────────────────────────────────
 
     #[test]
     fn open_state_open() {
-        assert_eq!(get_open_state(true), "open");
+        assert_eq!(open_closed_state(true), "open");
     }
 
     #[test]
     fn open_state_closed() {
-        assert_eq!(get_open_state(false), "closed");
+        assert_eq!(open_closed_state(false), "closed");
     }
 
     // ── make_trigger_id / make_content_id ───────────────────

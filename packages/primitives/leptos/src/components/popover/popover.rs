@@ -19,13 +19,7 @@ pub fn Popover(
     let (open_signal, set_open) = use_controllable_state(UseControllableStateParams {
         prop: open,
         default_prop: default_open,
-        on_change: on_open_change.map(|on_open_change| {
-            Callback::new(move |value: Option<bool>| {
-                if let Some(value) = value {
-                    on_open_change.run(value);
-                }
-            })
-        }),
+        on_change: adapt_callback(on_open_change),
     });
     let open = Signal::derive(move || open_signal.get().unwrap_or(false));
     let modal = prop_or_default(modal);

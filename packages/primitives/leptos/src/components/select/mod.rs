@@ -17,7 +17,7 @@ use crate::support::popper::{
     UpdatePositionStrategy, provide_popper_scope, use_popper_scope,
 };
 use crate::support::portal::ScopedPortal;
-use crate::support::primitive::{Primitive, compose_callbacks, data_attr, prop_or_default};
+use crate::support::primitive::{Primitive, adapt_callback, compose_callbacks, data_attr, prop_or_default};
 use crate::support::use_controllable_state::{UseControllableStateParams, use_controllable_state};
 use crate::support::use_internal_styles::use_internal_styles;
 use leptos::{

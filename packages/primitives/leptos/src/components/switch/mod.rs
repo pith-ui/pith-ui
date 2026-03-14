@@ -1,5 +1,5 @@
 use crate::support::compose_refs::use_composed_refs;
-use crate::support::primitive::{Primitive, compose_callbacks, data_attr, prop_or};
+use crate::support::primitive::{Primitive, adapt_callback, compose_callbacks, data_attr, prop_or};
 use crate::support::use_controllable_state::{UseControllableStateParams, use_controllable_state};
 use crate::support::use_previous::use_previous;
 use crate::support::use_size::use_size;
@@ -58,13 +58,7 @@ pub fn Switch(
     });
     let (checked, set_checked) = use_controllable_state(UseControllableStateParams {
         prop: checked,
-        on_change: on_checked_change.map(|on_checked_change| {
-            Callback::new(move |value: Option<bool>| {
-                if let Some(value) = value {
-                    on_checked_change.run(value);
-                }
-            })
-        }),
+        on_change: adapt_callback(on_checked_change),
         default_prop: default_checked,
     });
     let checked = Signal::derive(move || checked.get().unwrap_or(false));

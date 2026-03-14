@@ -50,13 +50,7 @@ pub fn Toast(
             Some(_) => default_open,
             None => MaybeProp::from(Some(true)),
         },
-        on_change: on_open_change.map(|on_open_change| {
-            Callback::new(move |value: Option<bool>| {
-                if let Some(value) = value {
-                    on_open_change.run(value);
-                }
-            })
-        }),
+        on_change: adapt_callback(on_open_change),
     });
     let is_open = Signal::derive(move || open_signal.get().unwrap_or(true));
 

@@ -8,7 +8,7 @@ use crate::support::collection::{
 use crate::support::compose_refs::use_composed_refs;
 use crate::support::direction::{Direction, use_direction};
 use crate::support::id::use_id;
-use crate::support::primitive::{Primitive, data_attr, open_closed_state, prop_or_default};
+use crate::support::primitive::{Primitive, adapt_callback, data_attr, open_closed_state, prop_or_default};
 use crate::support::use_controllable_state::{UseControllableStateParams, use_controllable_state};
 use crate::support::use_internal_styles::use_internal_styles;
 use leptos::{
@@ -117,13 +117,7 @@ fn create_single_contexts(
     let (value_signal, set_value) = use_controllable_state(UseControllableStateParams {
         prop: value,
         default_prop: default_value,
-        on_change: on_value_change.map(|on_value_change| {
-            Callback::new(move |value: Option<String>| {
-                if let Some(value) = value {
-                    on_value_change.run(value);
-                }
-            })
-        }),
+        on_change: adapt_callback(on_value_change),
     });
 
     // Wrap single value in a Vec for the shared AccordionValue context.
@@ -159,13 +153,7 @@ fn create_multiple_contexts(
     let (value_signal, set_value) = use_controllable_state(UseControllableStateParams {
         prop: value,
         default_prop: default_value,
-        on_change: on_value_change.map(|on_value_change| {
-            Callback::new(move |value: Option<Vec<String>>| {
-                if let Some(value) = value {
-                    on_value_change.run(value);
-                }
-            })
-        }),
+        on_change: adapt_callback(on_value_change),
     });
 
     let value_vec = Signal::derive(move || value_signal.get().unwrap_or_default());

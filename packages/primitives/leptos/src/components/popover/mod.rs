@@ -10,7 +10,9 @@ use crate::support::popper::{
 };
 use crate::support::portal::{ScopedPortal, resolve_force_mount};
 use crate::support::presence::Presence;
-use crate::support::primitive::{Primitive, compose_callbacks, open_closed_state, prop_or_default};
+use crate::support::primitive::{
+    Primitive, adapt_callback, compose_callbacks, open_closed_state, prop_or_default,
+};
 use crate::support::scroll_lock::use_body_scroll_lock;
 use crate::support::use_controllable_state::{UseControllableStateParams, use_controllable_state};
 use crate::support::use_internal_styles::use_internal_styles;

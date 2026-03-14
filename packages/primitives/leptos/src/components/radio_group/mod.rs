@@ -7,7 +7,7 @@ use std::sync::Arc;
 use crate::support::compose_refs::use_composed_refs;
 use crate::support::direction::{Direction, use_direction};
 use crate::support::primitive::{
-    Primitive, compose_callbacks, data_attr, prop_or, prop_or_default,
+    Primitive, adapt_callback, compose_callbacks, data_attr, prop_or, prop_or_default,
 };
 use crate::support::roving_focus::{Orientation, RovingFocusGroup, RovingFocusGroupItem};
 use crate::support::use_controllable_state::{UseControllableStateParams, use_controllable_state};
@@ -66,13 +66,7 @@ pub fn RadioGroup(
     let (current_value, set_value) = use_controllable_state(UseControllableStateParams {
         prop: value,
         default_prop: default_value,
-        on_change: on_value_change.map(|on_value_change| {
-            Callback::new(move |value: Option<String>| {
-                if let Some(value) = value {
-                    on_value_change.run(value);
-                }
-            })
-        }),
+        on_change: adapt_callback(on_value_change),
     });
 
     let value_signal = Signal::derive(move || current_value.get());

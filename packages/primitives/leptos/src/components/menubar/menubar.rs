@@ -22,13 +22,7 @@ pub fn Menubar(
     let (value_state, set_value_state) = use_controllable_state(UseControllableStateParams {
         prop: value,
         default_prop: default_value,
-        on_change: on_value_change.map(|on_value_change| {
-            Callback::new(move |value: Option<String>| {
-                if let Some(value) = value {
-                    on_value_change.run(value);
-                }
-            })
-        }),
+        on_change: adapt_callback(on_value_change),
     });
 
     let value_signal = Signal::derive(move || value_state.get().unwrap_or_default());

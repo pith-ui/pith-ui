@@ -27,13 +27,7 @@ pub fn PasswordToggleField(
     let (visible_signal, set_visible) = use_controllable_state(UseControllableStateParams {
         prop: visible,
         default_prop: MaybeProp::derive(move || Some(default_visible.get().unwrap_or(false))),
-        on_change: on_visibility_change.map(|on_visibility_change| {
-            Callback::new(move |value: Option<bool>| {
-                if let Some(value) = value {
-                    on_visibility_change.run(value);
-                }
-            })
-        }),
+        on_change: adapt_callback(on_visibility_change),
     });
     let visible = Signal::derive(move || visible_signal.get().unwrap_or(false));
 

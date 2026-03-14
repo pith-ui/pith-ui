@@ -31,26 +31,14 @@ pub fn Select(
     let (open_signal, set_open) = use_controllable_state(UseControllableStateParams {
         prop: open,
         default_prop: default_open,
-        on_change: on_open_change.map(|on_open_change| {
-            Callback::new(move |value: Option<bool>| {
-                if let Some(value) = value {
-                    on_open_change.run(value);
-                }
-            })
-        }),
+        on_change: adapt_callback(on_open_change),
     });
     let open_state = Signal::derive(move || open_signal.get().unwrap_or(false));
 
     let (value_signal, set_value) = use_controllable_state(UseControllableStateParams {
         prop: MaybeProp::derive(move || value.get()),
         default_prop: default_value,
-        on_change: on_value_change.map(|on_value_change| {
-            Callback::new(move |value: Option<String>| {
-                if let Some(value) = value {
-                    on_value_change.run(value);
-                }
-            })
-        }),
+        on_change: adapt_callback(on_value_change),
     });
     let value_state = Signal::derive(move || value_signal.get());
 

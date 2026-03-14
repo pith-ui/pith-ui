@@ -1,4 +1,4 @@
-use crate::support::primitive::{Primitive, compose_callbacks, data_attr, prop_or_default};
+use crate::support::primitive::{Primitive, adapt_callback, compose_callbacks, data_attr, prop_or_default};
 use crate::support::use_controllable_state::{UseControllableStateParams, use_controllable_state};
 use leptos::{attribute_interceptor::AttributeInterceptor, ev, html, prelude::*};
 use leptos_node_ref::AnyNodeRef;
@@ -30,13 +30,7 @@ pub fn Toggle(
 
     let (pressed, set_pressed) = use_controllable_state(UseControllableStateParams {
         prop: pressed,
-        on_change: on_pressed_change.map(|on_pressed_change| {
-            Callback::new(move |value: Option<bool>| {
-                if let Some(value) = value {
-                    on_pressed_change.run(value);
-                }
-            })
-        }),
+        on_change: adapt_callback(on_pressed_change),
         default_prop: default_pressed,
     });
     let pressed = Signal::derive(move || pressed.get().unwrap_or(false));

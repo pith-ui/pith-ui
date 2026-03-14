@@ -131,7 +131,7 @@ pub fn NavigationMenuContent(
                     on_focus_outside=on_focus_outside.unwrap_or(Callback::new(|_| {}))
                     on_pointer_down_outside=on_pointer_down_outside.unwrap_or(Callback::new(|_| {}))
                     on_interact_outside=on_interact_outside.unwrap_or(Callback::new(|_| {}))
-                    attr:data-state=move || get_open_state(open.get())
+                    attr:data-state=move || open_closed_state(open.get())
                     style:pointer-events=move || {
                         if !open.get() && context.is_root_menu { Some("none") } else { None }
                     }

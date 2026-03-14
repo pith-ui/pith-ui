@@ -187,13 +187,7 @@ pub fn NavigationMenuSub(
     let (value_signal, set_value) = use_controllable_state(UseControllableStateParams {
         prop: value,
         default_prop: MaybeProp::derive(move || Some(default_value.get().unwrap_or_default())),
-        on_change: on_value_change.map(|on_value_change| {
-            Callback::new(move |value: Option<String>| {
-                if let Some(value) = value {
-                    on_value_change.run(value);
-                }
-            })
-        }),
+        on_change: adapt_callback(on_value_change),
     });
 
     let current_value = Signal::derive(move || value_signal.get().unwrap_or_default());

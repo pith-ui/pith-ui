@@ -7,7 +7,7 @@ use crate::support::id::use_id;
 use crate::support::portal::{ScopedPortal, resolve_force_mount};
 use crate::support::presence::Presence;
 use crate::support::primitive::{
-    Primitive, compose_callbacks, open_closed_state, prop_or, prop_or_default,
+    Primitive, adapt_callback, compose_callbacks, open_closed_state, prop_or, prop_or_default,
 };
 use crate::support::scroll_lock::use_body_scroll_lock;
 use crate::support::use_controllable_state::{UseControllableStateParams, use_controllable_state};

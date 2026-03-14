@@ -373,13 +373,7 @@ pub fn DropdownMenuSub(
     let (open_state, set_open_state) = use_controllable_state(UseControllableStateParams {
         prop: open,
         default_prop: default_open,
-        on_change: on_open_change.map(|on_open_change| {
-            Callback::new(move |value: Option<bool>| {
-                if let Some(value) = value {
-                    on_open_change.run(value);
-                }
-            })
-        }),
+        on_change: adapt_callback(on_open_change),
     });
 
     let open_signal = Signal::derive(move || open_state.get().unwrap_or(false));

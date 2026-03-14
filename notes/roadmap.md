@@ -1,91 +1,28 @@
 # Refactoring Roadmap: Leptos Primitives
 
-## 1. Extract `wrap_callback` to shared crate
+## 1. ~~Extract `wrap_callback` to shared crate~~ ✅ DONE
 
-**Priority:** 1 | **Effort:** Trivial
+Consolidated into `support::primitive::wrap_callback`. All components import from the shared module.
 
-The identical function is copy-pasted in 5 files (`menu.rs`, `dropdown_menu.rs`, `context_menu.rs`, `menubar.rs`, `alert_dialog.rs`):
+## 2. ~~Extract `get_state(bool)` helper~~ ✅ DONE
 
-```rust
-fn wrap_callback<T: 'static>(cb: Option<Callback<T>>) -> Callback<T> {
-    match cb {
-        Some(cb) => cb,
-        None => Callback::new(|_| {}),
-    }
-}
-```
+Consolidated as `support::primitive::open_closed_state`. Last remaining `get_open_state` in navigation_menu replaced.
 
-**Fix:** Move to `radix_leptos_primitive` and re-export.
+## 3. ~~Simplify `use_controllable_state` callback wrapping~~ ✅ DONE
 
-## 2. Extract `get_state(bool)` helper
+Added `support::primitive::adapt_callback` and migrated all ~22 adapter pattern call sites.
 
-**Priority:** 2 | **Effort:** Trivial
+## 4. `MaybeProp<bool>` → `Signal<bool>` conversion helper — PARTIALLY DONE
 
-5 identical copies across `collapsible.rs`, `dialog.rs`, `accordion.rs`, `hover_card.rs`, `popover.rs` (plus variants named `get_open_state` in tooltip/menu/dropdown-menu):
+`prop_or` and `prop_or_default` helpers exist in `support::primitive` and are used in 11+ components. Popper props in `menu_content.rs` migrated.
 
-```rust
-fn get_state(open: bool) -> &'static str {
-    match open { true => "open", false => "closed" }
-}
-```
+**Remaining:** ~22 inline `Signal::derive(move || x.get().unwrap_or(...))` patterns remain, but most operate on `Signal<Option<T>>` (from `use_controllable_state`), not `MaybeProp<T>`. These can't use the current `prop_or` without making it generic over `Get<Value = Option<T>>`. The remaining compound patterns (e.g., `force_mount.get().unwrap_or(false) || context.open.get()`) can't be simplified with `prop_or`.
 
-**Fix:** Add `pub fn open_closed_state(open: bool) -> &'static str` to `radix_leptos_primitive`.
+**Possible future improvement:** Make `prop_or` generic or redesign `use_controllable_state` to return `Signal<T>` instead of `Signal<Option<T>>`.
 
-## 3. Simplify `use_controllable_state` callback wrapping
+## 5. ~~`data-disabled` attribute helper~~ ✅ DONE
 
-**Priority:** 3 | **Effort:** Small
-
-Every component using `use_controllable_state` with an external callback writes this 6-line adapter (~12 occurrences):
-
-```rust
-on_change: on_open_change.map(|cb| {
-    Callback::new(move |value: Option<bool>| {
-        if let Some(value) = value { cb.run(value); }
-    })
-}),
-```
-
-**Fix:** Add a helper function:
-
-```rust
-pub fn adapt_callback<T: 'static>(cb: Option<Callback<T>>) -> Option<Callback<Option<T>>> {
-    cb.map(|cb| Callback::new(move |v: Option<T>| { if let Some(v) = v { cb.run(v); } }))
-}
-```
-
-Or redesign `use_controllable_state` so `on_change` takes `Callback<T>` directly instead of `Callback<Option<T>>`, pushing the `Option` unwrap inside the hook.
-
-## 4. `MaybeProp<bool>` → `Signal<bool>` conversion helper
-
-**Priority:** 4 | **Effort:** Small
-
-67 occurrences of `Signal::derive(move || prop.get().unwrap_or(default))`.
-
-**Fix:**
-
-```rust
-pub fn prop_or<T: Clone + Send + Sync + 'static>(prop: MaybeProp<T>, default: T) -> Signal<T> {
-    Signal::derive(move || prop.get().unwrap_or(default))
-}
-```
-
-Each call site becomes `let disabled = prop_or(disabled, false);`.
-
-## 5. `data-disabled` attribute helper
-
-**Priority:** 5 | **Effort:** Small
-
-54 occurrences of `attr:data-disabled=move || disabled.get().then_some("")`.
-
-**Fix:**
-
-```rust
-pub fn data_attr(signal: Signal<bool>) -> impl Fn() -> Option<&'static str> {
-    move || signal.get().then_some("")
-}
-```
-
-Call sites become `attr:data-disabled=data_attr(disabled)`.
+`support::primitive::data_attr` exists and is used across all components. No remaining inline patterns.
 
 ## 6. Make context types `pub(crate)`
 
@@ -120,17 +57,18 @@ The "logic shell" / "rendered impl" split is used inconsistently — some compon
 
 ## Summary
 
-| #   | Refactor                                       | Effort       | Impact                                   |
-| --- | ---------------------------------------------- | ------------ | ---------------------------------------- |
-| 1   | Extract `wrap_callback`                        | Trivial      | Removes 5 duplicates                     |
-| 2   | Extract `get_state`/`open_closed_state`        | Trivial      | Removes 8+ duplicates                    |
-| 3   | `adapt_callback` for controllable state        | Small        | Cleans up 12 call sites                  |
-| 4   | `prop_or` helper                               | Small        | Cleans up 67 call sites                  |
-| 5   | `data_attr` helper + pub(crate) contexts       | Small        | Cleans up 54 sites, enables unit testing |
-| 6   | Generic `ScopedPortal`                         | Medium       | Removes ~100 lines of portal boilerplate |
-| 7   | Extract state machines + consistent Impl split | Medium-Large | Major testability win                    |
+| #   | Refactor                                       | Effort       | Status                                  |
+| --- | ---------------------------------------------- | ------------ | --------------------------------------- |
+| 1   | Extract `wrap_callback`                        | Trivial      | ✅ Done                                 |
+| 2   | Extract `get_state`/`open_closed_state`        | Trivial      | ✅ Done                                 |
+| 3   | `adapt_callback` for controllable state        | Small        | ✅ Done (22 sites migrated)             |
+| 4   | `prop_or` helper                               | Small        | Partially done (MaybeProp sites done)   |
+| 5   | `data_attr` helper                             | Small        | ✅ Done                                 |
+| 6   | `pub(crate)` contexts                          | Small        | Not started                             |
+| 7   | Generic `ScopedPortal`                         | Medium       | Not started                             |
+| 8   | Extract state machines + consistent Impl split | Medium-Large | Not started                             |
 
-Items 1–4 are low-risk, mechanical, and could be done in a single PR. Items 5–7 are more architectural and would benefit from incremental rollout.
+Items 1–3, 5 are complete. Item 4 is partially complete. Items 6–8 are more architectural and would benefit from incremental rollout.
 
 ## Notes
 

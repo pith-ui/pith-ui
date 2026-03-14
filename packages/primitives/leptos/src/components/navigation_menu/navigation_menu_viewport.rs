@@ -115,7 +115,7 @@ fn NavigationMenuViewportImpl(
             element=html::div
             as_child=as_child
             node_ref=composed_refs
-            attr:data-state=move || get_open_state(open.get())
+            attr:data-state=move || open_closed_state(open.get())
             attr:data-orientation=move || context.orientation.get().to_string()
             on:pointerenter=move |_: ev::PointerEvent| {
                 context.on_content_enter.run(());
@@ -213,7 +213,7 @@ fn NavigationMenuViewportImpl(
                                 on_focus_outside=data_on_focus_outside.get_value().unwrap_or(Callback::new(|_| {}))
                                 on_pointer_down_outside=data_on_pointer_down_outside.get_value().unwrap_or(Callback::new(|_| {}))
                                 on_interact_outside=data_on_interact_outside.get_value().unwrap_or(Callback::new(|_| {}))
-                                attr:data-state=move || get_open_state(is_active)
+                                attr:data-state=move || open_closed_state(is_active)
                                 style:pointer-events=move || {
                                     if !is_active && context.is_root_menu { Some("none") } else { None }
                                 }

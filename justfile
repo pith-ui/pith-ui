@@ -53,6 +53,18 @@ free_port:
 kill_trunk:
     -pkill -9 trunk
 
+# ── Story Books ──────────────────────────────────────────
+
+# Start up the Leptos Story Book
+[working-directory('stories/leptos')]
+serve_leptos_storybook: kill_trunk
+    trunk serve
+
+# Start up the React Story Book
+[working-directory('reference/react-radix-primitives')]
+serve_react_storybook:
+    pnpm install && pnpm --filter @repo/storybook dev
+
 # ── Start server + test (single command) ─────────────────
 
 # Start React servexr, run all tests, then shut down
@@ -76,6 +88,7 @@ test_leptos_component component: kill_trunk free_port
     pnpm start-server-and-test leptos:dev http://localhost:3000 'cypress run --headless --spec "cypress/e2e/{{ component }}.cy.js"' 2>&1
 
 # Start React server, test multiple components sequentially, then shut down
+
 # Usage: just test_react_components dialog popover hover-card
 [working-directory('reference_app')]
 test_react_components +components: free_port
@@ -84,6 +97,7 @@ test_react_components +components: free_port
     pnpm start-server-and-test react:dev http://localhost:3000 "cypress run --headless --spec \"$specs\"" 2>&1
 
 # Start Leptos server, test multiple components sequentially, then shut down
+
 # Usage: just test_leptos_components dialog popover hover-card
 [working-directory('reference_app')]
 test_leptos_components +components: kill_trunk free_port

@@ -58,7 +58,7 @@ pub fn NavigationMenuTrigger(
                     attr:id=move || trigger_id.get()
                     attr:disabled=move || disabled.get().unwrap_or(false).then_some("")
                     attr:data-disabled=move || disabled.get().unwrap_or(false).then_some("")
-                    attr:data-state=move || get_open_state(open.get())
+                    attr:data-state=move || open_closed_state(open.get())
                     attr:aria-expanded=move || open.get().to_string()
                     attr:aria-controls=move || content_id.get()
                     on:pointerenter=compose_callbacks(
