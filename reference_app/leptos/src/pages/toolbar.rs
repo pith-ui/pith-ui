@@ -9,9 +9,10 @@ pub fn ToolbarPage() -> impl IntoView {
     let (action_output, set_action_output) = signal(String::new());
 
     view! {
-        <Toolbar attr:class="toolbar-root" attr:aria-label="Formatting tools" attr:data-testid="horizontal-toolbar">
+        <Toolbar attr:class="toolbar-root" attr:aria-label="Formatting tools" attr:data-testid="horizontal-toolbar" attr:data-custom="toolbar-root-custom">
             <ToolbarButton
                 attr:class="toolbar-button"
+                attr:data-custom="toolbar-button-custom"
                 on:click=move |_| set_action_output.set("Bold clicked".to_string())
             >
                 "Bold"

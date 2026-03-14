@@ -7,8 +7,8 @@ export default function ToolbarPage() {
 
     return (
         <>
-            <Toolbar.Root className="toolbar-root" aria-label="Formatting tools" data-testid="horizontal-toolbar">
-                <Toolbar.Button className="toolbar-button" onClick={() => setActionOutput('Bold clicked')}>
+            <Toolbar.Root className="toolbar-root" aria-label="Formatting tools" data-testid="horizontal-toolbar" data-custom="toolbar-root-custom">
+                <Toolbar.Button className="toolbar-button" data-custom="toolbar-button-custom" onClick={() => setActionOutput('Bold clicked')}>
                     Bold
                 </Toolbar.Button>
                 <Toolbar.Button className="toolbar-button" onClick={() => setActionOutput('Italic clicked')}>

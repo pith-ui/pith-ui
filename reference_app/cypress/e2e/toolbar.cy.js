@@ -326,6 +326,31 @@ describe('Toolbar', () => {
         });
     });
 
+    // ── 7b. Attribute Forwarding ────────────────────────────
+
+    describe('attribute forwarding', () => {
+        it('Root forwards className/class and custom data attributes', () => {
+            getToolbar()
+                .should('have.class', 'toolbar-root')
+                .and('have.attr', 'data-custom', 'toolbar-root-custom')
+                .and('have.attr', 'role', 'toolbar');
+        });
+
+        it('Button forwards className/class and custom data attributes', () => {
+            getButton('Bold')
+                .should('have.class', 'toolbar-button')
+                .and('have.attr', 'data-custom', 'toolbar-button-custom');
+        });
+
+        it('Root preserves component attributes alongside forwarded attributes', () => {
+            getToolbar()
+                .should('have.attr', 'data-orientation', 'horizontal')
+                .and('have.attr', 'aria-orientation', 'horizontal')
+                .and('have.attr', 'data-custom', 'toolbar-root-custom')
+                .and('have.class', 'toolbar-root');
+        });
+    });
+
     // ── 8. Vertical Orientation ───────────────────────────────
 
     describe('vertical orientation', () => {
