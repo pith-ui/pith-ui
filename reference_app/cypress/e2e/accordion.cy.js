@@ -397,4 +397,35 @@ describe('Accordion', () => {
             cy.findByTestId('controlled-value').should('have.text', 'ctrl-item-2');
         });
     });
+
+    // ── Attribute Forwarding ────────────────────────────────
+
+    describe('attribute forwarding', () => {
+        it('Item forwards className/class and custom data attributes', () => {
+            cy.findByTestId('item-1')
+                .should('have.class', 'accordion-item')
+                .and('have.attr', 'data-custom', 'accordion-item-custom');
+        });
+
+        it('Header forwards className/class and custom data attributes', () => {
+            cy.findByTestId('item-1')
+                .find('[data-custom="accordion-header-custom"]')
+                .should('exist')
+                .and('have.class', 'accordion-header');
+        });
+
+        it('Trigger forwards className/class and custom data attributes', () => {
+            cy.findByRole('button', {name: 'Item 1'})
+                .should('have.class', 'accordion-trigger')
+                .and('have.attr', 'data-custom', 'accordion-trigger-custom');
+        });
+
+        it('Content forwards className/class and custom data attributes when open', () => {
+            cy.findByRole('button', {name: 'Item 1'}).click();
+            cy.findByText('Content 1')
+                .closest('[role="region"]')
+                .should('have.class', 'accordion-content')
+                .and('have.attr', 'data-custom', 'accordion-content-custom');
+        });
+    });
 });

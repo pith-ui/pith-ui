@@ -107,11 +107,11 @@ function ControlledAccordion() {
 function AccordionItems() {
     return (
         <>
-            <Accordion.Item value="item-1" className="accordion-item" data-testid="item-1">
-                <Accordion.Header className="accordion-header">
-                    <Accordion.Trigger className="accordion-trigger">Item 1</Accordion.Trigger>
+            <Accordion.Item value="item-1" className="accordion-item" data-testid="item-1" data-custom="accordion-item-custom">
+                <Accordion.Header className="accordion-header" data-custom="accordion-header-custom">
+                    <Accordion.Trigger className="accordion-trigger" data-custom="accordion-trigger-custom">Item 1</Accordion.Trigger>
                 </Accordion.Header>
-                <Accordion.Content className="accordion-content">Content 1</Accordion.Content>
+                <Accordion.Content className="accordion-content" data-custom="accordion-content-custom">Content 1</Accordion.Content>
             </Accordion.Item>
             <Accordion.Item value="item-2" className="accordion-item" data-testid="item-2" disabled>
                 <Accordion.Header className="accordion-header">

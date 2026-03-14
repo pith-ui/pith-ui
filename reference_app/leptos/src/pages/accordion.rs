@@ -8,11 +8,12 @@ fn AccordionItems() -> impl IntoView {
             value="item-1".to_string()
             attr:class="accordion-item"
             attr:data-testid="item-1"
+            attr:data-custom="accordion-item-custom"
         >
-            <AccordionHeader attr:class="accordion-header">
-                <AccordionTrigger attr:class="accordion-trigger">"Item 1"</AccordionTrigger>
+            <AccordionHeader attr:class="accordion-header" attr:data-custom="accordion-header-custom">
+                <AccordionTrigger attr:class="accordion-trigger" attr:data-custom="accordion-trigger-custom">"Item 1"</AccordionTrigger>
             </AccordionHeader>
-            <AccordionContent attr:class="accordion-content">"Content 1"</AccordionContent>
+            <AccordionContent attr:class="accordion-content" attr:data-custom="accordion-content-custom">"Content 1"</AccordionContent>
         </AccordionItem>
         <AccordionItem
             value="item-2".to_string()
