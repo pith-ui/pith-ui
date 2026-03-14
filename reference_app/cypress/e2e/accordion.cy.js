@@ -276,44 +276,16 @@ describe('Accordion', () => {
         });
     });
 
-    // ── 7. Internal Styles (CSS custom properties) ──────────
+    // ── 7. Attribute Forwarding (styles) ─────────────────────
 
-    describe('internal styles', () => {
+    describe('attribute forwarding (styles)', () => {
         beforeEach(() => {
             // Switch to multiple mode so we can open styled item without closing others
             cy.findByLabelText('multiple').click();
             cy.findByRole('button', {name: 'Styled Item'}).click();
         });
 
-        it('--radix-accordion-content-height matches actual height', () => {
-            cy.findByTestId('styled-content').then(($el) => {
-                const height = $el[0].getBoundingClientRect().height;
-                const cssVar = getComputedStyle($el[0]).getPropertyValue(
-                    '--radix-accordion-content-height'
-                );
-                expect(cssVar.trim()).to.equal(`${height}px`);
-            });
-        });
-
-        it('--radix-accordion-content-width matches actual width', () => {
-            cy.findByTestId('styled-content').then(($el) => {
-                const width = $el[0].getBoundingClientRect().width;
-                const cssVar = getComputedStyle($el[0]).getPropertyValue(
-                    '--radix-accordion-content-width'
-                );
-                expect(cssVar.trim()).to.equal(`${width}px`);
-            });
-        });
-
-        it('user style is preserved alongside internal CSS variables', () => {
-            cy.findByTestId('styled-content').should(
-                'have.css',
-                'background-color',
-                'rgb(255, 99, 71)'
-            );
-        });
-
-        it('internal CSS variables are not clobbered by user style', () => {
+        it('internal CSS variables are set for animation support', () => {
             cy.findByTestId('styled-content').then(($el) => {
                 const heightVar = getComputedStyle($el[0]).getPropertyValue(
                     '--radix-accordion-content-height'
@@ -322,6 +294,30 @@ describe('Accordion', () => {
                     '--radix-accordion-content-width'
                 );
                 expect(heightVar.trim()).to.match(/^\d+(\.\d+)?px$/);
+                expect(widthVar.trim()).to.match(/^\d+(\.\d+)?px$/);
+            });
+        });
+
+        it('non-conflicting user styles merge with internal styles', () => {
+            cy.findByTestId('styled-content').should(
+                'have.css',
+                'background-color',
+                'rgb(255, 99, 71)'
+            );
+        });
+
+        it('conflicting user styles override internal styles while non-conflicting ones merge', () => {
+            cy.findByTestId('styled-content').then(($el) => {
+                const style = getComputedStyle($el[0]);
+
+                // User has set --radix-accordion-content-height to 999px,
+                // which should override the internally computed value
+                const heightVar = style.getPropertyValue('--radix-accordion-content-height');
+                expect(heightVar.trim()).to.equal('999px');
+
+                // --radix-accordion-content-width was NOT set by the user,
+                // so the internal value should still be present
+                const widthVar = style.getPropertyValue('--radix-accordion-content-width');
                 expect(widthVar.trim()).to.match(/^\d+(\.\d+)?px$/);
             });
         });

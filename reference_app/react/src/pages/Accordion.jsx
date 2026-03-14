@@ -132,7 +132,7 @@ function AccordionItems() {
                 <Accordion.Content
                     className="accordion-content"
                     data-testid="styled-content"
-                    style={{background: 'tomato'}}
+                    style={{background: 'tomato', '--radix-accordion-content-height': '999px'}}
                 >
                     Styled content
                 </Accordion.Content>

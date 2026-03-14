@@ -1,4 +1,4 @@
-//! Hooks for applying internal CSS properties that must not be clobbered by user styles.
+//! Hooks for applying internal CSS properties as defaults that yield to user styles.
 //!
 //! # When to use `style:` directives instead
 //!
@@ -28,6 +28,12 @@
 //! This has runtime cost (extra ref + Effect allocation), so prefer `style:`
 //! directives when possible.
 //!
+//! # User style precedence
+//!
+//! Internal styles are treated as defaults. If the user has already set a CSS
+//! property via `attr:style`, the internal value is skipped so the user's value
+//! wins. Non-conflicting properties merge as expected.
+//!
 //! # Summary
 //!
 //! | Target element              | Approach                  |
@@ -40,9 +46,9 @@ use leptos::prelude::*;
 use leptos_node_ref::AnyNodeRef;
 use web_sys::wasm_bindgen::JsCast;
 
-/// Apply static CSS properties via `style.setProperty()` on the DOM node,
-/// avoiding conflicts with user-provided `attr:style` which overwrites
-/// all inline styles via `setAttribute`.
+/// Apply static CSS properties as defaults via `style.setProperty()` on the
+/// DOM node. Properties already set by the user (via `attr:style`) are skipped
+/// so that user styles always win.
 ///
 /// Returns a composed ref that should be passed as `node_ref` to the element.
 pub fn use_internal_styles(
@@ -52,7 +58,10 @@ pub fn use_internal_styles(
     let properties: Vec<(&'static str, &'static str)> = properties.to_vec();
     use_internal_styles_effect(node_ref, move |style| {
         for (name, value) in &properties {
-            let _ = style.set_property(name, value);
+            // Only set if the user hasn't already provided this property.
+            if style.get_property_value(name).unwrap_or_default().is_empty() {
+                let _ = style.set_property(name, value);
+            }
         }
     })
 }
