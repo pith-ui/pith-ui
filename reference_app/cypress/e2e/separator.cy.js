@@ -78,4 +78,28 @@ describe('Separator', () => {
             getDecorative().should('have.attr', 'data-orientation', 'horizontal');
         });
     });
+
+    // ── 3. Attribute Forwarding ─────────────────────────────
+
+    describe('attribute forwarding', () => {
+        it('forwards data-testid to the DOM element', () => {
+            getHorizontal().should('exist');
+        });
+
+        it('forwards className/class to the DOM element', () => {
+            getHorizontal().should('have.class', 'separator-root');
+        });
+
+        it('forwards custom data attributes to the DOM element', () => {
+            getHorizontal().should('have.attr', 'data-custom', 'user-value');
+        });
+
+        it('preserves component attributes alongside forwarded attributes', () => {
+            getHorizontal()
+                .should('have.attr', 'data-orientation', 'horizontal')
+                .and('have.attr', 'role', 'separator')
+                .and('have.class', 'separator-root')
+                .and('have.attr', 'data-custom', 'user-value');
+        });
+    });
 });

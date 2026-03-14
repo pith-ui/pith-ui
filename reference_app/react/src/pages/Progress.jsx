@@ -7,10 +7,11 @@ export default function ProgressPage() {
 
     return (
         <>
-            <Progress.Root className="progress-root" value={value} max={100}>
+            <Progress.Root className="progress-root" value={value} max={100} data-custom="progress-root-custom">
                 <Progress.Indicator
                     className="progress-indicator"
                     data-testid="progress-indicator"
+                    data-custom="progress-indicator-custom"
                     style={{width: value != null ? `${value}%` : undefined}}
                 />
             </Progress.Root>

@@ -16,9 +16,10 @@ pub fn TabsPage() -> impl IntoView {
                 orientation=orientation
                 activation_mode=activation_mode
                 attr:class="tabs-root"
+                attr:data-custom="tabs-root-custom"
             >
-                <TabsList attr:aria-label="tabs example" attr:class="tabs-list">
-                    <TabsTrigger value="tab1".to_string() attr:class="tabs-trigger">
+                <TabsList attr:aria-label="tabs example" attr:class="tabs-list" attr:data-custom="tabs-list-custom">
+                    <TabsTrigger value="tab1".to_string() attr:class="tabs-trigger" attr:data-custom="tabs-trigger-custom">
                         "Tab 1"
                     </TabsTrigger>
                     <TabsTrigger value="tab2".to_string() disabled=true attr:class="tabs-trigger">
@@ -28,7 +29,7 @@ pub fn TabsPage() -> impl IntoView {
                         "Tab 3"
                     </TabsTrigger>
                 </TabsList>
-                <TabsContent value="tab1".to_string() attr:class="tabs-content">
+                <TabsContent value="tab1".to_string() attr:class="tabs-content" attr:data-custom="tabs-content-custom">
                     "Content 1"
                 </TabsContent>
                 <TabsContent value="tab2".to_string() attr:class="tabs-content">

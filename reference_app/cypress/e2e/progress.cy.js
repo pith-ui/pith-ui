@@ -189,4 +189,43 @@ describe('Progress', () => {
             getRoot().should('have.attr', 'aria-valuenow', '100');
         });
     });
+
+    // ── 4. Attribute Forwarding ─────────────────────────────
+
+    describe('attribute forwarding', () => {
+        it('root forwards className/class to the DOM element', () => {
+            getRoot().should('have.class', 'progress-root');
+        });
+
+        it('root forwards custom data attributes to the DOM element', () => {
+            getRoot().should('have.attr', 'data-custom', 'progress-root-custom');
+        });
+
+        it('root preserves component attributes alongside forwarded attributes', () => {
+            getRoot()
+                .should('have.attr', 'role', 'progressbar')
+                .and('have.attr', 'data-state', 'loading')
+                .and('have.class', 'progress-root')
+                .and('have.attr', 'data-custom', 'progress-root-custom');
+        });
+
+        it('indicator forwards data-testid to the DOM element', () => {
+            getIndicator().should('exist');
+        });
+
+        it('indicator forwards className/class to the DOM element', () => {
+            getIndicator().should('have.class', 'progress-indicator');
+        });
+
+        it('indicator forwards custom data attributes to the DOM element', () => {
+            getIndicator().should('have.attr', 'data-custom', 'progress-indicator-custom');
+        });
+
+        it('indicator preserves component attributes alongside forwarded attributes', () => {
+            getIndicator()
+                .should('have.attr', 'data-state', 'loading')
+                .and('have.class', 'progress-indicator')
+                .and('have.attr', 'data-custom', 'progress-indicator-custom');
+        });
+    });
 });

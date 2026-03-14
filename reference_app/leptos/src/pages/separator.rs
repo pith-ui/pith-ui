@@ -9,6 +9,7 @@ pub fn SeparatorPage() -> impl IntoView {
         <Separator
             attr:class="separator-root"
             attr:data-testid="horizontal-separator"
+            attr:data-custom="user-value"
         />
 
         <p>"Content below horizontal separator"</p>

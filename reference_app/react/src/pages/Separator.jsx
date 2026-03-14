@@ -6,7 +6,7 @@ export default function SeparatorPage() {
         <>
             <p>Content above horizontal separator</p>
 
-            <Separator.Root className="separator-root" data-testid="horizontal-separator" />
+            <Separator.Root className="separator-root" data-testid="horizontal-separator" data-custom="user-value" />
 
             <p>Content below horizontal separator</p>
 

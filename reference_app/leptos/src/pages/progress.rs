@@ -8,12 +8,14 @@ pub fn ProgressPage() -> impl IntoView {
     view! {
         <Progress
             attr:class="progress-root"
+            attr:data-custom="progress-root-custom"
             value=value
             max=100.0
         >
             <ProgressIndicator
                 attr:class="progress-indicator"
                 attr:data-testid="progress-indicator"
+                attr:data-custom="progress-indicator-custom"
                 attr:style=move || {
                     value.get().map(|v| format!("width: {}%", v))
                 }

@@ -423,4 +423,37 @@ describe('Tabs', () => {
             cy.findByTestId('controlled-tab-content-1').should('exist');
         });
     });
+
+    // ── 10. Attribute Forwarding ────────────────────────────
+
+    describe('attribute forwarding', () => {
+        it('Root forwards className/class and custom data attributes', () => {
+            cy.findByTestId('uncontrolled-tabs-section')
+                .find('[data-custom="tabs-root-custom"]')
+                .should('exist')
+                .and('have.class', 'tabs-root')
+                .and('have.attr', 'data-orientation', 'horizontal');
+        });
+
+        it('List forwards className/class and custom data attributes', () => {
+            cy.findByRole('tablist')
+                .should('have.class', 'tabs-list')
+                .and('have.attr', 'data-custom', 'tabs-list-custom')
+                .and('have.attr', 'role', 'tablist');
+        });
+
+        it('Trigger forwards className/class and custom data attributes', () => {
+            cy.findByRole('tab', {name: 'Tab 1'})
+                .should('have.class', 'tabs-trigger')
+                .and('have.attr', 'data-custom', 'tabs-trigger-custom')
+                .and('have.attr', 'role', 'tab');
+        });
+
+        it('Content forwards className/class and custom data attributes', () => {
+            cy.findByRole('tabpanel')
+                .should('have.class', 'tabs-content')
+                .and('have.attr', 'data-custom', 'tabs-content-custom')
+                .and('have.attr', 'role', 'tabpanel');
+        });
+    });
 });

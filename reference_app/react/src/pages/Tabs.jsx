@@ -15,9 +15,10 @@ export default function TabsPage() {
                     orientation={orientation}
                     activationMode={activationMode}
                     className="tabs-root"
+                    data-custom="tabs-root-custom"
                 >
-                    <Tabs.List aria-label="tabs example" className="tabs-list">
-                        <Tabs.Trigger value="tab1" className="tabs-trigger">
+                    <Tabs.List aria-label="tabs example" className="tabs-list" data-custom="tabs-list-custom">
+                        <Tabs.Trigger value="tab1" className="tabs-trigger" data-custom="tabs-trigger-custom">
                             Tab 1
                         </Tabs.Trigger>
                         <Tabs.Trigger value="tab2" disabled className="tabs-trigger">
@@ -27,7 +28,7 @@ export default function TabsPage() {
                             Tab 3
                         </Tabs.Trigger>
                     </Tabs.List>
-                    <Tabs.Content value="tab1" className="tabs-content">
+                    <Tabs.Content value="tab1" className="tabs-content" data-custom="tabs-content-custom">
                         Content 1
                     </Tabs.Content>
                     <Tabs.Content value="tab2" className="tabs-content">
