@@ -21,7 +21,7 @@ export default function DropdownMenuPage() {
                     open
                 </DropdownMenu.Trigger>
                 <DropdownMenu.Portal>
-                    <DropdownMenu.Content className="dropdown-content" sideOffset={5}>
+                    <DropdownMenu.Content className="dropdown-content" sideOffset={5} style={{'--radix-dropdown-menu-content-transform-origin': '0px 0px'}}>
                         <DropdownMenu.Label className="dropdown-label">Actions</DropdownMenu.Label>
                         <DropdownMenu.Item
                             className="dropdown-item"

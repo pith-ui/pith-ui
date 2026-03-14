@@ -469,7 +469,7 @@ fn PopoverContentImpl(
     let children = StoredValue::new(children);
 
     let context = expect_context::<PopoverContextValue>();
-    let composed_refs = use_internal_styles(
+    let composed_refs = use_forced_styles(
         node_ref,
         &[
             (

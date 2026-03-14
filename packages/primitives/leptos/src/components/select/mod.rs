@@ -19,7 +19,7 @@ use crate::support::popper::{
 use crate::support::portal::ScopedPortal;
 use crate::support::primitive::{Primitive, adapt_callback, compose_callbacks, data_attr, prop_or_default};
 use crate::support::use_controllable_state::{UseControllableStateParams, use_controllable_state};
-use crate::support::use_internal_styles::use_internal_styles;
+use crate::support::use_internal_styles::{use_forced_styles, use_internal_styles};
 use leptos::{
     attribute_interceptor::AttributeInterceptor, context::Provider, ev, html, prelude::*,
 };

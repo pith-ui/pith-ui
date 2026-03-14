@@ -154,13 +154,20 @@ fn SelectContentImpl(
     let content_ref = AnyNodeRef::new();
     let viewport_ref = AnyNodeRef::new();
     let composed_refs = use_composed_refs(vec![node_ref, content_ref]);
-    let popper_styled_refs = use_internal_styles(
+    // Layout defaults — user styles can override these.
+    let default_styled_refs = use_internal_styles(
         composed_refs,
         &[
             ("display", "flex"),
             ("flex-direction", "column"),
             ("outline", "none"),
             ("box-sizing", "border-box"),
+        ],
+    );
+    // Popper-derived CSS var aliases — must always reflect current state.
+    let popper_styled_refs = use_forced_styles(
+        default_styled_refs,
+        &[
             (
                 "--radix-select-content-transform-origin",
                 "var(--radix-popper-transform-origin)",

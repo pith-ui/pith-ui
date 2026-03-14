@@ -311,6 +311,7 @@ fn HoverCardContentImpl(
     let on_dismiss = context.on_dismiss;
 
     let composed_refs = use_internal_styles_effect(composed_refs, move |style| {
+        // Popper-derived CSS var aliases — always forced (not user-overridable).
         for (name, value) in [
             (
                 "--radix-hover-card-content-transform-origin",
@@ -333,9 +334,7 @@ fn HoverCardContentImpl(
                 "var(--radix-popper-anchor-height)",
             ),
         ] {
-            if style.get_property_value(name).unwrap_or_default().is_empty() {
-                let _ = style.set_property(name, value);
-            }
+            let _ = style.set_property(name, value);
         }
         if contain_selection.get() {
             let _ = style.set_property("user-select", "text");

@@ -20,7 +20,7 @@ pub fn DropdownMenuPage() -> impl IntoView {
                 "open"
             </DropdownMenuTrigger>
             <DropdownMenuPortal>
-                <DropdownMenuContent class="dropdown-content" side_offset=5.0>
+                <DropdownMenuContent class="dropdown-content" side_offset=5.0 attr:style="--radix-dropdown-menu-content-transform-origin: 0px 0px">
                     <DropdownMenuLabel attr:class="dropdown-label">"Actions"</DropdownMenuLabel>
                     <DropdownMenuItem
                         attr:class="dropdown-item"

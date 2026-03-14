@@ -585,5 +585,27 @@ describe('Dropdown Menu', () => {
                 expect(availH.trim()).to.not.be.empty;
             });
         });
+
+        it('popper-derived CSS vars cannot be overridden by user styles', () => {
+            openMenu();
+            cy.findByRole('menu').then(($el) => {
+                const style = getComputedStyle($el[0]);
+
+                // User attempted to set --radix-dropdown-menu-content-transform-origin
+                // to 0px 0px, but the internal alias to var(--radix-popper-transform-origin)
+                // must always win so positioning stays correct
+                const transformOrigin = style.getPropertyValue(
+                    '--radix-dropdown-menu-content-transform-origin'
+                );
+                expect(transformOrigin.trim()).to.not.equal('0px 0px');
+                expect(transformOrigin.trim()).to.not.be.empty;
+
+                // Other internal vars are also unaffected
+                const availW = style.getPropertyValue(
+                    '--radix-dropdown-menu-content-available-width'
+                );
+                expect(availW.trim()).to.not.be.empty;
+            });
+        });
     });
 });

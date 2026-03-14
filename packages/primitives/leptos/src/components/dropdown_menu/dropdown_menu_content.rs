@@ -62,7 +62,7 @@ pub fn DropdownMenuContent(
     let on_pointer_down_outside = wrap_callback(on_pointer_down_outside);
     let on_focus_outside = wrap_callback(on_focus_outside);
 
-    let styled_ref = use_internal_styles(
+    let styled_ref = use_forced_styles(
         node_ref,
         &[
             (
@@ -440,7 +440,7 @@ pub fn DropdownMenuSubContent(
     let on_escape_key_down = wrap_callback(on_escape_key_down);
     let on_focus_outside = wrap_callback(on_focus_outside);
 
-    let styled_ref = use_internal_styles(
+    let styled_ref = use_forced_styles(
         node_ref,
         &[
             (

@@ -10,7 +10,7 @@ use crate::support::primitive::{
     wrap_callback,
 };
 use crate::support::use_controllable_state::{UseControllableStateParams, use_controllable_state};
-use crate::support::use_internal_styles::use_internal_styles;
+use crate::support::use_internal_styles::use_forced_styles;
 use leptos::{context::Provider, ev, html, prelude::*};
 use leptos_node_ref::AnyNodeRef;
 use send_wrapper::SendWrapper;
