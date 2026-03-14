@@ -10,14 +10,15 @@ export default function RadioGroupPage() {
         <>
             <RadioGroup.Root
                 className="radio-group-root"
+                data-custom="radio-group-root-custom"
                 disabled={disabled}
                 aria-label="Favourite pet"
                 value={value}
                 onValueChange={setValue}
             >
                 <label className="radio-group-label">
-                    <RadioGroup.Item className="radio-group-item" value="cat">
-                        <RadioGroup.Indicator className="radio-group-indicator" />
+                    <RadioGroup.Item className="radio-group-item" data-custom="radio-group-item-custom" value="cat">
+                        <RadioGroup.Indicator className="radio-group-indicator" data-custom="radio-group-indicator-custom" />
                     </RadioGroup.Item>
                     Cat
                 </label>

@@ -8,14 +8,15 @@ pub fn RadioGroupPage() -> impl IntoView {
     view! {
         <RadioGroup
             attr:class="radio-group-root"
+            attr:data-custom="radio-group-root-custom"
             disabled=disabled
             attr:aria-label="Favourite pet"
             value=value
             on_value_change=Callback::new(move |v: String| set_value.set(v))
         >
             <label class="radio-group-label">
-                <RadioGroupItem value="cat" attr:class="radio-group-item">
-                    <RadioGroupIndicator attr:class="radio-group-indicator" />
+                <RadioGroupItem value="cat" attr:class="radio-group-item" attr:data-custom="radio-group-item-custom">
+                    <RadioGroupIndicator attr:class="radio-group-indicator" attr:data-custom="radio-group-indicator-custom" />
                 </RadioGroupItem>
                 "Cat"
             </label>

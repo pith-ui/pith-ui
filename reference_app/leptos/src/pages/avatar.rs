@@ -24,9 +24,9 @@ pub fn AvatarPage() -> impl IntoView {
 
         // No image — immediate fallback
         <div class="avatar-container">
-            <Avatar attr:class="avatar-root" attr:data-testid="avatar-no-image">
-                <AvatarImage attr:class="avatar-image" />
-                <AvatarFallback attr:class="avatar-fallback">"NI"</AvatarFallback>
+            <Avatar attr:class="avatar-root" attr:data-testid="avatar-no-image" attr:data-custom="avatar-root-custom">
+                <AvatarImage attr:class="avatar-image" attr:data-custom="avatar-image-custom" />
+                <AvatarFallback attr:class="avatar-fallback" attr:data-custom="avatar-fallback-custom">"NI"</AvatarFallback>
             </Avatar>
             <span>"No image"</span>
         </div>

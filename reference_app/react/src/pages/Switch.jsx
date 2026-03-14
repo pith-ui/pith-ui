@@ -12,6 +12,7 @@ export default function SwitchPage() {
             <label>
                 <Switch.Root
                     className="switch-root"
+                    data-custom="switch-root-custom"
                     disabled={disabled}
                     checked={checked}
                     onCheckedChange={setChecked}
@@ -19,7 +20,7 @@ export default function SwitchPage() {
                     name="airplane"
                     value="on"
                 >
-                    <Switch.Thumb className="switch-thumb" />
+                    <Switch.Thumb className="switch-thumb" data-custom="switch-thumb-custom" />
                 </Switch.Root>{' '}
                 airplane mode
             </label>

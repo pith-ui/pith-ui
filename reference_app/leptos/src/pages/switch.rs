@@ -11,6 +11,7 @@ pub fn SwitchPage() -> impl IntoView {
         <label>
             <Switch
                 attr:class="switch-root"
+                attr:data-custom="switch-root-custom"
                 disabled=disabled
                 checked=checked
                 on_checked_change=Callback::new(move |value: bool| set_checked.set(value))
@@ -18,7 +19,7 @@ pub fn SwitchPage() -> impl IntoView {
                 name="airplane"
                 value="on"
             >
-                <SwitchThumb attr:class="switch-thumb" />
+                <SwitchThumb attr:class="switch-thumb" attr:data-custom="switch-thumb-custom" />
             </Switch>
             " airplane mode"
         </label>

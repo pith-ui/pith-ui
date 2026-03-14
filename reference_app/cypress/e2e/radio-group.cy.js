@@ -255,4 +255,28 @@ describe('Radio Group', () => {
             cy.findByTestId('radio-value').should('have.text', 'cat');
         });
     });
+
+    // ── Attribute Forwarding ────────────────────────────────
+
+    describe('attribute forwarding', () => {
+        it('Root forwards className/class and custom data attributes', () => {
+            cy.findByRole('radiogroup')
+                .should('have.class', 'radio-group-root')
+                .and('have.attr', 'data-custom', 'radio-group-root-custom');
+        });
+
+        it('Item forwards className/class and custom data attributes', () => {
+            cy.findByRole('radio', {name: 'Cat'})
+                .should('have.class', 'radio-group-item')
+                .and('have.attr', 'data-custom', 'radio-group-item-custom');
+        });
+
+        it('Indicator forwards className/class and custom data attributes when checked', () => {
+            cy.findByRole('radio', {name: 'Cat'}).click();
+            cy.findByRole('radio', {name: 'Cat'})
+                .find('[data-custom="radio-group-indicator-custom"]')
+                .should('exist')
+                .and('have.class', 'radio-group-indicator');
+        });
+    });
 });

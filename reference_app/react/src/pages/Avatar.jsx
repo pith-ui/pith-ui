@@ -16,9 +16,9 @@ export default function AvatarPage() {
 
             {/* No image — immediate fallback */}
             <div className="avatar-container">
-                <Avatar.Root className="avatar-root" data-testid="avatar-no-image">
-                    <Avatar.Image className="avatar-image" />
-                    <Avatar.Fallback className="avatar-fallback">NI</Avatar.Fallback>
+                <Avatar.Root className="avatar-root" data-testid="avatar-no-image" data-custom="avatar-root-custom">
+                    <Avatar.Image className="avatar-image" data-custom="avatar-image-custom" />
+                    <Avatar.Fallback className="avatar-fallback" data-custom="avatar-fallback-custom">NI</Avatar.Fallback>
                 </Avatar.Root>
                 <span>No image</span>
             </div>

@@ -115,4 +115,21 @@ describe('Avatar', () => {
             getAvatar('dynamic').should('contain.text', 'DY');
         });
     });
+
+    // ── Attribute Forwarding ────────────────────────────────
+
+    describe('attribute forwarding', () => {
+        it('Root forwards className/class and custom data attributes', () => {
+            getAvatar('no-image')
+                .should('have.class', 'avatar-root')
+                .and('have.attr', 'data-custom', 'avatar-root-custom');
+        });
+
+        it('Fallback forwards className/class and custom data attributes', () => {
+            getAvatar('no-image')
+                .find('[data-custom="avatar-fallback-custom"]')
+                .should('exist')
+                .and('have.class', 'avatar-fallback');
+        });
+    });
 });

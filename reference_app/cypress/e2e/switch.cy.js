@@ -169,4 +169,21 @@ describe('Switch', () => {
             cy.findByLabelText('checked').should('not.be.checked');
         });
     });
+
+    // ── Attribute Forwarding ────────────────────────────────
+
+    describe('attribute forwarding', () => {
+        it('Root forwards className/class and custom data attributes', () => {
+            cy.findByRole('switch', {name: 'airplane mode'})
+                .should('have.class', 'switch-root')
+                .and('have.attr', 'data-custom', 'switch-root-custom');
+        });
+
+        it('Thumb forwards className/class and custom data attributes', () => {
+            cy.findByRole('switch', {name: 'airplane mode'})
+                .find('[data-custom="switch-thumb-custom"]')
+                .should('exist')
+                .and('have.class', 'switch-thumb');
+        });
+    });
 });
