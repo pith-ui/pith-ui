@@ -10,11 +10,11 @@ export default function PopoverPage() {
     return (
         <>
             <Popover.Root modal={modal}>
-                <Popover.Trigger className="popover-trigger">open</Popover.Trigger>
+                <Popover.Trigger className="popover-trigger" data-custom="popover-trigger-custom">open</Popover.Trigger>
                 <Popover.Portal>
-                    <Popover.Content className="popover-content" sideOffset={5}>
+                    <Popover.Content className="popover-content" sideOffset={5} data-custom="popover-content-custom" style={{color: 'rgb(255, 0, 0)'}}>
                         <p>Popover content</p>
-                        <Popover.Close className="popover-close">close</Popover.Close>
+                        <Popover.Close className="popover-close" data-custom="popover-close-custom">close</Popover.Close>
                         <Popover.Arrow className="popover-arrow" width={20} height={10} />
                     </Popover.Content>
                 </Popover.Portal>

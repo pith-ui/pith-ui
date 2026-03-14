@@ -311,6 +311,46 @@ describe('Popover', () => {
         });
     });
 
+    // ── Attribute Forwarding & Style Merging ────────────────
+
+    describe('attribute forwarding and style merging', () => {
+        it('Trigger forwards className and custom data attributes', () => {
+            cy.findByText('open')
+                .should('have.class', 'popover-trigger')
+                .and('have.attr', 'data-custom', 'popover-trigger-custom');
+        });
+
+        it('Content forwards className and custom data attributes', () => {
+            cy.findByText('open').click();
+            shouldBeOpen();
+            cy.findByRole('dialog')
+                .should('have.class', 'popover-content')
+                .and('have.attr', 'data-custom', 'popover-content-custom');
+        });
+
+        it('Close forwards className and custom data attributes', () => {
+            cy.findByText('open').click();
+            shouldBeOpen();
+            cy.findByText('close')
+                .should('have.class', 'popover-close')
+                .and('have.attr', 'data-custom', 'popover-close-custom');
+        });
+
+        it('user style on Content coexists with internal CSS custom properties', () => {
+            cy.findByText('open').click();
+            shouldBeOpen();
+            cy.findByRole('dialog')
+                .should('have.css', 'color', 'rgb(255, 0, 0)')
+                .then(($el) => {
+                    const style = getComputedStyle($el[0]);
+                    const availW = style.getPropertyValue('--radix-popover-content-available-width');
+                    const availH = style.getPropertyValue('--radix-popover-content-available-height');
+                    expect(availW.trim()).to.not.be.empty;
+                    expect(availH.trim()).to.not.be.empty;
+                });
+        });
+    });
+
     // ── 8. Controlled Mode ────────────────────────────────────
 
     describe('controlled mode', () => {

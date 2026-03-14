@@ -9,11 +9,11 @@ pub fn PopoverPage() -> impl IntoView {
 
     view! {
         <Popover modal=modal>
-            <PopoverTrigger attr:class="popover-trigger">"open"</PopoverTrigger>
+            <PopoverTrigger attr:class="popover-trigger" attr:data-custom="popover-trigger-custom">"open"</PopoverTrigger>
             <PopoverPortal>
-                <PopoverContent attr:class="popover-content" side_offset=5.0>
+                <PopoverContent attr:class="popover-content" side_offset=5.0 attr:data-custom="popover-content-custom" attr:style="color: rgb(255, 0, 0)">
                     <p>"Popover content"</p>
-                    <PopoverClose attr:class="popover-close">"close"</PopoverClose>
+                    <PopoverClose attr:class="popover-close" attr:data-custom="popover-close-custom">"close"</PopoverClose>
                     <PopoverArrow attr:class="popover-arrow" width=20.0 height=10.0 />
                 </PopoverContent>
             </PopoverPortal>
