@@ -550,6 +550,28 @@ describe('Dropdown Menu', () => {
         });
     });
 
+    // ── Attribute Forwarding & Style Merging ────────────────
+
+    describe('attribute forwarding and style merging', () => {
+        it('Trigger forwards className and custom data attributes', () => {
+            cy.findByRole('button', {name: 'open'})
+                .should('have.class', 'dropdown-trigger')
+                .and('have.attr', 'data-custom', 'dropdown-trigger-custom');
+        });
+
+        it('Content forwards className via class prop', () => {
+            openMenu();
+            cy.findByRole('menu')
+                .should('have.class', 'dropdown-content');
+        });
+
+        it('content has outline: none from internal styles', () => {
+            openMenu();
+            cy.findByRole('menu')
+                .should('have.css', 'outline-style', 'none');
+        });
+    });
+
     describe('internal styles', () => {
         it('content has --radix-dropdown-menu-content-available-width', () => {
             openMenu();

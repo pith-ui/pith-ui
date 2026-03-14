@@ -15,6 +15,7 @@ export default function DropdownMenuPage() {
             <DropdownMenu.Root>
                 <DropdownMenu.Trigger
                     className="dropdown-trigger"
+                    data-custom="dropdown-trigger-custom"
                     onClick={() => setTriggerClickCount((c) => c + 1)}
                 >
                     open

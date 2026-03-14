@@ -14,12 +14,13 @@ pub fn DropdownMenuPage() -> impl IntoView {
         <DropdownMenu>
             <DropdownMenuTrigger
                 attr:class="dropdown-trigger"
+                attr:data-custom="dropdown-trigger-custom"
                 on:click=move |_| set_trigger_click_count.update(|c| *c += 1)
             >
                 "open"
             </DropdownMenuTrigger>
             <DropdownMenuPortal>
-                <DropdownMenuContent attr:class="dropdown-content" side_offset=5.0>
+                <DropdownMenuContent class="dropdown-content" side_offset=5.0>
                     <DropdownMenuLabel attr:class="dropdown-label">"Actions"</DropdownMenuLabel>
                     <DropdownMenuItem
                         attr:class="dropdown-item"
