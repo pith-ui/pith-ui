@@ -75,13 +75,13 @@ cargo test --all-features --locked --release
 The Leptos storybook uses [Trunk](https://trunkrs.dev/):
 
 ```bash
-cd stories/leptos && trunk serve
+just serve_leptos_storybook
 ```
 
 The React reference storybook (from the upstream Radix Primitives submodule) uses Storybook:
 
 ```bash
-cd reference/react-radix-primitives && pnpm install && pnpm --filter @repo/storybook dev
+just serve_react_storybook
 ```
 
 ### E2E Testing
