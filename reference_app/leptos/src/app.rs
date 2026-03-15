@@ -21,6 +21,7 @@ pub fn App() -> impl IntoView {
                     <Route path=path!("/") view=Index />
                     <Route path=path!("/accessible-icon") view=pages::accessible_icon::AccessibleIconPage />
                     <Route path=path!("/accordion") view=pages::accordion::AccordionPage />
+                    <Route path=path!("/attr-forwarding") view=pages::attr_forwarding::AttrForwardingPage />
                     <Route path=path!("/alert-dialog") view=pages::alert_dialog::AlertDialogPage />
                     <Route path=path!("/aspect-ratio") view=pages::aspect_ratio::AspectRatioPage />
                     <Route path=path!("/avatar") view=pages::avatar::AvatarPage />

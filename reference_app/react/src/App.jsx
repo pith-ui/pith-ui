@@ -1,5 +1,6 @@
 import {Routes, Route, Link} from 'react-router-dom';
 import AccessibleIcon from './pages/AccessibleIcon';
+import AttrForwarding from './pages/AttrForwarding';
 import Accordion from './pages/Accordion';
 import AlertDialog from './pages/AlertDialog';
 import AspectRatio from './pages/AspectRatio';
@@ -148,6 +149,7 @@ export default function App() {
         <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/accessible-icon" element={<AccessibleIcon />} />
+            <Route path="/attr-forwarding" element={<AttrForwarding />} />
             <Route path="/accordion" element={<Accordion />} />
             <Route path="/alert-dialog" element={<AlertDialog />} />
             <Route path="/aspect-ratio" element={<AspectRatio />} />
