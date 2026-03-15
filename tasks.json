@@ -292,7 +292,7 @@
     "component": "dialog",
     "principle": "Own Accessibility Completely",
     "description": "The Leptos implementation does not include dev-time warnings when DialogTitle or DialogDescription are missing. The React reference (dialog.tsx lines 498-548) renders TitleWarning and DescriptionWarning components that console.error/warn when required accessible labels are absent. The Leptos implementation in /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/dialog/dialog_content.rs has no equivalent, meaning consumers can silently create inaccessible dialogs without notice.",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {

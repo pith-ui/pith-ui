@@ -380,6 +380,41 @@ fn DialogContentImpl(
     // the last element in the DOM (because of the `Portal`)
     use_focus_guards();
 
+    // Dev-time warnings for missing accessibility labels (matches React's
+    // TitleWarning / DescriptionWarning in development mode).
+    if cfg!(debug_assertions) {
+        let title_id = context.title_id;
+        let description_id = context.description_id;
+        let content_name = role.get_value().clone();
+
+        Effect::new(move |_| {
+            let tid = title_id.get();
+            if !tid.is_empty() && document().get_element_by_id(&tid).is_none() {
+                web_sys::console::error_1(
+                    &format!(
+                        "`DialogContent` (role=\"{}\") requires a `DialogTitle` for the component \
+                         to be accessible for screen reader users.\n\n\
+                         If you want to hide the `DialogTitle`, you can wrap it with the \
+                         VisuallyHidden component.\n\n\
+                         For more information, see https://radix-ui.com/primitives/docs/components/dialog",
+                        content_name
+                    )
+                    .into(),
+                );
+            }
+        });
+
+        Effect::new(move |_| {
+            let did = description_id.get();
+            if !did.is_empty() && document().get_element_by_id(&did).is_none() {
+                web_sys::console::warn_1(
+                    &"Warning: Missing `Description` or `aria-describedby={undefined}` for DialogContent."
+                        .into(),
+                );
+            }
+        });
+    }
+
     let trapped = prop_or_default(trap_focus);
     let disable_outside = prop_or_default(disable_outside_pointer_events);
 
