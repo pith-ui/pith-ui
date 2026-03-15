@@ -12,8 +12,10 @@ pub fn DropdownMenuPage() -> impl IntoView {
     let (controlled_open, set_controlled_open) = signal(false);
     let (trigger_click_count, set_trigger_click_count) = signal(0i32);
 
-    // NodeRef for controlled content to set data-testid (attr: forwarding doesn't
-    // cascade through deep component chains like DropdownMenuContent → MenuContent → ...).
+    // NodeRef workaround for controlled content: attr: forwarding works on initial
+    // render (default_open) but NOT when content mounts reactively via Show/Presence
+    // (controlled open signal). This is a Leptos limitation where add_any_attr doesn't
+    // cascade through conditional re-renders.
     let controlled_content_ref = AnyNodeRef::new();
     Effect::new(move |_| {
         if let Some(el) = controlled_content_ref.get() {
