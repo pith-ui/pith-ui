@@ -4,9 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Rust port of [Radix UI](https://www.radix-ui.com) — a component library for building accessible UI. Part of the [Rust for Web](https://github.com/RustForWeb) initiative. Implements components across three Rust web frameworks: **Leptos**, **Yew**, and **Dioxus**.
-
-The project targets `wasm32-unknown-unknown` and uses Rust edition 2024.
+Leptos port of [Radix UI](https://www.radix-ui.com) — a component library for building accessible UI.
 
 ## Build & Development Commands
 
@@ -19,15 +17,13 @@ cargo fmt --all
 cargo fmt --all --check       # check only
 
 # Test
-cargo test --all-features --locked --release
+just test_leptos_unit
 
 # Dependency checks
 cargo deny check              # security/license audit
 cargo machete                 # unused dependencies
 cargo sort --workspace --check # manifest ordering
 ```
-
-To run a single package's tests: `cargo test -p <package-name> --all-features --locked --release`
 
 ## Architecture
 
@@ -306,17 +302,17 @@ Both apps must use the **same CSS** for component styling within test pages, so 
 
 **Test commands reference:**
 
-| Command | When to Use |
-|---|---|
-| `just test_react_component <component>` | Test a single component against the React reference app. Use to **validate that a Cypress test is correct** before running against Leptos (per RA Rule 2 step 3). |
-| `just test_leptos_component <component>` | Test a single component against the Leptos app. Use to **verify the Leptos port matches React behavior** (per RA Rule 2 step 5). |
-| `just test_react_components <c1> <c2> ...` | Test multiple components against React in one server session. Use when validating several related Cypress tests at once. |
-| `just test_leptos_components <c1> <c2> ...` | Test multiple components against Leptos in one server session. Use when verifying several Leptos ports at once. |
-| `just test_react` | Run **all** Cypress tests against React. Full regression validation. |
-| `just test_leptos` | Run **all** Cypress tests against Leptos. Full regression validation. |
-| `just test_leptos_unit` | Run cargo unit tests for leptos primitives. Logic-level testing without a browser. |
-| `just test_leptos_wasm` | Run wasm-bindgen tests in headless Chrome. WASM-specific behavior testing. |
-| `just test_leptos_all` | Run unit + wasm + all E2E tests for Leptos. Comprehensive pre-merge validation. |
+| Command                                     | When to Use                                                                                                                                                       |
+| ------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `just test_react_component <component>`     | Test a single component against the React reference app. Use to **validate that a Cypress test is correct** before running against Leptos (per RA Rule 2 step 3). |
+| `just test_leptos_component <component>`    | Test a single component against the Leptos app. Use to **verify the Leptos port matches React behavior** (per RA Rule 2 step 5).                                  |
+| `just test_react_components <c1> <c2> ...`  | Test multiple components against React in one server session. Use when validating several related Cypress tests at once.                                          |
+| `just test_leptos_components <c1> <c2> ...` | Test multiple components against Leptos in one server session. Use when verifying several Leptos ports at once.                                                   |
+| `just test_react`                           | Run **all** Cypress tests against React. Full regression validation.                                                                                              |
+| `just test_leptos`                          | Run **all** Cypress tests against Leptos. Full regression validation.                                                                                             |
+| `just test_leptos_unit`                     | Run cargo unit tests for leptos primitives. Logic-level testing without a browser.                                                                                |
+| `just test_leptos_wasm`                     | Run wasm-bindgen tests in headless Chrome. WASM-specific behavior testing.                                                                                        |
+| `just test_leptos_all`                      | Run unit + wasm + all E2E tests for Leptos. Comprehensive pre-merge validation.                                                                                   |
 
 The `<component>` name uses **hyphens** to match the Cypress spec filename (e.g., `dropdown-menu` for `dropdown-menu.cy.js`).
 
