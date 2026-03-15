@@ -31,7 +31,7 @@ pub fn AccordionItem(
         trigger_id,
         item_value,
     };
-    let item_context_stored = StoredValue::new(item_context.clone());
+    let item_context_stored = StoredValue::new(item_context);
     provide_context(item_context);
 
     let on_open_change = Callback::new(move |open_val: bool| {

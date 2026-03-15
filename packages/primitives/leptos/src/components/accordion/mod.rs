@@ -8,7 +8,9 @@ use crate::support::collection::{
 use crate::support::compose_refs::use_composed_refs;
 use crate::support::direction::{Direction, use_direction};
 use crate::support::id::use_id;
-use crate::support::primitive::{Primitive, adapt_callback, data_attr, open_closed_state, prop_or_default};
+use crate::support::primitive::{
+    Primitive, adapt_callback, data_attr, open_closed_state, prop_or_default,
+};
 use crate::support::use_controllable_state::{UseControllableStateParams, use_controllable_state};
 use crate::support::use_internal_styles::use_internal_styles;
 use leptos::{
@@ -75,31 +77,31 @@ const ITEM_DATA_PHANTOM: PhantomData<ItemData> = PhantomData;
  * Contexts
  * -----------------------------------------------------------------------------------------------*/
 
-#[derive(Clone)]
-struct AccordionValueContextValue {
-    value: Signal<Vec<String>>,
-    on_item_open: Callback<String>,
-    on_item_close: Callback<String>,
+#[derive(Clone, Copy)]
+pub(crate) struct AccordionValueContextValue {
+    pub(crate) value: Signal<Vec<String>>,
+    pub(crate) on_item_open: Callback<String>,
+    pub(crate) on_item_close: Callback<String>,
 }
 
-#[derive(Clone)]
-struct AccordionCollapsibleContextValue {
-    collapsible: Signal<bool>,
+#[derive(Clone, Copy)]
+pub(crate) struct AccordionCollapsibleContextValue {
+    pub(crate) collapsible: Signal<bool>,
 }
 
-#[derive(Clone)]
-struct AccordionImplContextValue {
-    disabled: Signal<bool>,
-    orientation: Signal<Orientation>,
+#[derive(Clone, Copy)]
+pub(crate) struct AccordionImplContextValue {
+    pub(crate) disabled: Signal<bool>,
+    pub(crate) orientation: Signal<Orientation>,
 }
 
-#[derive(Clone)]
-struct AccordionItemContextValue {
-    open: Signal<bool>,
-    disabled: Signal<bool>,
-    trigger_id: ReadSignal<String>,
+#[derive(Clone, Copy)]
+pub(crate) struct AccordionItemContextValue {
+    pub(crate) open: Signal<bool>,
+    pub(crate) disabled: Signal<bool>,
+    pub(crate) trigger_id: ReadSignal<String>,
     #[allow(dead_code)]
-    item_value: StoredValue<String>,
+    pub(crate) item_value: StoredValue<String>,
 }
 
 /* -------------------------------------------------------------------------------------------------
@@ -203,6 +205,21 @@ fn remove_item(values: Vec<String>, item: &str) -> Vec<String> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use any_spawner::Executor;
+
+    struct NoopExecutor;
+
+    impl any_spawner::CustomExecutor for NoopExecutor {
+        fn spawn(&self, _fut: any_spawner::PinnedFuture<()>) {}
+        fn spawn_local(&self, _fut: any_spawner::PinnedLocalFuture<()>) {}
+        fn poll_local(&self) {}
+    }
+
+    fn with_owner<T>(f: impl FnOnce() -> T) -> T {
+        let _ = Executor::init_custom_executor(NoopExecutor);
+        let owner = Owner::new_root(None);
+        owner.with(f)
+    }
 
     // ── single_value_to_vec ─────────────────────────────────
 
@@ -254,5 +271,230 @@ mod tests {
     fn remove_duplicate_items() {
         let result = remove_item(vec!["a".into(), "b".into(), "a".into()], "a");
         assert_eq!(result, vec!["b"]);
+    }
+
+    // ── Single mode state machine ───────────────────────────
+
+    #[test]
+    fn single_open_sets_value() {
+        with_owner(|| {
+            let (ctx, _) = create_single_contexts(
+                MaybeProp::from(None::<String>),
+                MaybeProp::from(None::<String>),
+                None,
+                MaybeProp::from(Some(true)),
+            );
+
+            assert_eq!(ctx.value.get(), Vec::<String>::new());
+
+            ctx.on_item_open.run("item-1".into());
+            assert_eq!(ctx.value.get(), vec!["item-1"]);
+        });
+    }
+
+    #[test]
+    fn single_open_replaces_previous() {
+        with_owner(|| {
+            let (ctx, _) = create_single_contexts(
+                MaybeProp::from(None::<String>),
+                MaybeProp::from(None::<String>),
+                None,
+                MaybeProp::from(Some(true)),
+            );
+
+            ctx.on_item_open.run("item-1".into());
+            ctx.on_item_open.run("item-2".into());
+            assert_eq!(ctx.value.get(), vec!["item-2"]);
+        });
+    }
+
+    #[test]
+    fn single_close_clears_when_collapsible() {
+        with_owner(|| {
+            let (ctx, _) = create_single_contexts(
+                MaybeProp::from(None::<String>),
+                MaybeProp::from(None::<String>),
+                None,
+                MaybeProp::from(Some(true)),
+            );
+
+            ctx.on_item_open.run("item-1".into());
+            ctx.on_item_close.run("item-1".into());
+            assert_eq!(ctx.value.get(), Vec::<String>::new());
+        });
+    }
+
+    #[test]
+    fn single_close_noop_when_not_collapsible() {
+        with_owner(|| {
+            let (ctx, _) = create_single_contexts(
+                MaybeProp::from(None::<String>),
+                MaybeProp::from(None::<String>),
+                None,
+                MaybeProp::from(Some(false)),
+            );
+
+            ctx.on_item_open.run("item-1".into());
+            ctx.on_item_close.run("item-1".into());
+            assert_eq!(ctx.value.get(), vec!["item-1"]);
+        });
+    }
+
+    #[test]
+    fn single_collapsible_defaults_to_false() {
+        with_owner(|| {
+            let (ctx, collapsible_ctx) = create_single_contexts(
+                MaybeProp::from(None::<String>),
+                MaybeProp::from(None::<String>),
+                None,
+                MaybeProp::from(None::<bool>),
+            );
+
+            assert!(!collapsible_ctx.collapsible.get());
+
+            // Close should be a no-op since collapsible defaults to false.
+            ctx.on_item_open.run("item-1".into());
+            ctx.on_item_close.run("item-1".into());
+            assert_eq!(ctx.value.get(), vec!["item-1"]);
+        });
+    }
+
+    #[test]
+    fn single_default_value() {
+        with_owner(|| {
+            let (ctx, _) = create_single_contexts(
+                MaybeProp::from(None::<String>),
+                MaybeProp::from(Some("item-2".to_string())),
+                None,
+                MaybeProp::from(Some(true)),
+            );
+
+            assert_eq!(ctx.value.get(), vec!["item-2"]);
+        });
+    }
+
+    #[test]
+    fn single_on_value_change_fires_in_controlled_mode() {
+        with_owner(|| {
+            let received = StoredValue::new(String::new());
+
+            let on_change = Callback::new(move |v: String| {
+                received.set_value(v);
+            });
+
+            // Use a controlled prop so on_change fires synchronously
+            // (uncontrolled on_change goes through an Effect which doesn't
+            // run under the NoopExecutor).
+            let (ctx, _) = create_single_contexts(
+                MaybeProp::from(Some(String::new())),
+                MaybeProp::from(None::<String>),
+                Some(on_change),
+                MaybeProp::from(Some(true)),
+            );
+
+            ctx.on_item_open.run("item-1".into());
+            assert_eq!(received.get_value(), "item-1");
+        });
+    }
+
+    // ── Multiple mode state machine ─────────────────────────
+
+    #[test]
+    fn multiple_open_appends() {
+        with_owner(|| {
+            let (ctx, _) = create_multiple_contexts(
+                MaybeProp::from(None::<Vec<String>>),
+                MaybeProp::from(None::<Vec<String>>),
+                None,
+            );
+
+            ctx.on_item_open.run("item-1".into());
+            ctx.on_item_open.run("item-2".into());
+            assert_eq!(ctx.value.get(), vec!["item-1", "item-2"]);
+        });
+    }
+
+    #[test]
+    fn multiple_close_removes_one() {
+        with_owner(|| {
+            let (ctx, _) = create_multiple_contexts(
+                MaybeProp::from(None::<Vec<String>>),
+                MaybeProp::from(None::<Vec<String>>),
+                None,
+            );
+
+            ctx.on_item_open.run("item-1".into());
+            ctx.on_item_open.run("item-2".into());
+            ctx.on_item_open.run("item-3".into());
+            ctx.on_item_close.run("item-2".into());
+            assert_eq!(ctx.value.get(), vec!["item-1", "item-3"]);
+        });
+    }
+
+    #[test]
+    fn multiple_close_last_item_empties() {
+        with_owner(|| {
+            let (ctx, _) = create_multiple_contexts(
+                MaybeProp::from(None::<Vec<String>>),
+                MaybeProp::from(None::<Vec<String>>),
+                None,
+            );
+
+            ctx.on_item_open.run("item-1".into());
+            ctx.on_item_close.run("item-1".into());
+            assert_eq!(ctx.value.get(), Vec::<String>::new());
+        });
+    }
+
+    #[test]
+    fn multiple_always_collapsible() {
+        with_owner(|| {
+            let (_, collapsible_ctx) = create_multiple_contexts(
+                MaybeProp::from(None::<Vec<String>>),
+                MaybeProp::from(None::<Vec<String>>),
+                None,
+            );
+
+            assert!(collapsible_ctx.collapsible.get());
+        });
+    }
+
+    #[test]
+    fn multiple_default_values() {
+        with_owner(|| {
+            let (ctx, _) = create_multiple_contexts(
+                MaybeProp::from(None::<Vec<String>>),
+                MaybeProp::from(Some(vec!["a".to_string(), "b".to_string()])),
+                None,
+            );
+
+            assert_eq!(ctx.value.get(), vec!["a", "b"]);
+        });
+    }
+
+    #[test]
+    fn multiple_on_value_change_fires_in_controlled_mode() {
+        with_owner(|| {
+            let received = StoredValue::new(Vec::<String>::new());
+
+            let on_change = Callback::new(move |v: Vec<String>| {
+                received.set_value(v);
+            });
+
+            // Use a controlled prop so on_change fires synchronously.
+            let (ctx, _) = create_multiple_contexts(
+                MaybeProp::from(Some(Vec::<String>::new())),
+                MaybeProp::from(None::<Vec<String>>),
+                Some(on_change),
+            );
+
+            ctx.on_item_open.run("item-1".into());
+            assert_eq!(received.get_value(), vec!["item-1"]);
+
+            ctx.on_item_open.run("item-2".into());
+            // Controlled mode: the prop still returns empty, so
+            // on_item_open reads the prop (empty) and appends.
+            assert_eq!(received.get_value(), vec!["item-2"]);
+        });
     }
 }
