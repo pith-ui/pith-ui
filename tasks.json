@@ -1284,7 +1284,7 @@
     "component": "toast",
     "principle": "Own Accessibility Completely",
     "description": "Leptos implementation is missing the `ToastAnnounce` component that exists in the React reference (toast.tsx lines 669-699). React renders a separate VisuallyHidden element with role=\"status\" and aria-live to announce toast content to screen readers via an off-screen live region. The Leptos implementation computes `announce_text` in an effect (toast.rs lines 181-189) but never renders a corresponding announce element, so screen reader announcements may not work correctly for new toasts.",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -1292,7 +1292,7 @@
     "component": "toast",
     "principle": "Own Accessibility Completely",
     "description": "Leptos Toast places `role=\"status\"` and `aria-live` directly on the interactive toast `<li>` element (toast.rs lines 224-230), whereas the React reference places `role=\"status\"` and `aria-live` on a separate non-interactive VisuallyHidden announce element (toast.tsx lines 554-556) and the interactive `<li>` has no role/aria-live. This architectural difference means the Leptos toast conflates the interactive container with the announcement region.",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -1300,7 +1300,7 @@
     "component": "toast",
     "principle": "Own Accessibility Completely",
     "description": "Leptos Toast does not wrap the toast `<li>` in a `DismissableLayer.Root` like the React reference does (toast.tsx lines 565-570). In React, `DismissableLayer.Root` provides a global `onEscapeKeyDown` handler that closes the toast when Escape is pressed anywhere on the page. The Leptos implementation only handles Escape via `on:keydown` on the `<li>` itself (toast.rs lines 237-248), so pressing Escape when the toast is not focused will not dismiss it.",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {

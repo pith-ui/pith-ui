@@ -4,7 +4,7 @@ use crate::support::collection::{
     CollectionItemSlot, CollectionItemValue, CollectionProvider, CollectionSlot, use_collection,
 };
 use crate::support::compose_refs::use_composed_refs;
-use crate::support::dismissable_layer::DismissableLayerBranch;
+use crate::support::dismissable_layer::{DismissableLayer, DismissableLayerBranch};
 use crate::support::portal::Portal;
 use crate::support::presence::Presence;
 use crate::support::primitive::{Primitive, adapt_callback};
@@ -101,8 +101,6 @@ impl SwipeEventTarget {
 
 #[derive(Clone, Copy)]
 pub(super) struct ToastProviderContextValue {
-    // Used by ToastAnnounce for screen reader announcements.
-    #[allow(dead_code)]
     pub(super) label: StoredValue<String>,
     pub(super) duration: Signal<i32>,
     pub(super) swipe_direction: Signal<SwipeDirection>,

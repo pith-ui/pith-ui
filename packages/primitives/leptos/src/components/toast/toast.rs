@@ -194,7 +194,35 @@ pub fn Toast(
     let on_swipe_end_composed = on_swipe_end;
     let on_escape_key_down_stored = on_escape_key_down;
 
+    // Compose escape key handler for DismissableLayer: skip close if the toast's
+    // own keydown already handled it (prevents double-dismiss).
+    let dismiss_escape = Callback::new(move |event: web_sys::KeyboardEvent| {
+        if let Some(cb) = on_escape_key_down_stored {
+            cb.run(event);
+        }
+        if !context.is_focused_toast_escape_key_down_ref.get_value() {
+            handle_close.run(());
+        }
+        context
+            .is_focused_toast_escape_key_down_ref
+            .set_value(false);
+    });
+
     view! {
+        // Announce toast content to screen readers via a separate visually-hidden live region.
+        // This keeps announcement semantics separate from the interactive <li> element.
+        <Show when=move || !announce_text.get().is_empty()>
+            <ToastAnnounce
+                role="status"
+                aria_live=Signal::derive(move || match toast_type.get() {
+                    ToastType::Foreground => "assertive",
+                    ToastType::Background => "polite",
+                })
+            >
+                {move || format!("{} {}", context.label.get_value(), announce_text.get().join(" "))}
+            </ToastAnnounce>
+        </Show>
+
         <Presence present=Signal::derive(move || force_mount || is_open.get())>
             <Show when=move || has_viewport.get()>
                 <Provider value=ToastInteractiveContextValue { on_close: handle_close }>
@@ -210,19 +238,15 @@ pub fn Toast(
                         <Provider value=context>
                             <Provider value=ToastInteractiveContextValue { on_close: handle_close }>
                                 <CollectionItemSlot item_data_type=ITEM_DATA_PHANTOM item_data=()>
+                                    <DismissableLayer
+                                        as_child=true
+                                        on_escape_key_down=dismiss_escape
+                                    >
                                     <Primitive
                                         element=html::li
                                         as_child=as_child
                                         node_ref=composed_refs
                                         attr:class=move || class.get().unwrap_or_default()
-                                        attr:role="status"
-                                        attr:aria-live=move || {
-                                            match toast_type.get() {
-                                                ToastType::Foreground => "assertive",
-                                                ToastType::Background => "polite",
-                                            }
-                                        }
-                                        attr:aria-atomic="true"
                                         attr:tabindex="0"
                                         attr:data-state=move || if is_open.get() { "open" } else { "closed" }
                                         attr:data-swipe-direction=move || swipe_direction.get().as_str()
@@ -356,6 +380,7 @@ pub fn Toast(
                                     >
                                         {children.with_value(|children| children())}
                                     </Primitive>
+                                    </DismissableLayer>
                                 </CollectionItemSlot>
                             </Provider>
                         </Provider>
@@ -457,6 +482,78 @@ pub fn ToastClose(
                 {children.with_value(|children| children())}
             </Primitive>
         </ToastAnnounceExclude>
+    }
+}
+
+/* -------------------------------------------------------------------------------------------------
+ * ToastAnnounce
+ * -----------------------------------------------------------------------------------------------*/
+
+/// Renders a visually-hidden live region that announces toast content to screen readers.
+/// Uses a two-frame delay before rendering text (to avoid screen reader stuttering) and
+/// auto-removes after 1 second (announcement has been consumed by assistive technology).
+/// Matches React's `ToastAnnounce` component.
+#[component]
+fn ToastAnnounce(
+    #[prop(into)] role: String,
+    #[prop(into)] aria_live: Signal<&'static str>,
+    children: ChildrenFn,
+) -> impl IntoView {
+    let children = StoredValue::new(children);
+    let role = StoredValue::new(role);
+
+    let render_text = RwSignal::new(false);
+    let is_announced = RwSignal::new(false);
+
+    // Two-frame delay before rendering text (matches React's useNextFrame).
+    Effect::new(move |_| {
+        let cb = Closure::once(Box::new(move || {
+            let inner_cb = Closure::once(Box::new(move || {
+                render_text.set(true);
+            }) as Box<dyn FnOnce()>);
+            web_sys::window()
+                .expect("Window should exist.")
+                .request_animation_frame(inner_cb.as_ref().unchecked_ref())
+                .ok();
+            inner_cb.forget();
+        }) as Box<dyn FnOnce()>);
+        web_sys::window()
+            .expect("Window should exist.")
+            .request_animation_frame(cb.as_ref().unchecked_ref())
+            .ok();
+        cb.forget();
+    });
+
+    // Auto-remove after 1 second
+    let announce_timer: StoredValue<Option<i32>> = StoredValue::new(None);
+    Effect::new(move |_| {
+        let timeout_id = set_timeout(
+            move || {
+                is_announced.set(true);
+            },
+            1000,
+        );
+        announce_timer.set_value(Some(timeout_id));
+    });
+
+    on_cleanup(move || {
+        clear_timeout(announce_timer);
+    });
+
+    view! {
+        <Show when=move || !is_announced.get()>
+            <Portal>
+                <VisuallyHidden
+                    attr:role=move || role.get_value()
+                    attr:aria-live=move || aria_live.get()
+                    attr:aria-atomic="true"
+                >
+                    <Show when=move || render_text.get()>
+                        {children.with_value(|children| children())}
+                    </Show>
+                </VisuallyHidden>
+            </Portal>
+        </Show>
     }
 }
 
