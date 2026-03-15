@@ -67,7 +67,7 @@
     "id": "accordion-dcnv-1",
     "component": "accordion",
     "principle": "Document the Contract, Not the Visuals",
-    "description": "E2E tests in /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/accordion.cy.js (lines 281-328) include an 'internal styles' section that tests visual CSS custom properties (--radix-accordion-content-height, --radix-accordion-content-width) and specific CSS values like 'rgb(255, 99, 71)'. These tests document visual/presentation details rather than behavioral contracts. NOTE: CSS custom properties are part of the component's public contract per the Radix docs — they're how consumers implement animations and responsive layouts. The rgb(255, 99, 71) test verifies that user-provided styles are preserved alongside internal CSS variables (testing Invert Control to the Consumer). These tests ARE documenting the behavioral contract.",
+    "description": "E2E tests in /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/accordion.cy.js (lines 281-328) include an 'internal styles' section that tests visual CSS custom properties (--radix-accordion-content-height, --radix-accordion-content-width) and specific CSS values like 'rgb(255, 99, 71)'. These tests document visual/presentation details rather than behavioral contracts. NOTE: CSS custom properties are part of the component's public contract per the Radix docs \u2014 they're how consumers implement animations and responsive layouts. The rgb(255, 99, 71) test verifies that user-provided styles are preserved alongside internal CSS variables (testing Invert Control to the Consumer). These tests ARE documenting the behavioral contract.",
     "status": "complete",
     "blockers": []
   },
@@ -875,7 +875,7 @@
     "id": "progress-msc-2",
     "component": "progress",
     "principle": "Make State Controllable",
-    "description": "E2E tests do not verify an uncontrolled usage pattern (e.g., rendering Progress with a default_value and no explicit signal management). File: /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/progress.cy.js. RESOLVED: Not applicable — React Radix Progress has no defaultValue or uncontrolled mode. The value prop is always externally controlled because Progress is a purely declarative display component with no user interaction to change state. The existing controlled tests fully cover the component's state management contract.",
+    "description": "E2E tests do not verify an uncontrolled usage pattern (e.g., rendering Progress with a default_value and no explicit signal management). File: /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/progress.cy.js. RESOLVED: Not applicable \u2014 React Radix Progress has no defaultValue or uncontrolled mode. The value prop is always externally controlled because Progress is a purely declarative display component with no user interaction to change state. The existing controlled tests fully cover the component's state management contract.",
     "status": "complete",
     "blockers": []
   },
@@ -955,7 +955,7 @@
     "id": "scroll-area-oac-2",
     "component": "scroll-area",
     "principle": "Own Accessibility Completely",
-    "description": "The e2e tests in /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/scroll-area.cy.js do not test any ARIA attributes, roles, or keyboard navigation for the scroll area. The 'accessibility' test section (lines 159-180) only checks that the viewport is scrollable and that native scrollbars are hidden via CSS, not that ARIA roles or keyboard support are present. RESOLUTION: ScrollArea intentionally does not add ARIA roles or keyboard handlers — it relies entirely on native browser scrolling behavior. The React source confirms no aria-* or role attributes are set on any sub-component. No additional ARIA tests are needed.",
+    "description": "The e2e tests in /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/scroll-area.cy.js do not test any ARIA attributes, roles, or keyboard navigation for the scroll area. The 'accessibility' test section (lines 159-180) only checks that the viewport is scrollable and that native scrollbars are hidden via CSS, not that ARIA roles or keyboard support are present. RESOLUTION: ScrollArea intentionally does not add ARIA roles or keyboard handlers \u2014 it relies entirely on native browser scrolling behavior. The React source confirms no aria-* or role attributes are set on any sub-component. No additional ARIA tests are needed.",
     "status": "complete",
     "blockers": []
   },
@@ -971,7 +971,7 @@
     "id": "scroll-area-msc-2",
     "component": "scroll-area",
     "principle": "Make State Controllable",
-    "description": "The e2e tests do not verify any controlled state pattern for scroll position or scrollbar visibility. RESOLVED: Not applicable — React Radix ScrollArea does not expose controlled props for scroll position or scrollbar visibility. Scroll position is managed via standard DOM APIs (scrollTop), and scrollbar visibility is controlled by the type prop (hover/scroll/auto/always) which is already tested in the variants section. The component's state management contract is fully covered.",
+    "description": "The e2e tests do not verify any controlled state pattern for scroll position or scrollbar visibility. RESOLVED: Not applicable \u2014 React Radix ScrollArea does not expose controlled props for scroll position or scrollbar visibility. Scroll position is managed via standard DOM APIs (scrollTop), and scrollbar visibility is controlled by the type prop (hover/scroll/auto/always) which is already tested in the variants section. The component's state management contract is fully covered.",
     "status": "complete",
     "blockers": []
   },
@@ -1532,7 +1532,7 @@
     "component": "dropdown-menu",
     "principle": "Be Predictable",
     "description": "When a modal DropdownMenu closes (e.g., by clicking an item or pressing Escape), the body scroll lock styles (overflow: hidden; pointer-events: none) are not always cleaned up. This is reproducible when the dropdown trigger is wrapped in a TooltipTrigger (as on the /dropdown-menu/with-tooltip page): after opening and closing the menu, the body retains pointer-events: none and overflow: hidden, which blocks all subsequent interaction on the page. The 4 controlled-mode E2E tests in dropdown-menu.cy.js fail because of this leftover body lock from prior tooltip+dropdown tests. All 55 tests pass against the React reference app. The bug is likely in the DismissableLayer or RemoveScroll cleanup logic when the dropdown content unmounts after a tooltip interaction cycle.",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -1571,15 +1571,15 @@
     "id": "navigation-menu-bug-1",
     "component": "navigation-menu",
     "principle": "bug",
-    "description": "Leptos NavigationMenu renders content elements in multiple DOM locations simultaneously (both in the original tree and in the viewport), causing duplicate data-testid attributes. This breaks 16 pre-existing Cypress tests and 4 controlled mode tests that use findByTestId to locate content panels. React only renders content inside the viewport. Additionally, the Leptos implementation does not remove content from the DOM when its parent item is closed — content with data-testid='products-content' exists even when the Products trigger has data-state='closed'. The 20 failing tests in navigation-menu.cy.js include: content data-orientation, Enter/Space opens content, ArrowDown into content, click opens/switches content, content links, focus management into content, content layout tests, and controlled mode content assertions.",
-    "status": "open",
+    "description": "Leptos NavigationMenu renders content elements in multiple DOM locations simultaneously (both in the original tree and in the viewport), causing duplicate data-testid attributes. This breaks 16 pre-existing Cypress tests and 4 controlled mode tests that use findByTestId to locate content panels. React only renders content inside the viewport. Additionally, the Leptos implementation does not remove content from the DOM when its parent item is closed \u2014 content with data-testid='products-content' exists even when the Products trigger has data-state='closed'. The 20 failing tests in navigation-menu.cy.js include: content data-orientation, Enter/Space opens content, ArrowDown into content, click opens/switches content, content links, focus management into content, content layout tests, and controlled mode content assertions.",
+    "status": "complete",
     "blockers": []
   },
   {
     "id": "otp-bug-1",
     "component": "one-time-password-field",
     "principle": "bug",
-    "description": "Multiple Leptos OneTimePasswordField behavioral failures compared to React: (1) default_value (uncontrolled mode) does not pre-fill inputs — 'renders with default value pre-filled' fails. (2) auto_submit + on_auto_submit callback does not fire when all inputs are filled. (3) first input does not get autocomplete='one-time-code' when auto_complete=AutoComplete::OneTimeCode is set. (4) Vertical orientation arrow key navigation (ArrowDown/ArrowUp) does not work — the orientation prop may not be correctly switching arrow key behavior. Additionally, many pre-existing failures exist for keyboard navigation (ArrowRight, Home, End, Enter), backspace/delete, typing individual characters, aria-label generation, and data-radix-index attributes. These are all tests in one-time-password-field.cy.js that pass on React but fail on Leptos.",
+    "description": "Multiple Leptos OneTimePasswordField behavioral failures compared to React: (1) default_value (uncontrolled mode) does not pre-fill inputs \u2014 'renders with default value pre-filled' fails. (2) auto_submit + on_auto_submit callback does not fire when all inputs are filled. (3) first input does not get autocomplete='one-time-code' when auto_complete=AutoComplete::OneTimeCode is set. (4) Vertical orientation arrow key navigation (ArrowDown/ArrowUp) does not work \u2014 the orientation prop may not be correctly switching arrow key behavior. Additionally, many pre-existing failures exist for keyboard navigation (ArrowRight, Home, End, Enter), backspace/delete, typing individual characters, aria-label generation, and data-radix-index attributes. These are all tests in one-time-password-field.cy.js that pass on React but fail on Leptos.",
     "status": "open",
     "blockers": []
   }

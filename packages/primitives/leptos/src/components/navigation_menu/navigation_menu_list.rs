@@ -63,15 +63,18 @@ pub(super) fn NavigationMenuProvider(
         on_viewport_content_remove,
     };
 
-    provide_context(context);
-    provide_context(ViewportContentContextValue {
+    let viewport_content_context = ViewportContentContextValue {
         items: viewport_content,
-    });
+    };
 
     view! {
-        <CollectionProvider<NavigationMenuItemData> item_data_type=PhantomData>
-            {children.with_value(|children| children())}
-        </CollectionProvider<NavigationMenuItemData>>
+        <Provider value=context>
+            <Provider value=viewport_content_context>
+                <CollectionProvider<NavigationMenuItemData> item_data_type=PhantomData>
+                    {children.with_value(|children| children())}
+                </CollectionProvider<NavigationMenuItemData>>
+            </Provider>
+        </Provider>
     }
 }
 
