@@ -231,7 +231,12 @@ fn OneTimePasswordFieldImpl(
                         set_value.run(Some(new_value));
                         if let Some(ct) = current_target {
                             let next = otp_input_from(&inputs, ct, 1);
-                            focus_input(next);
+                            if next.is_some() {
+                                focus_input(next);
+                            } else {
+                                // Last input: re-select so subsequent typing replaces
+                                focus_input(Some(ct));
+                            }
                         }
                         return;
                     }

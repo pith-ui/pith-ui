@@ -476,6 +476,13 @@ fn OneTimePasswordFieldInputInner(
                                                 cb.unchecked_ref(),
                                                 10,
                                             );
+                                    } else {
+                                        // On the last input: replace current value in place
+                                        event.prevent_default();
+                                        dispatch.with_value(|d| d(UpdateAction::SetChar {
+                                            char: key,
+                                            index,
+                                        }));
                                     }
                                 }
                                 // If selected, browser will replace the selected text
