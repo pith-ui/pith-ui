@@ -371,6 +371,19 @@ describe('OneTimePasswordField', () => {
             shouldHaveValue('123456');
         });
 
+        it('typing beyond the last slot replaces the last character', () => {
+            focusFirstInput();
+            cy.realPress('1');
+            cy.realPress('2');
+            cy.realPress('3');
+            cy.realPress('4');
+            cy.realPress('5');
+            cy.realPress('6');
+            cy.realPress('5');
+            cy.realPress('1');
+            shouldHaveValue('123451');
+        });
+
         it('invalid characters are rejected with numeric validation', () => {
             focusFirstInput();
             cy.realPress('a');
