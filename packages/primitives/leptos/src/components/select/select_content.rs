@@ -205,6 +205,20 @@ fn SelectContentImpl(
     // Focus guards
     use_focus_guards();
 
+    // aria-hide everything except the content (better supported equivalent to setting aria-modal)
+    let hidden_elements: RwSignal<Vec<SendWrapper<web_sys::Element>>> = RwSignal::new(Vec::new());
+
+    Effect::new(move |_| {
+        if let Some(content) = content_ref.get() {
+            let content: web_sys::HtmlElement = content.unchecked_into();
+            hide_others(&content, hidden_elements);
+        }
+    });
+
+    on_cleanup(move || {
+        unhide_others(hidden_elements);
+    });
+
     // selectedItem tracking (minimal)
     let selected_item_ref: StoredValue<Option<SendWrapper<web_sys::HtmlElement>>> =
         StoredValue::new(None);

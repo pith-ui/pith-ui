@@ -2,6 +2,7 @@ use std::marker::PhantomData;
 use std::sync::Arc;
 use std::sync::atomic::{AtomicI32, Ordering};
 
+use crate::support::aria_hidden::{hide_others, unhide_others};
 use crate::support::collection::{
     CollectionItemSlot, CollectionItemValue, CollectionProvider, CollectionSlot,
     provide_collection_scope, use_collection, use_collection_scope,
@@ -252,54 +253,6 @@ fn find_next_item<'a>(
     })
 }
 
-/// aria-hide everything except the given element.
-/// Simplified version — sets aria-hidden on siblings.
-#[allow(dead_code)]
-fn hide_others(content: &web_sys::HtmlElement) {
-    let document = match web_sys::window().and_then(|w| w.document()) {
-        Some(d) => d,
-        None => return,
-    };
-    let body = match document.body() {
-        Some(b) => b,
-        None => return,
-    };
-
-    let content_node: &web_sys::Node = content.unchecked_ref();
-
-    // Walk up from content to body, hiding siblings at each level
-    let mut current: web_sys::Node = content_node.clone();
-    loop {
-        let parent = match current.parent_node() {
-            Some(p) => p,
-            None => break,
-        };
-        let parent_el: &web_sys::Element = match parent.dyn_ref() {
-            Some(el) => el,
-            None => break,
-        };
-
-        let children = parent_el.children();
-        for i in 0..children.length() {
-            if let Some(child) = children.item(i) {
-                let child_node: &web_sys::Node = child.unchecked_ref();
-                if !child_node.is_same_node(Some(&current)) {
-                    let tag = child.tag_name().to_lowercase();
-                    if tag != "script" && tag != "style" {
-                        let _ = child.set_attribute("aria-hidden", "true");
-                        let _ = child.set_attribute("data-radix-select-hide", "");
-                    }
-                }
-            }
-        }
-
-        let body_node: &web_sys::Node = body.unchecked_ref();
-        if parent.is_same_node(Some(body_node)) {
-            break;
-        }
-        current = parent;
-    }
-}
 
 /// Margin around the select content for item-aligned positioning.
 const CONTENT_MARGIN: f64 = 10.0;

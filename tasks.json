@@ -1036,7 +1036,7 @@
     "component": "select",
     "principle": "Own Accessibility Completely",
     "description": "The Leptos implementation defines hide_others() in /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/select/mod.rs (lines 257-302) but marks it #[allow(dead_code)] and never calls it. The React reference calls hideOthers(content) in select.tsx (lines 573-575) to aria-hide everything except the select content when open, providing the equivalent of aria-modal. This missing call means screen readers may still announce background content while the select is open.",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {
