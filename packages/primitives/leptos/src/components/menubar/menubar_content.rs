@@ -27,7 +27,6 @@ pub fn MenubarPortal(
 #[component]
 pub fn MenubarContent(
     #[prop(into, optional)] force_mount: MaybeProp<bool>,
-    #[prop(into, optional)] class: MaybeProp<String>,
     #[prop(into, optional)] align: MaybeProp<Align>,
     #[prop(into, optional)] align_offset: MaybeProp<f64>,
     #[prop(into, optional)] avoid_collisions: MaybeProp<bool>,
@@ -83,7 +82,6 @@ pub fn MenubarContent(
             force_mount=force_mount
             as_child=as_child
             node_ref=composed_refs
-            attr:class=move || class.get().unwrap_or_default()
             id=Signal::derive(move || Some(menu_context.content_id.get()))
             aria_labelledby=Signal::derive(move || Some(menu_context.trigger_id.get()))
             align=align

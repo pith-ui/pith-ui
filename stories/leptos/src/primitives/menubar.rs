@@ -183,7 +183,7 @@ pub fn Styled() -> impl IntoView {
                     <MenubarMenu>
                         <MenubarTrigger attr:class=classes::trigger>"File"</MenubarTrigger>
                         <MenubarPortal>
-                            <MenubarContent class=classes::content side_offset=2.0>
+                            <MenubarContent attr:class=classes::content side_offset=2.0>
                                 <MenubarItem attr:class=classes::item>"New Tab"</MenubarItem>
                                 <MenubarItem attr:class=classes::item>"New Window"</MenubarItem>
                                 <MenubarItem attr:class=classes::item>"New Incognito Window"</MenubarItem>
@@ -193,7 +193,7 @@ pub fn Styled() -> impl IntoView {
                                         "Share " <span>"→"</span>
                                     </MenubarSubTrigger>
                                     <MenubarPortal>
-                                        <MenubarSubContent class=classes::content>
+                                        <MenubarSubContent attr:class=classes::content>
                                             <MenubarItem attr:class=classes::item>"Email Link"</MenubarItem>
                                             <MenubarItem attr:class=classes::item>"Messages"</MenubarItem>
                                             <MenubarItem attr:class=classes::item>"Airdrop"</MenubarItem>
@@ -209,7 +209,7 @@ pub fn Styled() -> impl IntoView {
                     <MenubarMenu>
                         <MenubarTrigger attr:class=classes::trigger>"Edit"</MenubarTrigger>
                         <MenubarPortal>
-                            <MenubarContent class=classes::content side_offset=2.0>
+                            <MenubarContent attr:class=classes::content side_offset=2.0>
                                 <MenubarItem attr:class=classes::item>"Undo"</MenubarItem>
                                 <MenubarItem attr:class=classes::item>"Redo"</MenubarItem>
                                 <MenubarSeparator attr:class=classes::separator />
@@ -218,7 +218,7 @@ pub fn Styled() -> impl IntoView {
                                         "Find " <span>"→"</span>
                                     </MenubarSubTrigger>
                                     <MenubarPortal>
-                                        <MenubarSubContent class=classes::content>
+                                        <MenubarSubContent attr:class=classes::content>
                                             <MenubarItem attr:class=classes::item>"Search the web…"</MenubarItem>
                                             <MenubarSeparator attr:class=classes::separator />
                                             <MenubarItem attr:class=classes::item>"Find…"</MenubarItem>
@@ -229,7 +229,7 @@ pub fn Styled() -> impl IntoView {
                                                     "Advanced " <span>"→"</span>
                                                 </MenubarSubTrigger>
                                                 <MenubarPortal>
-                                                    <MenubarSubContent class=classes::content>
+                                                    <MenubarSubContent attr:class=classes::content>
                                                         <MenubarItem attr:class=classes::item>"Regex"</MenubarItem>
                                                         <MenubarItem attr:class=classes::item>"Replace"</MenubarItem>
                                                     </MenubarSubContent>
@@ -249,7 +249,7 @@ pub fn Styled() -> impl IntoView {
                     <MenubarMenu>
                         <MenubarTrigger attr:class=classes::trigger>"View"</MenubarTrigger>
                         <MenubarPortal>
-                            <MenubarContent class=classes::content side_offset=2.0>
+                            <MenubarContent attr:class=classes::content side_offset=2.0>
                                 {check_options.iter().map(|option| {
                                     let option = option.to_string();
                                     let option_for_check = option.clone();
@@ -301,7 +301,7 @@ pub fn Styled() -> impl IntoView {
                     <MenubarMenu>
                         <MenubarTrigger attr:class=classes::trigger>"Profiles"</MenubarTrigger>
                         <MenubarPortal>
-                            <MenubarContent class=classes::content side_offset=2.0>
+                            <MenubarContent attr:class=classes::content side_offset=2.0>
                                 <MenubarRadioGroup
                                     value=Signal::derive(move || radio_selection.get())
                                     on_value_change=Callback::new(move |value: String| {
@@ -330,7 +330,7 @@ pub fn Styled() -> impl IntoView {
                     <MenubarMenu>
                         <MenubarTrigger attr:class=classes::trigger>"History"</MenubarTrigger>
                         <MenubarPortal>
-                            <MenubarContent class=classes::content side_offset=2.0>
+                            <MenubarContent attr:class=classes::content side_offset=2.0>
                                 <MenubarLabel attr:class=classes::label>"Work"</MenubarLabel>
                                 <MenubarItem attr:class=classes::item>"Radix"</MenubarItem>
                                 <MenubarItem attr:class=classes::item>"Github"</MenubarItem>
@@ -398,7 +398,7 @@ pub fn Cypress() -> impl IntoView {
                     <MenubarMenu>
                         <MenubarTrigger attr:class=classes::trigger>"File"</MenubarTrigger>
                         <CypressPortal portalled=portalled>
-                            <MenubarContent class=classes::content side_offset=2.0>
+                            <MenubarContent attr:class=classes::content side_offset=2.0>
                                 <MenubarItem attr:class=classes::item>"New Tab"</MenubarItem>
                                 <MenubarItem attr:class=classes::item>"New Window"</MenubarItem>
                                 <MenubarItem attr:class=classes::item>"New Incognito Window"</MenubarItem>
@@ -407,7 +407,7 @@ pub fn Cypress() -> impl IntoView {
                                     <MenubarSubTrigger attr:class=sub_trigger_class.get_value()>
                                         "Share " <span>"→"</span>
                                     </MenubarSubTrigger>
-                                    <MenubarSubContent class=classes::content>
+                                    <MenubarSubContent attr:class=classes::content>
                                         <MenubarItem attr:class=classes::item>"Email Link"</MenubarItem>
                                         <MenubarItem attr:class=classes::item>"Messages"</MenubarItem>
                                         <MenubarItem attr:class=classes::item>"Airdrop"</MenubarItem>
@@ -422,7 +422,7 @@ pub fn Cypress() -> impl IntoView {
                     <MenubarMenu>
                         <MenubarTrigger attr:class=classes::trigger>"Edit"</MenubarTrigger>
                         <CypressPortal portalled=portalled>
-                            <MenubarContent class=classes::content side_offset=2.0>
+                            <MenubarContent attr:class=classes::content side_offset=2.0>
                                 <MenubarItem attr:class=classes::item disabled=true>"Undo"</MenubarItem>
                                 <MenubarItem attr:class=classes::item>"Redo"</MenubarItem>
                                 <MenubarSeparator attr:class=classes::separator />
@@ -431,7 +431,7 @@ pub fn Cypress() -> impl IntoView {
                                         "Find " <span>"→"</span>
                                     </MenubarSubTrigger>
                                     <CypressPortal portalled=portalled>
-                                        <MenubarSubContent class=classes::content>
+                                        <MenubarSubContent attr:class=classes::content>
                                             <MenubarItem attr:class=classes::item>"Search the web…"</MenubarItem>
                                             <MenubarSeparator attr:class=classes::separator />
                                             <MenubarItem attr:class=classes::item>"Find…"</MenubarItem>
@@ -442,7 +442,7 @@ pub fn Cypress() -> impl IntoView {
                                                     "Advanced " <span>"→"</span>
                                                 </MenubarSubTrigger>
                                                 <CypressPortal portalled=portalled>
-                                                    <MenubarSubContent class=classes::content>
+                                                    <MenubarSubContent attr:class=classes::content>
                                                         <MenubarItem attr:class=classes::item>"Regex"</MenubarItem>
                                                         <MenubarItem attr:class=classes::item>"Replace"</MenubarItem>
                                                     </MenubarSubContent>
@@ -457,7 +457,7 @@ pub fn Cypress() -> impl IntoView {
                                         "Speech " <span>"→"</span>
                                     </MenubarSubTrigger>
                                     <CypressPortal portalled=portalled>
-                                        <MenubarSubContent class=classes::content>
+                                        <MenubarSubContent attr:class=classes::content>
                                             <MenubarItem attr:class=classes::item>"Start Speaking"</MenubarItem>
                                             <MenubarItem attr:class=classes::item>"Stop Speaking"</MenubarItem>
                                         </MenubarSubContent>
@@ -469,7 +469,7 @@ pub fn Cypress() -> impl IntoView {
                                         "Substitutions " <span>"→"</span>
                                     </MenubarSubTrigger>
                                     <CypressPortal portalled=portalled>
-                                        <MenubarSubContent class=classes::content>
+                                        <MenubarSubContent attr:class=classes::content>
                                             <MenubarItem attr:class=classes::item>"Smart Quotes"</MenubarItem>
                                             <MenubarItem attr:class=classes::item>"Smart Dashes"</MenubarItem>
                                         </MenubarSubContent>
@@ -486,7 +486,7 @@ pub fn Cypress() -> impl IntoView {
                     <MenubarMenu>
                         <MenubarTrigger attr:class=classes::trigger>"History"</MenubarTrigger>
                         <CypressPortal portalled=portalled>
-                            <MenubarContent class=classes::content side_offset=2.0>
+                            <MenubarContent attr:class=classes::content side_offset=2.0>
                                 <MenubarItem attr:class=classes::item>"Radix"</MenubarItem>
                                 <MenubarItem attr:class=classes::item>"Github"</MenubarItem>
                                 <MenubarItem attr:class=classes::item>"WorkOS"</MenubarItem>
@@ -536,7 +536,7 @@ pub fn Chromatic() -> impl IntoView {
                 <MenubarMenu>
                     <MenubarTrigger attr:class=classes::trigger>"File"</MenubarTrigger>
                     <MenubarPortal>
-                        <MenubarContent class=classes::content side_offset=2.0>
+                        <MenubarContent attr:class=classes::content side_offset=2.0>
                             <MenubarItem attr:class=classes::item>"New Tab"</MenubarItem>
                             <MenubarItem attr:class=classes::item>"New Window"</MenubarItem>
                             <MenubarItem attr:class=classes::item>"New Incognito Window"</MenubarItem>
@@ -548,7 +548,7 @@ pub fn Chromatic() -> impl IntoView {
                 <MenubarMenu>
                     <MenubarTrigger attr:class=classes::trigger>"Edit"</MenubarTrigger>
                     <MenubarPortal>
-                        <MenubarContent class=classes::content side_offset=2.0>
+                        <MenubarContent attr:class=classes::content side_offset=2.0>
                             <MenubarItem attr:class=classes::item disabled=true>"Undo"</MenubarItem>
                             <MenubarItem attr:class=classes::item>"Redo"</MenubarItem>
                             <MenubarSeparator attr:class=classes::separator />
@@ -581,7 +581,7 @@ pub fn Chromatic() -> impl IntoView {
                 <MenubarMenu value="edit".to_string()>
                     <MenubarTrigger attr:class=classes::trigger>"Edit"</MenubarTrigger>
                     <MenubarPortal>
-                        <MenubarContent class=classes::content side_offset=2.0>
+                        <MenubarContent attr:class=classes::content side_offset=2.0>
                             <MenubarItem attr:class=classes::item disabled=true>"Undo"</MenubarItem>
                             <MenubarItem attr:class=classes::item>"Redo"</MenubarItem>
                             <MenubarSeparator attr:class=classes::separator />
@@ -599,7 +599,7 @@ pub fn Chromatic() -> impl IntoView {
                 <MenubarMenu value="file".to_string()>
                     <MenubarTrigger attr:class=classes::trigger>"File"</MenubarTrigger>
                     <MenubarPortal>
-                        <MenubarContent class=classes::content side_offset=2.0>
+                        <MenubarContent attr:class=classes::content side_offset=2.0>
                             <MenubarItem attr:class=classes::item>"New Tab"</MenubarItem>
                             <MenubarItem attr:class=classes::item>"New Window"</MenubarItem>
                             <MenubarItem attr:class=classes::item>"New Incognito Window"</MenubarItem>
@@ -611,7 +611,7 @@ pub fn Chromatic() -> impl IntoView {
                 <MenubarMenu value="edit".to_string()>
                     <MenubarTrigger attr:class=classes::trigger>"Edit"</MenubarTrigger>
                     <MenubarPortal>
-                        <MenubarContent class=classes::content side_offset=2.0>
+                        <MenubarContent attr:class=classes::content side_offset=2.0>
                             <MenubarItem attr:class=classes::item disabled=true>"Undo"</MenubarItem>
                             <MenubarItem attr:class=classes::item>"Redo"</MenubarItem>
                             <MenubarSeparator attr:class=classes::separator />
@@ -628,7 +628,7 @@ pub fn Chromatic() -> impl IntoView {
                 <MenubarMenu value="file".to_string()>
                     <MenubarTrigger attr:class=classes::trigger>"File"</MenubarTrigger>
                     <MenubarPortal>
-                        <MenubarContent class=classes::content side_offset=2.0>
+                        <MenubarContent attr:class=classes::content side_offset=2.0>
                             <MenubarItem attr:class=classes::item>"New Tab"</MenubarItem>
                             <MenubarItem attr:class=classes::item>"New Window"</MenubarItem>
                             <MenubarItem attr:class=classes::item>"New Incognito Window"</MenubarItem>
@@ -640,7 +640,7 @@ pub fn Chromatic() -> impl IntoView {
                 <MenubarMenu value="edit".to_string()>
                     <MenubarTrigger attr:class=classes::trigger>"Edit"</MenubarTrigger>
                     <MenubarPortal>
-                        <MenubarContent class=classes::content side_offset=2.0>
+                        <MenubarContent attr:class=classes::content side_offset=2.0>
                             <MenubarItem attr:class=classes::item disabled=true>"Undo"</MenubarItem>
                             <MenubarItem attr:class=classes::item>"Redo"</MenubarItem>
                             <MenubarSeparator attr:class=classes::separator />
@@ -657,7 +657,7 @@ pub fn Chromatic() -> impl IntoView {
                 <MenubarMenu value="file".to_string()>
                     <MenubarTrigger attr:class=classes::trigger>"File"</MenubarTrigger>
                     <MenubarPortal>
-                        <MenubarContent class=classes::content side_offset=2.0>
+                        <MenubarContent attr:class=classes::content side_offset=2.0>
                             <MenubarItem attr:class=classes::item>"New Tab"</MenubarItem>
                             <MenubarItem attr:class=classes::item>"New Window"</MenubarItem>
                             <MenubarItem attr:class=classes::item>"New Incognito Window"</MenubarItem>
@@ -669,7 +669,7 @@ pub fn Chromatic() -> impl IntoView {
                 <MenubarMenu value="edit".to_string()>
                     <MenubarTrigger attr:class=classes::trigger>"Edit"</MenubarTrigger>
                     <MenubarPortal>
-                        <MenubarContent class=classes::content side_offset=2.0>
+                        <MenubarContent attr:class=classes::content side_offset=2.0>
                             <MenubarItem attr:class=classes::item disabled=true>"Undo"</MenubarItem>
                             <MenubarItem attr:class=classes::item>"Redo"</MenubarItem>
                             <MenubarSeparator attr:class=classes::separator />
@@ -678,7 +678,7 @@ pub fn Chromatic() -> impl IntoView {
                                     "Find " <span>"→"</span>
                                 </MenubarSubTrigger>
                                 <MenubarPortal>
-                                    <MenubarSubContent class=classes::content side_offset=10.0>
+                                    <MenubarSubContent attr:class=classes::content side_offset=10.0>
                                         <MenubarItem attr:class=classes::item>"Search the web…"</MenubarItem>
                                         <MenubarSeparator attr:class=classes::separator />
                                         <MenubarItem attr:class=classes::item>"Find…"</MenubarItem>
@@ -689,7 +689,7 @@ pub fn Chromatic() -> impl IntoView {
                                                 "Advanced " <span>"→"</span>
                                             </MenubarSubTrigger>
                                             <MenubarPortal>
-                                                <MenubarSubContent class=classes::content side_offset=10.0>
+                                                <MenubarSubContent attr:class=classes::content side_offset=10.0>
                                                     <MenubarItem attr:class=classes::item>"Regex"</MenubarItem>
                                                     <MenubarItem attr:class=classes::item>"Replace"</MenubarItem>
                                                     <MenubarArrow />
@@ -716,7 +716,7 @@ pub fn Chromatic() -> impl IntoView {
                     <MenubarMenu value="file".to_string()>
                         <MenubarTrigger attr:class=classes::trigger>"File"</MenubarTrigger>
                         <MenubarPortal>
-                            <MenubarContent class=classes::content avoid_collisions=false side_offset=2.0>
+                            <MenubarContent attr:class=classes::content avoid_collisions=false side_offset=2.0>
                                 <MenubarItem attr:class=classes::item>"New Tab"</MenubarItem>
                                 <MenubarItem attr:class=classes::item>"New Window"</MenubarItem>
                                 <MenubarItem attr:class=classes::item>"New Incognito Window"</MenubarItem>
@@ -728,7 +728,7 @@ pub fn Chromatic() -> impl IntoView {
                     <MenubarMenu value="edit".to_string()>
                         <MenubarTrigger attr:class=classes::trigger>"Edit"</MenubarTrigger>
                         <MenubarPortal>
-                            <MenubarContent class=classes::content avoid_collisions=false side_offset=2.0>
+                            <MenubarContent attr:class=classes::content avoid_collisions=false side_offset=2.0>
                                 <MenubarItem attr:class=classes::item disabled=true>"Undo"</MenubarItem>
                                 <MenubarItem attr:class=classes::item>"Redo"</MenubarItem>
                                 <MenubarSeparator attr:class=classes::separator />
@@ -737,7 +737,7 @@ pub fn Chromatic() -> impl IntoView {
                                         "Find " <span>"→"</span>
                                     </MenubarSubTrigger>
                                     <MenubarPortal>
-                                        <MenubarSubContent class=classes::content avoid_collisions=false side_offset=10.0 align_offset=-6.0>
+                                        <MenubarSubContent attr:class=classes::content avoid_collisions=false side_offset=10.0 align_offset=-6.0>
                                             <MenubarItem attr:class=classes::item>"Search the web…"</MenubarItem>
                                             <MenubarSeparator attr:class=classes::separator />
                                             <MenubarItem attr:class=classes::item>"Find…"</MenubarItem>
@@ -748,7 +748,7 @@ pub fn Chromatic() -> impl IntoView {
                                                     "Advanced " <span>"→"</span>
                                                 </MenubarSubTrigger>
                                                 <MenubarPortal>
-                                                    <MenubarSubContent class=classes::content avoid_collisions=false side_offset=10.0 align_offset=-6.0>
+                                                    <MenubarSubContent attr:class=classes::content avoid_collisions=false side_offset=10.0 align_offset=-6.0>
                                                         <MenubarItem attr:class=classes::item>"Regex"</MenubarItem>
                                                         <MenubarItem attr:class=classes::item>"Replace"</MenubarItem>
                                                         <MenubarArrow />
@@ -775,7 +775,7 @@ pub fn Chromatic() -> impl IntoView {
                 <MenubarMenu value="food".to_string()>
                     <MenubarTrigger attr:class=classes::trigger>"Food"</MenubarTrigger>
                     <MenubarPortal>
-                        <MenubarContent class=classes::content side_offset=2.0>
+                        <MenubarContent attr:class=classes::content side_offset=2.0>
                             {FOOD_GROUPS.iter().enumerate().map(|(index, food_group)| {
                                 view! {
                                     <MenubarGroup>
@@ -804,7 +804,7 @@ pub fn Chromatic() -> impl IntoView {
                 <MenubarMenu value="edit".to_string()>
                     <MenubarTrigger attr:class=classes::trigger>"Edit"</MenubarTrigger>
                     <MenubarPortal>
-                        <MenubarContent class=classes::content side_offset=2.0>
+                        <MenubarContent attr:class=classes::content side_offset=2.0>
                             <MenubarItem attr:class=classes::item disabled=true>"Undo"</MenubarItem>
                             <MenubarItem attr:class=classes::item>"Redo"</MenubarItem>
                             <MenubarSeparator attr:class=classes::separator />
@@ -821,7 +821,7 @@ pub fn Chromatic() -> impl IntoView {
                 <MenubarMenu value="items".to_string()>
                     <MenubarTrigger attr:class=classes::trigger>"Items"</MenubarTrigger>
                     <MenubarPortal>
-                        <MenubarContent class=classes::content side_offset=2.0>
+                        <MenubarContent attr:class=classes::content side_offset=2.0>
                             <MenubarItem attr:class=classes::item>"Show fonts"</MenubarItem>
                             <MenubarItem attr:class=classes::item>"Bigger"</MenubarItem>
                             <MenubarItem attr:class=classes::item>"Smaller"</MenubarItem>
@@ -872,7 +872,7 @@ pub fn Chromatic() -> impl IntoView {
                 <MenubarMenu value="edit".to_string()>
                     <MenubarTrigger attr:class=classes::trigger>"Edit"</MenubarTrigger>
                     <MenubarPortal>
-                        <MenubarContent class=classes::content side_offset=2.0>
+                        <MenubarContent attr:class=classes::content side_offset=2.0>
                             <MenubarItem attr:class=classes::item disabled=true>"Undo"</MenubarItem>
                             <MenubarItem attr:class=classes::item>"Redo"</MenubarItem>
                             <MenubarSeparator attr:class=classes::separator />

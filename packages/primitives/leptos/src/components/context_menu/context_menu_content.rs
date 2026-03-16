@@ -27,7 +27,6 @@ pub fn ContextMenuPortal(
 #[component]
 pub fn ContextMenuContent(
     #[prop(into, optional)] force_mount: MaybeProp<bool>,
-    #[prop(into, optional)] class: MaybeProp<String>,
     #[prop(into, optional)] align_offset: MaybeProp<f64>,
     #[prop(into, optional)] avoid_collisions: MaybeProp<bool>,
     #[prop(into, optional)] collision_boundary: MaybeProp<SendWrapper<Vec<web_sys::Element>>>,
@@ -58,7 +57,6 @@ pub fn ContextMenuContent(
             force_mount=force_mount
             as_child=as_child
             node_ref=node_ref
-            attr:class=move || class.get().unwrap_or_default()
             side=PopperSide::Right
             side_offset=2.0
             align=Align::Start
@@ -385,7 +383,6 @@ pub fn ContextMenuSubContent(
     #[prop(into, optional)] sticky: MaybeProp<Sticky>,
     #[prop(into, optional)] hide_when_detached: MaybeProp<bool>,
     #[prop(into, optional)] r#loop: MaybeProp<bool>,
-    #[prop(into, optional)] class: MaybeProp<String>,
     #[prop(into, optional)] on_escape_key_down: Option<Callback<ev::KeyboardEvent>>,
     #[prop(into, optional)] on_focus_outside: Option<Callback<web_sys::CustomEvent>>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
@@ -409,7 +406,6 @@ pub fn ContextMenuSubContent(
             r#loop=r#loop
             as_child=as_child
             node_ref=node_ref
-            attr:class=move || class.get().unwrap_or_default()
             style:--radix-context-menu-content-transform-origin="var(--radix-popper-transform-origin)"
             style:--radix-context-menu-content-available-width="var(--radix-popper-available-width)"
             style:--radix-context-menu-content-available-height="var(--radix-popper-available-height)"

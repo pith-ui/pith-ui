@@ -147,7 +147,7 @@ pub fn Styled() -> impl IntoView {
             <DropdownMenu>
                 <DropdownMenuTrigger attr:class=classes::trigger>"Open"</DropdownMenuTrigger>
                 <DropdownMenuPortal>
-                    <DropdownMenuContent class=classes::content side_offset=5.0>
+                    <DropdownMenuContent attr:class=classes::content side_offset=5.0>
                         <DropdownMenuItem attr:class=classes::item on_select=Callback::new(move |_: web_sys::Event| { web_sys::console::log_1(&"undo".into()); })>"Undo"</DropdownMenuItem>
                         <DropdownMenuItem attr:class=classes::item on_select=Callback::new(move |_: web_sys::Event| { web_sys::console::log_1(&"redo".into()); })>"Redo"</DropdownMenuItem>
                         <DropdownMenuSeparator attr:class=classes::separator />
@@ -174,14 +174,14 @@ pub fn Modality() -> impl IntoView {
                     <DropdownMenu>
                         <DropdownMenuTrigger attr:class=classes::trigger>"Open"</DropdownMenuTrigger>
                         <DropdownMenuPortal>
-                            <DropdownMenuContent class=classes::content side_offset=5.0>
+                            <DropdownMenuContent attr:class=classes::content side_offset=5.0>
                                 <DropdownMenuItem attr:class=classes::item on_select=Callback::new(move |_: web_sys::Event| { web_sys::console::log_1(&"undo".into()); })>"Undo"</DropdownMenuItem>
                                 <DropdownMenuItem attr:class=classes::item on_select=Callback::new(move |_: web_sys::Event| { web_sys::console::log_1(&"redo".into()); })>"Redo"</DropdownMenuItem>
                                 <DropdownMenuSeparator attr:class=classes::separator />
                                 <DropdownMenuSub>
                                     <DropdownMenuSubTrigger attr:class=sub_trigger_class.get_value()>"Submenu \u{2192}"</DropdownMenuSubTrigger>
                                     <DropdownMenuPortal>
-                                        <DropdownMenuSubContent class=classes::content side_offset=12.0>
+                                        <DropdownMenuSubContent attr:class=classes::content side_offset=12.0>
                                             <DropdownMenuItem attr:class=classes::item on_select=Callback::new(move |_: web_sys::Event| { web_sys::console::log_1(&"one".into()); })>"One"</DropdownMenuItem>
                                             <DropdownMenuItem attr:class=classes::item on_select=Callback::new(move |_: web_sys::Event| { web_sys::console::log_1(&"two".into()); })>"Two"</DropdownMenuItem>
                                             <DropdownMenuItem attr:class=classes::item on_select=Callback::new(move |_: web_sys::Event| { web_sys::console::log_1(&"three".into()); })>"Three"</DropdownMenuItem>
@@ -206,14 +206,14 @@ pub fn Modality() -> impl IntoView {
                     <DropdownMenu modal=false>
                         <DropdownMenuTrigger attr:class=classes::trigger>"Open"</DropdownMenuTrigger>
                         <DropdownMenuPortal>
-                            <DropdownMenuContent class=classes::content side_offset=5.0>
+                            <DropdownMenuContent attr:class=classes::content side_offset=5.0>
                                 <DropdownMenuItem attr:class=classes::item on_select=Callback::new(move |_: web_sys::Event| { web_sys::console::log_1(&"undo".into()); })>"Undo"</DropdownMenuItem>
                                 <DropdownMenuItem attr:class=classes::item on_select=Callback::new(move |_: web_sys::Event| { web_sys::console::log_1(&"redo".into()); })>"Redo"</DropdownMenuItem>
                                 <DropdownMenuSeparator attr:class=classes::separator />
                                 <DropdownMenuSub>
                                     <DropdownMenuSubTrigger attr:class=sub_trigger_class.get_value()>"Submenu \u{2192}"</DropdownMenuSubTrigger>
                                     <DropdownMenuPortal>
-                                        <DropdownMenuSubContent class=classes::content side_offset=12.0>
+                                        <DropdownMenuSubContent attr:class=classes::content side_offset=12.0>
                                             <DropdownMenuItem attr:class=classes::item on_select=Callback::new(move |_: web_sys::Event| { web_sys::console::log_1(&"one".into()); })>"One"</DropdownMenuItem>
                                             <DropdownMenuItem attr:class=classes::item on_select=Callback::new(move |_: web_sys::Event| { web_sys::console::log_1(&"two".into()); })>"Two"</DropdownMenuItem>
                                             <DropdownMenuItem attr:class=classes::item on_select=Callback::new(move |_: web_sys::Event| { web_sys::console::log_1(&"three".into()); })>"Three"</DropdownMenuItem>
@@ -258,21 +258,21 @@ pub fn Submenus() -> impl IntoView {
                     <DropdownMenu dir=Signal::derive(move || if rtl.get() { Direction::Rtl } else { Direction::Ltr })>
                         <DropdownMenuTrigger attr:class=classes::trigger>"Open"</DropdownMenuTrigger>
                         <DropdownMenuPortal>
-                            <DropdownMenuContent class=classes::content side_offset=5.0>
+                            <DropdownMenuContent attr:class=classes::content side_offset=5.0>
                                 <DropdownMenuItem attr:class=classes::item on_select=Callback::new(move |_: web_sys::Event| { web_sys::console::log_1(&"new-tab".into()); })>"New Tab"</DropdownMenuItem>
                                 <DropdownMenuItem attr:class=classes::item on_select=Callback::new(move |_: web_sys::Event| { web_sys::console::log_1(&"new-window".into()); })>"New Window"</DropdownMenuItem>
                                 <DropdownMenuSeparator attr:class=classes::separator />
                                 <DropdownMenuSub>
                                     <DropdownMenuSubTrigger attr:class=sub_trigger_class.get_value()>"Bookmarks \u{2192}"</DropdownMenuSubTrigger>
                                     <DropdownMenuPortal>
-                                        <DropdownMenuSubContent class=classes::content side_offset=12.0>
+                                        <DropdownMenuSubContent attr:class=classes::content side_offset=12.0>
                                             <DropdownMenuItem attr:class=classes::item on_select=Callback::new(move |_: web_sys::Event| { web_sys::console::log_1(&"index".into()); })>"Inbox"</DropdownMenuItem>
                                             <DropdownMenuItem attr:class=classes::item on_select=Callback::new(move |_: web_sys::Event| { web_sys::console::log_1(&"calendar".into()); })>"Calendar"</DropdownMenuItem>
                                             <DropdownMenuSeparator attr:class=classes::separator />
                                             <DropdownMenuSub>
                                                 <DropdownMenuSubTrigger attr:class=sub_trigger_class.get_value()>"WorkOS \u{2192}"</DropdownMenuSubTrigger>
                                                 <DropdownMenuPortal>
-                                                    <DropdownMenuSubContent class=classes::content side_offset=12.0>
+                                                    <DropdownMenuSubContent attr:class=classes::content side_offset=12.0>
                                                         <DropdownMenuItem attr:class=classes::item on_select=Callback::new(move |_: web_sys::Event| { web_sys::console::log_1(&"stitches".into()); })>"Stitches"</DropdownMenuItem>
                                                         <DropdownMenuItem attr:class=classes::item on_select=Callback::new(move |_: web_sys::Event| { web_sys::console::log_1(&"composer".into()); })>"Composer"</DropdownMenuItem>
                                                         <DropdownMenuItem attr:class=classes::item on_select=Callback::new(move |_: web_sys::Event| { web_sys::console::log_1(&"radix".into()); })>"Radix"</DropdownMenuItem>
@@ -289,7 +289,7 @@ pub fn Submenus() -> impl IntoView {
                                 <DropdownMenuSub>
                                     <DropdownMenuSubTrigger attr:class=sub_trigger_class.get_value() disabled=true>"History \u{2192}"</DropdownMenuSubTrigger>
                                     <DropdownMenuPortal>
-                                        <DropdownMenuSubContent class=classes::content side_offset=12.0>
+                                        <DropdownMenuSubContent attr:class=classes::content side_offset=12.0>
                                             <DropdownMenuItem attr:class=classes::item on_select=Callback::new(move |_: web_sys::Event| { web_sys::console::log_1(&"github".into()); })>"Github"</DropdownMenuItem>
                                             <DropdownMenuItem attr:class=classes::item on_select=Callback::new(move |_: web_sys::Event| { web_sys::console::log_1(&"google".into()); })>"Google"</DropdownMenuItem>
                                             <DropdownMenuItem attr:class=classes::item on_select=Callback::new(move |_: web_sys::Event| { web_sys::console::log_1(&"stack-overflow".into()); })>"Stack Overflow"</DropdownMenuItem>
@@ -300,7 +300,7 @@ pub fn Submenus() -> impl IntoView {
                                 <DropdownMenuSub>
                                     <DropdownMenuSubTrigger attr:class=sub_trigger_class.get_value()>"Tools \u{2192}"</DropdownMenuSubTrigger>
                                     <DropdownMenuPortal>
-                                        <DropdownMenuSubContent class=classes::content side_offset=12.0>
+                                        <DropdownMenuSubContent attr:class=classes::content side_offset=12.0>
                                             <DropdownMenuItem attr:class=classes::item on_select=Callback::new(move |_: web_sys::Event| { web_sys::console::log_1(&"extensions".into()); })>"Extensions"</DropdownMenuItem>
                                             <DropdownMenuItem attr:class=classes::item on_select=Callback::new(move |_: web_sys::Event| { web_sys::console::log_1(&"task-manager".into()); })>"Task Manager"</DropdownMenuItem>
                                             <DropdownMenuItem attr:class=classes::item on_select=Callback::new(move |_: web_sys::Event| { web_sys::console::log_1(&"developer-tools".into()); })>"Developer Tools"</DropdownMenuItem>
@@ -331,7 +331,7 @@ pub fn WithLabels() -> impl IntoView {
             <DropdownMenu>
                 <DropdownMenuTrigger attr:class=classes::trigger>"Open"</DropdownMenuTrigger>
                 <DropdownMenuPortal>
-                    <DropdownMenuContent class=classes::content side_offset=5.0>
+                    <DropdownMenuContent attr:class=classes::content side_offset=5.0>
                         {FOOD_GROUPS.iter().enumerate().map(|(index, food_group)| {
                             view! {
                                 <DropdownMenuGroup>
@@ -378,7 +378,7 @@ pub fn CheckboxItems() -> impl IntoView {
             <DropdownMenu>
                 <DropdownMenuTrigger attr:class=classes::trigger>"Open"</DropdownMenuTrigger>
                 <DropdownMenuPortal>
-                    <DropdownMenuContent class=classes::content side_offset=5.0>
+                    <DropdownMenuContent attr:class=classes::content side_offset=5.0>
                         <DropdownMenuGroup>
                             <DropdownMenuCheckboxItem
                                 attr:class=classes::item
@@ -468,7 +468,7 @@ pub fn RadioItems() -> impl IntoView {
             <DropdownMenu>
                 <DropdownMenuTrigger attr:class=classes::trigger>"Open"</DropdownMenuTrigger>
                 <DropdownMenuPortal>
-                    <DropdownMenuContent class=classes::content side_offset=5.0>
+                    <DropdownMenuContent attr:class=classes::content side_offset=5.0>
                         <DropdownMenuItem attr:class=classes::item on_select=Callback::new(move |_: web_sys::Event| { web_sys::console::log_1(&"minimize".into()); })>"Minimize window"</DropdownMenuItem>
                         <DropdownMenuItem attr:class=classes::item on_select=Callback::new(move |_: web_sys::Event| { web_sys::console::log_1(&"zoom".into()); })>"Zoom"</DropdownMenuItem>
                         <DropdownMenuItem attr:class=classes::item on_select=Callback::new(move |_: web_sys::Event| { web_sys::console::log_1(&"smaller".into()); })>"Smaller"</DropdownMenuItem>
@@ -501,7 +501,7 @@ pub fn PreventClosing() -> impl IntoView {
             <DropdownMenu>
                 <DropdownMenuTrigger attr:class=classes::trigger>"Open"</DropdownMenuTrigger>
                 <DropdownMenuPortal>
-                    <DropdownMenuContent class=classes::content side_offset=5.0>
+                    <DropdownMenuContent attr:class=classes::content side_offset=5.0>
                         <DropdownMenuItem
                             attr:class=classes::item
                             on_select=Callback::new(move |_: web_sys::Event| {
@@ -541,7 +541,7 @@ pub fn WithTooltip() -> impl IntoView {
                     </Tooltip>
                 </TooltipProvider>
                 <DropdownMenuPortal>
-                    <DropdownMenuContent class=classes::content side_offset=5.0>
+                    <DropdownMenuContent attr:class=classes::content side_offset=5.0>
                         <DropdownMenuItem attr:class=classes::item on_select=Callback::new(move |_: web_sys::Event| { web_sys::console::log_1(&"undo".into()); })>"Undo"</DropdownMenuItem>
                         <DropdownMenuItem attr:class=classes::item on_select=Callback::new(move |_: web_sys::Event| { web_sys::console::log_1(&"redo".into()); })>"Redo"</DropdownMenuItem>
                         <DropdownMenuSeparator attr:class=classes::separator />
@@ -563,7 +563,7 @@ pub fn NestedComposition() -> impl IntoView {
             <DropdownMenu>
                 <DropdownMenuTrigger attr:class=classes::trigger>"Open"</DropdownMenuTrigger>
                 <DropdownMenuPortal>
-                    <DropdownMenuContent class=classes::content side_offset=5.0>
+                    <DropdownMenuContent attr:class=classes::content side_offset=5.0>
                         <Dialog>
                             <DialogTrigger attr:class=classes::item as_child=true>
                                 <DropdownMenuItem on_select=Callback::new(move |event: web_sys::Event| { event.prevent_default(); })>
@@ -579,7 +579,7 @@ pub fn NestedComposition() -> impl IntoView {
                                             "Open"
                                         </DropdownMenuTrigger>
                                         <DropdownMenuPortal>
-                                            <DropdownMenuContent class=classes::content side_offset=5.0>
+                                            <DropdownMenuContent attr:class=classes::content side_offset=5.0>
                                                 <DropdownMenuItem attr:class=classes::item on_select=Callback::new(move |_: web_sys::Event| { web_sys::console::log_1(&"undo".into()); })>"Undo"</DropdownMenuItem>
                                                 <DropdownMenuItem attr:class=classes::item on_select=Callback::new(move |_: web_sys::Event| { web_sys::console::log_1(&"redo".into()); })>"Redo"</DropdownMenuItem>
                                                 <DropdownMenuArrow />
@@ -661,7 +661,7 @@ pub fn SingleItemAsDialogTrigger() -> impl IntoView {
                     </DropdownMenuTrigger>
 
                     <DropdownMenuPortal>
-                        <DropdownMenuContent class=classes::content side_offset=5.0>
+                        <DropdownMenuContent attr:class=classes::content side_offset=5.0>
                             <DialogTrigger attr:class=classes::item as_child=true>
                                 <DropdownMenuItem>"Delete"</DropdownMenuItem>
                             </DialogTrigger>
@@ -685,7 +685,7 @@ pub fn SingleItemAsDialogTrigger() -> impl IntoView {
                     </DropdownMenuTrigger>
 
                     <DropdownMenuPortal>
-                        <DropdownMenuContent class=classes::content side_offset=5.0
+                        <DropdownMenuContent attr:class=classes::content side_offset=5.0
                             on_close_auto_focus=content_close_auto_focus
                         >
                             <DialogTrigger attr:class=classes::item as_child=true>
@@ -732,7 +732,7 @@ pub fn MultipleItemsAsDialogTriggers() -> impl IntoView {
                     </DropdownMenuTrigger>
 
                     <DropdownMenuPortal>
-                        <DropdownMenuContent class=classes::content side_offset=5.0>
+                        <DropdownMenuContent attr:class=classes::content side_offset=5.0>
                             <DialogTrigger as_child=true attr:class=classes::item>
                                 <DropdownMenuItem on_select=Callback::new(move |_: web_sys::Event| { set_switch_accounts_open.set(true); })>
                                     "Switch Accounts"
@@ -777,7 +777,7 @@ pub fn MultipleItemsAsDialogTriggers() -> impl IntoView {
                     </DropdownMenuTrigger>
 
                     <DropdownMenuPortal>
-                        <DropdownMenuContent class=classes::content side_offset=5.0
+                        <DropdownMenuContent attr:class=classes::content side_offset=5.0
                             on_close_auto_focus=Callback::new(move |event: web_sys::Event| {
                                 if delete_open2.get_untracked() || switch_accounts_open2.get_untracked() {
                                     event.prevent_default();

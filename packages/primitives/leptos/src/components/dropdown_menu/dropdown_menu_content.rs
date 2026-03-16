@@ -27,7 +27,6 @@ pub fn DropdownMenuPortal(
 #[component]
 pub fn DropdownMenuContent(
     #[prop(into, optional)] force_mount: MaybeProp<bool>,
-    #[prop(into, optional)] class: MaybeProp<String>,
     #[prop(into, optional)] side: MaybeProp<PopperSide>,
     #[prop(into, optional)] side_offset: MaybeProp<f64>,
     #[prop(into, optional)] align: MaybeProp<Align>,
@@ -67,7 +66,6 @@ pub fn DropdownMenuContent(
             force_mount=force_mount
             as_child=as_child
             node_ref=node_ref
-            attr:class=move || class.get().unwrap_or_default()
             style:--radix-dropdown-menu-content-transform-origin="var(--radix-popper-transform-origin)"
             style:--radix-dropdown-menu-content-available-width="var(--radix-popper-available-width)"
             style:--radix-dropdown-menu-content-available-height="var(--radix-popper-available-height)"
@@ -409,7 +407,6 @@ pub fn DropdownMenuSubContent(
     #[prop(into, optional)] sticky: MaybeProp<Sticky>,
     #[prop(into, optional)] hide_when_detached: MaybeProp<bool>,
     #[prop(into, optional)] r#loop: MaybeProp<bool>,
-    #[prop(into, optional)] class: MaybeProp<String>,
     #[prop(into, optional)] on_escape_key_down: Option<Callback<ev::KeyboardEvent>>,
     #[prop(into, optional)] on_focus_outside: Option<Callback<web_sys::CustomEvent>>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
@@ -433,7 +430,6 @@ pub fn DropdownMenuSubContent(
             r#loop=r#loop
             as_child=as_child
             node_ref=node_ref
-            attr:class=move || class.get().unwrap_or_default()
             style:--radix-dropdown-menu-content-transform-origin="var(--radix-popper-transform-origin)"
             style:--radix-dropdown-menu-content-available-width="var(--radix-popper-available-width)"
             style:--radix-dropdown-menu-content-available-height="var(--radix-popper-available-height)"

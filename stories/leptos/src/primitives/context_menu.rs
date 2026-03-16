@@ -135,7 +135,7 @@ pub fn Styled() -> impl IntoView {
             <ContextMenu>
                 <ContextMenuTrigger attr:class=classes::trigger>"Right click here"</ContextMenuTrigger>
                 <ContextMenuPortal>
-                    <ContextMenuContent class=classes::content>
+                    <ContextMenuContent attr:class=classes::content>
                         <ContextMenuItem attr:class=classes::item on_select=Callback::new(move |_: web_sys::Event| { web_sys::console::log_1(&"undo".into()); })>"Undo"</ContextMenuItem>
                         <ContextMenuItem attr:class=classes::item on_select=Callback::new(move |_: web_sys::Event| { web_sys::console::log_1(&"redo".into()); })>"Redo"</ContextMenuItem>
                         <ContextMenuSeparator attr:class=classes::separator />
@@ -159,21 +159,21 @@ pub fn Modality() -> impl IntoView {
                     <ContextMenu>
                         <ContextMenuTrigger attr:class=classes::trigger>{""}</ContextMenuTrigger>
                         <ContextMenuPortal>
-                            <ContextMenuContent class=classes::content>
+                            <ContextMenuContent attr:class=classes::content>
                                 <ContextMenuItem attr:class=classes::item on_select=Callback::new(move |_: web_sys::Event| { web_sys::console::log_1(&"undo".into()); })>"Undo"</ContextMenuItem>
                                 <ContextMenuItem attr:class=classes::item on_select=Callback::new(move |_: web_sys::Event| { web_sys::console::log_1(&"redo".into()); })>"Redo"</ContextMenuItem>
                                 <ContextMenuSeparator attr:class=classes::separator />
                                 <ContextMenuSub>
                                     <ContextMenuSubTrigger attr:class=classes::subTrigger>"Submenu \u{2192}"</ContextMenuSubTrigger>
                                     <ContextMenuPortal>
-                                        <ContextMenuSubContent class=classes::content side_offset=12.0>
+                                        <ContextMenuSubContent attr:class=classes::content side_offset=12.0>
                                             <ContextMenuItem attr:class=classes::item on_select=Callback::new(move |_: web_sys::Event| { web_sys::console::log_1(&"one".into()); })>"One"</ContextMenuItem>
                                             <ContextMenuItem attr:class=classes::item on_select=Callback::new(move |_: web_sys::Event| { web_sys::console::log_1(&"two".into()); })>"Two"</ContextMenuItem>
                                             <ContextMenuSeparator attr:class=classes::separator />
                                             <ContextMenuSub>
                                                 <ContextMenuSubTrigger attr:class=classes::subTrigger>"Submenu \u{2192}"</ContextMenuSubTrigger>
                                                 <ContextMenuPortal>
-                                                    <ContextMenuSubContent class=classes::content side_offset=12.0>
+                                                    <ContextMenuSubContent attr:class=classes::content side_offset=12.0>
                                                         <ContextMenuItem attr:class=classes::item on_select=Callback::new(move |_: web_sys::Event| { web_sys::console::log_1(&"one".into()); })>"One"</ContextMenuItem>
                                                         <ContextMenuItem attr:class=classes::item on_select=Callback::new(move |_: web_sys::Event| { web_sys::console::log_1(&"two".into()); })>"Two"</ContextMenuItem>
                                                         <ContextMenuItem attr:class=classes::item on_select=Callback::new(move |_: web_sys::Event| { web_sys::console::log_1(&"three".into()); })>"Three"</ContextMenuItem>
@@ -203,21 +203,21 @@ pub fn Modality() -> impl IntoView {
                     <ContextMenu modal=false>
                         <ContextMenuTrigger attr:class=classes::trigger>{""}</ContextMenuTrigger>
                         <ContextMenuPortal>
-                            <ContextMenuContent class=classes::content>
+                            <ContextMenuContent attr:class=classes::content>
                                 <ContextMenuItem attr:class=classes::item on_select=Callback::new(move |_: web_sys::Event| { web_sys::console::log_1(&"undo".into()); })>"Undo"</ContextMenuItem>
                                 <ContextMenuItem attr:class=classes::item on_select=Callback::new(move |_: web_sys::Event| { web_sys::console::log_1(&"redo".into()); })>"Redo"</ContextMenuItem>
                                 <ContextMenuSeparator attr:class=classes::separator />
                                 <ContextMenuSub>
                                     <ContextMenuSubTrigger attr:class=classes::subTrigger>"Submenu \u{2192}"</ContextMenuSubTrigger>
                                     <ContextMenuPortal>
-                                        <ContextMenuSubContent class=classes::content side_offset=12.0>
+                                        <ContextMenuSubContent attr:class=classes::content side_offset=12.0>
                                             <ContextMenuItem attr:class=classes::item on_select=Callback::new(move |_: web_sys::Event| { web_sys::console::log_1(&"one".into()); })>"One"</ContextMenuItem>
                                             <ContextMenuItem attr:class=classes::item on_select=Callback::new(move |_: web_sys::Event| { web_sys::console::log_1(&"two".into()); })>"Two"</ContextMenuItem>
                                             <ContextMenuSeparator attr:class=classes::separator />
                                             <ContextMenuSub>
                                                 <ContextMenuSubTrigger attr:class=classes::subTrigger>"Submenu \u{2192}"</ContextMenuSubTrigger>
                                                 <ContextMenuPortal>
-                                                    <ContextMenuSubContent class=classes::content side_offset=12.0>
+                                                    <ContextMenuSubContent attr:class=classes::content side_offset=12.0>
                                                         <ContextMenuItem attr:class=classes::item on_select=Callback::new(move |_: web_sys::Event| { web_sys::console::log_1(&"one".into()); })>"One"</ContextMenuItem>
                                                         <ContextMenuItem attr:class=classes::item on_select=Callback::new(move |_: web_sys::Event| { web_sys::console::log_1(&"two".into()); })>"Two"</ContextMenuItem>
                                                         <ContextMenuItem attr:class=classes::item on_select=Callback::new(move |_: web_sys::Event| { web_sys::console::log_1(&"three".into()); })>"Three"</ContextMenuItem>
@@ -266,21 +266,21 @@ pub fn Submenus() -> impl IntoView {
                     <ContextMenu dir=Signal::derive(move || if rtl.get() { Direction::Rtl } else { Direction::Ltr })>
                         <ContextMenuTrigger attr:class=classes::trigger>"Right Click Here"</ContextMenuTrigger>
                         <ContextMenuPortal>
-                            <ContextMenuContent class=classes::content>
+                            <ContextMenuContent attr:class=classes::content>
                                 <ContextMenuItem attr:class=classes::item on_select=Callback::new(move |_: web_sys::Event| { web_sys::console::log_1(&"new-tab".into()); })>"New Tab"</ContextMenuItem>
                                 <ContextMenuItem attr:class=classes::item on_select=Callback::new(move |_: web_sys::Event| { web_sys::console::log_1(&"new-window".into()); })>"New Window"</ContextMenuItem>
                                 <ContextMenuSeparator attr:class=classes::separator />
                                 <ContextMenuSub>
                                     <ContextMenuSubTrigger attr:class=classes::subTrigger>"Bookmarks \u{2192}"</ContextMenuSubTrigger>
                                     <ContextMenuPortal>
-                                        <ContextMenuSubContent class=classes::content side_offset=12.0>
+                                        <ContextMenuSubContent attr:class=classes::content side_offset=12.0>
                                             <ContextMenuItem attr:class=classes::item on_select=Callback::new(move |_: web_sys::Event| { web_sys::console::log_1(&"index".into()); })>"Inbox"</ContextMenuItem>
                                             <ContextMenuItem attr:class=classes::item on_select=Callback::new(move |_: web_sys::Event| { web_sys::console::log_1(&"calendar".into()); })>"Calendar"</ContextMenuItem>
                                             <ContextMenuSeparator attr:class=classes::separator />
                                             <ContextMenuSub>
                                                 <ContextMenuSubTrigger attr:class=classes::subTrigger>"WorkOS \u{2192}"</ContextMenuSubTrigger>
                                                 <ContextMenuPortal>
-                                                    <ContextMenuSubContent class=classes::content side_offset=12.0>
+                                                    <ContextMenuSubContent attr:class=classes::content side_offset=12.0>
                                                         <ContextMenuItem attr:class=classes::item on_select=Callback::new(move |_: web_sys::Event| { web_sys::console::log_1(&"stitches".into()); })>"Stitches"</ContextMenuItem>
                                                         <ContextMenuItem attr:class=classes::item on_select=Callback::new(move |_: web_sys::Event| { web_sys::console::log_1(&"composer".into()); })>"Composer"</ContextMenuItem>
                                                         <ContextMenuItem attr:class=classes::item on_select=Callback::new(move |_: web_sys::Event| { web_sys::console::log_1(&"radix".into()); })>"Radix"</ContextMenuItem>
@@ -297,7 +297,7 @@ pub fn Submenus() -> impl IntoView {
                                 <ContextMenuSub>
                                     <ContextMenuSubTrigger attr:class=classes::subTrigger disabled=true>"History \u{2192}"</ContextMenuSubTrigger>
                                     <ContextMenuPortal>
-                                        <ContextMenuSubContent class=classes::content side_offset=12.0>
+                                        <ContextMenuSubContent attr:class=classes::content side_offset=12.0>
                                             <ContextMenuItem attr:class=classes::item on_select=Callback::new(move |_: web_sys::Event| { web_sys::console::log_1(&"github".into()); })>"Github"</ContextMenuItem>
                                             <ContextMenuItem attr:class=classes::item on_select=Callback::new(move |_: web_sys::Event| { web_sys::console::log_1(&"google".into()); })>"Google"</ContextMenuItem>
                                             <ContextMenuItem attr:class=classes::item on_select=Callback::new(move |_: web_sys::Event| { web_sys::console::log_1(&"stack-overflow".into()); })>"Stack Overflow"</ContextMenuItem>
@@ -308,7 +308,7 @@ pub fn Submenus() -> impl IntoView {
                                 <ContextMenuSub>
                                     <ContextMenuSubTrigger attr:class=classes::subTrigger>"Tools \u{2192}"</ContextMenuSubTrigger>
                                     <ContextMenuPortal>
-                                        <ContextMenuSubContent class=classes::content side_offset=12.0>
+                                        <ContextMenuSubContent attr:class=classes::content side_offset=12.0>
                                             <ContextMenuItem attr:class=classes::item on_select=Callback::new(move |_: web_sys::Event| { web_sys::console::log_1(&"extensions".into()); })>"Extensions"</ContextMenuItem>
                                             <ContextMenuItem attr:class=classes::item on_select=Callback::new(move |_: web_sys::Event| { web_sys::console::log_1(&"task-manager".into()); })>"Task Manager"</ContextMenuItem>
                                             <ContextMenuItem attr:class=classes::item on_select=Callback::new(move |_: web_sys::Event| { web_sys::console::log_1(&"developer-tools".into()); })>"Developer Tools"</ContextMenuItem>
@@ -338,7 +338,7 @@ pub fn WithLabels() -> impl IntoView {
             <ContextMenu>
                 <ContextMenuTrigger attr:class=classes::trigger>"Right click here"</ContextMenuTrigger>
                 <ContextMenuPortal>
-                    <ContextMenuContent class=classes::content>
+                    <ContextMenuContent attr:class=classes::content>
                         {FOOD_GROUPS.iter().enumerate().map(|(index, food_group)| {
                             view! {
                                 <ContextMenuGroup>
@@ -382,7 +382,7 @@ pub fn CheckboxItems() -> impl IntoView {
             <ContextMenu>
                 <ContextMenuTrigger attr:class=classes::trigger>"Right click here"</ContextMenuTrigger>
                 <ContextMenuPortal>
-                    <ContextMenuContent class=classes::content>
+                    <ContextMenuContent attr:class=classes::content>
                         <ContextMenuItem attr:class=classes::item on_select=Callback::new(move |_: web_sys::Event| { web_sys::console::log_1(&"show".into()); })>"Show fonts"</ContextMenuItem>
                         <ContextMenuItem attr:class=classes::item on_select=Callback::new(move |_: web_sys::Event| { web_sys::console::log_1(&"bigger".into()); })>"Bigger"</ContextMenuItem>
                         <ContextMenuItem attr:class=classes::item on_select=Callback::new(move |_: web_sys::Event| { web_sys::console::log_1(&"smaller".into()); })>"Smaller"</ContextMenuItem>
@@ -442,7 +442,7 @@ pub fn RadioItems() -> impl IntoView {
             <ContextMenu>
                 <ContextMenuTrigger attr:class=classes::trigger>"Right click here"</ContextMenuTrigger>
                 <ContextMenuPortal>
-                    <ContextMenuContent class=classes::content>
+                    <ContextMenuContent attr:class=classes::content>
                         <ContextMenuItem attr:class=classes::item on_select=Callback::new(move |_: web_sys::Event| { web_sys::console::log_1(&"minimize".into()); })>"Minimize window"</ContextMenuItem>
                         <ContextMenuItem attr:class=classes::item on_select=Callback::new(move |_: web_sys::Event| { web_sys::console::log_1(&"zoom".into()); })>"Zoom"</ContextMenuItem>
                         <ContextMenuItem attr:class=classes::item on_select=Callback::new(move |_: web_sys::Event| { web_sys::console::log_1(&"smaller".into()); })>"Smaller"</ContextMenuItem>
@@ -474,7 +474,7 @@ pub fn PreventClosing() -> impl IntoView {
             <ContextMenu>
                 <ContextMenuTrigger attr:class=classes::trigger>"Right click here"</ContextMenuTrigger>
                 <ContextMenuPortal>
-                    <ContextMenuContent class=classes::content>
+                    <ContextMenuContent attr:class=classes::content>
                         <ContextMenuItem
                             attr:class=classes::item
                             on_select=Callback::new(move |_: web_sys::Event| {
@@ -508,7 +508,7 @@ pub fn Nested() -> impl IntoView {
                     <ContextMenu>
                         <ContextMenuTrigger attr:class=classes::trigger attr:style="background-color: tomato;">{""}</ContextMenuTrigger>
                         <ContextMenuPortal>
-                            <ContextMenuContent class=classes::content>
+                            <ContextMenuContent attr:class=classes::content>
                                 <ContextMenuLabel attr:class=classes::label>"Red box menu"</ContextMenuLabel>
                                 <ContextMenuSeparator attr:class=classes::separator />
                                 <ContextMenuItem attr:class=classes::item on_select=Callback::new(move |_: web_sys::Event| { web_sys::console::log_1(&"red action1".into()); })>"Red action 1"</ContextMenuItem>
@@ -517,7 +517,7 @@ pub fn Nested() -> impl IntoView {
                                 <ContextMenuSub>
                                     <ContextMenuSubTrigger attr:class=classes::subTrigger>"Submenu \u{2192}"</ContextMenuSubTrigger>
                                     <ContextMenuPortal>
-                                        <ContextMenuSubContent class=classes::content side_offset=12.0>
+                                        <ContextMenuSubContent attr:class=classes::content side_offset=12.0>
                                             <ContextMenuItem attr:class=classes::item on_select=Callback::new(move |_: web_sys::Event| { web_sys::console::log_1(&"red sub action 1".into()); })>"Red sub action 1"</ContextMenuItem>
                                             <ContextMenuItem attr:class=classes::item on_select=Callback::new(move |_: web_sys::Event| { web_sys::console::log_1(&"red sub action 2".into()); })>"Red sub action 2"</ContextMenuItem>
                                             <ContextMenuArrow />
@@ -529,7 +529,7 @@ pub fn Nested() -> impl IntoView {
                     </ContextMenu>
                 </ContextMenuTrigger>
                 <ContextMenuPortal>
-                    <ContextMenuContent class=classes::content>
+                    <ContextMenuContent attr:class=classes::content>
                         <ContextMenuLabel attr:class=classes::label>"Blue box menu"</ContextMenuLabel>
                         <ContextMenuSeparator attr:class=classes::separator />
                         <ContextMenuItem attr:class=classes::item on_select=Callback::new(move |_: web_sys::Event| { web_sys::console::log_1(&"blue action1".into()); })>"Blue action 1"</ContextMenuItem>
@@ -538,7 +538,7 @@ pub fn Nested() -> impl IntoView {
                         <ContextMenuSub>
                             <ContextMenuSubTrigger attr:class=classes::subTrigger>"Submenu \u{2192}"</ContextMenuSubTrigger>
                             <ContextMenuPortal>
-                                <ContextMenuSubContent class=classes::content side_offset=12.0>
+                                <ContextMenuSubContent attr:class=classes::content side_offset=12.0>
                                     <ContextMenuItem attr:class=classes::item on_select=Callback::new(move |_: web_sys::Event| { web_sys::console::log_1(&"blue sub action 1".into()); })>"Blue sub action 1"</ContextMenuItem>
                                     <ContextMenuItem attr:class=classes::item on_select=Callback::new(move |_: web_sys::Event| { web_sys::console::log_1(&"blue sub action 2".into()); })>"Blue sub action 2"</ContextMenuItem>
                                     <ContextMenuArrow />

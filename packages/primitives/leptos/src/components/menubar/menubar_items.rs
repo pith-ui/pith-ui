@@ -294,7 +294,6 @@ pub fn MenubarSubContent(
     #[prop(into, optional)] sticky: MaybeProp<Sticky>,
     #[prop(into, optional)] hide_when_detached: MaybeProp<bool>,
     #[prop(into, optional)] r#loop: MaybeProp<bool>,
-    #[prop(into, optional)] class: MaybeProp<String>,
     #[prop(into, optional)] on_escape_key_down: Option<Callback<ev::KeyboardEvent>>,
     #[prop(into, optional)] on_focus_outside: Option<Callback<web_sys::CustomEvent>>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
@@ -329,7 +328,6 @@ pub fn MenubarSubContent(
             r#loop=r#loop
             as_child=as_child
             node_ref=composed_refs
-            attr:class=move || class.get().unwrap_or_default()
             style:--radix-menubar-content-transform-origin="var(--radix-popper-transform-origin)"
             style:--radix-menubar-content-available-width="var(--radix-popper-available-width)"
             style:--radix-menubar-content-available-height="var(--radix-popper-available-height)"
