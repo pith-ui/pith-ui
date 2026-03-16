@@ -2336,8 +2336,11 @@ dependencies = [
  "console_error_panic_hook",
  "console_log",
  "leptos",
+ "leptos-node-ref",
  "leptos_router",
  "log",
+ "send_wrapper",
+ "web-sys",
 ]
 
 [[package]]

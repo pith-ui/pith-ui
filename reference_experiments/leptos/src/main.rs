@@ -6,6 +6,7 @@
 
 mod app;
 mod pages;
+mod support;
 
 use leptos::prelude::*;
 
