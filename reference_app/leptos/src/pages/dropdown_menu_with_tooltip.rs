@@ -9,20 +9,20 @@ pub fn DropdownMenuWithTooltipPage() -> impl IntoView {
             <TooltipProvider>
                 <Tooltip>
                     <TooltipTrigger as_child=true>
-                        <DropdownMenuTrigger attr:class="dropdown-trigger">"open"</DropdownMenuTrigger>
+                        <DropdownMenuTrigger class:dropdown-trigger=true>"open"</DropdownMenuTrigger>
                     </TooltipTrigger>
                     <TooltipContent>"Tooltip content"</TooltipContent>
                 </Tooltip>
             </TooltipProvider>
             <DropdownMenuPortal>
-                <DropdownMenuContent attr:class="dropdown-content" side_offset=5.0>
-                    <DropdownMenuItem attr:class="dropdown-item" on_select=Callback::new(move |_: web_sys::Event| {})>
+                <DropdownMenuContent class:dropdown-content=true side_offset=5.0>
+                    <DropdownMenuItem class:dropdown-item=true on_select=Callback::new(move |_: web_sys::Event| {})>
                         "Item 1"
                     </DropdownMenuItem>
-                    <DropdownMenuItem attr:class="dropdown-item" on_select=Callback::new(move |_: web_sys::Event| {})>
+                    <DropdownMenuItem class:dropdown-item=true on_select=Callback::new(move |_: web_sys::Event| {})>
                         "Item 2"
                     </DropdownMenuItem>
-                    <DropdownMenuItem attr:class="dropdown-item" on_select=Callback::new(move |_: web_sys::Event| {})>
+                    <DropdownMenuItem class:dropdown-item=true on_select=Callback::new(move |_: web_sys::Event| {})>
                         "Item 3"
                     </DropdownMenuItem>
                 </DropdownMenuContent>

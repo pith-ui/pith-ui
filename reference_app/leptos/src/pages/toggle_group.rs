@@ -31,18 +31,18 @@ pub fn ToggleGroupPage() -> impl IntoView {
                         r#type=ToggleGroupType::Multiple
                         orientation=orient
                         disabled=disabled
-                        attr:class="toggle-group-root"
+                        class:toggle-group-root=true
                         attr:aria-label="Options"
                         value=multiple_value_signal
                         on_value_change=Callback::new(move |v: Vec<String>| set_multiple_value.set(v))
                     >
-                        <ToggleGroupItem value="1" attr:class="toggle-group-item">
+                        <ToggleGroupItem value="1" class:toggle-group-item=true>
                             "Item 1"
                         </ToggleGroupItem>
-                        <ToggleGroupItem value="2" disabled=true attr:class="toggle-group-item">
+                        <ToggleGroupItem value="2" disabled=true class:toggle-group-item=true>
                             "Item 2"
                         </ToggleGroupItem>
-                        <ToggleGroupItem value="3" attr:class="toggle-group-item">
+                        <ToggleGroupItem value="3" class:toggle-group-item=true>
                             "Item 3"
                         </ToggleGroupItem>
                     </ToggleGroup>
@@ -53,18 +53,18 @@ pub fn ToggleGroupPage() -> impl IntoView {
                 r#type=ToggleGroupType::Single
                 orientation=orient
                 disabled=disabled
-                attr:class="toggle-group-root"
+                class:toggle-group-root=true
                 attr:aria-label="Options"
                 value=single_value_signal
                 on_value_change=Callback::new(move |v: Vec<String>| set_single_value.set(v))
             >
-                <ToggleGroupItem value="1" attr:class="toggle-group-item">
+                <ToggleGroupItem value="1" class:toggle-group-item=true>
                     "Item 1"
                 </ToggleGroupItem>
-                <ToggleGroupItem value="2" disabled=true attr:class="toggle-group-item">
+                <ToggleGroupItem value="2" disabled=true class:toggle-group-item=true>
                     "Item 2"
                 </ToggleGroupItem>
-                <ToggleGroupItem value="3" attr:class="toggle-group-item">
+                <ToggleGroupItem value="3" class:toggle-group-item=true>
                     "Item 3"
                 </ToggleGroupItem>
             </ToggleGroup>

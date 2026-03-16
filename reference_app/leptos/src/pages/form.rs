@@ -41,40 +41,40 @@ pub fn FormPage() -> impl IntoView {
 
     view! {
         <Form
-            attr:class="form-root"
+            class:form-root=true
             on_clear_server_errors=Callback::new(move |_| set_server_errors_name.set(false))
             on:submit=on_submit
             on:reset=on_reset
         >
             <FormField
                 name="name"
-                attr:class="form-field"
+                class:form-field=true
                 server_invalid=Signal::derive(move || server_errors_name.get())
             >
-                <FormLabel attr:class="form-label">"Name"</FormLabel>
-                <FormControl attr:class="form-control" attr:r#type="text" attr:required="" />
-                <FormMessage attr:class="form-message" r#match=Match::BuiltIn(ValidityMatcher::ValueMissing)>
+                <FormLabel class:form-label=true>"Name"</FormLabel>
+                <FormControl class:form-control=true attr:r#type="text" attr:required="" />
+                <FormMessage class:form-message=true r#match=Match::BuiltIn(ValidityMatcher::ValueMissing)>
                     "Name is required"
                 </FormMessage>
                 <Show when=move || server_errors_name.get()>
-                    <FormMessage attr:class="form-message">
+                    <FormMessage class:form-message=true>
                         "Name is already taken"
                     </FormMessage>
                 </Show>
             </FormField>
 
-            <FormField name="email" attr:class="form-field">
-                <FormLabel attr:class="form-label">"Email"</FormLabel>
-                <FormControl attr:class="form-control" attr:r#type="email" attr:required="" />
-                <FormMessage attr:class="form-message" r#match=Match::BuiltIn(ValidityMatcher::ValueMissing)>
+            <FormField name="email" class:form-field=true>
+                <FormLabel class:form-label=true>"Email"</FormLabel>
+                <FormControl class:form-control=true attr:r#type="email" attr:required="" />
+                <FormMessage class:form-message=true r#match=Match::BuiltIn(ValidityMatcher::ValueMissing)>
                     "Email is required"
                 </FormMessage>
-                <FormMessage attr:class="form-message" r#match=Match::BuiltIn(ValidityMatcher::TypeMismatch)>
+                <FormMessage class:form-message=true r#match=Match::BuiltIn(ValidityMatcher::TypeMismatch)>
                     "Please enter a valid email"
                 </FormMessage>
             </FormField>
 
-            <FormSubmit attr:class="form-submit">"Submit"</FormSubmit>
+            <FormSubmit class:form-submit=true>"Submit"</FormSubmit>
             <button type="reset">"reset"</button>
         </Form>
 
@@ -84,10 +84,10 @@ pub fn FormPage() -> impl IntoView {
 
         <hr />
         <h3>"ValidityState"</h3>
-        <Form attr:class="form-root" attr:data-testid="validity-form" on:submit=|e: web_sys::SubmitEvent| e.prevent_default()>
-            <FormField name="vs-name" attr:class="form-field">
-                <FormLabel attr:class="form-label">"VS Name"</FormLabel>
-                <FormControl attr:class="form-control" attr:r#type="text" attr:required="" attr:data-testid="vs-name-input" />
+        <Form class:form-root=true attr:data-testid="validity-form" on:submit=|e: web_sys::SubmitEvent| e.prevent_default()>
+            <FormField name="vs-name" class:form-field=true>
+                <FormLabel class:form-label=true>"VS Name"</FormLabel>
+                <FormControl class:form-control=true attr:r#type="text" attr:required="" attr:data-testid="vs-name-input" />
                 <FormValidityState children=Callback::new(move |validity: Option<Validity>| {
                     let text = match validity {
                         Some(v) => format!(
@@ -100,9 +100,9 @@ pub fn FormPage() -> impl IntoView {
                 }) />
             </FormField>
 
-            <FormField name="vs-email" attr:class="form-field">
-                <FormLabel attr:class="form-label">"VS Email"</FormLabel>
-                <FormControl attr:class="form-control" attr:r#type="email" attr:data-testid="vs-email-input" />
+            <FormField name="vs-email" class:form-field=true>
+                <FormLabel class:form-label=true>"VS Email"</FormLabel>
+                <FormControl class:form-control=true attr:r#type="email" attr:data-testid="vs-email-input" />
                 <FormValidityState children=Callback::new(move |validity: Option<Validity>| {
                     let text = match validity {
                         Some(v) => format!(
@@ -115,7 +115,7 @@ pub fn FormPage() -> impl IntoView {
                 }) />
             </FormField>
 
-            <FormSubmit attr:class="form-submit" attr:data-testid="vs-submit">"Check Validity"</FormSubmit>
+            <FormSubmit class:form-submit=true attr:data-testid="vs-submit">"Check Validity"</FormSubmit>
         </Form>
     }
 }

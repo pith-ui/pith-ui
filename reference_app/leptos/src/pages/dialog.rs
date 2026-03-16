@@ -18,24 +18,14 @@ pub fn DialogPage() -> impl IntoView {
             <DialogPortal>
                 <DialogOverlay
                     attr:data-testid="overlay"
-                    attr:class=move || {
-                        let mut classes = vec!["dialog-overlay".to_string()];
-                        if animated.get() {
-                            classes.push("dialog-animated-overlay".to_string());
-                            classes.push("dialog-duration-50".to_string());
-                        }
-                        classes.join(" ")
-                    }
+                    class:dialog-overlay=true
+                    class:dialog-animated-overlay=animated
+                    class:dialog-duration-50=animated
                 />
                 <DialogContent
-                    attr:class=move || {
-                        let mut classes = vec!["dialog-content".to_string()];
-                        if animated.get() {
-                            classes.push("dialog-animated-content".to_string());
-                            classes.push("dialog-duration-50".to_string());
-                        }
-                        classes.join(" ")
-                    }
+                    class:dialog-content=true
+                    class:dialog-animated-content=animated
+                    class:dialog-duration-50=animated
                 >
                     <DialogTitle>"title"</DialogTitle>
                     <DialogDescription>"description"</DialogDescription>
@@ -57,10 +47,10 @@ pub fn DialogPage() -> impl IntoView {
             <DialogPortal>
                 <DialogOverlay
                     attr:data-testid="styled-overlay"
-                    attr:class="dialog-overlay"
-                    attr:style="background: tomato"
+                    class:dialog-overlay=true
+                    style:background="tomato"
                 />
-                <DialogContent attr:class="dialog-content">
+                <DialogContent class:dialog-content=true>
                     <DialogTitle>"styled title"</DialogTitle>
                     <DialogClose>"close styled"</DialogClose>
                 </DialogContent>
@@ -103,8 +93,8 @@ pub fn DialogPage() -> impl IntoView {
             >
                 <DialogTrigger attr:data-testid="controlled-dialog-trigger">"open controlled"</DialogTrigger>
                 <DialogPortal>
-                    <DialogOverlay attr:class="dialog-overlay" />
-                    <DialogContent attr:class="dialog-content" attr:data-testid="controlled-dialog-content">
+                    <DialogOverlay class:dialog-overlay=true />
+                    <DialogContent class:dialog-content=true attr:data-testid="controlled-dialog-content">
                         <DialogTitle>"controlled title"</DialogTitle>
                         <DialogDescription>"controlled description"</DialogDescription>
                         <DialogClose attr:data-testid="controlled-dialog-close">"close controlled"</DialogClose>
@@ -152,9 +142,9 @@ pub fn DialogPage() -> impl IntoView {
             <Dialog>
                 <DialogTrigger attr:data-testid="callback-trigger">"open callback"</DialogTrigger>
                 <DialogPortal>
-                    <DialogOverlay attr:class="dialog-overlay" attr:data-testid="callback-overlay" />
+                    <DialogOverlay class:dialog-overlay=true attr:data-testid="callback-overlay" />
                     <DialogContent
-                        attr:class="dialog-content"
+                        class:dialog-content=true
                         attr:data-testid="callback-content"
                         on_open_auto_focus=Callback::new(move |_: web_sys::Event| {
                             set_event_log.update(|log| log.push("openAutoFocus".to_string()));

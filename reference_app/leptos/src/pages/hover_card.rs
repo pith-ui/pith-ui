@@ -9,7 +9,7 @@ pub fn HoverCardPage() -> impl IntoView {
     view! {
         <HoverCard open_delay=0.0 close_delay=0.0>
             <HoverCardTrigger
-                attr:class="hover-card-trigger"
+                class:hover-card-trigger=true
                 attr:href="#"
                 attr:data-testid="hover-card-trigger"
             >
@@ -17,14 +17,14 @@ pub fn HoverCardPage() -> impl IntoView {
             </HoverCardTrigger>
             <HoverCardPortal>
                 <HoverCardContent
-                    attr:class="hover-card-content"
+                    class:hover-card-content=true
                     side_offset=5.0
                     attr:data-testid="hover-card-content"
-                    attr:style="background: tomato"
+                    style:background="tomato"
                 >
                     <p>"Hover card content"</p>
                     <p>"Supplementary information"</p>
-                    <HoverCardArrow attr:class="hover-card-arrow" width=20.0 height=10.0 />
+                    <HoverCardArrow class:hover-card-arrow=true width=20.0 height=10.0 />
                 </HoverCardContent>
             </HoverCardPortal>
         </HoverCard>
@@ -65,7 +65,7 @@ pub fn HoverCardPage() -> impl IntoView {
                 close_delay=0.0
             >
                 <HoverCardTrigger
-                    attr:class="hover-card-trigger"
+                    class:hover-card-trigger=true
                     attr:href="#"
                     attr:data-testid="controlled-trigger"
                 >
@@ -73,12 +73,12 @@ pub fn HoverCardPage() -> impl IntoView {
                 </HoverCardTrigger>
                 <HoverCardPortal>
                     <HoverCardContent
-                        attr:class="hover-card-content"
+                        class:hover-card-content=true
                         side_offset=5.0
                         attr:data-testid="controlled-content"
                     >
                         <p>"Controlled hover card content"</p>
-                        <HoverCardArrow attr:class="hover-card-arrow" width=20.0 height=10.0 />
+                        <HoverCardArrow class:hover-card-arrow=true width=20.0 height=10.0 />
                     </HoverCardContent>
                 </HoverCardPortal>
             </HoverCard>
@@ -92,7 +92,7 @@ pub fn HoverCardPage() -> impl IntoView {
         <h3>"Delayed"</h3>
         <HoverCard open_delay=500.0 close_delay=300.0>
             <HoverCardTrigger
-                attr:class="hover-card-trigger"
+                class:hover-card-trigger=true
                 attr:href="#"
                 attr:data-testid="delayed-trigger"
             >
@@ -100,12 +100,12 @@ pub fn HoverCardPage() -> impl IntoView {
             </HoverCardTrigger>
             <HoverCardPortal>
                 <HoverCardContent
-                    attr:class="hover-card-content"
+                    class:hover-card-content=true
                     side_offset=5.0
                     attr:data-testid="delayed-content"
                 >
                     <p>"Delayed hover card content"</p>
-                    <HoverCardArrow attr:class="hover-card-arrow" width=20.0 height=10.0 />
+                    <HoverCardArrow class:hover-card-arrow=true width=20.0 height=10.0 />
                 </HoverCardContent>
             </HoverCardPortal>
         </HoverCard>

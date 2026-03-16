@@ -6,46 +6,46 @@ fn AccordionItems() -> impl IntoView {
     view! {
         <AccordionItem
             value="item-1".to_string()
-            attr:class="accordion-item"
+            class:accordion-item=true
             attr:data-testid="item-1"
             attr:data-custom="accordion-item-custom"
         >
-            <AccordionHeader attr:class="accordion-header" attr:data-custom="accordion-header-custom">
-                <AccordionTrigger attr:class="accordion-trigger" attr:data-custom="accordion-trigger-custom">"Item 1"</AccordionTrigger>
+            <AccordionHeader class:accordion-header=true attr:data-custom="accordion-header-custom">
+                <AccordionTrigger class:accordion-trigger=true attr:data-custom="accordion-trigger-custom">"Item 1"</AccordionTrigger>
             </AccordionHeader>
-            <AccordionContent attr:class="accordion-content" attr:data-custom="accordion-content-custom">"Content 1"</AccordionContent>
+            <AccordionContent class:accordion-content=true attr:data-custom="accordion-content-custom">"Content 1"</AccordionContent>
         </AccordionItem>
         <AccordionItem
             value="item-2".to_string()
             disabled=true
-            attr:class="accordion-item"
+            class:accordion-item=true
             attr:data-testid="item-2"
         >
-            <AccordionHeader attr:class="accordion-header">
-                <AccordionTrigger attr:class="accordion-trigger">"Item 2"</AccordionTrigger>
+            <AccordionHeader class:accordion-header=true>
+                <AccordionTrigger class:accordion-trigger=true>"Item 2"</AccordionTrigger>
             </AccordionHeader>
-            <AccordionContent attr:class="accordion-content">"Content 2"</AccordionContent>
+            <AccordionContent class:accordion-content=true>"Content 2"</AccordionContent>
         </AccordionItem>
         <AccordionItem
             value="item-3".to_string()
-            attr:class="accordion-item"
+            class:accordion-item=true
             attr:data-testid="item-3"
         >
-            <AccordionHeader attr:class="accordion-header">
-                <AccordionTrigger attr:class="accordion-trigger">"Item 3"</AccordionTrigger>
+            <AccordionHeader class:accordion-header=true>
+                <AccordionTrigger class:accordion-trigger=true>"Item 3"</AccordionTrigger>
             </AccordionHeader>
-            <AccordionContent attr:class="accordion-content">"Content 3"</AccordionContent>
+            <AccordionContent class:accordion-content=true>"Content 3"</AccordionContent>
         </AccordionItem>
         <AccordionItem
             value="item-styled".to_string()
-            attr:class="accordion-item"
+            class:accordion-item=true
             attr:data-testid="item-styled"
         >
-            <AccordionHeader attr:class="accordion-header">
-                <AccordionTrigger attr:class="accordion-trigger">"Styled Item"</AccordionTrigger>
+            <AccordionHeader class:accordion-header=true>
+                <AccordionTrigger class:accordion-trigger=true>"Styled Item"</AccordionTrigger>
             </AccordionHeader>
             <AccordionContent
-                attr:class="accordion-content"
+                class:accordion-content=true
                 attr:data-testid="styled-content"
                 style:background="tomato"
                 style:--radix-accordion-content-height="999px"
@@ -67,7 +67,7 @@ pub fn AccordionPage() -> impl IntoView {
                 view! {
                     <Accordion
                         r#type=AccordionType::Multiple
-                        attr:class="accordion-root"
+                        class:accordion-root=true
                         attr:data-testid="accordion-root"
                     >
                         <AccordionItems />
@@ -78,7 +78,7 @@ pub fn AccordionPage() -> impl IntoView {
                     <Accordion
                         r#type=AccordionType::Single
                         collapsible=collapsible
-                        attr:class="accordion-root"
+                        class:accordion-root=true
                         attr:data-testid="accordion-root"
                     >
                         <AccordionItems />
@@ -172,28 +172,28 @@ fn ControlledAccordion() -> impl IntoView {
             on_value_change=Callback::new(move |val: String| {
                 set_controlled_value.set(val);
             })
-            attr:class="accordion-root"
+            class:accordion-root=true
             attr:data-testid="controlled-accordion-root"
         >
             <AccordionItem
                 value="ctrl-item-1".to_string()
-                attr:class="accordion-item"
+                class:accordion-item=true
                 attr:data-testid="ctrl-item-1"
             >
-                <AccordionHeader attr:class="accordion-header">
-                    <AccordionTrigger attr:class="accordion-trigger">"Ctrl Item 1"</AccordionTrigger>
+                <AccordionHeader class:accordion-header=true>
+                    <AccordionTrigger class:accordion-trigger=true>"Ctrl Item 1"</AccordionTrigger>
                 </AccordionHeader>
-                <AccordionContent attr:class="accordion-content">"Controlled Content 1"</AccordionContent>
+                <AccordionContent class:accordion-content=true>"Controlled Content 1"</AccordionContent>
             </AccordionItem>
             <AccordionItem
                 value="ctrl-item-2".to_string()
-                attr:class="accordion-item"
+                class:accordion-item=true
                 attr:data-testid="ctrl-item-2"
             >
-                <AccordionHeader attr:class="accordion-header">
-                    <AccordionTrigger attr:class="accordion-trigger">"Ctrl Item 2"</AccordionTrigger>
+                <AccordionHeader class:accordion-header=true>
+                    <AccordionTrigger class:accordion-trigger=true>"Ctrl Item 2"</AccordionTrigger>
                 </AccordionHeader>
-                <AccordionContent attr:class="accordion-content">"Controlled Content 2"</AccordionContent>
+                <AccordionContent class:accordion-content=true>"Controlled Content 2"</AccordionContent>
             </AccordionItem>
         </Accordion>
     }

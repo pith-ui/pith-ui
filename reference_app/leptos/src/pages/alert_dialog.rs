@@ -10,8 +10,8 @@ pub fn AlertDialogPage() -> impl IntoView {
         <AlertDialog>
             <AlertDialogTrigger>"delete"</AlertDialogTrigger>
             <AlertDialogPortal>
-                <AlertDialogOverlay attr:class="alert-dialog-overlay" />
-                <AlertDialogContent attr:class="alert-dialog-content">
+                <AlertDialogOverlay class:alert-dialog-overlay=true />
+                <AlertDialogContent class:alert-dialog-content=true>
                     <AlertDialogTitle>"Are you sure?"</AlertDialogTitle>
                     <AlertDialogDescription>"This action cannot be undone."</AlertDialogDescription>
                     <AlertDialogCancel>"cancel"</AlertDialogCancel>
@@ -40,8 +40,8 @@ pub fn AlertDialogPage() -> impl IntoView {
         >
             <AlertDialogTrigger attr:data-testid="controlled-trigger">"controlled delete"</AlertDialogTrigger>
             <AlertDialogPortal>
-                <AlertDialogOverlay attr:class="alert-dialog-overlay" />
-                <AlertDialogContent attr:class="alert-dialog-content" attr:data-testid="controlled-content">
+                <AlertDialogOverlay class:alert-dialog-overlay=true />
+                <AlertDialogContent class:alert-dialog-content=true attr:data-testid="controlled-content">
                     <AlertDialogTitle>"Controlled Alert"</AlertDialogTitle>
                     <AlertDialogDescription>"This is a controlled alert dialog."</AlertDialogDescription>
                     <AlertDialogCancel attr:data-testid="controlled-cancel">"cancel"</AlertDialogCancel>

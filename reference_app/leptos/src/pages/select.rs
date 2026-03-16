@@ -18,49 +18,49 @@ pub fn SelectPage() -> impl IntoView {
             on_value_change=Callback::new(move |v: String| set_value.set(v))
             disabled=disabled
         >
-            <SelectTrigger attr:class="select-trigger" attr:data-testid="select-trigger">
+            <SelectTrigger class:select-trigger=true attr:data-testid="select-trigger">
                 <SelectValue placeholder="Select a fruit..." />
-                <SelectIcon attr:class="select-icon">"▼"</SelectIcon>
+                <SelectIcon class:select-icon=true>"▼"</SelectIcon>
             </SelectTrigger>
             <SelectPortal>
-                <SelectContent attr:class="select-content" position="popper" side_offset=4.0>
-                    <SelectScrollUpButton attr:class="select-scroll-button">"▲"</SelectScrollUpButton>
-                    <SelectViewport attr:class="select-viewport">
+                <SelectContent class:select-content=true position="popper" side_offset=4.0>
+                    <SelectScrollUpButton class:select-scroll-button=true>"▲"</SelectScrollUpButton>
+                    <SelectViewport class:select-viewport=true>
                         <SelectGroup>
-                            <SelectLabel attr:class="select-label">"Fruits"</SelectLabel>
-                            <SelectItem attr:class="select-item" value="apple">
-                                <SelectItemIndicator attr:class="select-indicator">"✓"</SelectItemIndicator>
+                            <SelectLabel class:select-label=true>"Fruits"</SelectLabel>
+                            <SelectItem class:select-item=true value="apple">
+                                <SelectItemIndicator class:select-indicator=true>"✓"</SelectItemIndicator>
                                 <SelectItemText>"Apple"</SelectItemText>
                             </SelectItem>
-                            <SelectItem attr:class="select-item" value="avocado">
-                                <SelectItemIndicator attr:class="select-indicator">"✓"</SelectItemIndicator>
+                            <SelectItem class:select-item=true value="avocado">
+                                <SelectItemIndicator class:select-indicator=true>"✓"</SelectItemIndicator>
                                 <SelectItemText>"Avocado"</SelectItemText>
                             </SelectItem>
-                            <SelectItem attr:class="select-item" value="banana">
-                                <SelectItemIndicator attr:class="select-indicator">"✓"</SelectItemIndicator>
+                            <SelectItem class:select-item=true value="banana">
+                                <SelectItemIndicator class:select-indicator=true>"✓"</SelectItemIndicator>
                                 <SelectItemText>"Banana"</SelectItemText>
                             </SelectItem>
-                            <SelectItem attr:class="select-item" value="cherry" disabled=true>
-                                <SelectItemIndicator attr:class="select-indicator">"✓"</SelectItemIndicator>
+                            <SelectItem class:select-item=true value="cherry" disabled=true>
+                                <SelectItemIndicator class:select-indicator=true>"✓"</SelectItemIndicator>
                                 <SelectItemText>"Cherry"</SelectItemText>
                             </SelectItem>
                         </SelectGroup>
 
-                        <SelectSeparator attr:class="select-separator" />
+                        <SelectSeparator class:select-separator=true />
 
                         <SelectGroup>
-                            <SelectLabel attr:class="select-label">"Vegetables"</SelectLabel>
-                            <SelectItem attr:class="select-item" value="carrot">
-                                <SelectItemIndicator attr:class="select-indicator">"✓"</SelectItemIndicator>
+                            <SelectLabel class:select-label=true>"Vegetables"</SelectLabel>
+                            <SelectItem class:select-item=true value="carrot">
+                                <SelectItemIndicator class:select-indicator=true>"✓"</SelectItemIndicator>
                                 <SelectItemText>"Carrot"</SelectItemText>
                             </SelectItem>
-                            <SelectItem attr:class="select-item" value="potato">
-                                <SelectItemIndicator attr:class="select-indicator">"✓"</SelectItemIndicator>
+                            <SelectItem class:select-item=true value="potato">
+                                <SelectItemIndicator class:select-indicator=true>"✓"</SelectItemIndicator>
                                 <SelectItemText>"Potato"</SelectItemText>
                             </SelectItem>
                         </SelectGroup>
                     </SelectViewport>
-                    <SelectScrollDownButton attr:class="select-scroll-button">"▼"</SelectScrollDownButton>
+                    <SelectScrollDownButton class:select-scroll-button=true>"▼"</SelectScrollDownButton>
                 </SelectContent>
             </SelectPortal>
         </Select>
@@ -99,23 +99,23 @@ pub fn SelectPage() -> impl IntoView {
         // ── Default value select ──
         <h3>"Default Value"</h3>
         <Select default_value="banana">
-            <SelectTrigger attr:class="select-trigger" attr:data-testid="default-trigger">
+            <SelectTrigger class:select-trigger=true attr:data-testid="default-trigger">
                 <SelectValue />
-                <SelectIcon attr:class="select-icon">"▼"</SelectIcon>
+                <SelectIcon class:select-icon=true>"▼"</SelectIcon>
             </SelectTrigger>
             <SelectPortal>
-                <SelectContent attr:class="select-content" position="popper" side_offset=4.0>
-                    <SelectViewport attr:class="select-viewport">
-                        <SelectItem attr:class="select-item" value="apple">
-                            <SelectItemIndicator attr:class="select-indicator">"✓"</SelectItemIndicator>
+                <SelectContent class:select-content=true position="popper" side_offset=4.0>
+                    <SelectViewport class:select-viewport=true>
+                        <SelectItem class:select-item=true value="apple">
+                            <SelectItemIndicator class:select-indicator=true>"✓"</SelectItemIndicator>
                             <SelectItemText>"Apple"</SelectItemText>
                         </SelectItem>
-                        <SelectItem attr:class="select-item" value="banana">
-                            <SelectItemIndicator attr:class="select-indicator">"✓"</SelectItemIndicator>
+                        <SelectItem class:select-item=true value="banana">
+                            <SelectItemIndicator class:select-indicator=true>"✓"</SelectItemIndicator>
                             <SelectItemText>"Banana"</SelectItemText>
                         </SelectItem>
-                        <SelectItem attr:class="select-item" value="cherry">
-                            <SelectItemIndicator attr:class="select-indicator">"✓"</SelectItemIndicator>
+                        <SelectItem class:select-item=true value="cherry">
+                            <SelectItemIndicator class:select-indicator=true>"✓"</SelectItemIndicator>
                             <SelectItemText>"Cherry"</SelectItemText>
                         </SelectItem>
                     </SelectViewport>
@@ -134,23 +134,23 @@ pub fn SelectPage() -> impl IntoView {
                     value=Signal::derive(move || Some(controlled_value.get()))
                     on_value_change=Callback::new(move |v: String| set_controlled_value.set(v))
                 >
-                    <SelectTrigger attr:class="select-trigger" attr:data-testid="controlled-trigger-a">
+                    <SelectTrigger class:select-trigger=true attr:data-testid="controlled-trigger-a">
                         <SelectValue />
-                        <SelectIcon attr:class="select-icon">"▼"</SelectIcon>
+                        <SelectIcon class:select-icon=true>"▼"</SelectIcon>
                     </SelectTrigger>
                     <SelectPortal>
-                        <SelectContent attr:class="select-content" position="popper" side_offset=4.0>
-                            <SelectViewport attr:class="select-viewport">
-                                <SelectItem attr:class="select-item" value="fr">
-                                    <SelectItemIndicator attr:class="select-indicator">"✓"</SelectItemIndicator>
+                        <SelectContent class:select-content=true position="popper" side_offset=4.0>
+                            <SelectViewport class:select-viewport=true>
+                                <SelectItem class:select-item=true value="fr">
+                                    <SelectItemIndicator class:select-indicator=true>"✓"</SelectItemIndicator>
                                     <SelectItemText>"France"</SelectItemText>
                                 </SelectItem>
-                                <SelectItem attr:class="select-item" value="uk">
-                                    <SelectItemIndicator attr:class="select-indicator">"✓"</SelectItemIndicator>
+                                <SelectItem class:select-item=true value="uk">
+                                    <SelectItemIndicator class:select-indicator=true>"✓"</SelectItemIndicator>
                                     <SelectItemText>"United Kingdom"</SelectItemText>
                                 </SelectItem>
-                                <SelectItem attr:class="select-item" value="es">
-                                    <SelectItemIndicator attr:class="select-indicator">"✓"</SelectItemIndicator>
+                                <SelectItem class:select-item=true value="es">
+                                    <SelectItemIndicator class:select-indicator=true>"✓"</SelectItemIndicator>
                                     <SelectItemText>"Spain"</SelectItemText>
                                 </SelectItem>
                             </SelectViewport>
@@ -165,23 +165,23 @@ pub fn SelectPage() -> impl IntoView {
                     value=Signal::derive(move || Some(controlled_value.get()))
                     on_value_change=Callback::new(move |v: String| set_controlled_value.set(v))
                 >
-                    <SelectTrigger attr:class="select-trigger" attr:data-testid="controlled-trigger-b">
+                    <SelectTrigger class:select-trigger=true attr:data-testid="controlled-trigger-b">
                         <SelectValue />
-                        <SelectIcon attr:class="select-icon">"▼"</SelectIcon>
+                        <SelectIcon class:select-icon=true>"▼"</SelectIcon>
                     </SelectTrigger>
                     <SelectPortal>
-                        <SelectContent attr:class="select-content" position="popper" side_offset=4.0>
-                            <SelectViewport attr:class="select-viewport">
-                                <SelectItem attr:class="select-item" value="fr">
-                                    <SelectItemIndicator attr:class="select-indicator">"✓"</SelectItemIndicator>
+                        <SelectContent class:select-content=true position="popper" side_offset=4.0>
+                            <SelectViewport class:select-viewport=true>
+                                <SelectItem class:select-item=true value="fr">
+                                    <SelectItemIndicator class:select-indicator=true>"✓"</SelectItemIndicator>
                                     <SelectItemText>"France"</SelectItemText>
                                 </SelectItem>
-                                <SelectItem attr:class="select-item" value="uk">
-                                    <SelectItemIndicator attr:class="select-indicator">"✓"</SelectItemIndicator>
+                                <SelectItem class:select-item=true value="uk">
+                                    <SelectItemIndicator class:select-indicator=true>"✓"</SelectItemIndicator>
                                     <SelectItemText>"United Kingdom"</SelectItemText>
                                 </SelectItem>
-                                <SelectItem attr:class="select-item" value="es">
-                                    <SelectItemIndicator attr:class="select-indicator">"✓"</SelectItemIndicator>
+                                <SelectItem class:select-item=true value="es">
+                                    <SelectItemIndicator class:select-indicator=true>"✓"</SelectItemIndicator>
                                     <SelectItemText>"Spain"</SelectItemText>
                                 </SelectItem>
                             </SelectViewport>
@@ -203,31 +203,31 @@ pub fn SelectPage() -> impl IntoView {
         // ── Item-aligned positioning (default) ──
         <h3>"Item Aligned"</h3>
         <Select default_value="banana">
-            <SelectTrigger attr:class="select-trigger" attr:data-testid="aligned-trigger">
+            <SelectTrigger class:select-trigger=true attr:data-testid="aligned-trigger">
                 <SelectValue />
-                <SelectIcon attr:class="select-icon">"▼"</SelectIcon>
+                <SelectIcon class:select-icon=true>"▼"</SelectIcon>
             </SelectTrigger>
             <SelectPortal>
-                <SelectContent attr:class="select-content" attr:data-testid="aligned-content">
-                    <SelectViewport attr:class="select-viewport">
-                        <SelectItem attr:class="select-item" value="apple">
-                            <SelectItemIndicator attr:class="select-indicator">"✓"</SelectItemIndicator>
+                <SelectContent class:select-content=true attr:data-testid="aligned-content">
+                    <SelectViewport class:select-viewport=true>
+                        <SelectItem class:select-item=true value="apple">
+                            <SelectItemIndicator class:select-indicator=true>"✓"</SelectItemIndicator>
                             <SelectItemText>"Apple"</SelectItemText>
                         </SelectItem>
-                        <SelectItem attr:class="select-item" value="banana">
-                            <SelectItemIndicator attr:class="select-indicator">"✓"</SelectItemIndicator>
+                        <SelectItem class:select-item=true value="banana">
+                            <SelectItemIndicator class:select-indicator=true>"✓"</SelectItemIndicator>
                             <SelectItemText>"Banana"</SelectItemText>
                         </SelectItem>
-                        <SelectItem attr:class="select-item" value="cherry">
-                            <SelectItemIndicator attr:class="select-indicator">"✓"</SelectItemIndicator>
+                        <SelectItem class:select-item=true value="cherry">
+                            <SelectItemIndicator class:select-indicator=true>"✓"</SelectItemIndicator>
                             <SelectItemText>"Cherry"</SelectItemText>
                         </SelectItem>
-                        <SelectItem attr:class="select-item" value="date">
-                            <SelectItemIndicator attr:class="select-indicator">"✓"</SelectItemIndicator>
+                        <SelectItem class:select-item=true value="date">
+                            <SelectItemIndicator class:select-indicator=true>"✓"</SelectItemIndicator>
                             <SelectItemText>"Date"</SelectItemText>
                         </SelectItem>
-                        <SelectItem attr:class="select-item" value="elderberry">
-                            <SelectItemIndicator attr:class="select-indicator">"✓"</SelectItemIndicator>
+                        <SelectItem class:select-item=true value="elderberry">
+                            <SelectItemIndicator class:select-indicator=true>"✓"</SelectItemIndicator>
                             <SelectItemText>"Elderberry"</SelectItemText>
                         </SelectItem>
                     </SelectViewport>
@@ -263,23 +263,23 @@ fn FormSection() -> impl IntoView {
             <label>
                 "Country: "
                 <Select name="country" default_value="fr">
-                    <SelectTrigger attr:class="select-trigger" attr:data-testid="form-trigger">
+                    <SelectTrigger class:select-trigger=true attr:data-testid="form-trigger">
                         <SelectValue />
-                        <SelectIcon attr:class="select-icon">"▼"</SelectIcon>
+                        <SelectIcon class:select-icon=true>"▼"</SelectIcon>
                     </SelectTrigger>
                     <SelectPortal>
-                        <SelectContent attr:class="select-content" position="popper" side_offset=4.0>
-                            <SelectViewport attr:class="select-viewport">
-                                <SelectItem attr:class="select-item" value="fr">
-                                    <SelectItemIndicator attr:class="select-indicator">"✓"</SelectItemIndicator>
+                        <SelectContent class:select-content=true position="popper" side_offset=4.0>
+                            <SelectViewport class:select-viewport=true>
+                                <SelectItem class:select-item=true value="fr">
+                                    <SelectItemIndicator class:select-indicator=true>"✓"</SelectItemIndicator>
                                     <SelectItemText>"France"</SelectItemText>
                                 </SelectItem>
-                                <SelectItem attr:class="select-item" value="uk">
-                                    <SelectItemIndicator attr:class="select-indicator">"✓"</SelectItemIndicator>
+                                <SelectItem class:select-item=true value="uk">
+                                    <SelectItemIndicator class:select-indicator=true>"✓"</SelectItemIndicator>
                                     <SelectItemText>"United Kingdom"</SelectItemText>
                                 </SelectItem>
-                                <SelectItem attr:class="select-item" value="es">
-                                    <SelectItemIndicator attr:class="select-indicator">"✓"</SelectItemIndicator>
+                                <SelectItem class:select-item=true value="es">
+                                    <SelectItemIndicator class:select-indicator=true>"✓"</SelectItemIndicator>
                                     <SelectItemText>"Spain"</SelectItemText>
                                 </SelectItem>
                             </SelectViewport>
@@ -300,23 +300,23 @@ pub fn SelectForcedOpenPage() -> impl IntoView {
         <h3>"Forced Open No Value (Item Aligned)"</h3>
         <div style="position: relative; min-height: 200px;">
             <Select open=true>
-                <SelectTrigger attr:class="select-trigger" attr:data-testid="forced-novalue-trigger">
+                <SelectTrigger class:select-trigger=true attr:data-testid="forced-novalue-trigger">
                     <SelectValue placeholder="Pick an option" />
-                    <SelectIcon attr:class="select-icon">"▼"</SelectIcon>
+                    <SelectIcon class:select-icon=true>"▼"</SelectIcon>
                 </SelectTrigger>
                 <SelectPortal>
-                    <SelectContent attr:class="select-content" attr:data-testid="forced-novalue-content" attr:style="opacity: 0.7;">
-                        <SelectViewport attr:class="select-viewport">
-                            <SelectItem attr:class="select-item" value="apple">
-                                <SelectItemIndicator attr:class="select-indicator">"✓"</SelectItemIndicator>
+                    <SelectContent class:select-content=true attr:data-testid="forced-novalue-content" style:opacity="0.7">
+                        <SelectViewport class:select-viewport=true>
+                            <SelectItem class:select-item=true value="apple">
+                                <SelectItemIndicator class:select-indicator=true>"✓"</SelectItemIndicator>
                                 <SelectItemText>"Apple"</SelectItemText>
                             </SelectItem>
-                            <SelectItem attr:class="select-item" value="banana">
-                                <SelectItemIndicator attr:class="select-indicator">"✓"</SelectItemIndicator>
+                            <SelectItem class:select-item=true value="banana">
+                                <SelectItemIndicator class:select-indicator=true>"✓"</SelectItemIndicator>
                                 <SelectItemText>"Banana"</SelectItemText>
                             </SelectItem>
-                            <SelectItem attr:class="select-item" value="cherry">
-                                <SelectItemIndicator attr:class="select-indicator">"✓"</SelectItemIndicator>
+                            <SelectItem class:select-item=true value="cherry">
+                                <SelectItemIndicator class:select-indicator=true>"✓"</SelectItemIndicator>
                                 <SelectItemText>"Cherry"</SelectItemText>
                             </SelectItem>
                         </SelectViewport>
@@ -331,23 +331,23 @@ pub fn SelectForcedOpenPage() -> impl IntoView {
         <h3>"Forced Open (Popper)"</h3>
         <div style="position: relative; min-height: 200px;">
             <Select default_value="banana" open=true>
-                <SelectTrigger attr:class="select-trigger" attr:data-testid="forced-trigger">
+                <SelectTrigger class:select-trigger=true attr:data-testid="forced-trigger">
                     <SelectValue />
-                    <SelectIcon attr:class="select-icon">"▼"</SelectIcon>
+                    <SelectIcon class:select-icon=true>"▼"</SelectIcon>
                 </SelectTrigger>
                 <SelectPortal>
-                    <SelectContent attr:class="select-content" attr:data-testid="forced-content" position="popper" side_offset=4.0 attr:style="background: tomato">
-                        <SelectViewport attr:class="select-viewport">
-                            <SelectItem attr:class="select-item" value="apple">
-                                <SelectItemIndicator attr:class="select-indicator">"✓"</SelectItemIndicator>
+                    <SelectContent class:select-content=true attr:data-testid="forced-content" position="popper" side_offset=4.0 style:background="tomato">
+                        <SelectViewport class:select-viewport=true>
+                            <SelectItem class:select-item=true value="apple">
+                                <SelectItemIndicator class:select-indicator=true>"✓"</SelectItemIndicator>
                                 <SelectItemText>"Apple"</SelectItemText>
                             </SelectItem>
-                            <SelectItem attr:class="select-item" value="banana">
-                                <SelectItemIndicator attr:class="select-indicator">"✓"</SelectItemIndicator>
+                            <SelectItem class:select-item=true value="banana">
+                                <SelectItemIndicator class:select-indicator=true>"✓"</SelectItemIndicator>
                                 <SelectItemText>"Banana"</SelectItemText>
                             </SelectItem>
-                            <SelectItem attr:class="select-item" value="cherry">
-                                <SelectItemIndicator attr:class="select-indicator">"✓"</SelectItemIndicator>
+                            <SelectItem class:select-item=true value="cherry">
+                                <SelectItemIndicator class:select-indicator=true>"✓"</SelectItemIndicator>
                                 <SelectItemText>"Cherry"</SelectItemText>
                             </SelectItem>
                         </SelectViewport>
@@ -362,23 +362,23 @@ pub fn SelectForcedOpenPage() -> impl IntoView {
         <h3>"Forced Open (Item Aligned)"</h3>
         <div style="position: relative; min-height: 200px;">
             <Select default_value="banana" open=true>
-                <SelectTrigger attr:class="select-trigger" attr:data-testid="forced-aligned-trigger">
+                <SelectTrigger class:select-trigger=true attr:data-testid="forced-aligned-trigger">
                     <SelectValue />
-                    <SelectIcon attr:class="select-icon">"▼"</SelectIcon>
+                    <SelectIcon class:select-icon=true>"▼"</SelectIcon>
                 </SelectTrigger>
                 <SelectPortal>
-                    <SelectContent attr:class="select-content" attr:data-testid="forced-aligned-content">
-                        <SelectViewport attr:class="select-viewport">
-                            <SelectItem attr:class="select-item" value="apple">
-                                <SelectItemIndicator attr:class="select-indicator">"✓"</SelectItemIndicator>
+                    <SelectContent class:select-content=true attr:data-testid="forced-aligned-content">
+                        <SelectViewport class:select-viewport=true>
+                            <SelectItem class:select-item=true value="apple">
+                                <SelectItemIndicator class:select-indicator=true>"✓"</SelectItemIndicator>
                                 <SelectItemText>"Apple"</SelectItemText>
                             </SelectItem>
-                            <SelectItem attr:class="select-item" value="banana">
-                                <SelectItemIndicator attr:class="select-indicator">"✓"</SelectItemIndicator>
+                            <SelectItem class:select-item=true value="banana">
+                                <SelectItemIndicator class:select-indicator=true>"✓"</SelectItemIndicator>
                                 <SelectItemText>"Banana"</SelectItemText>
                             </SelectItem>
-                            <SelectItem attr:class="select-item" value="cherry">
-                                <SelectItemIndicator attr:class="select-indicator">"✓"</SelectItemIndicator>
+                            <SelectItem class:select-item=true value="cherry">
+                                <SelectItemIndicator class:select-indicator=true>"✓"</SelectItemIndicator>
                                 <SelectItemText>"Cherry"</SelectItemText>
                             </SelectItem>
                         </SelectViewport>

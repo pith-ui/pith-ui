@@ -470,13 +470,6 @@ fn PopoverContentImpl(
 
     let context = expect_context::<PopoverContextValue>();
 
-    let popover_content_style = "\
-        --radix-popover-content-transform-origin: var(--radix-popper-transform-origin); \
-        --radix-popover-content-available-width: var(--radix-popper-available-width); \
-        --radix-popover-content-available-height: var(--radix-popper-available-height); \
-        --radix-popover-trigger-width: var(--radix-popper-anchor-width); \
-        --radix-popover-trigger-height: var(--radix-popper-anchor-height);";
-
     // Make sure the whole tree has focus guards as our `Popover` may be
     // the last element in the DOM (because of the `Portal`)
     use_focus_guards();
@@ -517,7 +510,11 @@ fn PopoverContentImpl(
                     update_position_strategy=update_position_strategy
                     as_child=as_child
                     node_ref=node_ref
-                    attr:style=popover_content_style
+                    style:--radix-popover-content-transform-origin="var(--radix-popper-transform-origin)"
+                    style:--radix-popover-content-available-width="var(--radix-popper-available-width)"
+                    style:--radix-popover-content-available-height="var(--radix-popper-available-height)"
+                    style:--radix-popover-trigger-width="var(--radix-popper-anchor-width)"
+                    style:--radix-popover-trigger-height="var(--radix-popper-anchor-height)"
                     attr:data-state=move || open_closed_state(context.open.get())
                     attr:role="dialog"
                     attr:id=move || context.content_id.get()

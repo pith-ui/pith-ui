@@ -8,16 +8,16 @@ pub fn CollapsiblePage() -> impl IntoView {
 
     view! {
         <Collapsible
-            attr:class="collapsible-root"
+            class:collapsible-root=true
             attr:data-testid="collapsible-root"
             disabled=disabled
             open=open
             on_open_change=Callback::new(move |value: bool| set_open.set(value))
         >
-            <CollapsibleTrigger attr:class="collapsible-trigger">
+            <CollapsibleTrigger class:collapsible-trigger=true>
                 "toggle"
             </CollapsibleTrigger>
-            <CollapsibleContent attr:class="collapsible-content">
+            <CollapsibleContent class:collapsible-content=true>
                 <p>"Collapsible content."</p>
             </CollapsibleContent>
         </Collapsible>
@@ -28,7 +28,7 @@ pub fn CollapsiblePage() -> impl IntoView {
         <Collapsible open=true>
             <CollapsibleContent
                 attr:data-testid="styled-collapsible-content"
-                attr:style="background: tomato"
+                style:background="tomato"
             >
                 <p>"Styled collapsible content."</p>
             </CollapsibleContent>

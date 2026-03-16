@@ -6,23 +6,23 @@ pub fn NavigationMenuPage() -> impl IntoView {
     let (controlled_value, set_controlled_value) = signal(String::new());
 
     view! {
-        <NavigationMenu attr:class="nav-root" attr:data-testid="nav-root" delay_duration=0.0 skip_delay_duration=0.0>
-            <NavigationMenuList attr:class="nav-list">
-                <NavigationMenuItem attr:class="nav-item" value="products".to_string()>
-                    <NavigationMenuTrigger attr:class="nav-trigger">
+        <NavigationMenu class:nav-root=true attr:data-testid="nav-root" delay_duration=0.0 skip_delay_duration=0.0>
+            <NavigationMenuList class:nav-list=true>
+                <NavigationMenuItem class:nav-item=true value="products".to_string()>
+                    <NavigationMenuTrigger class:nav-trigger=true>
                         "Products"
                     </NavigationMenuTrigger>
-                    <NavigationMenuContent attr:class="nav-content nav-content-products" attr:data-testid="products-content" attr:style="grid-template-columns: 1fr 1fr;">
+                    <NavigationMenuContent class:nav-content=true class:nav-content-products=true attr:data-testid="products-content" style:grid-template-columns="1fr 1fr">
                         <div class="nav-content-group" data-testid="products-featured">
                             <h3 class="nav-group-heading">"Featured"</h3>
                             <ul class="nav-content-list">
                                 <li>
-                                    <NavigationMenuLink attr:class="nav-content-link" attr:href="#">
+                                    <NavigationMenuLink class:nav-content-link=true attr:href="#">
                                         "Product A"
                                     </NavigationMenuLink>
                                 </li>
                                 <li>
-                                    <NavigationMenuLink attr:class="nav-content-link" attr:href="#">
+                                    <NavigationMenuLink class:nav-content-link=true attr:href="#">
                                         "Product B"
                                     </NavigationMenuLink>
                                 </li>
@@ -32,7 +32,7 @@ pub fn NavigationMenuPage() -> impl IntoView {
                             <h3 class="nav-group-heading">"All Products"</h3>
                             <ul class="nav-content-list">
                                 <li>
-                                    <NavigationMenuLink attr:class="nav-content-link" attr:href="#">
+                                    <NavigationMenuLink class:nav-content-link=true attr:href="#">
                                         "Product C"
                                     </NavigationMenuLink>
                                 </li>
@@ -41,19 +41,19 @@ pub fn NavigationMenuPage() -> impl IntoView {
                     </NavigationMenuContent>
                 </NavigationMenuItem>
 
-                <NavigationMenuItem attr:class="nav-item" value="resources".to_string()>
-                    <NavigationMenuTrigger attr:class="nav-trigger">
+                <NavigationMenuItem class:nav-item=true value="resources".to_string()>
+                    <NavigationMenuTrigger class:nav-trigger=true>
                         "Resources"
                     </NavigationMenuTrigger>
-                    <NavigationMenuContent attr:class="nav-content nav-content-resources" attr:data-testid="resources-content">
+                    <NavigationMenuContent class:nav-content=true class:nav-content-resources=true attr:data-testid="resources-content">
                         <ul class="nav-content-list">
                             <li>
-                                <NavigationMenuLink attr:class="nav-content-link" attr:href="#">
+                                <NavigationMenuLink class:nav-content-link=true attr:href="#">
                                     "Blog"
                                 </NavigationMenuLink>
                             </li>
                             <li>
-                                <NavigationMenuLink attr:class="nav-content-link" attr:href="#">
+                                <NavigationMenuLink class:nav-content-link=true attr:href="#">
                                     "Docs"
                                 </NavigationMenuLink>
                             </li>
@@ -61,16 +61,16 @@ pub fn NavigationMenuPage() -> impl IntoView {
                     </NavigationMenuContent>
                 </NavigationMenuItem>
 
-                <NavigationMenuItem attr:class="nav-item">
-                    <NavigationMenuLink attr:class="nav-link-direct" attr:href="#" active=true>
+                <NavigationMenuItem class:nav-item=true>
+                    <NavigationMenuLink class:nav-link-direct=true attr:href="#" active=true>
                         "About"
                     </NavigationMenuLink>
                 </NavigationMenuItem>
 
-                <NavigationMenuIndicator attr:class="nav-indicator" attr:data-testid="nav-indicator" />
+                <NavigationMenuIndicator class:nav-indicator=true attr:data-testid="nav-indicator" />
             </NavigationMenuList>
 
-            <NavigationMenuViewport attr:class="nav-viewport" attr:data-testid="nav-viewport" />
+            <NavigationMenuViewport class:nav-viewport=true attr:data-testid="nav-viewport" />
         </NavigationMenu>
 
         <br />
@@ -107,28 +107,28 @@ pub fn NavigationMenuPage() -> impl IntoView {
         </span>
 
         <NavigationMenu
-            attr:class="nav-root"
+            class:nav-root=true
             attr:data-testid="controlled-nav-root"
             value=Signal::derive(move || controlled_value.get())
             on_value_change=Callback::new(move |v: String| set_controlled_value.set(v))
             delay_duration=0.0
             skip_delay_duration=0.0
         >
-            <NavigationMenuList attr:class="nav-list">
-                <NavigationMenuItem attr:class="nav-item" value="c-products".to_string()>
+            <NavigationMenuList class:nav-list=true>
+                <NavigationMenuItem class:nav-item=true value="c-products".to_string()>
                     <NavigationMenuTrigger
-                        attr:class="nav-trigger"
+                        class:nav-trigger=true
                         attr:data-testid="controlled-products-trigger"
                     >
                         "CProducts"
                     </NavigationMenuTrigger>
                     <NavigationMenuContent
-                        attr:class="nav-content"
+                        class:nav-content=true
                         attr:data-testid="controlled-products-content"
                     >
                         <ul class="nav-content-list">
                             <li>
-                                <NavigationMenuLink attr:class="nav-content-link" attr:href="#">
+                                <NavigationMenuLink class:nav-content-link=true attr:href="#">
                                     "CProduct A"
                                 </NavigationMenuLink>
                             </li>
@@ -136,20 +136,20 @@ pub fn NavigationMenuPage() -> impl IntoView {
                     </NavigationMenuContent>
                 </NavigationMenuItem>
 
-                <NavigationMenuItem attr:class="nav-item" value="c-resources".to_string()>
+                <NavigationMenuItem class:nav-item=true value="c-resources".to_string()>
                     <NavigationMenuTrigger
-                        attr:class="nav-trigger"
+                        class:nav-trigger=true
                         attr:data-testid="controlled-resources-trigger"
                     >
                         "CResources"
                     </NavigationMenuTrigger>
                     <NavigationMenuContent
-                        attr:class="nav-content"
+                        class:nav-content=true
                         attr:data-testid="controlled-resources-content"
                     >
                         <ul class="nav-content-list">
                             <li>
-                                <NavigationMenuLink attr:class="nav-content-link" attr:href="#">
+                                <NavigationMenuLink class:nav-content-link=true attr:href="#">
                                     "CBlog"
                                 </NavigationMenuLink>
                             </li>
@@ -158,7 +158,7 @@ pub fn NavigationMenuPage() -> impl IntoView {
                 </NavigationMenuItem>
             </NavigationMenuList>
 
-            <NavigationMenuViewport attr:class="nav-viewport" attr:data-testid="controlled-nav-viewport" />
+            <NavigationMenuViewport class:nav-viewport=true attr:data-testid="controlled-nav-viewport" />
         </NavigationMenu>
     }
 }

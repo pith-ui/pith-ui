@@ -310,17 +310,8 @@ fn HoverCardContentImpl(
 
     let on_dismiss = context.on_dismiss;
 
-    let hover_card_content_style = Signal::derive(move || {
-        let mut s = String::from("\
-            --radix-hover-card-content-transform-origin: var(--radix-popper-transform-origin); \
-            --radix-hover-card-content-available-width: var(--radix-popper-available-width); \
-            --radix-hover-card-content-available-height: var(--radix-popper-available-height); \
-            --radix-hover-card-trigger-width: var(--radix-popper-anchor-width); \
-            --radix-hover-card-trigger-height: var(--radix-popper-anchor-height);");
-        if contain_selection.get() {
-            s.push_str(" user-select: text; -webkit-user-select: text;");
-        }
-        s
+    let contain_selection_style = Signal::derive(move || {
+        contain_selection.get().then_some("text")
     });
 
     view! {
@@ -349,7 +340,13 @@ fn HoverCardContentImpl(
                 update_position_strategy=update_position_strategy
                 as_child=as_child
                 node_ref=composed_refs
-                attr:style=hover_card_content_style
+                style:--radix-hover-card-content-transform-origin="var(--radix-popper-transform-origin)"
+                style:--radix-hover-card-content-available-width="var(--radix-popper-available-width)"
+                style:--radix-hover-card-content-available-height="var(--radix-popper-available-height)"
+                style:--radix-hover-card-trigger-width="var(--radix-popper-anchor-width)"
+                style:--radix-hover-card-trigger-height="var(--radix-popper-anchor-height)"
+                style:user-select=contain_selection_style
+                style:-webkit-user-select=contain_selection_style
                 attr:data-state=move || open_closed_state(context.open.get())
                 on:pointerenter=move |event: ev::PointerEvent| {
                     on_pointer_enter.run(event);

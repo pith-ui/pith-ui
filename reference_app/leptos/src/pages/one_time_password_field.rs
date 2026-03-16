@@ -56,7 +56,7 @@ pub fn OneTimePasswordFieldPage() -> impl IntoView {
     view! {
         <form on:submit=on_submit on:reset=on_reset>
             <OneTimePasswordField
-                attr:class="otp-root"
+                class:otp-root=true
                 attr:data-testid="main-otp-root"
                 value=Signal::derive(move || Some(value.get()))
                 on_value_change=Callback::new(move |v: String| {
@@ -119,7 +119,7 @@ pub fn OneTimePasswordFieldPage() -> impl IntoView {
             <h3>"Uncontrolled"</h3>
             <form on:submit=uncontrolled_on_submit>
                 <OneTimePasswordField
-                    attr:class="otp-root"
+                    class:otp-root=true
                     attr:data-testid="uncontrolled-root"
                     default_value="12"
                     name="uncontrolled-code"
@@ -137,7 +137,7 @@ pub fn OneTimePasswordFieldPage() -> impl IntoView {
             <hr />
             <h3>"Password Type"</h3>
             <OneTimePasswordField
-                attr:class="otp-root"
+                class:otp-root=true
                 attr:data-testid="password-root"
                 r#type=InputType::Password
             >
@@ -151,7 +151,7 @@ pub fn OneTimePasswordFieldPage() -> impl IntoView {
             <hr />
             <h3>"Placeholder"</h3>
             <OneTimePasswordField
-                attr:class="otp-root"
+                class:otp-root=true
                 attr:data-testid="placeholder-root"
                 placeholder="○○○○"
             >
@@ -165,7 +165,7 @@ pub fn OneTimePasswordFieldPage() -> impl IntoView {
             <hr />
             <h3>"AutoSubmit"</h3>
             <OneTimePasswordField
-                attr:class="otp-root"
+                class:otp-root=true
                 attr:data-testid="autosubmit-root"
                 auto_submit=true
                 on_auto_submit=Callback::new(move |v: String| set_auto_submitted.set(format!("AutoSubmitted: {v}")))
@@ -181,7 +181,7 @@ pub fn OneTimePasswordFieldPage() -> impl IntoView {
             <hr />
             <h3>"AutoComplete"</h3>
             <OneTimePasswordField
-                attr:class="otp-root"
+                class:otp-root=true
                 attr:data-testid="autocomplete-root"
                 auto_complete=AutoComplete::OneTimeCode
             >

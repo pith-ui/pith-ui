@@ -24,25 +24,25 @@ pub fn AvatarPage() -> impl IntoView {
 
         // No image — immediate fallback
         <div class="avatar-container">
-            <Avatar attr:class="avatar-root" attr:data-testid="avatar-no-image" attr:data-custom="avatar-root-custom">
-                <AvatarImage attr:class="avatar-image" attr:data-custom="avatar-image-custom" />
-                <AvatarFallback attr:class="avatar-fallback" attr:data-custom="avatar-fallback-custom">"NI"</AvatarFallback>
+            <Avatar class:avatar-root=true attr:data-testid="avatar-no-image" attr:data-custom="avatar-root-custom">
+                <AvatarImage class:avatar-image=true attr:data-custom="avatar-image-custom" />
+                <AvatarFallback class:avatar-fallback=true attr:data-custom="avatar-fallback-custom">"NI"</AvatarFallback>
             </Avatar>
             <span>"No image"</span>
         </div>
 
         // Working image
         <div class="avatar-container">
-            <Avatar attr:class="avatar-root" attr:data-testid="avatar-working">
+            <Avatar class:avatar-root=true attr:data-testid="avatar-working">
                 <AvatarImage
-                    attr:class="avatar-image"
+                    class:avatar-image=true
                     src=WORKING_SRC.to_string()
                     attr:alt="Working avatar"
                     on_loading_status_change=Callback::new(move |status: ImageLoadingStatus| {
                         set_working_status.set(status_to_string(status));
                     })
                 />
-                <AvatarFallback attr:class="avatar-fallback">"WI"</AvatarFallback>
+                <AvatarFallback class:avatar-fallback=true>"WI"</AvatarFallback>
             </Avatar>
             <span>
                 "Working image (status: "
@@ -53,16 +53,16 @@ pub fn AvatarPage() -> impl IntoView {
 
         // Broken image
         <div class="avatar-container">
-            <Avatar attr:class="avatar-root" attr:data-testid="avatar-broken">
+            <Avatar class:avatar-root=true attr:data-testid="avatar-broken">
                 <AvatarImage
-                    attr:class="avatar-image"
+                    class:avatar-image=true
                     src=BROKEN_SRC.to_string()
                     attr:alt="Broken avatar"
                     on_loading_status_change=Callback::new(move |status: ImageLoadingStatus| {
                         set_broken_status.set(status_to_string(status));
                     })
                 />
-                <AvatarFallback attr:class="avatar-fallback">"BI"</AvatarFallback>
+                <AvatarFallback class:avatar-fallback=true>"BI"</AvatarFallback>
             </Avatar>
             <span>
                 "Broken image (status: "
@@ -73,13 +73,13 @@ pub fn AvatarPage() -> impl IntoView {
 
         // Delayed fallback with broken image
         <div class="avatar-container">
-            <Avatar attr:class="avatar-root" attr:data-testid="avatar-delayed">
+            <Avatar class:avatar-root=true attr:data-testid="avatar-delayed">
                 <AvatarImage
-                    attr:class="avatar-image"
+                    class:avatar-image=true
                     src=BROKEN_SRC.to_string()
                     attr:alt="Delayed avatar"
                 />
-                <AvatarFallback attr:class="avatar-fallback" delay_ms=300>
+                <AvatarFallback class:avatar-fallback=true delay_ms=300>
                     "DI"
                 </AvatarFallback>
             </Avatar>
@@ -88,13 +88,13 @@ pub fn AvatarPage() -> impl IntoView {
 
         // Dynamic source
         <div class="avatar-container">
-            <Avatar attr:class="avatar-root" attr:data-testid="avatar-dynamic">
+            <Avatar class:avatar-root=true attr:data-testid="avatar-dynamic">
                 <AvatarImage
-                    attr:class="avatar-image"
+                    class:avatar-image=true
                     src=Signal::derive(move || dynamic_src.get())
                     attr:alt="Dynamic avatar"
                 />
-                <AvatarFallback attr:class="avatar-fallback">"DY"</AvatarFallback>
+                <AvatarFallback class:avatar-fallback=true>"DY"</AvatarFallback>
             </Avatar>
             <span>"Dynamic source"</span>
         </div>

@@ -155,13 +155,7 @@ fn SelectContentImpl(
     let viewport_ref = AnyNodeRef::new();
     let composed_refs = use_composed_refs(vec![node_ref, content_ref]);
 
-    let select_content_style = "\
-        display: flex; flex-direction: column; outline: none; box-sizing: border-box; \
-        --radix-select-content-transform-origin: var(--radix-popper-transform-origin); \
-        --radix-select-content-available-width: var(--radix-popper-available-width); \
-        --radix-select-content-available-height: var(--radix-popper-available-height); \
-        --radix-select-trigger-width: var(--radix-popper-anchor-width); \
-        --radix-select-trigger-height: var(--radix-popper-anchor-height);";
+    // Select content styles: applied as individual style: directives below.
 
     let _get_items = StoredValue::new(use_collection::<SelectItemData>());
     let (is_positioned, set_is_positioned) = signal(false);
@@ -636,7 +630,15 @@ fn SelectContentImpl(
                                     update_position_strategy=update_position_strategy
                                     as_child=as_child
                                     node_ref=composed_refs
-                                    attr:style=select_content_style
+                                    style:display="flex"
+                                    style:flex-direction="column"
+                                    style:outline="none"
+                                    style:box-sizing="border-box"
+                                    style:--radix-select-content-transform-origin="var(--radix-popper-transform-origin)"
+                                    style:--radix-select-content-available-width="var(--radix-popper-available-width)"
+                                    style:--radix-select-content-available-height="var(--radix-popper-available-height)"
+                                    style:--radix-select-trigger-width="var(--radix-popper-anchor-width)"
+                                    style:--radix-select-trigger-height="var(--radix-popper-anchor-height)"
                                     on_placed=Some(Callback::new(move |_: ()| {
                                         set_is_positioned.set(true);
                                     }))

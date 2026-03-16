@@ -7,7 +7,7 @@ pub fn RadioGroupPage() -> impl IntoView {
     let (value, set_value) = signal(String::new());
     view! {
         <RadioGroup
-            attr:class="radio-group-root"
+            class:radio-group-root=true
             attr:data-custom="radio-group-root-custom"
             disabled=disabled
             attr:aria-label="Favourite pet"
@@ -15,20 +15,20 @@ pub fn RadioGroupPage() -> impl IntoView {
             on_value_change=Callback::new(move |v: String| set_value.set(v))
         >
             <label class="radio-group-label">
-                <RadioGroupItem value="cat" attr:class="radio-group-item" attr:data-custom="radio-group-item-custom">
-                    <RadioGroupIndicator attr:class="radio-group-indicator" attr:data-custom="radio-group-indicator-custom" />
+                <RadioGroupItem value="cat" class:radio-group-item=true attr:data-custom="radio-group-item-custom">
+                    <RadioGroupIndicator class:radio-group-indicator=true attr:data-custom="radio-group-indicator-custom" />
                 </RadioGroupItem>
                 "Cat"
             </label>
             <label class="radio-group-label">
-                <RadioGroupItem value="dog" disabled=true attr:class="radio-group-item">
-                    <RadioGroupIndicator attr:class="radio-group-indicator" />
+                <RadioGroupItem value="dog" disabled=true class:radio-group-item=true>
+                    <RadioGroupIndicator class:radio-group-indicator=true />
                 </RadioGroupItem>
                 "Dog"
             </label>
             <label class="radio-group-label">
-                <RadioGroupItem value="rabbit" attr:class="radio-group-item">
-                    <RadioGroupIndicator attr:class="radio-group-indicator" />
+                <RadioGroupItem value="rabbit" class:radio-group-item=true>
+                    <RadioGroupIndicator class:radio-group-indicator=true />
                 </RadioGroupItem>
                 "Rabbit"
             </label>

@@ -21,13 +21,13 @@ pub fn MenubarPage() -> impl IntoView {
     view! {
         <DirectionProvider direction=dir>
         <div dir=move || dir.get().to_string()>
-        <Menubar attr:class="menubar-root" dir=dir>
+        <Menubar class:menubar-root=true dir=dir>
             <MenubarMenu value="file".to_string()>
-                <MenubarTrigger attr:class="menubar-trigger">"File"</MenubarTrigger>
+                <MenubarTrigger class:menubar-trigger=true>"File"</MenubarTrigger>
                 <MenubarPortal>
-                    <MenubarContent attr:class="menubar-content" side_offset=5.0 avoid_collisions=Signal::derive(move || !rtl.get())>
+                    <MenubarContent class:menubar-content=true side_offset=5.0 avoid_collisions=Signal::derive(move || !rtl.get())>
                         <MenubarItem
-                            attr:class="menubar-item"
+                            class:menubar-item=true
                             on_select=Callback::new({
                                 let set_last_action = set_last_action.clone();
                                 move |_: web_sys::Event| set_last_action.set("New Tab".into())
@@ -36,7 +36,7 @@ pub fn MenubarPage() -> impl IntoView {
                             "New Tab"
                         </MenubarItem>
                         <MenubarItem
-                            attr:class="menubar-item"
+                            class:menubar-item=true
                             on_select=Callback::new({
                                 let set_last_action = set_last_action.clone();
                                 move |_: web_sys::Event| set_last_action.set("New Window".into())
@@ -45,7 +45,7 @@ pub fn MenubarPage() -> impl IntoView {
                             "New Window"
                         </MenubarItem>
                         <MenubarItem
-                            attr:class="menubar-item"
+                            class:menubar-item=true
                             on_select=Callback::new({
                                 let set_last_action = set_last_action.clone();
                                 move |_: web_sys::Event| set_last_action.set("Print".into())
@@ -58,11 +58,11 @@ pub fn MenubarPage() -> impl IntoView {
             </MenubarMenu>
 
             <MenubarMenu value="edit".to_string()>
-                <MenubarTrigger attr:class="menubar-trigger">"Edit"</MenubarTrigger>
+                <MenubarTrigger class:menubar-trigger=true>"Edit"</MenubarTrigger>
                 <MenubarPortal>
-                    <MenubarContent attr:class="menubar-content" side_offset=5.0 avoid_collisions=Signal::derive(move || !rtl.get())>
+                    <MenubarContent class:menubar-content=true side_offset=5.0 avoid_collisions=Signal::derive(move || !rtl.get())>
                         <MenubarItem
-                            attr:class="menubar-item"
+                            class:menubar-item=true
                             disabled=disabled
                             on_select=Callback::new({
                                 let set_last_action = set_last_action.clone();
@@ -72,7 +72,7 @@ pub fn MenubarPage() -> impl IntoView {
                             "Undo"
                         </MenubarItem>
                         <MenubarItem
-                            attr:class="menubar-item"
+                            class:menubar-item=true
                             on_select=Callback::new({
                                 let set_last_action = set_last_action.clone();
                                 move |_: web_sys::Event| set_last_action.set("Redo".into())
@@ -80,15 +80,15 @@ pub fn MenubarPage() -> impl IntoView {
                         >
                             "Redo"
                         </MenubarItem>
-                        <MenubarSeparator attr:class="menubar-separator" />
+                        <MenubarSeparator class:menubar-separator=true />
                         <MenubarSub>
-                            <MenubarSubTrigger attr:class="menubar-item menubar-sub-trigger">
+                            <MenubarSubTrigger class:menubar-item=true class:menubar-sub-trigger=true>
                                 "Find \u{2192}"
                             </MenubarSubTrigger>
                             <MenubarPortal>
-                                <MenubarSubContent attr:class="menubar-content" side_offset=2.0>
+                                <MenubarSubContent class:menubar-content=true side_offset=2.0>
                                     <MenubarItem
-                                        attr:class="menubar-item"
+                                        class:menubar-item=true
                                         on_select=Callback::new({
                                             let set_last_action = set_last_action.clone();
                                             move |_: web_sys::Event| set_last_action.set("Search the web\u{2026}".into())
@@ -97,7 +97,7 @@ pub fn MenubarPage() -> impl IntoView {
                                         "Search the web\u{2026}"
                                     </MenubarItem>
                                     <MenubarItem
-                                        attr:class="menubar-item"
+                                        class:menubar-item=true
                                         on_select=Callback::new({
                                             let set_last_action = set_last_action.clone();
                                             move |_: web_sys::Event| set_last_action.set("Find\u{2026}".into())
@@ -106,7 +106,7 @@ pub fn MenubarPage() -> impl IntoView {
                                         "Find\u{2026}"
                                     </MenubarItem>
                                     <MenubarItem
-                                        attr:class="menubar-item"
+                                        class:menubar-item=true
                                         on_select=Callback::new({
                                             let set_last_action = set_last_action.clone();
                                             move |_: web_sys::Event| set_last_action.set("Find Next".into())
@@ -117,9 +117,9 @@ pub fn MenubarPage() -> impl IntoView {
                                 </MenubarSubContent>
                             </MenubarPortal>
                         </MenubarSub>
-                        <MenubarSeparator attr:class="menubar-separator" />
+                        <MenubarSeparator class:menubar-separator=true />
                         <MenubarItem
-                            attr:class="menubar-item"
+                            class:menubar-item=true
                             on_select=Callback::new({
                                 let set_last_action = set_last_action.clone();
                                 move |_: web_sys::Event| set_last_action.set("Cut".into())
@@ -132,43 +132,43 @@ pub fn MenubarPage() -> impl IntoView {
             </MenubarMenu>
 
             <MenubarMenu value="view".to_string()>
-                <MenubarTrigger attr:class="menubar-trigger">"View"</MenubarTrigger>
+                <MenubarTrigger class:menubar-trigger=true>"View"</MenubarTrigger>
                 <MenubarPortal>
-                    <MenubarContent attr:class="menubar-content" side_offset=5.0 avoid_collisions=Signal::derive(move || !rtl.get())>
+                    <MenubarContent class:menubar-content=true side_offset=5.0 avoid_collisions=Signal::derive(move || !rtl.get())>
                         <MenubarCheckboxItem
-                            attr:class="menubar-item"
+                            class:menubar-item=true
                             checked=Signal::derive(move || CheckedState::from(bookmarks.get()))
                             on_checked_change=Callback::new(move |v: bool| set_bookmarks.set(v))
                         >
-                            <MenubarItemIndicator attr:class="menubar-indicator">
+                            <MenubarItemIndicator class:menubar-indicator=true>
                                 "\u{2713}"
                             </MenubarItemIndicator>
                             "Always Show Bookmarks Bar"
                         </MenubarCheckboxItem>
                         <MenubarCheckboxItem
-                            attr:class="menubar-item"
+                            class:menubar-item=true
                             checked=Signal::derive(move || CheckedState::from(urls.get()))
                             on_checked_change=Callback::new(move |v: bool| set_urls.set(v))
                         >
-                            <MenubarItemIndicator attr:class="menubar-indicator">
+                            <MenubarItemIndicator class:menubar-indicator=true>
                                 "\u{2713}"
                             </MenubarItemIndicator>
                             "Always Show Full URLs"
                         </MenubarCheckboxItem>
-                        <MenubarSeparator attr:class="menubar-separator" />
-                        <MenubarLabel attr:class="menubar-label">"Zoom"</MenubarLabel>
+                        <MenubarSeparator class:menubar-separator=true />
+                        <MenubarLabel class:menubar-label=true>"Zoom"</MenubarLabel>
                         <MenubarRadioGroup
                             value=zoom
                             on_value_change=Callback::new(move |v: String| set_zoom.set(v))
                         >
-                            <MenubarRadioItem attr:class="menubar-item" value="compact">
-                                <MenubarItemIndicator attr:class="menubar-indicator">
+                            <MenubarRadioItem class:menubar-item=true value="compact">
+                                <MenubarItemIndicator class:menubar-indicator=true>
                                     "\u{25cf}"
                                 </MenubarItemIndicator>
                                 "Compact"
                             </MenubarRadioItem>
-                            <MenubarRadioItem attr:class="menubar-item" value="normal">
-                                <MenubarItemIndicator attr:class="menubar-indicator">
+                            <MenubarRadioItem class:menubar-item=true value="normal">
+                                <MenubarItemIndicator class:menubar-indicator=true>
                                     "\u{25cf}"
                                 </MenubarItemIndicator>
                                 "Normal"

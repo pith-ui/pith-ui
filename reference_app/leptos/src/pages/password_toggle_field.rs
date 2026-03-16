@@ -32,8 +32,8 @@ pub fn PasswordToggleFieldPage() -> impl IntoView {
                 visible=visible
                 on_visibility_change=Callback::new(move |v: bool| set_visible.set(v))
             >
-                <PasswordToggleFieldInput id="password" attr:class="ptf-input" />
-                <PasswordToggleFieldToggle attr:class="ptf-toggle">
+                <PasswordToggleFieldInput id="password" class:ptf-input=true />
+                <PasswordToggleFieldToggle class:ptf-toggle=true>
                     <PasswordToggleFieldIcon
                         visible_icon=ViewFn::from(eye_open_icon)
                         hidden_icon=ViewFn::from(eye_closed_icon)
@@ -46,8 +46,8 @@ pub fn PasswordToggleFieldPage() -> impl IntoView {
         <label for="pin">"PIN"</label>
         <div class="ptf-field">
             <PasswordToggleField>
-                <PasswordToggleFieldInput id="pin" attr:class="ptf-input" />
-                <PasswordToggleFieldToggle attr:class="ptf-toggle">
+                <PasswordToggleFieldInput id="pin" class:ptf-input=true />
+                <PasswordToggleFieldToggle class:ptf-toggle=true>
                     <PasswordToggleFieldSlot
                         render=Callback::new(|visible: bool| {
                             if visible { "Hide".into_any() } else { "Show".into_any() }
@@ -62,8 +62,8 @@ pub fn PasswordToggleFieldPage() -> impl IntoView {
             <label for="form-password">"Form Password"</label>
             <div class="ptf-field">
                 <PasswordToggleField>
-                    <PasswordToggleFieldInput id="form-password" attr:class="ptf-input" />
-                    <PasswordToggleFieldToggle attr:class="ptf-toggle">
+                    <PasswordToggleFieldInput id="form-password" class:ptf-input=true />
+                    <PasswordToggleFieldToggle class:ptf-toggle=true>
                         <PasswordToggleFieldSlot
                             render=Callback::new(|visible: bool| {
                                 if visible { "Hide".into_any() } else { "Show".into_any() }

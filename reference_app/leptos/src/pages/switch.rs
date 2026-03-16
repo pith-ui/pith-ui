@@ -10,7 +10,7 @@ pub fn SwitchPage() -> impl IntoView {
     view! {
         <label>
             <Switch
-                attr:class="switch-root"
+                class:switch-root=true
                 attr:data-custom="switch-root-custom"
                 disabled=disabled
                 checked=checked
@@ -19,7 +19,7 @@ pub fn SwitchPage() -> impl IntoView {
                 name="airplane"
                 value="on"
             >
-                <SwitchThumb attr:class="switch-thumb" attr:data-custom="switch-thumb-custom" />
+                <SwitchThumb class:switch-thumb=true attr:data-custom="switch-thumb-custom" />
             </Switch>
             " airplane mode"
         </label>

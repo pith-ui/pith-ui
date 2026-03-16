@@ -30,13 +30,13 @@ pub fn MenuPage() -> impl IntoView {
         </label>
         <br /><br />
         <Menu open=true modal=false>
-            <MenuAnchor attr:class="menu-anchor">"Anchor"</MenuAnchor>
+            <MenuAnchor class:menu-anchor=true>"Anchor"</MenuAnchor>
             <MenuPortal>
-                <MenuContent attr:class="menu-content" attr:style="background: tomato; outline: 2px solid rgb(255, 0, 0)">
+                <MenuContent class:menu-content=true style:background="tomato" style:outline="2px solid rgb(255, 0, 0)">
                     <MenuGroup>
-                        <MenuLabel attr:class="menu-label">"Fruits"</MenuLabel>
+                        <MenuLabel class:menu-label=true>"Fruits"</MenuLabel>
                         <MenuItem
-                            attr:class="menu-item"
+                            class:menu-item=true
                             on_select=Callback::new({
                                 let set_last_action = set_last_action.clone();
                                 move |_: web_sys::Event| { set_last_action.set("Apple".into()); }
@@ -45,7 +45,7 @@ pub fn MenuPage() -> impl IntoView {
                             "Apple"
                         </MenuItem>
                         <MenuItem
-                            attr:class="menu-item"
+                            class:menu-item=true
                             on_select=Callback::new({
                                 let set_last_action = set_last_action.clone();
                                 move |_: web_sys::Event| { set_last_action.set("Banana".into()); }
@@ -54,7 +54,7 @@ pub fn MenuPage() -> impl IntoView {
                             "Banana"
                         </MenuItem>
                         <MenuItem
-                            attr:class="menu-item"
+                            class:menu-item=true
                             on_select=Callback::new({
                                 let set_last_action = set_last_action.clone();
                                 move |_: web_sys::Event| { set_last_action.set("Blueberry".into()); }
@@ -64,12 +64,12 @@ pub fn MenuPage() -> impl IntoView {
                         </MenuItem>
                     </MenuGroup>
 
-                    <MenuSeparator attr:class="menu-separator" />
+                    <MenuSeparator class:menu-separator=true />
 
                     <MenuGroup>
-                        <MenuLabel attr:class="menu-label">"Vegetables"</MenuLabel>
+                        <MenuLabel class:menu-label=true>"Vegetables"</MenuLabel>
                         <MenuItem
-                            attr:class="menu-item"
+                            class:menu-item=true
                             on_select=Callback::new({
                                 let set_last_action = set_last_action.clone();
                                 move |_: web_sys::Event| { set_last_action.set("Broccoli".into()); }
@@ -78,7 +78,7 @@ pub fn MenuPage() -> impl IntoView {
                             "Broccoli"
                         </MenuItem>
                         <MenuItem
-                            attr:class="menu-item"
+                            class:menu-item=true
                             disabled=true
                             on_select=Callback::new({
                                 let set_last_action = set_last_action.clone();
@@ -88,7 +88,7 @@ pub fn MenuPage() -> impl IntoView {
                             "Carrot"
                         </MenuItem>
                         <MenuItem
-                            attr:class="menu-item"
+                            class:menu-item=true
                             on_select=Callback::new({
                                 let set_last_action = set_last_action.clone();
                                 move |_: web_sys::Event| { set_last_action.set("Courgette".into()); }
@@ -98,10 +98,10 @@ pub fn MenuPage() -> impl IntoView {
                         </MenuItem>
                     </MenuGroup>
 
-                    <MenuSeparator attr:class="menu-separator" />
+                    <MenuSeparator class:menu-separator=true />
 
                     <MenuItem
-                        attr:class="menu-item"
+                        class:menu-item=true
                         on_select=Callback::new({
                             let set_last_action = set_last_action.clone();
                             move |_: web_sys::Event| { set_last_action.set("Undo".into()); }
@@ -110,7 +110,7 @@ pub fn MenuPage() -> impl IntoView {
                         "Undo"
                     </MenuItem>
                     <MenuItem
-                        attr:class="menu-item"
+                        class:menu-item=true
                         on_select=Callback::new({
                             let set_last_action = set_last_action.clone();
                             move |_: web_sys::Event| { set_last_action.set("Redo".into()); }
@@ -119,10 +119,10 @@ pub fn MenuPage() -> impl IntoView {
                         "Redo"
                     </MenuItem>
 
-                    <MenuSeparator attr:class="menu-separator" />
+                    <MenuSeparator class:menu-separator=true />
 
                     <MenuCheckboxItem
-                        attr:class="menu-item"
+                        class:menu-item=true
                         checked=Signal::derive(move || CheckedState::from(bold_checked.get()))
                         on_checked_change=Callback::new(move |v: bool| set_bold_checked.set(v))
                     >
@@ -130,7 +130,7 @@ pub fn MenuPage() -> impl IntoView {
                         <MenuItemIndicator>"\u{2713}"</MenuItemIndicator>
                     </MenuCheckboxItem>
                     <MenuCheckboxItem
-                        attr:class="menu-item"
+                        class:menu-item=true
                         checked=Signal::derive(move || CheckedState::from(italic_checked.get()))
                         on_checked_change=Callback::new(move |v: bool| set_italic_checked.set(v))
                     >
@@ -138,49 +138,49 @@ pub fn MenuPage() -> impl IntoView {
                         <MenuItemIndicator>"\u{2713}"</MenuItemIndicator>
                     </MenuCheckboxItem>
 
-                    <MenuSeparator attr:class="menu-separator" />
+                    <MenuSeparator class:menu-separator=true />
 
                     <MenuRadioGroup value=font_size on_value_change=Callback::new(move |v: String| set_font_size.set(v))>
-                        <MenuRadioItem attr:class="menu-item" value="Small">
+                        <MenuRadioItem class:menu-item=true value="Small">
                             "Small"
                             <MenuItemIndicator>"\u{2713}"</MenuItemIndicator>
                         </MenuRadioItem>
-                        <MenuRadioItem attr:class="menu-item" value="Medium">
+                        <MenuRadioItem class:menu-item=true value="Medium">
                             "Medium"
                             <MenuItemIndicator>"\u{2713}"</MenuItemIndicator>
                         </MenuRadioItem>
-                        <MenuRadioItem attr:class="menu-item" value="Large">
+                        <MenuRadioItem class:menu-item=true value="Large">
                             "Large"
                             <MenuItemIndicator>"\u{2713}"</MenuItemIndicator>
                         </MenuRadioItem>
                     </MenuRadioGroup>
 
-                    <MenuSeparator attr:class="menu-separator" />
+                    <MenuSeparator class:menu-separator=true />
 
                     <MenuGroup>
-                        <MenuLabel attr:class="menu-label">"Suits (textValue)"</MenuLabel>
-                        <MenuItem attr:class="menu-item" text_value="Hearts">
+                        <MenuLabel class:menu-label=true>"Suits (textValue)"</MenuLabel>
+                        <MenuItem class:menu-item=true text_value="Hearts">
                             <span role="img" aria-label="Hearts">"\u{2665}\u{fe0f}"</span> "Hearts"
                         </MenuItem>
-                        <MenuItem attr:class="menu-item" text_value="Spades">
+                        <MenuItem class:menu-item=true text_value="Spades">
                             <span role="img" aria-label="Spades">"\u{2660}\u{fe0f}"</span> "Spades"
                         </MenuItem>
-                        <MenuItem attr:class="menu-item" text_value="Diamonds">
+                        <MenuItem class:menu-item=true text_value="Diamonds">
                             <span role="img" aria-label="Diamonds">"\u{2666}\u{fe0f}"</span> "Diamonds"
                         </MenuItem>
-                        <MenuItem attr:class="menu-item" text_value="Clubs">
+                        <MenuItem class:menu-item=true text_value="Clubs">
                             <span role="img" aria-label="Clubs">"\u{2663}\u{fe0f}"</span> "Clubs"
                         </MenuItem>
                     </MenuGroup>
 
-                    <MenuSeparator attr:class="menu-separator" />
+                    <MenuSeparator class:menu-separator=true />
 
                     <MenuSub open=sub_open on_open_change=Callback::new(move |v: bool| set_sub_open.set(v))>
-                        <MenuSubTrigger attr:class="menu-item">"More Options..."</MenuSubTrigger>
+                        <MenuSubTrigger class:menu-item=true>"More Options..."</MenuSubTrigger>
                         <MenuPortal>
                             <MenuSubContent class=sub_content_class>
                                 <MenuItem
-                                    attr:class="menu-item"
+                                    class:menu-item=true
                                     on_select=Callback::new({
                                         let set_last_action = set_last_action.clone();
                                         move |_: web_sys::Event| { set_last_action.set("Option A".into()); }
@@ -189,7 +189,7 @@ pub fn MenuPage() -> impl IntoView {
                                     "Option A"
                                 </MenuItem>
                                 <MenuItem
-                                    attr:class="menu-item"
+                                    class:menu-item=true
                                     on_select=Callback::new({
                                         let set_last_action = set_last_action.clone();
                                         move |_: web_sys::Event| { set_last_action.set("Option B".into()); }

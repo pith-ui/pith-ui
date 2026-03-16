@@ -10,14 +10,14 @@ pub fn ContextMenuPage() -> impl IntoView {
 
     view! {
         <ContextMenu>
-            <ContextMenuTrigger attr:class="context-trigger" attr:data-testid="context-trigger">
+            <ContextMenuTrigger class:context-trigger=true attr:data-testid="context-trigger">
                 "Right click here"
             </ContextMenuTrigger>
             <ContextMenuPortal>
-                <ContextMenuContent attr:class="context-content">
-                    <ContextMenuLabel attr:class="context-label">"Actions"</ContextMenuLabel>
+                <ContextMenuContent class:context-content=true>
+                    <ContextMenuLabel class:context-label=true>"Actions"</ContextMenuLabel>
                     <ContextMenuItem
-                        attr:class="context-item"
+                        class:context-item=true
                         on_select=Callback::new({
                             let set_last_action = set_last_action.clone();
                             move |_: web_sys::Event| set_last_action.set("Item 1".into())
@@ -26,7 +26,7 @@ pub fn ContextMenuPage() -> impl IntoView {
                         "Item 1"
                     </ContextMenuItem>
                     <ContextMenuItem
-                        attr:class="context-item"
+                        class:context-item=true
                         disabled=disabled
                         on_select=Callback::new({
                             let set_last_action = set_last_action.clone();
@@ -36,7 +36,7 @@ pub fn ContextMenuPage() -> impl IntoView {
                         "Item 2"
                     </ContextMenuItem>
                     <ContextMenuItem
-                        attr:class="context-item"
+                        class:context-item=true
                         on_select=Callback::new({
                             let set_last_action = set_last_action.clone();
                             move |_: web_sys::Event| set_last_action.set("Item 3".into())
@@ -45,10 +45,10 @@ pub fn ContextMenuPage() -> impl IntoView {
                         "Item 3"
                     </ContextMenuItem>
 
-                    <ContextMenuSeparator attr:class="context-separator" />
+                    <ContextMenuSeparator class:context-separator=true />
 
                     <ContextMenuItem
-                        attr:class="context-item"
+                        class:context-item=true
                         on_select=Callback::new({
                             let set_last_action = set_last_action.clone();
                             move |_: web_sys::Event| set_last_action.set("Apple".into())
@@ -57,7 +57,7 @@ pub fn ContextMenuPage() -> impl IntoView {
                         "Apple"
                     </ContextMenuItem>
                     <ContextMenuItem
-                        attr:class="context-item"
+                        class:context-item=true
                         on_select=Callback::new({
                             let set_last_action = set_last_action.clone();
                             move |_: web_sys::Event| set_last_action.set("Banana".into())
@@ -66,49 +66,49 @@ pub fn ContextMenuPage() -> impl IntoView {
                         "Banana"
                     </ContextMenuItem>
 
-                    <ContextMenuSeparator attr:class="context-separator" />
+                    <ContextMenuSeparator class:context-separator=true />
 
                     <ContextMenuCheckboxItem
-                        attr:class="context-item"
+                        class:context-item=true
                         checked=Signal::derive(move || CheckedState::from(checked.get()))
                         on_checked_change=Callback::new(move |v: bool| set_checked.set(v))
                     >
-                        <ContextMenuItemIndicator attr:class="context-indicator">
+                        <ContextMenuItemIndicator class:context-indicator=true>
                             "\u{2713}"
                         </ContextMenuItemIndicator>
                         "Check me"
                     </ContextMenuCheckboxItem>
 
-                    <ContextMenuSeparator attr:class="context-separator" />
+                    <ContextMenuSeparator class:context-separator=true />
 
                     <ContextMenuRadioGroup
                         value=radio_value
                         on_value_change=Callback::new(move |v: String| set_radio_value.set(v))
                     >
-                        <ContextMenuRadioItem attr:class="context-item" value="radio1">
-                            <ContextMenuItemIndicator attr:class="context-indicator">
+                        <ContextMenuRadioItem class:context-item=true value="radio1">
+                            <ContextMenuItemIndicator class:context-indicator=true>
                                 "\u{25cf}"
                             </ContextMenuItemIndicator>
                             "Radio 1"
                         </ContextMenuRadioItem>
-                        <ContextMenuRadioItem attr:class="context-item" value="radio2">
-                            <ContextMenuItemIndicator attr:class="context-indicator">
+                        <ContextMenuRadioItem class:context-item=true value="radio2">
+                            <ContextMenuItemIndicator class:context-indicator=true>
                                 "\u{25cf}"
                             </ContextMenuItemIndicator>
                             "Radio 2"
                         </ContextMenuRadioItem>
                     </ContextMenuRadioGroup>
 
-                    <ContextMenuSeparator attr:class="context-separator" />
+                    <ContextMenuSeparator class:context-separator=true />
 
                     <ContextMenuSub>
-                        <ContextMenuSubTrigger attr:class="context-item context-sub-trigger">
+                        <ContextMenuSubTrigger class:context-item=true class:context-sub-trigger=true>
                             "Submenu \u{2192}"
                         </ContextMenuSubTrigger>
                         <ContextMenuPortal>
-                            <ContextMenuSubContent attr:class="context-content" side_offset=2.0>
+                            <ContextMenuSubContent class:context-content=true side_offset=2.0>
                                 <ContextMenuItem
-                                    attr:class="context-item"
+                                    class:context-item=true
                                     on_select=Callback::new({
                                         let set_last_action = set_last_action.clone();
                                         move |_: web_sys::Event| set_last_action.set("Sub item 1".into())
@@ -117,7 +117,7 @@ pub fn ContextMenuPage() -> impl IntoView {
                                     "Sub item 1"
                                 </ContextMenuItem>
                                 <ContextMenuItem
-                                    attr:class="context-item"
+                                    class:context-item=true
                                     on_select=Callback::new({
                                         let set_last_action = set_last_action.clone();
                                         move |_: web_sys::Event| set_last_action.set("Sub item 2".into())
@@ -159,9 +159,9 @@ pub fn ContextMenuPage() -> impl IntoView {
         // Styled trigger for internal styles testing
         <ContextMenu>
             <ContextMenuTrigger
-                attr:class="context-trigger"
+                class:context-trigger=true
                 attr:data-testid="styled-context-trigger"
-                attr:style="background: tomato"
+                style:background="tomato"
             >
                 "Styled trigger"
             </ContextMenuTrigger>

@@ -13,17 +13,17 @@ pub fn DropdownMenuPage() -> impl IntoView {
     view! {
         <DropdownMenu>
             <DropdownMenuTrigger
-                attr:class="dropdown-trigger"
+                class:dropdown-trigger=true
                 attr:data-custom="dropdown-trigger-custom"
                 on:click=move |_| set_trigger_click_count.update(|c| *c += 1)
             >
                 "open"
             </DropdownMenuTrigger>
             <DropdownMenuPortal>
-                <DropdownMenuContent class="dropdown-content" side_offset=5.0 attr:style="--radix-dropdown-menu-content-transform-origin: 0px 0px">
-                    <DropdownMenuLabel attr:class="dropdown-label">"Actions"</DropdownMenuLabel>
+                <DropdownMenuContent class="dropdown-content" side_offset=5.0 style:--radix-dropdown-menu-content-transform-origin="0px 0px">
+                    <DropdownMenuLabel class:dropdown-label=true>"Actions"</DropdownMenuLabel>
                     <DropdownMenuItem
-                        attr:class="dropdown-item"
+                        class:dropdown-item=true
                         on_select=Callback::new({
                             let set_last_action = set_last_action.clone();
                             move |_: web_sys::Event| set_last_action.set("Item 1".into())
@@ -32,7 +32,7 @@ pub fn DropdownMenuPage() -> impl IntoView {
                         "Item 1"
                     </DropdownMenuItem>
                     <DropdownMenuItem
-                        attr:class="dropdown-item"
+                        class:dropdown-item=true
                         disabled=disabled
                         on_select=Callback::new({
                             let set_last_action = set_last_action.clone();
@@ -42,7 +42,7 @@ pub fn DropdownMenuPage() -> impl IntoView {
                         "Item 2"
                     </DropdownMenuItem>
                     <DropdownMenuItem
-                        attr:class="dropdown-item"
+                        class:dropdown-item=true
                         on_select=Callback::new({
                             let set_last_action = set_last_action.clone();
                             move |_: web_sys::Event| set_last_action.set("Item 3".into())
@@ -51,49 +51,49 @@ pub fn DropdownMenuPage() -> impl IntoView {
                         "Item 3"
                     </DropdownMenuItem>
 
-                    <DropdownMenuSeparator attr:class="dropdown-separator" />
+                    <DropdownMenuSeparator class:dropdown-separator=true />
 
                     <DropdownMenuCheckboxItem
-                        attr:class="dropdown-item"
+                        class:dropdown-item=true
                         checked=Signal::derive(move || CheckedState::from(checked.get()))
                         on_checked_change=Callback::new(move |v: bool| set_checked.set(v))
                     >
-                        <DropdownMenuItemIndicator attr:class="dropdown-indicator">
+                        <DropdownMenuItemIndicator class:dropdown-indicator=true>
                             "\u{2713}"
                         </DropdownMenuItemIndicator>
                         "Check me"
                     </DropdownMenuCheckboxItem>
 
-                    <DropdownMenuSeparator attr:class="dropdown-separator" />
+                    <DropdownMenuSeparator class:dropdown-separator=true />
 
                     <DropdownMenuRadioGroup
                         value=radio_value
                         on_value_change=Callback::new(move |v: String| set_radio_value.set(v))
                     >
-                        <DropdownMenuRadioItem attr:class="dropdown-item" value="radio1">
-                            <DropdownMenuItemIndicator attr:class="dropdown-indicator">
+                        <DropdownMenuRadioItem class:dropdown-item=true value="radio1">
+                            <DropdownMenuItemIndicator class:dropdown-indicator=true>
                                 "\u{25cf}"
                             </DropdownMenuItemIndicator>
                             "Radio 1"
                         </DropdownMenuRadioItem>
-                        <DropdownMenuRadioItem attr:class="dropdown-item" value="radio2">
-                            <DropdownMenuItemIndicator attr:class="dropdown-indicator">
+                        <DropdownMenuRadioItem class:dropdown-item=true value="radio2">
+                            <DropdownMenuItemIndicator class:dropdown-indicator=true>
                                 "\u{25cf}"
                             </DropdownMenuItemIndicator>
                             "Radio 2"
                         </DropdownMenuRadioItem>
                     </DropdownMenuRadioGroup>
 
-                    <DropdownMenuSeparator attr:class="dropdown-separator" />
+                    <DropdownMenuSeparator class:dropdown-separator=true />
 
                     <DropdownMenuSub>
-                        <DropdownMenuSubTrigger attr:class="dropdown-item dropdown-sub-trigger">
+                        <DropdownMenuSubTrigger class:dropdown-item=true class:dropdown-sub-trigger=true>
                             "Submenu \u{2192}"
                         </DropdownMenuSubTrigger>
                         <DropdownMenuPortal>
-                            <DropdownMenuSubContent attr:class="dropdown-content" side_offset=2.0>
+                            <DropdownMenuSubContent class:dropdown-content=true side_offset=2.0>
                                 <DropdownMenuItem
-                                    attr:class="dropdown-item"
+                                    class:dropdown-item=true
                                     on_select=Callback::new({
                                         let set_last_action = set_last_action.clone();
                                         move |_: web_sys::Event| set_last_action.set("Sub item 1".into())
@@ -102,7 +102,7 @@ pub fn DropdownMenuPage() -> impl IntoView {
                                     "Sub item 1"
                                 </DropdownMenuItem>
                                 <DropdownMenuItem
-                                    attr:class="dropdown-item"
+                                    class:dropdown-item=true
                                     on_select=Callback::new({
                                         let set_last_action = set_last_action.clone();
                                         move |_: web_sys::Event| set_last_action.set("Sub item 2".into())
@@ -114,7 +114,7 @@ pub fn DropdownMenuPage() -> impl IntoView {
                         </DropdownMenuPortal>
                     </DropdownMenuSub>
 
-                    <DropdownMenuArrow attr:class="dropdown-arrow" />
+                    <DropdownMenuArrow class:dropdown-arrow=true />
                 </DropdownMenuContent>
             </DropdownMenuPortal>
         </DropdownMenu>
@@ -183,7 +183,7 @@ pub fn DropdownMenuPage() -> impl IntoView {
             on_open_change=Callback::new(move |value: bool| set_controlled_open.set(value))
         >
             <DropdownMenuTrigger
-                attr:class="controlled-dropdown-trigger"
+                class:controlled-dropdown-trigger=true
                 attr:data-testid="controlled-dropdown-trigger"
             >
                 "controlled open"
@@ -194,10 +194,10 @@ pub fn DropdownMenuPage() -> impl IntoView {
                     attr:data-testid="controlled-dropdown-content"
                     side_offset=5.0
                 >
-                    <DropdownMenuItem attr:class="dropdown-item">
+                    <DropdownMenuItem class:dropdown-item=true>
                         "Controlled Item 1"
                     </DropdownMenuItem>
-                    <DropdownMenuItem attr:class="dropdown-item">
+                    <DropdownMenuItem class:dropdown-item=true>
                         "Controlled Item 2"
                     </DropdownMenuItem>
                 </DropdownMenuContent>

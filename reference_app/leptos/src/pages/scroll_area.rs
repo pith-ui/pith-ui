@@ -29,11 +29,11 @@ pub fn ScrollAreaPage() -> impl IntoView {
             view! {
                 <ScrollArea
                     r#type=current_type
-                    attr:class="scroll-area-root"
+                    class:scroll-area-root=true
                     attr:data-testid="scroll-area-root"
                 >
                     <ScrollAreaViewport
-                        attr:class="scroll-area-viewport"
+                        class:scroll-area-viewport=true
                         attr:data-testid="scroll-area-viewport"
                     >
                         <div class={

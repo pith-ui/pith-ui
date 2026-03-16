@@ -7,7 +7,7 @@ pub fn SeparatorPage() -> impl IntoView {
         <p>"Content above horizontal separator"</p>
 
         <Separator
-            attr:class="separator-root"
+            class:separator-root=true
             attr:data-testid="horizontal-separator"
             attr:data-custom="user-value"
         />
@@ -17,7 +17,7 @@ pub fn SeparatorPage() -> impl IntoView {
         <div class="separator-vertical-container">
             <span>"Left"</span>
             <Separator
-                attr:class="separator-root"
+                class:separator-root=true
                 orientation=Orientation::Vertical
                 attr:data-testid="vertical-separator"
             />
@@ -27,7 +27,7 @@ pub fn SeparatorPage() -> impl IntoView {
         <br />
 
         <Separator
-            attr:class="separator-root"
+            class:separator-root=true
             decorative=true
             attr:data-testid="decorative-separator"
         />

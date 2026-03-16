@@ -9,12 +9,12 @@ pub fn SliderPage() -> impl IntoView {
 
     view! {
         // Wrap in reactive closure so the Slider remounts when orientation changes,
-        // ensuring attr:class is properly applied to the new DOM element.
+        // ensuring class: is properly applied to the new DOM element.
         {move || {
             let o = orientation.get();
             view! {
                 <Slider
-                    attr:class="slider-root"
+                    class:slider-root=true
                     disabled=disabled
                     orientation=o
                     value=value
@@ -23,10 +23,10 @@ pub fn SliderPage() -> impl IntoView {
                     max=100.0
                     step=1.0
                 >
-                    <SliderTrack attr:class="slider-track">
-                        <SliderRange attr:class="slider-range" />
+                    <SliderTrack class:slider-track=true>
+                        <SliderRange class:slider-range=true />
                     </SliderTrack>
-                    <SliderThumb attr:class="slider-thumb" attr:aria-label="Volume" />
+                    <SliderThumb class:slider-thumb=true attr:aria-label="Volume" />
                 </Slider>
             }
         }}
@@ -42,17 +42,17 @@ pub fn SliderPage() -> impl IntoView {
 
         <h3>"Uncontrolled"</h3>
         <Slider
-            attr:class="slider-root"
+            class:slider-root=true
             default_value=vec![30.0]
             min=0.0
             max=100.0
             step=1.0
             attr:data-testid="uncontrolled-slider"
         >
-            <SliderTrack attr:class="slider-track">
-                <SliderRange attr:class="slider-range" />
+            <SliderTrack class:slider-track=true>
+                <SliderRange class:slider-range=true />
             </SliderTrack>
-            <SliderThumb attr:class="slider-thumb" attr:aria-label="Uncontrolled volume" attr:data-testid="uncontrolled-thumb" />
+            <SliderThumb class:slider-thumb=true attr:aria-label="Uncontrolled volume" attr:data-testid="uncontrolled-thumb" />
         </Slider>
 
         <hr />

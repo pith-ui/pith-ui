@@ -8,7 +8,7 @@ pub fn TogglePage() -> impl IntoView {
 
     view! {
         <Toggle
-            attr:class="toggle-root"
+            class:toggle-root=true
             disabled=disabled
             pressed=pressed
             on_pressed_change=move |value: bool| set_pressed.set(value)

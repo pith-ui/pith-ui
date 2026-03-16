@@ -82,12 +82,12 @@ pub fn ToastPage() -> impl IntoView {
                 open=open
                 on_open_change=Callback::new(move |value: bool| set_open.set(value))
             >
-                <ToastTitle attr:class="toast-title">"Toast title"</ToastTitle>
-                <ToastDescription attr:class="toast-description">"Toast description"</ToastDescription>
-                <ToastAction attr:class="toast-action" alt_text="Undo the action" as_child=true>
+                <ToastTitle class:toast-title=true>"Toast title"</ToastTitle>
+                <ToastDescription class:toast-description=true>"Toast description"</ToastDescription>
+                <ToastAction class:toast-action=true alt_text="Undo the action" as_child=true>
                     <button>"Undo"</button>
                 </ToastAction>
-                <ToastClose attr:class="toast-close" as_child=true>
+                <ToastClose class:toast-close=true as_child=true>
                     <button>"×"</button>
                 </ToastClose>
             </Toast>
@@ -123,9 +123,9 @@ pub fn ToastPage() -> impl IntoView {
                 on_open_change=Callback::new(move |value: bool| set_controlled_open.set(value))
                 duration=MaybeProp::from(Some(1_000_000))
             >
-                <ToastTitle attr:class="toast-title">"Controlled toast title"</ToastTitle>
-                <ToastDescription attr:class="toast-description">"Controlled toast description"</ToastDescription>
-                <ToastClose attr:class="toast-close" as_child=true>
+                <ToastTitle class:toast-title=true>"Controlled toast title"</ToastTitle>
+                <ToastDescription class:toast-description=true>"Controlled toast description"</ToastDescription>
+                <ToastClose class:toast-close=true as_child=true>
                     <button data-testid="controlled-toast-close">"Close controlled"</button>
                 </ToastClose>
             </Toast>
@@ -163,10 +163,10 @@ fn MultiToast(id: u32) -> impl IntoView {
 
     view! {
         <Toast class="toast-root" open=true duration=MaybeProp::from(Some(1_000_000)) node_ref=toast_ref>
-            <ToastTitle attr:class="toast-title">
+            <ToastTitle class:toast-title=true>
                 {format!("Multi toast {id}")}
             </ToastTitle>
-            <ToastDescription attr:class="toast-description">
+            <ToastDescription class:toast-description=true>
                 {format!("Description {id}")}
             </ToastDescription>
             <ToastAction alt_text=format!("Action for toast {id}") as_child=true>
@@ -187,11 +187,11 @@ fn MultiToast(id: u32) -> impl IntoView {
 fn UncontrolledToast() -> impl IntoView {
     view! {
         <Toast class="toast-root" duration=MaybeProp::from(Some(1_000_000))>
-            <ToastTitle attr:class="toast-title">"Uncontrolled toast"</ToastTitle>
-            <ToastDescription attr:class="toast-description">
+            <ToastTitle class:toast-title=true>"Uncontrolled toast"</ToastTitle>
+            <ToastDescription class:toast-description=true>
                 "This toast has no open prop"
             </ToastDescription>
-            <ToastClose attr:class="toast-close" as_child=true>
+            <ToastClose class:toast-close=true as_child=true>
                 <button data-testid="uncontrolled-close">"Close uncontrolled"</button>
             </ToastClose>
         </Toast>

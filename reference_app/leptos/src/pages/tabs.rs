@@ -15,27 +15,27 @@ pub fn TabsPage() -> impl IntoView {
                 default_value="tab1".to_string()
                 orientation=orientation
                 activation_mode=activation_mode
-                attr:class="tabs-root"
+                class:tabs-root=true
                 attr:data-custom="tabs-root-custom"
             >
-                <TabsList attr:aria-label="tabs example" attr:class="tabs-list" attr:data-custom="tabs-list-custom">
-                    <TabsTrigger value="tab1".to_string() attr:class="tabs-trigger" attr:data-custom="tabs-trigger-custom">
+                <TabsList attr:aria-label="tabs example" class:tabs-list=true attr:data-custom="tabs-list-custom">
+                    <TabsTrigger value="tab1".to_string() class:tabs-trigger=true attr:data-custom="tabs-trigger-custom">
                         "Tab 1"
                     </TabsTrigger>
-                    <TabsTrigger value="tab2".to_string() disabled=true attr:class="tabs-trigger">
+                    <TabsTrigger value="tab2".to_string() disabled=true class:tabs-trigger=true>
                         "Tab 2"
                     </TabsTrigger>
-                    <TabsTrigger value="tab3".to_string() attr:class="tabs-trigger">
+                    <TabsTrigger value="tab3".to_string() class:tabs-trigger=true>
                         "Tab 3"
                     </TabsTrigger>
                 </TabsList>
-                <TabsContent value="tab1".to_string() attr:class="tabs-content" attr:data-custom="tabs-content-custom">
+                <TabsContent value="tab1".to_string() class:tabs-content=true attr:data-custom="tabs-content-custom">
                     "Content 1"
                 </TabsContent>
-                <TabsContent value="tab2".to_string() attr:class="tabs-content">
+                <TabsContent value="tab2".to_string() class:tabs-content=true>
                     "Content 2"
                 </TabsContent>
-                <TabsContent value="tab3".to_string() attr:class="tabs-content">
+                <TabsContent value="tab3".to_string() class:tabs-content=true>
                     "Content 3"
                 </TabsContent>
             </Tabs>
@@ -96,19 +96,19 @@ pub fn TabsPage() -> impl IntoView {
 
         // Force-mounted tabs for hidden attribute test
         <div data-testid="force-mount-tabs-section" aria-hidden="true">
-            <Tabs default_value="fm1".to_string() attr:class="tabs-root">
-                <TabsList attr:aria-label="force mount tabs" attr:class="tabs-list">
-                    <TabsTrigger value="fm1".to_string() attr:class="tabs-trigger" attr:data-testid="fm-trigger-1">
+            <Tabs default_value="fm1".to_string() class:tabs-root=true>
+                <TabsList attr:aria-label="force mount tabs" class:tabs-list=true>
+                    <TabsTrigger value="fm1".to_string() class:tabs-trigger=true attr:data-testid="fm-trigger-1">
                         "FM 1"
                     </TabsTrigger>
-                    <TabsTrigger value="fm2".to_string() attr:class="tabs-trigger" attr:data-testid="fm-trigger-2">
+                    <TabsTrigger value="fm2".to_string() class:tabs-trigger=true attr:data-testid="fm-trigger-2">
                         "FM 2"
                     </TabsTrigger>
                 </TabsList>
-                <TabsContent value="fm1".to_string() attr:class="tabs-content" attr:data-testid="fm-content-1" force_mount=true>
+                <TabsContent value="fm1".to_string() class:tabs-content=true attr:data-testid="fm-content-1" force_mount=true>
                     "FM Content 1"
                 </TabsContent>
-                <TabsContent value="fm2".to_string() attr:class="tabs-content" attr:data-testid="fm-content-2" force_mount=true>
+                <TabsContent value="fm2".to_string() class:tabs-content=true attr:data-testid="fm-content-2" force_mount=true>
                     "FM Content 2"
                 </TabsContent>
             </Tabs>
@@ -147,27 +147,27 @@ pub fn TabsPage() -> impl IntoView {
             <Tabs
                 value=Signal::derive(move || Some(controlled_value.get()))
                 on_value_change=Callback::new(move |v: String| set_controlled_value.set(v))
-                attr:class="tabs-root"
+                class:tabs-root=true
                 attr:data-testid="controlled-tabs"
             >
-                <TabsList attr:aria-label="controlled tabs example" attr:class="tabs-list">
-                    <TabsTrigger value="ctab1".to_string() attr:class="tabs-trigger" attr:data-testid="controlled-tab-trigger-1">
+                <TabsList attr:aria-label="controlled tabs example" class:tabs-list=true>
+                    <TabsTrigger value="ctab1".to_string() class:tabs-trigger=true attr:data-testid="controlled-tab-trigger-1">
                         "CTab 1"
                     </TabsTrigger>
-                    <TabsTrigger value="ctab2".to_string() attr:class="tabs-trigger" attr:data-testid="controlled-tab-trigger-2">
+                    <TabsTrigger value="ctab2".to_string() class:tabs-trigger=true attr:data-testid="controlled-tab-trigger-2">
                         "CTab 2"
                     </TabsTrigger>
-                    <TabsTrigger value="ctab3".to_string() attr:class="tabs-trigger" attr:data-testid="controlled-tab-trigger-3">
+                    <TabsTrigger value="ctab3".to_string() class:tabs-trigger=true attr:data-testid="controlled-tab-trigger-3">
                         "CTab 3"
                     </TabsTrigger>
                 </TabsList>
-                <TabsContent value="ctab1".to_string() attr:class="tabs-content" attr:data-testid="controlled-tab-content-1">
+                <TabsContent value="ctab1".to_string() class:tabs-content=true attr:data-testid="controlled-tab-content-1">
                     "Controlled Content 1"
                 </TabsContent>
-                <TabsContent value="ctab2".to_string() attr:class="tabs-content" attr:data-testid="controlled-tab-content-2">
+                <TabsContent value="ctab2".to_string() class:tabs-content=true attr:data-testid="controlled-tab-content-2">
                     "Controlled Content 2"
                 </TabsContent>
-                <TabsContent value="ctab3".to_string() attr:class="tabs-content" attr:data-testid="controlled-tab-content-3">
+                <TabsContent value="ctab3".to_string() class:tabs-content=true attr:data-testid="controlled-tab-content-3">
                     "Controlled Content 3"
                 </TabsContent>
             </Tabs>

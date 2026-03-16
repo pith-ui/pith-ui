@@ -9,12 +9,12 @@ pub fn PopoverPage() -> impl IntoView {
 
     view! {
         <Popover modal=modal>
-            <PopoverTrigger attr:class="popover-trigger" attr:data-custom="popover-trigger-custom">"open"</PopoverTrigger>
+            <PopoverTrigger class:popover-trigger=true attr:data-custom="popover-trigger-custom">"open"</PopoverTrigger>
             <PopoverPortal>
-                <PopoverContent attr:class="popover-content" side_offset=5.0 attr:data-custom="popover-content-custom" attr:style="color: rgb(255, 0, 0)">
+                <PopoverContent class:popover-content=true side_offset=5.0 attr:data-custom="popover-content-custom" style:color="rgb(255, 0, 0)">
                     <p>"Popover content"</p>
-                    <PopoverClose attr:class="popover-close" attr:data-custom="popover-close-custom">"close"</PopoverClose>
-                    <PopoverArrow attr:class="popover-arrow" width=20.0 height=10.0 />
+                    <PopoverClose class:popover-close=true attr:data-custom="popover-close-custom">"close"</PopoverClose>
+                    <PopoverArrow class:popover-arrow=true width=20.0 height=10.0 />
                 </PopoverContent>
             </PopoverPortal>
         </Popover>
@@ -61,20 +61,20 @@ pub fn PopoverPage() -> impl IntoView {
             on_open_change=Callback::new(move |open: bool| set_controlled_open.set(open))
         >
             <PopoverTrigger
-                attr:class="popover-trigger"
+                class:popover-trigger=true
                 attr:data-testid="controlled-trigger"
             >
                 "controlled open"
             </PopoverTrigger>
             <PopoverPortal>
                 <PopoverContent
-                    attr:class="popover-content"
+                    class:popover-content=true
                     side_offset=5.0
                     attr:data-testid="controlled-content"
                 >
                     <p>"Controlled popover content"</p>
-                    <PopoverClose attr:class="popover-close">"close"</PopoverClose>
-                    <PopoverArrow attr:class="popover-arrow" width=20.0 height=10.0 />
+                    <PopoverClose class:popover-close=true>"close"</PopoverClose>
+                    <PopoverArrow class:popover-arrow=true width=20.0 height=10.0 />
                 </PopoverContent>
             </PopoverPortal>
         </Popover>
@@ -111,7 +111,7 @@ pub fn PopoverPage() -> impl IntoView {
         <Popover>
             <div style="display: flex; gap: 200px; align-items: flex-start">
                 <PopoverTrigger
-                    attr:class="popover-trigger"
+                    class:popover-trigger=true
                     attr:data-testid="anchor-trigger"
                 >
                     "anchor open"
@@ -127,12 +127,12 @@ pub fn PopoverPage() -> impl IntoView {
             </div>
             <PopoverPortal>
                 <PopoverContent
-                    attr:class="popover-content"
+                    class:popover-content=true
                     side_offset=5.0
                     attr:data-testid="anchor-content"
                 >
                     <p>"Anchored popover content"</p>
-                    <PopoverClose attr:class="popover-close" attr:data-testid="anchor-close">
+                    <PopoverClose class:popover-close=true attr:data-testid="anchor-close">
                         "close"
                     </PopoverClose>
                 </PopoverContent>

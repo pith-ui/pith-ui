@@ -20,7 +20,7 @@ pub fn CheckboxPage() -> impl IntoView {
     view! {
         <label class="checkbox-label">
             <Checkbox
-                attr:class="checkbox-root"
+                class:checkbox-root=true
                 disabled=disabled
                 checked=Signal::derive(move || checked_value.get())
                 on_checked_change=move |value: CheckedState| {
@@ -40,7 +40,7 @@ pub fn CheckboxPage() -> impl IntoView {
                     }
                 }
             >
-                <CheckboxIndicator attr:class="checkbox-indicator">
+                <CheckboxIndicator class:checkbox-indicator=true>
                     {move || {
                         if checked_value.get() == CheckedState::Indeterminate {
                             "\u{2212}"
@@ -57,14 +57,15 @@ pub fn CheckboxPage() -> impl IntoView {
 
         // Always-checked checkbox for internal styles testing
         <Checkbox
-            attr:class="checkbox-root"
+            class:checkbox-root=true
             checked=Signal::derive(|| CheckedState::True)
             attr:data-testid="styled-checkbox"
         >
             <CheckboxIndicator
-                attr:class="checkbox-indicator"
+                class:checkbox-indicator=true
                 attr:data-testid="styled-indicator"
-                attr:style="background: tomato; pointer-events: auto"
+                style:background="tomato"
+                style:pointer-events="auto"
             >
                 "\u{2713}"
             </CheckboxIndicator>
@@ -76,11 +77,13 @@ pub fn CheckboxPage() -> impl IntoView {
         <Checkbox
             checked=Signal::derive(|| CheckedState::True)
             attr:data-testid="style-forwarded-checkbox"
-            attr:style="background-color: rgb(0, 128, 0); border: 3px solid rgb(255, 0, 0)"
+            style:background-color="rgb(0, 128, 0)"
+            style:border="3px solid rgb(255, 0, 0)"
         >
             <CheckboxIndicator
                 attr:id="style-forwarded-indicator"
-                attr:style="color: rgb(0, 0, 255); font-size: 24px"
+                style:color="rgb(0, 0, 255)"
+                style:font-size="24px"
             >
                 "\u{2713}"
             </CheckboxIndicator>

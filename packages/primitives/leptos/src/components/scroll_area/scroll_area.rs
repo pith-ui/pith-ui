@@ -48,13 +48,9 @@ pub fn ScrollArea(
                     as_child=as_child
                     node_ref=composed_ref
                     attr:dir=move || direction.get().to_string()
-                    attr:style=move || {
-                        format!(
-                            "position: relative; --radix-scroll-area-corner-width: {}px; --radix-scroll-area-corner-height: {}px;",
-                            corner_width.get(),
-                            corner_height.get()
-                        )
-                    }
+                    style:position="relative"
+                    style:--radix-scroll-area-corner-width=move || format!("{}px", corner_width.get())
+                    style:--radix-scroll-area-corner-height=move || format!("{}px", corner_height.get())
                     {..attrs}
                 >
                     {children.with_value(|children| children())}
@@ -114,13 +110,8 @@ pub fn ScrollAreaViewport(
                 as_child=as_child
                 node_ref=composed_ref
                 attr:data-radix-scroll-area-viewport=""
-                attr:style=move || {
-                    format!(
-                        "overflow-x: {}; overflow-y: {};",
-                        if scrollbar_x_enabled.get() { "scroll" } else { "hidden" },
-                        if scrollbar_y_enabled.get() { "scroll" } else { "hidden" },
-                    )
-                }
+                style:overflow-x=move || if scrollbar_x_enabled.get() { "scroll" } else { "hidden" }
+                style:overflow-y=move || if scrollbar_y_enabled.get() { "scroll" } else { "hidden" }
                 {..attrs}
             >
                 <div

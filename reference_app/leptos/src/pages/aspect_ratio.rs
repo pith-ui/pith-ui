@@ -19,7 +19,7 @@ pub fn AspectRatioPage() -> impl IntoView {
             <AspectRatio
                 ratio={16.0 / 9.0}
                 attr:data-testid="with-custom-style"
-                attr:style="background: tomato"
+                style:background="tomato"
             >
                 <span>"Custom background"</span>
             </AspectRatio>
@@ -37,7 +37,9 @@ pub fn AspectRatioPage() -> impl IntoView {
             <AspectRatio
                 ratio={16.0 / 9.0}
                 attr:data-testid="with-conflicting-style"
-                attr:style="position: relative; top: 10px; background: cornflowerblue"
+                style:position="relative"
+                style:top="10px"
+                style:background="cornflowerblue"
             >
                 <span>"Conflicting styles"</span>
             </AspectRatio>

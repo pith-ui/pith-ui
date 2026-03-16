@@ -11,19 +11,19 @@ pub fn TooltipPage() -> impl IntoView {
         <TooltipProvider delay_duration=0.0 skip_delay_duration=0.0>
             <Tooltip>
                 <TooltipTrigger
-                    attr:class="tooltip-trigger"
+                    class:tooltip-trigger=true
                     attr:data-testid="tooltip-trigger-1"
                 >
                     "trigger 1"
                 </TooltipTrigger>
                 <TooltipPortal>
                     <TooltipContent
-                        attr:class="tooltip-content"
+                        class:tooltip-content=true
                         side_offset=5.0
                         attr:data-testid="tooltip-content-1"
                     >
                         "Tooltip 1"
-                        <TooltipArrow attr:class="tooltip-arrow" width=12.0 height=6.0 />
+                        <TooltipArrow class:tooltip-arrow=true width=12.0 height=6.0 />
                     </TooltipContent>
                 </TooltipPortal>
             </Tooltip>
@@ -33,19 +33,19 @@ pub fn TooltipPage() -> impl IntoView {
 
             <Tooltip>
                 <TooltipTrigger
-                    attr:class="tooltip-trigger"
+                    class:tooltip-trigger=true
                     attr:data-testid="tooltip-trigger-2"
                 >
                     "trigger 2"
                 </TooltipTrigger>
                 <TooltipPortal>
                     <TooltipContent
-                        attr:class="tooltip-content"
+                        class:tooltip-content=true
                         side_offset=5.0
                         attr:data-testid="tooltip-content-2"
                     >
                         "Tooltip 2"
-                        <TooltipArrow attr:class="tooltip-arrow" width=12.0 height=6.0 />
+                        <TooltipArrow class:tooltip-arrow=true width=12.0 height=6.0 />
                     </TooltipContent>
                 </TooltipPortal>
             </Tooltip>
@@ -58,19 +58,19 @@ pub fn TooltipPage() -> impl IntoView {
                 on_open_change=Callback::new(move |open: bool| set_controlled_open.set(open))
             >
                 <TooltipTrigger
-                    attr:class="tooltip-trigger"
+                    class:tooltip-trigger=true
                     attr:data-testid="tooltip-trigger-controlled"
                 >
                     "controlled trigger"
                 </TooltipTrigger>
                 <TooltipPortal>
                     <TooltipContent
-                        attr:class="tooltip-content"
+                        class:tooltip-content=true
                         side_offset=5.0
                         attr:data-testid="tooltip-content-controlled"
                     >
                         "Controlled Tooltip"
-                        <TooltipArrow attr:class="tooltip-arrow" width=12.0 height=6.0 />
+                        <TooltipArrow class:tooltip-arrow=true width=12.0 height=6.0 />
                     </TooltipContent>
                 </TooltipPortal>
             </Tooltip>

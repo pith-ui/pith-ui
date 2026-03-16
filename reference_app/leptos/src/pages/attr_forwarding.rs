@@ -113,7 +113,7 @@ pub fn AttrForwardingPage() -> impl IntoView {
             // ── ScrollArea ─────────────────────────────────
             <section>
                 <h3>"ScrollArea"</h3>
-                <ScrollArea attr:data-attr-test="scroll-area-root" attr:style="height: 50px; overflow: hidden;">
+                <ScrollArea attr:data-attr-test="scroll-area-root" style:height="50px" style:overflow="hidden">
                     <ScrollAreaViewport attr:data-attr-test="scroll-area-viewport">
                         <div style="height: 200px;">"Tall content"</div>
                     </ScrollAreaViewport>
@@ -225,7 +225,7 @@ pub fn AttrForwardingPage() -> impl IntoView {
                         <div style="padding: 20px; border: 1px dashed gray;">"Right-click here"</div>
                     </ContextMenuTrigger>
                     <ContextMenuPortal>
-                        <ContextMenuContent attr:data-attr-test="context-menu-content" force_mount=true attr:style="visibility: hidden; position: fixed;">
+                        <ContextMenuContent attr:data-attr-test="context-menu-content" force_mount=true style:visibility="hidden" style:position="fixed">
                             <ContextMenuItem attr:data-attr-test="context-menu-item">"Item"</ContextMenuItem>
                         </ContextMenuContent>
                     </ContextMenuPortal>
