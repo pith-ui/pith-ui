@@ -15,7 +15,6 @@ use crate::support::primitive::{
 };
 use crate::support::scroll_lock::use_body_scroll_lock;
 use crate::support::use_controllable_state::{UseControllableStateParams, use_controllable_state};
-use crate::support::use_internal_styles::use_forced_styles;
 use leptos::{
     attribute_interceptor::AttributeInterceptor, context::Provider, ev, html, prelude::*,
 };

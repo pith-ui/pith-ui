@@ -154,42 +154,14 @@ fn SelectContentImpl(
     let content_ref = AnyNodeRef::new();
     let viewport_ref = AnyNodeRef::new();
     let composed_refs = use_composed_refs(vec![node_ref, content_ref]);
-    // Layout defaults — user styles can override these.
-    let default_styled_refs = use_internal_styles(
-        composed_refs,
-        &[
-            ("display", "flex"),
-            ("flex-direction", "column"),
-            ("outline", "none"),
-            ("box-sizing", "border-box"),
-        ],
-    );
-    // Popper-derived CSS var aliases — must always reflect current state.
-    let popper_styled_refs = use_forced_styles(
-        default_styled_refs,
-        &[
-            (
-                "--radix-select-content-transform-origin",
-                "var(--radix-popper-transform-origin)",
-            ),
-            (
-                "--radix-select-content-available-width",
-                "var(--radix-popper-available-width)",
-            ),
-            (
-                "--radix-select-content-available-height",
-                "var(--radix-popper-available-height)",
-            ),
-            (
-                "--radix-select-trigger-width",
-                "var(--radix-popper-anchor-width)",
-            ),
-            (
-                "--radix-select-trigger-height",
-                "var(--radix-popper-anchor-height)",
-            ),
-        ],
-    );
+
+    let select_content_style = "\
+        display: flex; flex-direction: column; outline: none; box-sizing: border-box; \
+        --radix-select-content-transform-origin: var(--radix-popper-transform-origin); \
+        --radix-select-content-available-width: var(--radix-popper-available-width); \
+        --radix-select-content-available-height: var(--radix-popper-available-height); \
+        --radix-select-trigger-width: var(--radix-popper-anchor-width); \
+        --radix-select-trigger-height: var(--radix-popper-anchor-height);";
 
     let _get_items = StoredValue::new(use_collection::<SelectItemData>());
     let (is_positioned, set_is_positioned) = signal(false);
@@ -663,7 +635,8 @@ fn SelectContentImpl(
                                     hide_when_detached=hide_when_detached
                                     update_position_strategy=update_position_strategy
                                     as_child=as_child
-                                    node_ref=popper_styled_refs
+                                    node_ref=composed_refs
+                                    attr:style=select_content_style
                                     on_placed=Some(Callback::new(move |_: ()| {
                                         set_is_positioned.set(true);
                                     }))

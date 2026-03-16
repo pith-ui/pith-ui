@@ -141,26 +141,28 @@ pub fn AccordionContent(
     let accordion_context = expect_context::<AccordionImplContextValue>();
     let item_context = expect_context::<AccordionItemContextValue>();
 
-    let composed_ref = use_internal_styles(
-        node_ref,
-        &[
-            (
-                "--radix-accordion-content-height",
-                "var(--radix-collapsible-content-height)",
-            ),
-            (
-                "--radix-accordion-content-width",
-                "var(--radix-collapsible-content-width)",
-            ),
-        ],
-    );
+    // Set accordion CSS var aliases via setProperty so they don't clobber
+    // CollapsibleContent's own --radix-collapsible-content-height/width vars.
+    // Only set if the user hasn't already provided their own values (overridable defaults).
+    Effect::new(move |_| {
+        if let Some(el) = node_ref.get() {
+            let el: web_sys::HtmlElement = el.unchecked_into();
+            let style = el.style();
+            if style.get_property_value("--radix-accordion-content-height").unwrap_or_default().is_empty() {
+                style.set_property("--radix-accordion-content-height", "var(--radix-collapsible-content-height)").ok();
+            }
+            if style.get_property_value("--radix-accordion-content-width").unwrap_or_default().is_empty() {
+                style.set_property("--radix-accordion-content-width", "var(--radix-collapsible-content-width)").ok();
+            }
+        }
+    });
 
     view! {
         <AttributeInterceptor let:attrs>
             <CollapsibleContent
                 force_mount=force_mount
                 as_child=as_child
-                node_ref=composed_ref
+                node_ref=node_ref
                 attr:role="region"
                 attr:aria-labelledby=move || item_context.trigger_id.get()
                 attr:data-orientation=move || accordion_context.orientation.get().to_string()

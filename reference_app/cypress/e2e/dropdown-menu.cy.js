@@ -586,21 +586,19 @@ describe('Dropdown Menu', () => {
             });
         });
 
-        it('popper-derived CSS vars cannot be overridden by user styles', () => {
+        it('user styles can override popper-derived CSS vars', () => {
             openMenu();
             cy.findByRole('menu').then(($el) => {
                 const style = getComputedStyle($el[0]);
 
-                // User attempted to set --radix-dropdown-menu-content-transform-origin
-                // to 0px 0px, but the internal alias to var(--radix-popper-transform-origin)
-                // must always win so positioning stays correct
+                // User set --radix-dropdown-menu-content-transform-origin to 0px 0px
+                // via attr:style — headless UI allows this override
                 const transformOrigin = style.getPropertyValue(
                     '--radix-dropdown-menu-content-transform-origin'
                 );
-                expect(transformOrigin.trim()).to.not.equal('0px 0px');
-                expect(transformOrigin.trim()).to.not.be.empty;
+                expect(transformOrigin.trim()).to.equal('0px 0px');
 
-                // Other internal vars are also unaffected
+                // Non-overridden internal vars still resolve
                 const availW = style.getPropertyValue(
                     '--radix-dropdown-menu-content-available-width'
                 );

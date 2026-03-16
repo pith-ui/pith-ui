@@ -2339,6 +2339,7 @@ dependencies = [
  "leptos-node-ref",
  "leptos_router",
  "log",
+ "radix-leptos-primitives",
  "send_wrapper",
  "web-sys",
 ]

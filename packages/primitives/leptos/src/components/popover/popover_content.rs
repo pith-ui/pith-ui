@@ -469,31 +469,13 @@ fn PopoverContentImpl(
     let children = StoredValue::new(children);
 
     let context = expect_context::<PopoverContextValue>();
-    let composed_refs = use_forced_styles(
-        node_ref,
-        &[
-            (
-                "--radix-popover-content-transform-origin",
-                "var(--radix-popper-transform-origin)",
-            ),
-            (
-                "--radix-popover-content-available-width",
-                "var(--radix-popper-available-width)",
-            ),
-            (
-                "--radix-popover-content-available-height",
-                "var(--radix-popper-available-height)",
-            ),
-            (
-                "--radix-popover-trigger-width",
-                "var(--radix-popper-anchor-width)",
-            ),
-            (
-                "--radix-popover-trigger-height",
-                "var(--radix-popper-anchor-height)",
-            ),
-        ],
-    );
+
+    let popover_content_style = "\
+        --radix-popover-content-transform-origin: var(--radix-popper-transform-origin); \
+        --radix-popover-content-available-width: var(--radix-popper-available-width); \
+        --radix-popover-content-available-height: var(--radix-popper-available-height); \
+        --radix-popover-trigger-width: var(--radix-popper-anchor-width); \
+        --radix-popover-trigger-height: var(--radix-popper-anchor-height);";
 
     // Make sure the whole tree has focus guards as our `Popover` may be
     // the last element in the DOM (because of the `Portal`)
@@ -534,7 +516,8 @@ fn PopoverContentImpl(
                     hide_when_detached=hide_when_detached
                     update_position_strategy=update_position_strategy
                     as_child=as_child
-                    node_ref=composed_refs
+                    node_ref=node_ref
+                    attr:style=popover_content_style
                     attr:data-state=move || open_closed_state(context.open.get())
                     attr:role="dialog"
                     attr:id=move || context.content_id.get()

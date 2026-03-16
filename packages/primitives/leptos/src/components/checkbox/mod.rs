@@ -4,7 +4,6 @@ use crate::support::compose_refs::use_composed_refs;
 use crate::support::presence::Presence;
 use crate::support::primitive::{Primitive, adapt_callback, compose_callbacks, data_attr, prop_or};
 use crate::support::use_controllable_state::{UseControllableStateParams, use_controllable_state};
-use crate::support::use_internal_styles::use_internal_styles;
 use crate::support::use_previous::use_previous;
 use crate::support::use_size::use_size;
 use leptos::{
@@ -219,7 +218,6 @@ pub fn CheckboxIndicator(
     });
 
     let children = StoredValue::new(children);
-    let styled_ref = use_internal_styles(node_ref, &[("pointer-events", "none")]);
 
     view! {
         <Presence present=present node_ref=node_ref>
@@ -227,7 +225,8 @@ pub fn CheckboxIndicator(
                 <Primitive
                     element=html::span
                     as_child=as_child
-                    node_ref=styled_ref
+                    node_ref=node_ref
+                    style:pointer-events="none"
                     attr:data-state=move || get_state(context.state.get())
                     attr:data-disabled=data_attr(context.disabled)
                     {..attrs}

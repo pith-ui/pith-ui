@@ -12,7 +12,6 @@ use crate::support::primitive::{
     Primitive, adapt_callback, data_attr, open_closed_state, prop_or_default,
 };
 use crate::support::use_controllable_state::{UseControllableStateParams, use_controllable_state};
-use crate::support::use_internal_styles::use_internal_styles;
 use leptos::{
     attribute_interceptor::AttributeInterceptor, context::Provider, ev, html, prelude::*,
 };

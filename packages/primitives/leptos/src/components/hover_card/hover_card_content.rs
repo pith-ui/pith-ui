@@ -310,39 +310,17 @@ fn HoverCardContentImpl(
 
     let on_dismiss = context.on_dismiss;
 
-    let composed_refs = use_internal_styles_effect(composed_refs, move |style| {
-        // Popper-derived CSS var aliases — always forced (not user-overridable).
-        for (name, value) in [
-            (
-                "--radix-hover-card-content-transform-origin",
-                "var(--radix-popper-transform-origin)",
-            ),
-            (
-                "--radix-hover-card-content-available-width",
-                "var(--radix-popper-available-width)",
-            ),
-            (
-                "--radix-hover-card-content-available-height",
-                "var(--radix-popper-available-height)",
-            ),
-            (
-                "--radix-hover-card-trigger-width",
-                "var(--radix-popper-anchor-width)",
-            ),
-            (
-                "--radix-hover-card-trigger-height",
-                "var(--radix-popper-anchor-height)",
-            ),
-        ] {
-            let _ = style.set_property(name, value);
-        }
+    let hover_card_content_style = Signal::derive(move || {
+        let mut s = String::from("\
+            --radix-hover-card-content-transform-origin: var(--radix-popper-transform-origin); \
+            --radix-hover-card-content-available-width: var(--radix-popper-available-width); \
+            --radix-hover-card-content-available-height: var(--radix-popper-available-height); \
+            --radix-hover-card-trigger-width: var(--radix-popper-anchor-width); \
+            --radix-hover-card-trigger-height: var(--radix-popper-anchor-height);");
         if contain_selection.get() {
-            let _ = style.set_property("user-select", "text");
-            let _ = style.set_property("-webkit-user-select", "text");
-        } else {
-            let _ = style.remove_property("user-select");
-            let _ = style.remove_property("-webkit-user-select");
+            s.push_str(" user-select: text; -webkit-user-select: text;");
         }
+        s
     });
 
     view! {
@@ -371,6 +349,7 @@ fn HoverCardContentImpl(
                 update_position_strategy=update_position_strategy
                 as_child=as_child
                 node_ref=composed_refs
+                attr:style=hover_card_content_style
                 attr:data-state=move || open_closed_state(context.open.get())
                 on:pointerenter=move |event: ev::PointerEvent| {
                     on_pointer_enter.run(event);

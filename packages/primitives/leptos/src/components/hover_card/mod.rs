@@ -8,7 +8,6 @@ use crate::support::portal::{ScopedPortal, resolve_force_mount};
 use crate::support::presence::Presence;
 use crate::support::primitive::{Primitive, adapt_callback, compose_callbacks, open_closed_state};
 use crate::support::use_controllable_state::{UseControllableStateParams, use_controllable_state};
-use crate::support::use_internal_styles::use_internal_styles_effect;
 use leptos::{
     attribute_interceptor::AttributeInterceptor, context::Provider, ev, html, prelude::*,
 };
