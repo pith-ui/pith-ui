@@ -5,9 +5,6 @@ pub fn MenuContent(
     /// Used to force mounting when more control is needed. Useful when controlling animation with animation libraries.
     #[prop(into, optional)]
     force_mount: MaybeProp<bool>,
-    /// CSS class applied directly to the inner content element (same element as data-state).
-    #[prop(into, optional)]
-    class: MaybeProp<String>,
     /// Event handler called when auto-focusing on close. Can be prevented.
     #[prop(into, optional)]
     on_close_auto_focus: Option<Callback<ev::Event>>,
@@ -60,10 +57,6 @@ pub fn MenuContent(
     /// The id of the element that labels the content.
     #[prop(into, optional)]
     aria_labelledby: MaybeProp<String>,
-    /// Additional inline styles to apply to the content element. Used by wrapper components
-    /// (e.g., ContextMenuContent) to set CSS custom property aliases on the final rendered element.
-    #[prop(into, optional)]
-    content_style: MaybeProp<String>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
     children: ChildrenFn,
@@ -84,17 +77,6 @@ pub fn MenuContent(
     let on_entry_focus = wrap_callback(on_entry_focus);
     let on_key_down = wrap_callback(on_key_down);
 
-    // Prepend `outline: none` to content_style so the menu content element never shows
-    // a focus outline. In React Radix this is set as an inline style default.
-    let content_style = MaybeProp::derive(move || {
-        let extra = content_style.get().unwrap_or_default();
-        if extra.is_empty() {
-            Some("outline: none".to_string())
-        } else {
-            Some(format!("outline: none; {extra}"))
-        }
-    });
-
     // Forward user attrs (e.g., attr:data-testid) through CollectionProvider/Presence/Show
     // to the content element. ForwardedAttrs stores the AnyAttribute and spread() returns
     // a clone for use with {..} on inner components.
@@ -111,8 +93,6 @@ pub fn MenuContent(
                             fallback=move || view! {
                                 <MenuRootContentNonModal
                                     {..forwarded.spread()}
-                                    class=class
-                                    content_style=content_style
                                     on_close_auto_focus=on_close_auto_focus
                                     on_escape_key_down=on_escape_key_down
                                     on_pointer_down_outside=on_pointer_down_outside
@@ -142,8 +122,6 @@ pub fn MenuContent(
                     >
                         <MenuRootContentModal
                             {..forwarded.spread()}
-                            class=class
-                            content_style=content_style
                             on_close_auto_focus=on_close_auto_focus
                             on_escape_key_down=on_escape_key_down
                             on_pointer_down_outside=on_pointer_down_outside
@@ -199,8 +177,6 @@ pub(super) fn MenuRootContentModal(
     #[prop(into, optional)] r#loop: MaybeProp<bool>,
     #[prop(into, optional)] id: MaybeProp<String>,
     #[prop(into, optional)] aria_labelledby: MaybeProp<String>,
-    #[prop(into, optional)] class: MaybeProp<String>,
-    #[prop(into, optional)] content_style: MaybeProp<String>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
     children: ChildrenFn,
@@ -262,8 +238,6 @@ pub(super) fn MenuRootContentModal(
             r#loop=r#loop
             id=id
             aria_labelledby=aria_labelledby
-            class=class
-            content_style=content_style
             as_child=as_child
             node_ref=composed_refs
         >
@@ -294,8 +268,6 @@ pub(super) fn MenuRootContentNonModal(
     #[prop(into, optional)] r#loop: MaybeProp<bool>,
     #[prop(into, optional)] id: MaybeProp<String>,
     #[prop(into, optional)] aria_labelledby: MaybeProp<String>,
-    #[prop(into, optional)] class: MaybeProp<String>,
-    #[prop(into, optional)] content_style: MaybeProp<String>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
     children: ChildrenFn,
@@ -337,8 +309,6 @@ pub(super) fn MenuRootContentNonModal(
             r#loop=r#loop
             id=id
             aria_labelledby=aria_labelledby
-            class=class
-            content_style=content_style
             as_child=as_child
             node_ref=node_ref
         >
@@ -410,13 +380,6 @@ pub(super) fn MenuContentImpl(
     /// The id of the element that labels the content.
     #[prop(into, optional)]
     aria_labelledby: MaybeProp<String>,
-    /// CSS class applied directly to the inner content element (same element as data-state).
-    /// Use this instead of `attr:class` for reliable reactive class updates.
-    #[prop(into, optional)]
-    class: MaybeProp<String>,
-    /// Additional inline styles for the content element (e.g., CSS custom property aliases).
-    #[prop(into, optional)]
-    content_style: MaybeProp<String>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
     children: ChildrenFn,
@@ -866,8 +829,7 @@ pub(super) fn MenuContentImpl(
                             dir=Signal::derive(move || Some(root_context.dir.get().to_string()))
                             as_child=as_child
                             node_ref=composed_refs
-                            attr:class=move || class.get().unwrap_or_default()
-                            attr:style=move || content_style.get().unwrap_or_default()
+                            style:outline="none"
                             attr:role="menu"
                             attr:aria-orientation="vertical"
                             attr:data-state=move || open_closed_state(context.open.get())

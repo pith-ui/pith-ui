@@ -259,12 +259,6 @@ pub fn MenuSubContent(
     #[prop(into, optional)] on_escape_key_down: Option<Callback<ev::KeyboardEvent>>,
     #[prop(into, optional)] on_focus_outside: Option<Callback<CustomEvent>>,
     #[prop(into, optional)] on_key_down: Option<Callback<ev::KeyboardEvent>>,
-    /// CSS class applied directly to the inner content element (same element as data-state).
-    #[prop(into, optional)]
-    class: MaybeProp<String>,
-    /// Additional inline styles for the content element (e.g., CSS custom property aliases).
-    #[prop(into, optional)]
-    content_style: MaybeProp<String>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
     children: ChildrenFn,
@@ -312,8 +306,6 @@ pub fn MenuSubContent(
                         disable_outside_pointer_events=false
                         disable_outside_scroll=false
                         trap_focus=false
-                        class=class
-                        content_style=content_style
                         as_child=as_child
                         node_ref=composed_refs
                         on_open_auto_focus=Callback::new(move |event: ev::Event| {

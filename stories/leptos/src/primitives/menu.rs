@@ -590,7 +590,7 @@ fn MenuWithAnchor(
         <Menu open=open modal=false>
             <MenuAnchor attr:style="display: inline-block">{""}</MenuAnchor>
             <MenuPortal>
-                <MenuContent class=Signal::derive(move || content_class.get_value())>
+                <MenuContent attr:class=Signal::derive(move || content_class.get_value())>
                     {children.with_value(|children| children())}
                 </MenuContent>
             </MenuPortal>
@@ -627,7 +627,7 @@ fn Submenu(
                 {heading.get_value()} " \u{2192}"
             </MenuSubTrigger>
             <MenuPortal>
-                <MenuSubContent class=content_class>
+                <MenuSubContent attr:class=content_class>
                     {children.with_value(|children| children())}
                 </MenuSubContent>
             </MenuPortal>

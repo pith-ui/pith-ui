@@ -78,7 +78,7 @@ pub fn ToastPage() -> impl IntoView {
             <button data-testid="outside-button">"outside"</button>
 
             <Toast
-                class="toast-root"
+                class:toast-root=true
                 open=open
                 on_open_change=Callback::new(move |value: bool| set_open.set(value))
             >
@@ -118,7 +118,7 @@ pub fn ToastPage() -> impl IntoView {
             </label>
 
             <Toast
-                class="toast-root"
+                class:toast-root=true
                 open=controlled_open
                 on_open_change=Callback::new(move |value: bool| set_controlled_open.set(value))
                 duration=MaybeProp::from(Some(1_000_000))

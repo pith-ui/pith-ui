@@ -242,10 +242,10 @@ pub fn Toast(
                                         on_escape_key_down=dismiss_escape
                                     >
                                     <Primitive
+                                        {..forwarded.spread()}
                                         element=html::li
                                         as_child=as_child
                                         node_ref=composed_refs
-                                        {..forwarded.spread()}
                                         attr:tabindex="0"
                                         attr:data-state=move || if is_open.get() { "open" } else { "closed" }
                                         attr:data-swipe-direction=move || swipe_direction.get().as_str()

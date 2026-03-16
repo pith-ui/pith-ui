@@ -62,20 +62,17 @@ pub fn DropdownMenuContent(
     let on_pointer_down_outside = wrap_callback(on_pointer_down_outside);
     let on_focus_outside = wrap_callback(on_focus_outside);
 
-    let content_style = "\
-        --radix-dropdown-menu-content-transform-origin: var(--radix-popper-transform-origin); \
-        --radix-dropdown-menu-content-available-width: var(--radix-popper-available-width); \
-        --radix-dropdown-menu-content-available-height: var(--radix-popper-available-height); \
-        --radix-dropdown-menu-trigger-width: var(--radix-popper-anchor-width); \
-        --radix-dropdown-menu-trigger-height: var(--radix-popper-anchor-height);";
-
     view! {
         <MenuContent
             force_mount=force_mount
-            class=class
             as_child=as_child
             node_ref=node_ref
-            content_style=content_style
+            attr:class=move || class.get().unwrap_or_default()
+            style:--radix-dropdown-menu-content-transform-origin="var(--radix-popper-transform-origin)"
+            style:--radix-dropdown-menu-content-available-width="var(--radix-popper-available-width)"
+            style:--radix-dropdown-menu-content-available-height="var(--radix-popper-available-height)"
+            style:--radix-dropdown-menu-trigger-width="var(--radix-popper-anchor-width)"
+            style:--radix-dropdown-menu-trigger-height="var(--radix-popper-anchor-height)"
             id=Signal::derive(move || Some(context.content_id.get()))
             aria_labelledby=Signal::derive(move || Some(context.trigger_id.get()))
             side=side
@@ -422,13 +419,6 @@ pub fn DropdownMenuSubContent(
     let on_escape_key_down = wrap_callback(on_escape_key_down);
     let on_focus_outside = wrap_callback(on_focus_outside);
 
-    let content_style = "\
-        --radix-dropdown-menu-content-transform-origin: var(--radix-popper-transform-origin); \
-        --radix-dropdown-menu-content-available-width: var(--radix-popper-available-width); \
-        --radix-dropdown-menu-content-available-height: var(--radix-popper-available-height); \
-        --radix-dropdown-menu-trigger-width: var(--radix-popper-anchor-width); \
-        --radix-dropdown-menu-trigger-height: var(--radix-popper-anchor-height);";
-
     view! {
         <MenuSubContent
             force_mount=force_mount
@@ -441,10 +431,14 @@ pub fn DropdownMenuSubContent(
             sticky=sticky
             hide_when_detached=hide_when_detached
             r#loop=r#loop
-            class=class
             as_child=as_child
             node_ref=node_ref
-            content_style=content_style
+            attr:class=move || class.get().unwrap_or_default()
+            style:--radix-dropdown-menu-content-transform-origin="var(--radix-popper-transform-origin)"
+            style:--radix-dropdown-menu-content-available-width="var(--radix-popper-available-width)"
+            style:--radix-dropdown-menu-content-available-height="var(--radix-popper-available-height)"
+            style:--radix-dropdown-menu-trigger-width="var(--radix-popper-anchor-width)"
+            style:--radix-dropdown-menu-trigger-height="var(--radix-popper-anchor-height)"
             on_escape_key_down=on_escape_key_down
             on_focus_outside=on_focus_outside
         >

@@ -56,11 +56,11 @@ pub fn ScrollAreaPage() -> impl IntoView {
                     </ScrollAreaViewport>
                     <ScrollAreaScrollbar
                         orientation=Orientation::Vertical
-                        class="scroll-area-scrollbar"
+                        class:scroll-area-scrollbar=true
                         attr:data-testid="scrollbar-vertical"
                     >
                         <ScrollAreaThumb
-                            class="scroll-area-thumb"
+                            class:scroll-area-thumb=true
                             attr:data-testid="thumb-vertical"
                         >""</ScrollAreaThumb>
                     </ScrollAreaScrollbar>
@@ -68,11 +68,11 @@ pub fn ScrollAreaPage() -> impl IntoView {
                         Some(view! {
                             <ScrollAreaScrollbar
                                 orientation=Orientation::Horizontal
-                                class="scroll-area-scrollbar"
+                                class:scroll-area-scrollbar=true
                                 attr:data-testid="scrollbar-horizontal"
                             >
                                 <ScrollAreaThumb
-                                    class="scroll-area-thumb"
+                                    class:scroll-area-thumb=true
                                     attr:data-testid="thumb-horizontal"
                                 >""</ScrollAreaThumb>
                             </ScrollAreaScrollbar>

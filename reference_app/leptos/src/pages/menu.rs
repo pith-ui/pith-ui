@@ -10,13 +10,7 @@ pub fn MenuPage() -> impl IntoView {
     let (sub_open, set_sub_open) = signal(false);
     let (animated, set_animated) = signal(false);
 
-    let sub_content_class = Signal::derive(move || {
-        if animated.get() {
-            "menu-content menu-content-animated".to_string()
-        } else {
-            "menu-content".to_string()
-        }
-    });
+    // sub_content_class removed — using class: directives directly on MenuSubContent
 
     view! {
         <label>
@@ -178,7 +172,7 @@ pub fn MenuPage() -> impl IntoView {
                     <MenuSub open=sub_open on_open_change=Callback::new(move |v: bool| set_sub_open.set(v))>
                         <MenuSubTrigger class:menu-item=true>"More Options..."</MenuSubTrigger>
                         <MenuPortal>
-                            <MenuSubContent class=sub_content_class>
+                            <MenuSubContent class:menu-content=true class:menu-content-animated=animated>
                                 <MenuItem
                                     class:menu-item=true
                                     on_select=Callback::new({

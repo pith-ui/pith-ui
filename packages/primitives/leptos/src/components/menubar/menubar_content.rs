@@ -81,9 +81,9 @@ pub fn MenubarContent(
     view! {
         <MenuContent
             force_mount=force_mount
-            class=class
             as_child=as_child
             node_ref=composed_refs
+            attr:class=move || class.get().unwrap_or_default()
             id=Signal::derive(move || Some(menu_context.content_id.get()))
             aria_labelledby=Signal::derive(move || Some(menu_context.trigger_id.get()))
             align=align
@@ -97,7 +97,11 @@ pub fn MenubarContent(
             r#loop=r#loop
             side=side
             side_offset=side_offset
-            content_style="--radix-menubar-content-transform-origin: var(--radix-popper-transform-origin); --radix-menubar-content-available-width: var(--radix-popper-available-width); --radix-menubar-content-available-height: var(--radix-popper-available-height); --radix-menubar-trigger-width: var(--radix-popper-anchor-width); --radix-menubar-trigger-height: var(--radix-popper-anchor-height);"
+            style:--radix-menubar-content-transform-origin="var(--radix-popper-transform-origin)"
+            style:--radix-menubar-content-available-width="var(--radix-popper-available-width)"
+            style:--radix-menubar-content-available-height="var(--radix-popper-available-height)"
+            style:--radix-menubar-trigger-width="var(--radix-popper-anchor-width)"
+            style:--radix-menubar-trigger-height="var(--radix-popper-anchor-height)"
             on_close_auto_focus=compose_callbacks(
                 on_close_auto_focus,
                 Some(Callback::new({

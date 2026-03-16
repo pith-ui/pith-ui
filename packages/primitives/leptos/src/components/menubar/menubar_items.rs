@@ -327,12 +327,16 @@ pub fn MenubarSubContent(
             sticky=sticky
             hide_when_detached=hide_when_detached
             r#loop=r#loop
-            class=class
             as_child=as_child
             node_ref=composed_refs
+            attr:class=move || class.get().unwrap_or_default()
+            style:--radix-menubar-content-transform-origin="var(--radix-popper-transform-origin)"
+            style:--radix-menubar-content-available-width="var(--radix-popper-available-width)"
+            style:--radix-menubar-content-available-height="var(--radix-popper-available-height)"
+            style:--radix-menubar-trigger-width="var(--radix-popper-anchor-width)"
+            style:--radix-menubar-trigger-height="var(--radix-popper-anchor-height)"
             on_escape_key_down=on_escape_key_down
             on_focus_outside=on_focus_outside
-            content_style="--radix-menubar-content-transform-origin: var(--radix-popper-transform-origin); --radix-menubar-content-available-width: var(--radix-popper-available-width); --radix-menubar-content-available-height: var(--radix-popper-available-height); --radix-menubar-trigger-width: var(--radix-popper-anchor-width); --radix-menubar-trigger-height: var(--radix-popper-anchor-height);"
         >
             {children()}
         </MenuSubContent>

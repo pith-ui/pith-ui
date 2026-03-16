@@ -56,9 +56,9 @@ pub fn ContextMenuContent(
     view! {
         <MenuContent
             force_mount=force_mount
-            class=class
             as_child=as_child
             node_ref=node_ref
+            attr:class=move || class.get().unwrap_or_default()
             side=PopperSide::Right
             side_offset=2.0
             align=Align::Start
@@ -70,7 +70,11 @@ pub fn ContextMenuContent(
             sticky=sticky
             hide_when_detached=hide_when_detached
             r#loop=r#loop
-            content_style="--radix-context-menu-content-transform-origin: var(--radix-popper-transform-origin); --radix-context-menu-content-available-width: var(--radix-popper-available-width); --radix-context-menu-content-available-height: var(--radix-popper-available-height); --radix-context-menu-trigger-width: var(--radix-popper-anchor-width); --radix-context-menu-trigger-height: var(--radix-popper-anchor-height);"
+            style:--radix-context-menu-content-transform-origin="var(--radix-popper-transform-origin)"
+            style:--radix-context-menu-content-available-width="var(--radix-popper-available-width)"
+            style:--radix-context-menu-content-available-height="var(--radix-popper-available-height)"
+            style:--radix-context-menu-trigger-width="var(--radix-popper-anchor-width)"
+            style:--radix-context-menu-trigger-height="var(--radix-popper-anchor-height)"
             on_close_auto_focus=compose_callbacks(
                 on_close_auto_focus,
                 Some(Callback::new(move |event: ev::Event| {
@@ -403,12 +407,16 @@ pub fn ContextMenuSubContent(
             sticky=sticky
             hide_when_detached=hide_when_detached
             r#loop=r#loop
-            class=class
             as_child=as_child
             node_ref=node_ref
+            attr:class=move || class.get().unwrap_or_default()
+            style:--radix-context-menu-content-transform-origin="var(--radix-popper-transform-origin)"
+            style:--radix-context-menu-content-available-width="var(--radix-popper-available-width)"
+            style:--radix-context-menu-content-available-height="var(--radix-popper-available-height)"
+            style:--radix-context-menu-trigger-width="var(--radix-popper-anchor-width)"
+            style:--radix-context-menu-trigger-height="var(--radix-popper-anchor-height)"
             on_escape_key_down=on_escape_key_down
             on_focus_outside=on_focus_outside
-            content_style="--radix-context-menu-content-transform-origin: var(--radix-popper-transform-origin); --radix-context-menu-content-available-width: var(--radix-popper-available-width); --radix-context-menu-content-available-height: var(--radix-popper-available-height); --radix-context-menu-trigger-width: var(--radix-popper-anchor-width); --radix-context-menu-trigger-height: var(--radix-popper-anchor-height);"
         >
             {children()}
         </MenuSubContent>

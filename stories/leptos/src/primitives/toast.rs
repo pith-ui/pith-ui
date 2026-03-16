@@ -87,7 +87,7 @@ pub fn Controlled() -> impl IntoView {
                 let:_i
             >
                 <Toast
-                    class=format!("{} {}", classes::root, classes::errorRoot)
+                    attr:class=format!("{} {}", classes::root, classes::errorRoot)
                 >
                     <ToastDescription>"There was an error"</ToastDescription>
                     <ToastAction
@@ -131,7 +131,7 @@ pub fn FromDialog() -> impl IntoView {
             </Dialog>
 
             <Toast
-                class=format!("{} {}", classes::root, classes::errorRoot)
+                attr:class=format!("{} {}", classes::root, classes::errorRoot)
                 open=open
                 on_open_change=Callback::new(move |o: bool| set_open.set(o))
             >
@@ -190,7 +190,7 @@ pub fn Promise() -> impl IntoView {
             }>
                 <button>"Save"</button>
                 <Toast
-                    class=classes::root
+                    attr:class=classes::root
                     duration=duration
                     open=open
                     on_open_change=Callback::new(move |o: bool| set_open.set(o))
@@ -321,7 +321,7 @@ pub fn Animated() -> impl IntoView {
                 <option value="down">"Slide down"</option>
             </select>
             <Toast
-                class=format!("{} {}", classes::root, classes::animatedRoot)
+                attr:class=format!("{} {}", classes::root, classes::animatedRoot)
                 open=open
                 on_open_change=Callback::new(move |o: bool| set_open.set(o))
             >
@@ -356,7 +356,7 @@ pub fn Cypress() -> impl IntoView {
                     let:identifier
                 >
                     <Toast
-                        class=classes::root
+                        attr:class=classes::root
                         open=true
                         attr:data-testid=format!("toast-{identifier}")
                     >
@@ -451,7 +451,7 @@ pub fn Chromatic() -> impl IntoView {
             <Toast
                 default_open=false
                 duration=MaybeProp::from(Some(1_000_000))
-                class=classes::root
+                attr:class=classes::root
             >
                 <div class=classes::header>
                     <ToastTitle attr:class=classes::title>"Title"</ToastTitle>
@@ -476,7 +476,7 @@ pub fn Chromatic() -> impl IntoView {
             <Toast
                 open=true
                 duration=MaybeProp::from(Some(1_000_000))
-                class=classes::root
+                attr:class=classes::root
             >
                 <div class=classes::header>
                     <ToastTitle attr:class=classes::title>"Toast"</ToastTitle>
@@ -499,7 +499,7 @@ pub fn Chromatic() -> impl IntoView {
             <Toast
                 open=false
                 duration=MaybeProp::from(Some(1_000_000))
-                class=classes::root
+                attr:class=classes::root
             >
                 <div class=classes::header>
                     <ToastTitle attr:class=classes::title>"Toast"</ToastTitle>
@@ -523,7 +523,7 @@ pub fn Chromatic() -> impl IntoView {
         <ToastProvider>
             <Toast
                 duration=MaybeProp::from(Some(snapshot_delay - 100))
-                class=classes::root
+                attr:class=classes::root
             >
                 <div class=classes::header>
                     <ToastTitle attr:class=classes::title>"Toast"</ToastTitle>
@@ -547,7 +547,7 @@ pub fn Chromatic() -> impl IntoView {
                 duration=MaybeProp::from(Some(snapshot_delay - 100))
                 open=open
                 on_open_change=Callback::new(move |o: bool| set_open.set(o))
-                class=classes::root
+                attr:class=classes::root
             >
                 <div class=classes::header>
                     <ToastTitle attr:class=classes::title>"Toast"</ToastTitle>
@@ -590,7 +590,7 @@ pub fn Chromatic() -> impl IntoView {
         <ToastProvider duration=Signal::derive(|| 1_000_000)>
             <Toast
                 duration=MaybeProp::from(Some(snapshot_delay - 100))
-                class=classes::root
+                attr:class=classes::root
             >
                 <div class=classes::header>
                     <ToastTitle attr:class=classes::title>"Toast"</ToastTitle>
@@ -621,7 +621,7 @@ fn ToastUpgradeAvailable(
 ) -> impl IntoView {
     view! {
         <Toast
-            class=classes::root
+            attr:class=classes::root
             open=open
             on_open_change=on_open_change.unwrap_or(Callback::new(|_| {}))
         >
@@ -652,7 +652,7 @@ fn ToastSubscribeSuccess(
 ) -> impl IntoView {
     view! {
         <Toast
-            class=classes::root
+            attr:class=classes::root
             open=open
             on_open_change=on_open_change.unwrap_or(Callback::new(|_| {}))
         >
@@ -676,7 +676,7 @@ fn ToastWithProgress() -> impl IntoView {
 
     view! {
         <Toast
-            class=classes::root
+            attr:class=classes::root
             duration=MaybeProp::from(Some(duration))
             on_pause=Callback::new(move |_: ()| set_paused.set(true))
             on_resume=Callback::new(move |_: ()| set_paused.set(false))
