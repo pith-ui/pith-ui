@@ -13,7 +13,7 @@ use crate::support::direction::{Direction, use_direction};
 use crate::support::dismissable_layer::DismissableLayer;
 use crate::support::id::use_id;
 use crate::support::forwarded_attrs::ForwardedAttrs;
-use crate::support::presence::{Presence, extract_attrs};
+use crate::support::presence::Presence;
 use crate::support::primitive::{Primitive, adapt_callback, compose_callbacks, open_closed_state, prop_or};
 use crate::support::use_controllable_state::{UseControllableStateParams, use_controllable_state};
 use crate::support::use_previous::use_previous;
@@ -164,8 +164,8 @@ pub struct ContentData {
     pub item_content_ref: AnyNodeRef,
     /// User attributes (e.g., data-testid, class) captured from the component and forwarded
     /// to the viewport rendering path. In React, these are spread via {...contentProps}; in
-    /// Leptos, we capture them via AttributeInterceptor and transfer them explicitly.
-    pub extra_attrs: Vec<(String, String)>,
+    /// Leptos, we capture them via ForwardedAttrs and spread() them in the viewport.
+    pub forwarded_attrs: ForwardedAttrs,
 }
 
 /* -------------------------------------------------------------------------------------------------

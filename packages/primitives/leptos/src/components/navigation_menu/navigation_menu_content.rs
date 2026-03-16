@@ -45,11 +45,10 @@ pub fn NavigationMenuContent(
     // inline before the viewport Effect fires.
     let has_viewport = Signal::derive(move || context.has_viewport_component.get());
 
-    // Capture user attributes (e.g., data-testid, class) via AttributeInterceptor so they can
-    // be forwarded to the viewport rendering path (extra_attrs). AttributeInterceptor intercepts
-    // attrs at the type-composition level — BEFORE any DOM element is created — eliminating
-    // timing issues with the old hidden-span approach.
-    let captured_attrs: StoredValue<Vec<(String, String)>> = StoredValue::new(vec![]);
+    // Capture user attributes (e.g., data-testid, class) via ForwardedAttrs so they can
+    // be forwarded to the viewport rendering path. ForwardedAttrs preserves reactivity
+    // by storing the AnyAttribute and using spread() in the viewport.
+    let forwarded = ForwardedAttrs::new();
 
     Effect::new(move |_| {
         if has_viewport.get() {
@@ -72,7 +71,7 @@ pub fn NavigationMenuContent(
                 on_interact_outside,
                 content_ref: node_ref,
                 item_content_ref: item_context.content_ref,
-                extra_attrs: captured_attrs.get_value(),
+                forwarded_attrs: forwarded,
             };
             context
                 .on_viewport_content_change
@@ -98,9 +97,8 @@ pub fn NavigationMenuContent(
 
     view! {
         <AttributeInterceptor let:attrs>
-            // Extract user attrs for viewport forwarding, then pass through to inline Presence.
-            {captured_attrs.set_value(extract_attrs(attrs.clone()))}
-            <Presence present=present node_ref={presence_ref} {..attrs}>
+            {forwarded.set(attrs)}
+            <Presence present=present node_ref={presence_ref} {..forwarded.spread()}>
                 <NavigationMenuContentImpl
                     value=item_value.get_value()
                     trigger_ref=trigger_ref

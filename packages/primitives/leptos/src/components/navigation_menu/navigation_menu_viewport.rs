@@ -152,7 +152,7 @@ fn NavigationMenuViewportImpl(
                     let data_on_interact_outside = StoredValue::new(data.on_interact_outside);
                     let data_content_ref = data.content_ref;
                     let data_item_content_ref = data.item_content_ref;
-                    let data_extra_attrs = StoredValue::new(data.extra_attrs.clone());
+                    let data_forwarded_attrs = data.forwarded_attrs;
 
                     // Capture content element ref for viewport sizing
                     let inner_ref = AnyNodeRef::new();
@@ -168,23 +168,10 @@ fn NavigationMenuViewportImpl(
                         }
                     });
 
-                    // Apply user attributes captured from NavigationMenuContent to the
-                    // rendered content element. These were lost during the viewport
-                    // registration process (React forwards them via {...contentProps}).
-                    Effect::new(move |_| {
-                        if let Some(el) = inner_ref.get() {
-                            let el: web_sys::HtmlElement = el.unchecked_into();
-                            data_extra_attrs.with_value(|attrs| {
-                                for (name, value) in attrs {
-                                    el.set_attribute(name, value).ok();
-                                }
-                            });
-                        }
-                    });
-
                     view! {
                         <Presence present=present node_ref=presence_ref>
                             <NavigationMenuContentImpl
+                                {..data_forwarded_attrs.spread()}
                                 value=data_value.get_value()
                                 trigger_ref=data_trigger_ref
                                 focus_proxy_ref=data_focus_proxy_ref
