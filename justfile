@@ -104,3 +104,30 @@ test_leptos_components +components: kill_trunk free_port
     #!/usr/bin/env bash
     specs=$(echo "{{ components }}" | tr ' ' '\n' | sed 's|.*|cypress/e2e/&.cy.js|' | paste -sd, -)
     pnpm start-server-and-test leptos:dev http://localhost:3000 "cypress run --headless --spec \"$specs\"" 2>&1
+
+# ── Reference Experiments ─────────────────────────────────
+
+# Kill any process listening on port 3001
+[private]
+free_port_experiments:
+    -lsof -ti :3001 | xargs kill -9
+
+# Start the experiments dev server on :3001
+[working-directory('reference_experiments/leptos')]
+dev_experiments: kill_trunk free_port_experiments
+    trunk serve --port 3001
+
+# Open the Cypress GUI for experiments
+[working-directory('reference_experiments')]
+cy_open_experiments:
+    pnpm cy:open
+
+# Run all experiment tests
+[working-directory('reference_experiments')]
+test_experiments: kill_trunk free_port_experiments
+    pnpm cy:run:leptos
+
+# Run a single experiment test
+[working-directory('reference_experiments')]
+test_experiment experiment: kill_trunk free_port_experiments
+    pnpm start-server-and-test leptos:dev http://localhost:3001 'cypress run --headless --spec "cypress/e2e/{{ experiment }}.cy.js"' 2>&1

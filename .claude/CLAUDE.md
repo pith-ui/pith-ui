@@ -57,6 +57,7 @@ Packages follow the pattern `radix-{framework}-{component}`, e.g., `radix-yew-ch
   - `react/` — React app using real `@radix-ui/react-*` packages (source of truth)
   - `leptos/` — Leptos app using `radix-leptos-*` packages (must match React behavior)
   - `cypress/` — Shared Cypress E2E tests that run against either app
+- **`reference_experiments/`** — Leptos-only experiment sandbox for validating framework assumptions and edge cases in isolation. Use this when you need to test a hypothesis about how a Leptos API works (e.g., attribute cloning, signal behavior, component composition patterns) before committing to an approach in the main component code. Has its own Leptos app + Cypress tests on port 3001. See `reference_experiments/CLAUDE.md` for details and `just test_experiment <name>` to run.
 
 ### Key Dependencies
 

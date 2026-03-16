@@ -1,0 +1,23 @@
+{
+    "name": "@rustforweb/radix-experiments",
+    "description": "Leptos-only experiment harness for validating framework assumptions.",
+    "private": true,
+    "scripts": {
+        "leptos:dev": "cd leptos && trunk serve --port 3001",
+        "cy:open": "cypress open",
+        "cy:run": "cypress run --headless",
+        "cy:run:leptos": "start-server-and-test leptos:dev http://localhost:3001 cy:run"
+    },
+    "devDependencies": {
+        "@testing-library/cypress": "^10.0.0",
+        "cypress": "^14.0.0",
+        "cypress-real-events": "^1.15.0",
+        "start-server-and-test": "^2.0.0"
+    },
+    "pnpm": {
+        "onlyBuiltDependencies": ["cypress"]
+    },
+    "engines": {
+        "node": ">=18"
+    }
+}

@@ -1,0 +1,17 @@
+[package]
+name = "radix-leptos-experiments"
+description = "Leptos experiment app for validating framework assumptions."
+publish = false
+
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+version.workspace = true
+
+[dependencies]
+console_error_panic_hook.workspace = true
+console_log.workspace = true
+leptos = { workspace = true, features = ["csr"] }
+leptos_router.workspace = true
+log.workspace = true
