@@ -72,16 +72,10 @@ pub fn SliderRange(
             node_ref=node_ref
             attr:data-orientation=move || context.orientation.get().to_string()
             attr:data-disabled=data_attr(context.disabled)
-            attr:style=move || {
-                let orient = orientation.get();
-                format!(
-                    "{}: {}%; {}: {}%;",
-                    orient.start_edge,
-                    offset_start.get(),
-                    orient.end_edge,
-                    offset_end.get(),
-                )
-            }
+            style:left=move || (orientation.get().start_edge == "left").then(|| format!("{}%", offset_start.get()))
+            style:right=move || (orientation.get().end_edge == "right").then(|| format!("{}%", offset_end.get()))
+            style:bottom=move || (orientation.get().start_edge == "bottom").then(|| format!("{}%", offset_start.get()))
+            style:top=move || (orientation.get().end_edge == "top").then(|| format!("{}%", offset_end.get()))
         >
             {children.with_value(|children| children.as_ref().map(|children| children()))}
         </Primitive>
@@ -278,21 +272,15 @@ fn SliderThumbImpl(
                 attr:data-orientation=move || context.orientation.get().to_string()
                 attr:data-disabled=data_attr(context.disabled)
                 attr:tabindex=move || if context.disabled.get() { None } else { Some("0") }
-                attr:style=move || {
-                    let orient = orientation.get();
-                    let mut style = format!(
-                        "transform: var(--radix-slider-thumb-transform); position: absolute; {}: calc({}% + {}px);",
-                        orient.start_edge,
-                        percent.get(),
-                        thumb_in_bounds_offset.get(),
-                    );
-                    // Only hide when we have a valid index but no value at that position.
-                    // Don't hide when index is -1 (initial render before mount/indexing).
-                    if index.get() >= 0 && value.get().is_none() {
-                        style.push_str(" display: none;");
-                    }
-                    style
-                }
+                style:transform="var(--radix-slider-thumb-transform)"
+                style:position="absolute"
+                style:left=move || (orientation.get().start_edge == "left").then(|| format!("calc({}% + {}px)", percent.get(), thumb_in_bounds_offset.get()))
+                style:right=move || (orientation.get().start_edge == "right").then(|| format!("calc({}% + {}px)", percent.get(), thumb_in_bounds_offset.get()))
+                style:top=move || (orientation.get().start_edge == "top").then(|| format!("calc({}% + {}px)", percent.get(), thumb_in_bounds_offset.get()))
+                style:bottom=move || (orientation.get().start_edge == "bottom").then(|| format!("calc({}% + {}px)", percent.get(), thumb_in_bounds_offset.get()))
+                // Only hide when we have a valid index but no value at that position.
+                // Don't hide when index is -1 (initial render before mount/indexing).
+                style:display=move || (index.get() >= 0 && value.get().is_none()).then_some("none")
                 on:focus=move |_: ev::FocusEvent| {
                     let idx = index.get();
                     if idx >= 0 {

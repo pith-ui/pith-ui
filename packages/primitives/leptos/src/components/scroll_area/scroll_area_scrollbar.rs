@@ -616,16 +616,10 @@ fn ScrollAreaScrollbarX(
                     on_wheel_scroll=on_wheel_scroll_impl
                     on_drag_scroll=on_drag_scroll_impl
                     on_resize=on_resize
-                    style=Signal::derive(move || {
-                        let d = dir.get();
-                        let thumb_width = get_thumb_size(&sizes.get());
-                        format!(
-                            "bottom: 0; {}: var(--radix-scroll-area-corner-width); {}: 0; --radix-scroll-area-thumb-width: {}px;",
-                            if d == Direction::Rtl { "left" } else { "right" },
-                            if d == Direction::Rtl { "right" } else { "left" },
-                            thumb_width
-                        )
-                    })
+                    style:bottom="0"
+                    style:left=move || if dir.get() == Direction::Rtl { "var(--radix-scroll-area-corner-width)" } else { "0" }
+                    style:right=move || if dir.get() == Direction::Ltr { "var(--radix-scroll-area-corner-width)" } else { "0" }
+                    style:--radix-scroll-area-thumb-width=move || format!("{}px", get_thumb_size(&sizes.get()))
                     as_child=as_child
                     node_ref=composed_ref
                 >
@@ -738,15 +732,11 @@ fn ScrollAreaScrollbarY(
                     on_wheel_scroll=on_wheel_scroll_impl
                     on_drag_scroll=on_drag_scroll_impl
                     on_resize=on_resize
-                    style=Signal::derive(move || {
-                        let d = dir.get();
-                        let thumb_height = get_thumb_size(&sizes.get());
-                        format!(
-                            "top: 0; {}: 0; bottom: var(--radix-scroll-area-corner-height); --radix-scroll-area-thumb-height: {}px;",
-                            if d == Direction::Ltr { "right" } else { "left" },
-                            thumb_height
-                        )
-                    })
+                    style:top="0"
+                    style:right=move || (dir.get() == Direction::Ltr).then_some("0")
+                    style:left=move || (dir.get() == Direction::Rtl).then_some("0")
+                    style:bottom="var(--radix-scroll-area-corner-height)"
+                    style:--radix-scroll-area-thumb-height=move || format!("{}px", get_thumb_size(&sizes.get()))
                     as_child=as_child
                     node_ref=composed_ref
                 >
@@ -773,7 +763,6 @@ fn ScrollAreaScrollbarImpl(
     on_wheel_scroll: Callback<(SendWrapper<web_sys::WheelEvent>, f64)>,
     on_drag_scroll: Callback<(f64, f64)>,
     on_resize: Callback<()>,
-    #[prop(into)] style: Signal<String>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
     children: ChildrenFn,
@@ -892,7 +881,7 @@ fn ScrollAreaScrollbarImpl(
                 node_ref=composed_ref
                 attr:class=forwarded_class.get_value()
                 attr:data-orientation=data_orientation
-                attr:style=move || format!("position: absolute; {}", style.get())
+                style:position="absolute"
                 on:pointerdown=move |event: ev::PointerEvent| {
                     let main_pointer = 0;
                     if event.button() == main_pointer {

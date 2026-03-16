@@ -97,15 +97,12 @@ fn ScrollAreaCornerImpl(
                     as_child=as_child
                     node_ref=node_ref
                     attr:class=forwarded_class.get_value()
-                    attr:style=move || {
-                        let d = dir.get();
-                        format!(
-                            "width: {}px; height: {}px; position: absolute; {}: 0; bottom: 0;",
-                            width.get(),
-                            height.get(),
-                            if d == Direction::Ltr { "right" } else { "left" }
-                        )
-                    }
+                    style:width=move || format!("{}px", width.get())
+                    style:height=move || format!("{}px", height.get())
+                    style:position="absolute"
+                    style:bottom="0"
+                    style:right=move || (dir.get() == Direction::Ltr).then_some("0")
+                    style:left=move || (dir.get() == Direction::Rtl).then_some("0")
                 >
                     {children.with_value(|children| children())}
                 </Primitive>
