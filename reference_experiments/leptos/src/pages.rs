@@ -1,4 +1,6 @@
+pub mod as_child_chain;
 pub mod attribute_clone;
+pub mod class_override;
 pub mod forwarded_attrs;
 pub mod nav_menu_reactive_attrs;
 pub mod presence_attrs;

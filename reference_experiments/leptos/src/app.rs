@@ -16,9 +16,11 @@ fn Index() -> impl IntoView {
             <li><a href="/spreadable-attrs">"Spreadable ForwardedAttrs"</a></li>
             <li><a href="/nav-menu-reactive-attrs">"NavigationMenu Reactive Attrs"</a></li>
             <li><a href="/style-override">"Style Override Order"</a></li>
+            <li><a href="/class-override">"Class Override Order"</a></li>
             <li><a href="/interceptor-capture">"Interceptor Capture Scope"</a></li>
             <li><a href="/non-overridable-styles">"Non-Overridable Styles"</a></li>
             <li><a href="/popper-style-approaches">"Popper Style Approaches"</a></li>
+            <li><a href="/as-child-chain">"asChild Chain (multi-level forwarding)"</a></li>
         </ul>
     }
 }
@@ -30,7 +32,9 @@ pub fn App() -> impl IntoView {
             <main>
                 <Routes fallback=|| "Not found.".into_view()>
                     <Route path=path!("/") view=Index />
+                    <Route path=path!("/as-child-chain") view=pages::as_child_chain::AsChildChainPage />
                     <Route path=path!("/attribute-clone") view=pages::attribute_clone::AttributeClonePage />
+                    <Route path=path!("/class-override") view=pages::class_override::ClassOverridePage />
                     <Route path=path!("/forwarded-attrs") view=pages::forwarded_attrs::ForwardedAttrsPage />
                     <Route path=path!("/presence-attrs") view=pages::presence_attrs::PresenceAttrsPage />
                     <Route path=path!("/spreadable-attrs") view=pages::spreadable_attrs::SpreadableAttrsPage />
