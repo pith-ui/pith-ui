@@ -1,7 +1,5 @@
 use leptos::prelude::*;
-use leptos_node_ref::AnyNodeRef;
 use radix_leptos_primitives::dropdown_menu::*;
-use web_sys::wasm_bindgen::JsCast;
 
 #[component]
 pub fn DropdownMenuPage() -> impl IntoView {
@@ -11,19 +9,6 @@ pub fn DropdownMenuPage() -> impl IntoView {
     let (disabled, set_disabled) = signal(false);
     let (controlled_open, set_controlled_open) = signal(false);
     let (trigger_click_count, set_trigger_click_count) = signal(0i32);
-
-    // NodeRef workaround for controlled content: attr: forwarding works on initial
-    // render (default_open) but NOT when content mounts reactively via Show/Presence
-    // (controlled open signal). This is a Leptos limitation where add_any_attr doesn't
-    // cascade through conditional re-renders.
-    let controlled_content_ref = AnyNodeRef::new();
-    Effect::new(move |_| {
-        if let Some(el) = controlled_content_ref.get() {
-            let el: &web_sys::Element = el.unchecked_ref();
-            el.set_attribute("data-testid", "controlled-dropdown-content")
-                .ok();
-        }
-    });
 
     view! {
         <DropdownMenu>
@@ -206,7 +191,7 @@ pub fn DropdownMenuPage() -> impl IntoView {
             <DropdownMenuPortal>
                 <DropdownMenuContent
                     class="dropdown-content"
-                    node_ref=controlled_content_ref
+                    attr:data-testid="controlled-dropdown-content"
                     side_offset=5.0
                 >
                     <DropdownMenuItem attr:class="dropdown-item">

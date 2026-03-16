@@ -12,13 +12,13 @@ use crate::support::compose_refs::use_composed_refs;
 use crate::support::direction::{Direction, use_direction};
 use crate::support::dismissable_layer::DismissableLayer;
 use crate::support::id::use_id;
-use crate::support::presence::Presence;
+use crate::support::presence::{Presence, extract_attrs};
 use crate::support::primitive::{Primitive, adapt_callback, compose_callbacks, open_closed_state, prop_or};
 use crate::support::use_controllable_state::{UseControllableStateParams, use_controllable_state};
 use crate::support::use_previous::use_previous;
 use crate::support::visually_hidden::VisuallyHidden;
 use leptos::{
-    attr::Attribute as _, attribute_interceptor::AttributeInterceptor, context::Provider, ev, html,
+    attribute_interceptor::AttributeInterceptor, context::Provider, ev, html,
     prelude::*,
 };
 use leptos_node_ref::AnyNodeRef;
@@ -383,24 +383,6 @@ fn use_resize_observer(
                 .ok();
         }
     });
-}
-
-/// Extracts `(name, value)` pairs from an `AnyAttribute` by building it on a temporary
-/// detached DOM element. The temp element is never inserted into the document, so it cannot
-/// be found by `querySelector` / `findByTestId`.
-fn extract_attrs(attrs: leptos::attr::any_attribute::AnyAttribute) -> Vec<(String, String)> {
-    let tmp = document()
-        .create_element("div")
-        .expect("Element should be created.");
-    let _state = attrs.build(&tmp);
-    let named = tmp.attributes();
-    let mut pairs = vec![];
-    for i in 0..named.length() {
-        if let Some(attr) = named.item(i) {
-            pairs.push((attr.name(), attr.value()));
-        }
-    }
-    pairs
 }
 
 /* -------------------------------------------------------------------------------------------------

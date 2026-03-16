@@ -285,11 +285,30 @@ pub fn MenuSubContent(
         Direction::Ltr => PopperSide::Right,
     });
 
+    // Capture user attrs via AttributeInterceptor before they get lost at the
+    // CollectionProvider/ChildrenFn boundary. Same pattern as MenuContent.
+    let forwarded_attrs: StoredValue<Vec<(String, String)>> = StoredValue::new(vec![]);
+
+    Effect::new(move |_| {
+        if let Some(el) = composed_refs.get() {
+            let el: web_sys::Element = el.unchecked_into();
+            forwarded_attrs.with_value(|attrs| {
+                for (name, value) in attrs {
+                    if name != "style" {
+                        el.set_attribute(name, value).ok();
+                    }
+                }
+            });
+        }
+    });
+
     view! {
-        <CollectionProvider item_data_type=ITEM_DATA_PHANTHOM>
-            <Presence present=present node_ref=composed_refs>
-                <CollectionSlot item_data_type=ITEM_DATA_PHANTHOM>
-                    <MenuContentImpl
+        <AttributeInterceptor let:attrs>
+            {forwarded_attrs.set_value(extract_attrs(attrs))}
+            <CollectionProvider item_data_type=ITEM_DATA_PHANTHOM>
+                <Presence present=present node_ref=composed_refs>
+                    <CollectionSlot item_data_type=ITEM_DATA_PHANTHOM>
+                        <MenuContentImpl
                         id=Signal::derive(move || Some(sub_context.content_id.get()))
                         aria_labelledby=Signal::derive(move || Some(sub_context.trigger_id.get()))
                         side=sub_side
@@ -385,5 +404,6 @@ pub fn MenuSubContent(
                 </CollectionSlot>
             </Presence>
         </CollectionProvider>
+        </AttributeInterceptor>
     }
 }

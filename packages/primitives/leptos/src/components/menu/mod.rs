@@ -22,7 +22,7 @@ pub use crate::support::popper::{
 };
 use crate::support::popper::{Popper, PopperAnchor, PopperArrow, PopperContent};
 use crate::support::portal::ScopedPortal;
-use crate::support::presence::Presence;
+use crate::support::presence::{Presence, extract_attrs};
 use crate::support::primitive::{
     Primitive, compose_callbacks, data_attr, open_closed_state, prop_or, prop_or_default,
     wrap_callback,

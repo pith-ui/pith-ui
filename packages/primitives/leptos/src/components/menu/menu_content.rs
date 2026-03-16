@@ -84,14 +84,36 @@ pub fn MenuContent(
     let on_entry_focus = wrap_callback(on_entry_focus);
     let on_key_down = wrap_callback(on_key_down);
 
+    // Capture user attrs (e.g., attr:data-testid) via AttributeInterceptor before they get lost
+    // at the CollectionProvider/ChildrenFn boundary. Apply them to the content element via an
+    // Effect on node_ref when children mount reactively (Presence false→true).
+    // NOTE: `style` is excluded because it would clobber programmatic styles set by
+    // use_internal_styles/use_forced_styles which use CSSStyleDeclaration.setProperty().
+    let forwarded_attrs: StoredValue<Vec<(String, String)>> = StoredValue::new(vec![]);
+
+    Effect::new(move |_| {
+        if let Some(el) = node_ref.get() {
+            let el: web_sys::Element = el.unchecked_into();
+            forwarded_attrs.with_value(|attrs| {
+                for (name, value) in attrs {
+                    if name != "style" {
+                        el.set_attribute(name, value).ok();
+                    }
+                }
+            });
+        }
+    });
+
     view! {
-        <CollectionProvider item_data_type=ITEM_DATA_PHANTHOM>
-            <Presence present=present node_ref=node_ref>
-                <CollectionSlot item_data_type=ITEM_DATA_PHANTHOM>
-                    <Show
-                        when=move || root_context.modal.get()
-                        fallback=move || view! {
-                            <MenuRootContentNonModal
+        <AttributeInterceptor let:attrs>
+            {forwarded_attrs.set_value(extract_attrs(attrs))}
+            <CollectionProvider item_data_type=ITEM_DATA_PHANTHOM>
+                <Presence present=present node_ref=node_ref>
+                    <CollectionSlot item_data_type=ITEM_DATA_PHANTHOM>
+                        <Show
+                            when=move || root_context.modal.get()
+                            fallback=move || view! {
+                                <MenuRootContentNonModal
                                 class=class
                                 content_style=content_style
                                 on_close_auto_focus=on_close_auto_focus
@@ -153,6 +175,7 @@ pub fn MenuContent(
                 </CollectionSlot>
             </Presence>
         </CollectionProvider>
+        </AttributeInterceptor>
     }
 }
 

@@ -2,7 +2,7 @@ mod use_state_machine;
 
 use std::collections::HashMap;
 
-use leptos::prelude::*;
+use leptos::{attr::Attribute as _, prelude::*};
 use leptos_node_ref::AnyNodeRef;
 use send_wrapper::SendWrapper;
 use web_sys::wasm_bindgen::{JsCast, closure::Closure};
@@ -236,4 +236,22 @@ fn get_animation_name(styles: Option<&web_sys::CssStyleDeclaration>) -> String {
     styles
         .and_then(|styles| styles.get_property_value("animation-name").ok())
         .unwrap_or("none".into())
+}
+
+/// Extracts `(name, value)` pairs from an `AnyAttribute` by building it on a temporary
+/// detached DOM element. The temp element is never inserted into the document, so it cannot
+/// be found by `querySelector` / `findByTestId`.
+pub fn extract_attrs(attrs: leptos::attr::any_attribute::AnyAttribute) -> Vec<(String, String)> {
+    let tmp = document()
+        .create_element("div")
+        .expect("Element should be created.");
+    let _state = attrs.build(&tmp);
+    let named = tmp.attributes();
+    let mut pairs = vec![];
+    for i in 0..named.length() {
+        if let Some(attr) = named.item(i) {
+            pairs.push((attr.name(), attr.value()));
+        }
+    }
+    pairs
 }
