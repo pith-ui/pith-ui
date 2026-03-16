@@ -16,5 +16,6 @@ leptos = { workspace = true, features = ["csr"] }
 leptos-node-ref.workspace = true
 leptos_router.workspace = true
 log.workspace = true
+radix-leptos-primitives = { workspace = true, features = ["all"] }
 send_wrapper.workspace = true
 web-sys = { workspace = true, features = ["Element", "NamedNodeMap", "Attr"] }

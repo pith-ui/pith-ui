@@ -14,6 +14,7 @@ fn Index() -> impl IntoView {
             <li><a href="/presence-attrs">"Presence/Show Attribute Spreading"</a></li>
             <li><a href="/forwarded-attrs">"ForwardedAttrs (reactive solution)"</a></li>
             <li><a href="/spreadable-attrs">"Spreadable ForwardedAttrs"</a></li>
+            <li><a href="/nav-menu-reactive-attrs">"NavigationMenu Reactive Attrs"</a></li>
         </ul>
     }
 }
@@ -29,6 +30,7 @@ pub fn App() -> impl IntoView {
                     <Route path=path!("/forwarded-attrs") view=pages::forwarded_attrs::ForwardedAttrsPage />
                     <Route path=path!("/presence-attrs") view=pages::presence_attrs::PresenceAttrsPage />
                     <Route path=path!("/spreadable-attrs") view=pages::spreadable_attrs::SpreadableAttrsPage />
+                    <Route path=path!("/nav-menu-reactive-attrs") view=pages::nav_menu_reactive_attrs::NavMenuReactiveAttrsPage />
                 </Routes>
             </main>
         </Router>
