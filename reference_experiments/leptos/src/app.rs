@@ -16,6 +16,7 @@ fn Index() -> impl IntoView {
             <li><a href="/spreadable-attrs">"Spreadable ForwardedAttrs"</a></li>
             <li><a href="/nav-menu-reactive-attrs">"NavigationMenu Reactive Attrs"</a></li>
             <li><a href="/style-override">"Style Override Order"</a></li>
+            <li><a href="/non-overridable-styles">"Non-Overridable Styles"</a></li>
         </ul>
     }
 }
@@ -33,6 +34,7 @@ pub fn App() -> impl IntoView {
                     <Route path=path!("/spreadable-attrs") view=pages::spreadable_attrs::SpreadableAttrsPage />
                     <Route path=path!("/nav-menu-reactive-attrs") view=pages::nav_menu_reactive_attrs::NavMenuReactiveAttrsPage />
                     <Route path=path!("/style-override") view=pages::style_override::StyleOverridePage />
+                    <Route path=path!("/non-overridable-styles") view=pages::non_overridable_styles::NonOverridableStylesPage />
                 </Routes>
             </main>
         </Router>
