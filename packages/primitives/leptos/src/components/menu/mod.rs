@@ -22,13 +22,13 @@ pub use crate::support::popper::{
 };
 use crate::support::popper::{Popper, PopperAnchor, PopperArrow, PopperContent};
 use crate::support::portal::ScopedPortal;
-use crate::support::presence::{Presence, extract_attrs};
+use crate::support::forwarded_attrs::ForwardedAttrs;
+use crate::support::presence::Presence;
 use crate::support::primitive::{
     Primitive, compose_callbacks, data_attr, open_closed_state, prop_or, prop_or_default,
     wrap_callback,
 };
 use crate::support::roving_focus::{Orientation, RovingFocusGroup, RovingFocusGroupItem};
-use crate::support::use_internal_styles::use_internal_styles;
 use leptos::{
     attribute_interceptor::AttributeInterceptor, context::Provider, ev, html, prelude::*,
 };

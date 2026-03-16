@@ -84,29 +84,25 @@ pub fn MenuContent(
     let on_entry_focus = wrap_callback(on_entry_focus);
     let on_key_down = wrap_callback(on_key_down);
 
-    // Capture user attrs (e.g., attr:data-testid) via AttributeInterceptor before they get lost
-    // at the CollectionProvider/ChildrenFn boundary. Apply them to the content element via an
-    // Effect on node_ref when children mount reactively (Presence false→true).
-    // NOTE: `style` is excluded because it would clobber programmatic styles set by
-    // use_internal_styles/use_forced_styles which use CSSStyleDeclaration.setProperty().
-    let forwarded_attrs: StoredValue<Vec<(String, String)>> = StoredValue::new(vec![]);
-
-    Effect::new(move |_| {
-        if let Some(el) = node_ref.get() {
-            let el: web_sys::Element = el.unchecked_into();
-            forwarded_attrs.with_value(|attrs| {
-                for (name, value) in attrs {
-                    if name != "style" {
-                        el.set_attribute(name, value).ok();
-                    }
-                }
-            });
+    // Prepend `outline: none` to content_style so the menu content element never shows
+    // a focus outline. In React Radix this is set as an inline style default.
+    let content_style = MaybeProp::derive(move || {
+        let extra = content_style.get().unwrap_or_default();
+        if extra.is_empty() {
+            Some("outline: none".to_string())
+        } else {
+            Some(format!("outline: none; {extra}"))
         }
     });
 
+    // Forward user attrs (e.g., attr:data-testid) through CollectionProvider/Presence/Show
+    // to the content element. ForwardedAttrs stores the AnyAttribute and spread() returns
+    // a clone for use with {..} on inner components.
+    let forwarded = ForwardedAttrs::new();
+
     view! {
         <AttributeInterceptor let:attrs>
-            {forwarded_attrs.set_value(extract_attrs(attrs))}
+            {forwarded.set(attrs)}
             <CollectionProvider item_data_type=ITEM_DATA_PHANTHOM>
                 <Presence present=present node_ref=node_ref>
                     <CollectionSlot item_data_type=ITEM_DATA_PHANTHOM>
@@ -114,36 +110,38 @@ pub fn MenuContent(
                             when=move || root_context.modal.get()
                             fallback=move || view! {
                                 <MenuRootContentNonModal
-                                class=class
-                                content_style=content_style
-                                on_close_auto_focus=on_close_auto_focus
-                                on_escape_key_down=on_escape_key_down
-                                on_pointer_down_outside=on_pointer_down_outside
-                                on_focus_outside=on_focus_outside
-                                on_interact_outside=on_interact_outside
-                                on_entry_focus=on_entry_focus
-                                on_key_down=on_key_down
-                                side=side
-                                side_offset=side_offset
-                                align=align
-                                align_offset=align_offset
-                                avoid_collisions=avoid_collisions
-                                collision_boundary=collision_boundary
-                                collision_padding=collision_padding
-                                arrow_padding=arrow_padding
-                                sticky=sticky
-                                hide_when_detached=hide_when_detached
-                                r#loop=r#loop
-                                id=id
-                                aria_labelledby=aria_labelledby
-                                as_child=as_child
-                                node_ref=node_ref
-                            >
-                                {children.with_value(|children| children())}
-                            </MenuRootContentNonModal>
-                        }
+                                    {..forwarded.spread()}
+                                    class=class
+                                    content_style=content_style
+                                    on_close_auto_focus=on_close_auto_focus
+                                    on_escape_key_down=on_escape_key_down
+                                    on_pointer_down_outside=on_pointer_down_outside
+                                    on_focus_outside=on_focus_outside
+                                    on_interact_outside=on_interact_outside
+                                    on_entry_focus=on_entry_focus
+                                    on_key_down=on_key_down
+                                    side=side
+                                    side_offset=side_offset
+                                    align=align
+                                    align_offset=align_offset
+                                    avoid_collisions=avoid_collisions
+                                    collision_boundary=collision_boundary
+                                    collision_padding=collision_padding
+                                    arrow_padding=arrow_padding
+                                    sticky=sticky
+                                    hide_when_detached=hide_when_detached
+                                    r#loop=r#loop
+                                    id=id
+                                    aria_labelledby=aria_labelledby
+                                    as_child=as_child
+                                    node_ref=node_ref
+                                >
+                                    {children.with_value(|children| children())}
+                                </MenuRootContentNonModal>
+                            }
                     >
                         <MenuRootContentModal
+                            {..forwarded.spread()}
                             class=class
                             content_style=content_style
                             on_close_auto_focus=on_close_auto_focus
@@ -431,7 +429,6 @@ pub(super) fn MenuContentImpl(
     let (current_item_id, set_current_item_id) = signal::<Option<String>>(None);
     let content_ref = AnyNodeRef::new();
     let composed_refs = use_composed_refs(vec![node_ref, content_ref]);
-    let composed_refs = use_internal_styles(composed_refs, &[("outline", "none")]);
     let timer = RwSignal::new(0);
     let search = RwSignal::new("".to_string());
     let pointer_grace_timer = RwSignal::new(0);
