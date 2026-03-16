@@ -47,7 +47,8 @@ fn AccordionItems() -> impl IntoView {
             <AccordionContent
                 attr:class="accordion-content"
                 attr:data-testid="styled-content"
-                attr:style="background: tomato; --radix-accordion-content-height: 999px"
+                style:background="tomato"
+                style:--radix-accordion-content-height="999px"
             >
                 "Styled content"
             </AccordionContent>

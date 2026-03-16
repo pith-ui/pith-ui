@@ -306,17 +306,16 @@ describe('Accordion', () => {
             );
         });
 
-        it('conflicting user styles override internal styles while non-conflicting ones merge', () => {
+        it('user style: directive overrides internal CSS var alias', () => {
             cy.findByTestId('styled-content').then(($el) => {
                 const style = getComputedStyle($el[0]);
 
-                // User has set --radix-accordion-content-height to 999px,
-                // which should override the internally computed value
+                // User set style:--radix-accordion-content-height="999px" which
+                // overrides the internal alias (matching React's overridable pattern)
                 const heightVar = style.getPropertyValue('--radix-accordion-content-height');
                 expect(heightVar.trim()).to.equal('999px');
 
-                // --radix-accordion-content-width was NOT set by the user,
-                // so the internal value should still be present
+                // Width was NOT overridden by the user, so the internal alias resolves
                 const widthVar = style.getPropertyValue('--radix-accordion-content-width');
                 expect(widthVar.trim()).to.match(/^\d+(\.\d+)?px$/);
             });
