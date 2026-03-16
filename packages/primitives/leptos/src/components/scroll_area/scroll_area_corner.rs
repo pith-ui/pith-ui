@@ -6,16 +6,12 @@ use super::*;
 
 #[component]
 pub fn ScrollAreaCorner(
-    #[prop(into, optional)] class: MaybeProp<String>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
     children: ChildrenFn,
 ) -> impl IntoView {
     let children = StoredValue::new(children);
     let context = expect_context::<ScrollAreaContextValue>();
-
-    // Forward class via context to bypass Show boundary
-    provide_context(ForwardedCornerClass(class.get_untracked()));
 
     let has_both_scrollbars = Memo::new(move |_| {
         context.scrollbar_x.get().is_some() && context.scrollbar_y.get().is_some()
@@ -49,14 +45,6 @@ fn ScrollAreaCornerImpl(
 ) -> impl IntoView {
     let children = StoredValue::new(children);
     let context = expect_context::<ScrollAreaContextValue>();
-
-    // Read forwarded class from public ScrollAreaCorner component (StoredValue is Copy,
-    // allowing capture by Fn closures inside the view! macro / AttributeInterceptor).
-    let forwarded_class = StoredValue::new(
-        use_context::<ForwardedCornerClass>()
-            .and_then(|c| c.0)
-            .unwrap_or_default(),
-    );
 
     let width = RwSignal::new(0.0_f64);
     let height = RwSignal::new(0.0_f64);
@@ -96,7 +84,6 @@ fn ScrollAreaCornerImpl(
                     element=html::div
                     as_child=as_child
                     node_ref=node_ref
-                    attr:class=forwarded_class.get_value()
                     style:width=move || format!("{}px", width.get())
                     style:height=move || format!("{}px", height.get())
                     style:position="absolute"

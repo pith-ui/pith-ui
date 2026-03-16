@@ -65,16 +65,16 @@ fn ScrollAreaStory(
                     {children.with_value(|children| children())}
                 </ScrollAreaViewport>
                 {vertical.then(|| view! {
-                    <ScrollAreaScrollbar orientation=Orientation::Vertical class=classes::scrollbar>
-                        <ScrollAreaThumb class=thumb_class.get_value()>""</ScrollAreaThumb>
+                    <ScrollAreaScrollbar orientation=Orientation::Vertical attr:class=classes::scrollbar>
+                        <ScrollAreaThumb attr:class=thumb_class.get_value()>""</ScrollAreaThumb>
                     </ScrollAreaScrollbar>
                 })}
                 {horizontal.then(|| view! {
-                    <ScrollAreaScrollbar orientation=Orientation::Horizontal class=classes::scrollbar>
-                        <ScrollAreaThumb class=thumb_class.get_value()>""</ScrollAreaThumb>
+                    <ScrollAreaScrollbar orientation=Orientation::Horizontal attr:class=classes::scrollbar>
+                        <ScrollAreaThumb attr:class=thumb_class.get_value()>""</ScrollAreaThumb>
                     </ScrollAreaScrollbar>
                 })}
-                <ScrollAreaCorner class=classes::corner>""</ScrollAreaCorner>
+                <ScrollAreaCorner attr:class=classes::corner>""</ScrollAreaCorner>
             </ScrollArea>
         </div>
     }

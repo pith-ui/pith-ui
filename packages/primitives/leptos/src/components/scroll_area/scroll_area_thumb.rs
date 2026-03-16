@@ -7,7 +7,6 @@ use super::*;
 #[component]
 pub fn ScrollAreaThumb(
     #[prop(into, optional)] force_mount: Option<bool>,
-    #[prop(into, optional)] class: MaybeProp<String>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
     children: ChildrenFn,
@@ -15,9 +14,6 @@ pub fn ScrollAreaThumb(
     let children = StoredValue::new(children);
     let force_mount = force_mount.unwrap_or(false);
     let scrollbar_context = expect_context::<ScrollbarContextValue>();
-
-    // Forward class via context to bypass Presence/Show boundary
-    provide_context(ForwardedThumbClass(class.get_untracked()));
 
     let presence_ref = AnyNodeRef::new();
 
@@ -47,14 +43,6 @@ fn ScrollAreaThumbImpl(
     let scroll_area_context = expect_context::<ScrollAreaContextValue>();
     let scrollbar_context = expect_context::<ScrollbarContextValue>();
     let on_thumb_position_change = scrollbar_context.on_thumb_position_change;
-
-    // Read forwarded class from public ScrollAreaThumb component (StoredValue is Copy,
-    // allowing capture by Fn closures inside the view! macro / AttributeInterceptor).
-    let forwarded_class = StoredValue::new(
-        use_context::<ForwardedThumbClass>()
-            .and_then(|c| c.0)
-            .unwrap_or_default(),
-    );
 
     let thumb_ref = AnyNodeRef::new();
     let composed_ref = use_composed_refs(vec![node_ref, thumb_ref]);
@@ -185,7 +173,6 @@ fn ScrollAreaThumbImpl(
                 node_ref=composed_ref
                 style:width="var(--radix-scroll-area-thumb-width)"
                 style:height="var(--radix-scroll-area-thumb-height)"
-                attr:class=forwarded_class.get_value()
                 attr:data-state=move || if has_thumb.get() { "visible" } else { "hidden" }
                 on:pointerdown=move |event: ev::PointerEvent| {
                     if let Some(target) = event.target() {

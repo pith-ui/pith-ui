@@ -80,7 +80,7 @@ pub fn ScrollAreaPage() -> impl IntoView {
                     } else {
                         None
                     }}
-                    <ScrollAreaCorner class="scroll-area-corner">""</ScrollAreaCorner>
+                    <ScrollAreaCorner class:scroll-area-corner=true>""</ScrollAreaCorner>
                 </ScrollArea>
             }
         }}

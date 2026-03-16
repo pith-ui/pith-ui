@@ -8,7 +8,6 @@ use super::*;
 pub fn ScrollAreaScrollbar(
     #[prop(into, optional)] orientation: Option<Orientation>,
     #[prop(into, optional)] force_mount: Option<bool>,
-    #[prop(into, optional)] class: MaybeProp<String>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
     children: ChildrenFn,
@@ -17,9 +16,6 @@ pub fn ScrollAreaScrollbar(
     let orientation = orientation.unwrap_or_default();
     let force_mount = force_mount.unwrap_or(false);
     let context = expect_context::<ScrollAreaContextValue>();
-
-    // Forward class via context to bypass Presence/Show boundary
-    provide_context(ForwardedScrollbarClass(class.get_untracked()));
 
     let is_horizontal = orientation == Orientation::Horizontal;
 
@@ -771,13 +767,6 @@ fn ScrollAreaScrollbarImpl(
     let context = expect_context::<ScrollAreaContextValue>();
 
     // Read forwarded class from public ScrollAreaScrollbar component (StoredValue is Copy,
-    // allowing capture by Fn closures inside the view! macro / AttributeInterceptor).
-    let forwarded_class = StoredValue::new(
-        use_context::<ForwardedScrollbarClass>()
-            .and_then(|c| c.0)
-            .unwrap_or_default(),
-    );
-
     let scrollbar: RwSignal<Option<SendWrapper<web_sys::HtmlElement>>> = RwSignal::new(None);
     let scrollbar_ref = AnyNodeRef::new();
     let composed_ref = use_composed_refs(vec![node_ref, scrollbar_ref]);
@@ -879,7 +868,6 @@ fn ScrollAreaScrollbarImpl(
                 element=html::div
                 as_child=as_child
                 node_ref=composed_ref
-                attr:class=forwarded_class.get_value()
                 attr:data-orientation=data_orientation
                 style:position="absolute"
                 on:pointerdown=move |event: ev::PointerEvent| {

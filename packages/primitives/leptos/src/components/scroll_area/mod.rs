@@ -116,17 +116,9 @@ struct ScrollbarContextValue {
     on_thumb_position_change: Callback<()>,
 }
 
-/// Forwarded CSS class from public component to inner Impl, bypassing Presence/Show boundaries.
-#[derive(Clone)]
-struct ForwardedScrollbarClass(Option<String>);
 
-/// Forwarded CSS class from public ScrollAreaThumb to ScrollAreaThumbImpl.
-#[derive(Clone)]
-struct ForwardedThumbClass(Option<String>);
 
-/// Forwarded CSS class from public ScrollAreaCorner to ScrollAreaCornerImpl.
-#[derive(Clone)]
-struct ForwardedCornerClass(Option<String>);
+
 
 /* -------------------------------------------------------------------------------------------------
  * State machine (used by ScrollAreaScrollbarScroll)
