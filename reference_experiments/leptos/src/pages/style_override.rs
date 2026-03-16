@@ -173,6 +173,99 @@ fn AccordionLikeFixture() -> impl IntoView {
     }
 }
 
+// ── Fixture 6: User style: directive (not attr:style) via ForwardedAttrs ─────
+//
+// Fixture 3 used attr:style="..." which clobbers. What if the user passes
+// style:--internal-a="user-override" instead? ForwardedAttrs type-erases
+// to AnyAttribute, so it may still end up as attr:style.
+
+#[component]
+fn StyleDirectiveOverrideComponent() -> impl IntoView {
+    let forwarded = ForwardedAttrs::new();
+
+    view! {
+        <AttributeInterceptor let:attrs>
+            {forwarded.set(attrs)}
+            <div
+                data-testid="style-directive-override-target"
+                style:--internal-a="value-a"
+                style:--internal-b="value-b"
+                {..forwarded.spread()}
+            >
+                "Internal style: directives + user style: directive via ForwardedAttrs"
+            </div>
+        </AttributeInterceptor>
+    }
+}
+
+#[component]
+fn StyleDirectiveOverrideFixture() -> impl IntoView {
+    view! {
+        <div data-testid="fixture-6">
+            <StyleDirectiveOverrideComponent style:--internal-a="user-override" />
+        </div>
+    }
+}
+
+// ── Fixture 7: Vanilla AttributeInterceptor + direct {..attrs} spread ───────
+//
+// No ForwardedAttrs — just the raw AttributeInterceptor let:attrs with
+// {..attrs} spread. Tests whether type erasure from into_any_attr()
+// causes the same clobbering.
+
+#[component]
+fn VanillaInterceptorComponent() -> impl IntoView {
+    view! {
+        <AttributeInterceptor let:attrs>
+            <div
+                data-testid="vanilla-interceptor-target"
+                style:--internal-a="value-a"
+                style:--internal-b="value-b"
+                {..attrs}
+            >
+                "Vanilla AttributeInterceptor + direct spread"
+            </div>
+        </AttributeInterceptor>
+    }
+}
+
+#[component]
+fn VanillaInterceptorFixture() -> impl IntoView {
+    view! {
+        <div data-testid="fixture-7">
+            <VanillaInterceptorComponent style:--internal-a="user-override" />
+        </div>
+    }
+}
+
+// ── Fixture 8: No interceptor — let Leptos spread naturally ─────────────────
+//
+// No AttributeInterceptor at all. Leptos applies user attrs to the
+// top-level element via its native add_any_attr pipeline. Tests whether
+// the native pipeline preserves style: directives alongside user style:.
+
+#[component]
+fn NativeSpreadComponent() -> impl IntoView {
+    view! {
+        <div
+            data-testid="native-spread-target"
+            style:--internal-a="value-a"
+            style:--internal-b="value-b"
+        >
+            "No interceptor — native Leptos attr spreading"
+        </div>
+    }
+}
+
+#[component]
+fn NativeSpreadFixture() -> impl IntoView {
+    view! {
+        <div data-testid="fixture-8">
+            <NativeSpreadComponent style:--internal-a="user-override" />
+        </div>
+    }
+}
+
 // ── Page ────────────────────────────────────────────────────────────────────
 
 #[component]
@@ -186,7 +279,7 @@ pub fn StyleOverridePage() -> impl IntoView {
         <h2>"2. spread first, then style: directive"</h2>
         <SpreadFirstFixture />
 
-        <h2>"3. Multiple internal vars, user overrides one"</h2>
+        <h2>"3. Multiple internal vars, user overrides one (attr:style clobbers)"</h2>
         <MultiStyleFixture />
 
         <h2>"4. No conflict (user has no style attr)"</h2>
@@ -194,5 +287,14 @@ pub fn StyleOverridePage() -> impl IntoView {
 
         <h2>"5. Accordion-like CSS var alias pattern"</h2>
         <AccordionLikeFixture />
+
+        <h2>"6. User style: directive (not attr:style) via ForwardedAttrs"</h2>
+        <StyleDirectiveOverrideFixture />
+
+        <h2>"7. Vanilla AttributeInterceptor + direct spread"</h2>
+        <VanillaInterceptorFixture />
+
+        <h2>"8. No interceptor — native Leptos spreading"</h2>
+        <NativeSpreadFixture />
     }
 }

@@ -96,4 +96,61 @@ describe('Style Override Order', () => {
             });
         });
     });
+
+    // ── 6. User style: directive via ForwardedAttrs ─────────────────────────
+    //
+    // User passes style:--internal-a="user-override" (not attr:style).
+    // Does ForwardedAttrs type erasure still cause clobbering?
+
+    describe('user style: directive via ForwardedAttrs', () => {
+        it('overridden var has user value', () => {
+            getCssVar('style-directive-override-target', '--internal-a').then((val) => {
+                expect(val).to.equal('user-override');
+            });
+        });
+
+        it('non-overridden var keeps internal value', () => {
+            getCssVar('style-directive-override-target', '--internal-b').then((val) => {
+                expect(val).to.equal('value-b');
+            });
+        });
+    });
+
+    // ── 7. Vanilla AttributeInterceptor + direct spread ─────────────────────
+    //
+    // No ForwardedAttrs — direct {..attrs} from AttributeInterceptor.
+    // Does into_any_attr() type erasure cause the same clobbering?
+
+    describe('vanilla AttributeInterceptor + direct spread', () => {
+        it('overridden var has user value', () => {
+            getCssVar('vanilla-interceptor-target', '--internal-a').then((val) => {
+                expect(val).to.equal('user-override');
+            });
+        });
+
+        it('non-overridden var keeps internal value', () => {
+            getCssVar('vanilla-interceptor-target', '--internal-b').then((val) => {
+                expect(val).to.equal('value-b');
+            });
+        });
+    });
+
+    // ── 8. No interceptor — native Leptos spreading ─────────────────────────
+    //
+    // Leptos handles attr spreading natively via add_any_attr.
+    // No type erasure through AnyAttribute.
+
+    describe('native Leptos spreading (no interceptor)', () => {
+        it('overridden var has user value', () => {
+            getCssVar('native-spread-target', '--internal-a').then((val) => {
+                expect(val).to.equal('user-override');
+            });
+        });
+
+        it('non-overridden var keeps internal value', () => {
+            getCssVar('native-spread-target', '--internal-b').then((val) => {
+                expect(val).to.equal('value-b');
+            });
+        });
+    });
 });
