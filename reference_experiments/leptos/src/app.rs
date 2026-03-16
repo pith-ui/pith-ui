@@ -13,6 +13,7 @@ fn Index() -> impl IntoView {
             <li><a href="/attribute-clone">"Attribute Clone"</a></li>
             <li><a href="/presence-attrs">"Presence/Show Attribute Spreading"</a></li>
             <li><a href="/forwarded-attrs">"ForwardedAttrs (reactive solution)"</a></li>
+            <li><a href="/spreadable-attrs">"Spreadable ForwardedAttrs"</a></li>
         </ul>
     }
 }
@@ -27,6 +28,7 @@ pub fn App() -> impl IntoView {
                     <Route path=path!("/attribute-clone") view=pages::attribute_clone::AttributeClonePage />
                     <Route path=path!("/forwarded-attrs") view=pages::forwarded_attrs::ForwardedAttrsPage />
                     <Route path=path!("/presence-attrs") view=pages::presence_attrs::PresenceAttrsPage />
+                    <Route path=path!("/spreadable-attrs") view=pages::spreadable_attrs::SpreadableAttrsPage />
                 </Routes>
             </main>
         </Router>

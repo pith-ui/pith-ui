@@ -1,7 +1,7 @@
 // ── Experiment: ForwardedAttrs — Reactive Attribute Forwarding ───────────────
 //
-// Tests ForwardedAttrs as a replacement for the extract_attrs + StoredValue +
-// Effect workaround used in MenuContent. ForwardedAttrs should:
+// Tests ForwardedAttrs.spread() as a replacement for the extract_attrs +
+// StoredValue + Effect workaround used in MenuContent. ForwardedAttrs should:
 //
 // 1. Apply static attrs to elements inside Show (basic survival)
 // 2. Preserve reactivity for signal-driven attrs (the key improvement)
@@ -18,14 +18,13 @@ use leptos::prelude::*;
 fn StaticInternalShow() -> impl IntoView {
     let (visible, set_visible) = signal(true);
     let forwarded = ForwardedAttrs::new();
-    let target_ref = forwarded.target();
 
     view! {
         <AttributeInterceptor let:attrs>
             {forwarded.set(attrs)}
             <div>
                 <Show when=move || visible.get()>
-                    <div data-testid="static-target" node_ref=target_ref>
+                    <div data-testid="static-target" {..forwarded.spread()}>
                         "I am the target"
                     </div>
                 </Show>
@@ -56,14 +55,13 @@ fn StaticInternalShowFixture() -> impl IntoView {
 fn ReactiveInternalShow() -> impl IntoView {
     let (visible, set_visible) = signal(true);
     let forwarded = ForwardedAttrs::new();
-    let target_ref = forwarded.target();
 
     view! {
         <AttributeInterceptor let:attrs>
             {forwarded.set(attrs)}
             <div>
                 <Show when=move || visible.get()>
-                    <div data-testid="reactive-target" node_ref=target_ref>
+                    <div data-testid="reactive-target" {..forwarded.spread()}>
                         "I am the target"
                     </div>
                 </Show>
@@ -95,18 +93,16 @@ fn ReactiveInternalShowFixture() -> impl IntoView {
 fn MultiTarget() -> impl IntoView {
     let (visible, set_visible) = signal(true);
     let forwarded = ForwardedAttrs::new();
-    let ref_a = forwarded.target();
-    let ref_b = forwarded.target();
 
     view! {
         <AttributeInterceptor let:attrs>
             {forwarded.set(attrs)}
             <div>
                 <Show when=move || visible.get()>
-                    <div data-testid="multi-target-a" node_ref=ref_a>
+                    <div data-testid="multi-target-a" {..forwarded.spread()}>
                         "Target A"
                     </div>
-                    <div data-testid="multi-target-b" node_ref=ref_b>
+                    <div data-testid="multi-target-b" {..forwarded.spread()}>
                         "Target B"
                     </div>
                 </Show>
@@ -143,7 +139,7 @@ pub fn ForwardedAttrsPage() -> impl IntoView {
         <h1>"Experiment: ForwardedAttrs"</h1>
 
         <h2>"1. Static Attrs + Internal Show"</h2>
-        <p>"Static attrs applied via ForwardedAttrs to element inside Show."</p>
+        <p>"Static attrs applied via ForwardedAttrs.spread() to element inside Show."</p>
         <StaticInternalShowFixture />
 
         <h2>"2. Reactive Attrs + Internal Show"</h2>
