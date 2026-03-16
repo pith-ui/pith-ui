@@ -3,5 +3,6 @@ pub mod forwarded_attrs;
 pub mod nav_menu_reactive_attrs;
 pub mod presence_attrs;
 pub mod non_overridable_styles;
+pub mod popper_style_approaches;
 pub mod spreadable_attrs;
 pub mod style_override;
