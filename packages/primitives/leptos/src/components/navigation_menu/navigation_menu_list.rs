@@ -97,25 +97,10 @@ pub fn NavigationMenuList(
     // of the <ul>), keeping it out of the <ul>'s flow. We mirror that structure here.
     //
     // User attrs (e.g. attr:class) are captured via AttributeInterceptor and forwarded
-    // to the <ul> via an Effect — the same pattern used by NavigationMenuContent and
-    // NavigationMenuIndicator.
+    // to the <ul> via ForwardedAttrs.spread().
     let indicator_track_ref = AnyNodeRef::new();
-    let ul_ref = AnyNodeRef::new();
-    let composed_ul_refs = use_composed_refs(vec![node_ref, ul_ref]);
 
-    let captured_attrs: StoredValue<Vec<(String, String)>> = StoredValue::new(vec![]);
-
-    // Forward captured attrs to the <ul>
-    Effect::new(move |_| {
-        if let Some(el) = ul_ref.get() {
-            let el: web_sys::Element = el.unchecked_into();
-            captured_attrs.with_value(|attrs| {
-                for (name, value) in attrs {
-                    el.set_attribute(name, value).ok();
-                }
-            });
-        }
-    });
+    let forwarded = ForwardedAttrs::new();
 
     // Store indicator track element when mounted
     Effect::new(move |_| {
@@ -130,8 +115,9 @@ pub fn NavigationMenuList(
             <Primitive
                 element=html::ul
                 as_child=as_child
-                node_ref=composed_ul_refs
+                node_ref=node_ref
                 attr:data-orientation=move || context.orientation.get().to_string()
+                {..forwarded.spread()}
             >
                 {children.with_value(|children| children.as_ref().map(|children| children()))}
             </Primitive>
@@ -140,7 +126,7 @@ pub fn NavigationMenuList(
 
     view! {
         <AttributeInterceptor let:attrs>
-            {captured_attrs.set_value(extract_attrs(attrs))}
+            {forwarded.set(attrs)}
             <div style="position: relative" node_ref=indicator_track_ref>
                 <CollectionSlot<NavigationMenuItemData> item_data_type=PhantomData>
                     {move || {

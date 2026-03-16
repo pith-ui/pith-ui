@@ -20,20 +20,9 @@ pub fn NavigationMenuIndicator(
 
     let presence_ref = AnyNodeRef::new();
 
-    // Capture user attributes (e.g., data-testid, class) via AttributeInterceptor for forwarding.
-    let indicator_captured_attrs: StoredValue<Vec<(String, String)>> = StoredValue::new(vec![]);
-
-    // Apply captured attrs to the indicator element after mount
-    Effect::new(move |_| {
-        if let Some(el) = node_ref.get() {
-            let el: web_sys::HtmlElement = el.unchecked_into();
-            indicator_captured_attrs.with_value(|attrs| {
-                for (name, value) in attrs {
-                    el.set_attribute(name, value).ok();
-                }
-            });
-        }
-    });
+    // Capture user attributes (e.g., data-testid, class) via ForwardedAttrs for spreading
+    // onto the indicator element rendered inside the portal.
+    let forwarded = ForwardedAttrs::new();
 
     // Capture contexts before portal boundary so they can be re-provided inside mount_to.
     let context_for_portal = context.clone();
@@ -44,6 +33,7 @@ pub fn NavigationMenuIndicator(
         view! {
             <Presence present=present node_ref=presence_ref>
                 <NavigationMenuIndicatorImpl
+                    {..forwarded.spread()}
                     as_child=as_child
                     node_ref=node_ref
                     presence_ref=presence_ref
@@ -92,7 +82,7 @@ pub fn NavigationMenuIndicator(
     // into the indicator track wrapper div.
     view! {
         <AttributeInterceptor let:attrs>
-            {indicator_captured_attrs.set_value(extract_attrs(attrs))}
+            {forwarded.set(attrs)}
         </AttributeInterceptor>
     }
 }
