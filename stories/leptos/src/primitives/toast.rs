@@ -104,7 +104,7 @@ pub fn Controlled() -> impl IntoView {
                 key=|i| *i
                 let:_i
             >
-                <Toast class=classes::root>
+                <Toast attr:class=classes::root>
                     <ToastDescription>"Successfully saved"</ToastDescription>
                 </Toast>
             </For>
@@ -224,7 +224,7 @@ pub fn KeyChange() -> impl IntoView {
                     // Re-key by wrapping in a keyed reactive block
                     let _count = toast_one_count.get();
                     view! {
-                        <Toast class=classes::root>
+                        <Toast attr:class=classes::root>
                             <ToastDescription>"Toast one"</ToastDescription>
                         </Toast>
                     }
@@ -235,7 +235,7 @@ pub fn KeyChange() -> impl IntoView {
                 {move || {
                     let _count = toast_two_count.get();
                     view! {
-                        <Toast class=classes::root>
+                        <Toast attr:class=classes::root>
                             <ToastDescription>"Toast two"</ToastDescription>
                         </Toast>
                     }
@@ -394,7 +394,7 @@ pub fn Chromatic() -> impl IntoView {
     view! {
         <h1>"Order"</h1>
         <ToastProvider duration=Signal::derive(|| 1_000_000)>
-            <Toast class=classes::root>
+            <Toast attr:class=classes::root>
                 <div class=classes::header>
                     <ToastTitle attr:class=classes::title>"Toast 1"</ToastTitle>
                     <ToastClose attr:class=classes::close>"\u{00d7}"</ToastClose>
@@ -408,7 +408,7 @@ pub fn Chromatic() -> impl IntoView {
                     "Action"
                 </ToastAction>
             </Toast>
-            <Toast class=classes::root>
+            <Toast attr:class=classes::root>
                 <div class=classes::header>
                     <ToastTitle attr:class=classes::title>"Toast 2"</ToastTitle>
                     <ToastClose attr:class=classes::close>"\u{00d7}"</ToastClose>
@@ -429,7 +429,7 @@ pub fn Chromatic() -> impl IntoView {
 
         <h2>"Open"</h2>
         <ToastProvider>
-            <Toast duration=MaybeProp::from(Some(1_000_000)) class=classes::root>
+            <Toast duration=MaybeProp::from(Some(1_000_000)) attr:class=classes::root>
                 <div class=classes::header>
                     <ToastTitle attr:class=classes::title>"Toast"</ToastTitle>
                     <ToastClose attr:class=classes::close>"\u{00d7}"</ToastClose>
@@ -569,7 +569,7 @@ pub fn Chromatic() -> impl IntoView {
 
         <h2>"Duration"</h2>
         <ToastProvider duration=Signal::derive(move || snapshot_delay - 100)>
-            <Toast class=classes::root>
+            <Toast attr:class=classes::root>
                 <div class=classes::header>
                     <ToastTitle attr:class=classes::title>"Toast"</ToastTitle>
                     <ToastClose attr:class=classes::close>"\u{00d7}"</ToastClose>

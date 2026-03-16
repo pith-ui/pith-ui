@@ -162,7 +162,7 @@ fn MultiToast(id: u32) -> impl IntoView {
     });
 
     view! {
-        <Toast class="toast-root" open=true duration=MaybeProp::from(Some(1_000_000)) node_ref=toast_ref>
+        <Toast class:toast-root=true open=true duration=MaybeProp::from(Some(1_000_000)) node_ref=toast_ref>
             <ToastTitle class:toast-title=true>
                 {format!("Multi toast {id}")}
             </ToastTitle>
@@ -186,7 +186,7 @@ fn MultiToast(id: u32) -> impl IntoView {
 #[component]
 fn UncontrolledToast() -> impl IntoView {
     view! {
-        <Toast class="toast-root" duration=MaybeProp::from(Some(1_000_000))>
+        <Toast class:toast-root=true duration=MaybeProp::from(Some(1_000_000))>
             <ToastTitle class:toast-title=true>"Uncontrolled toast"</ToastTitle>
             <ToastDescription class:toast-description=true>
                 "This toast has no open prop"

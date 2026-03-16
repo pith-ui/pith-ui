@@ -33,11 +33,6 @@ pub fn Toast(
     #[prop(into, optional)] on_swipe_move: Option<Callback<SwipeEvent>>,
     #[prop(into, optional)] on_swipe_cancel: Option<Callback<SwipeEvent>>,
     #[prop(into, optional)] on_swipe_end: Option<Callback<SwipeEvent>>,
-    /// Explicit class forwarding -- `attr:class` on `<Toast>` cannot cross the Portal
-    /// boundary (Portal uses `mount_to` which creates a separate rendering context).
-    /// Use `attr:class` as usual; this prop is for internal forwarding to the `<li>`.
-    #[prop(into, optional)]
-    class: MaybeProp<String>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     children: ChildrenFn,
@@ -208,10 +203,14 @@ pub fn Toast(
             .set_value(false);
     });
 
+    let forwarded = ForwardedAttrs::new();
+
     view! {
-        // Announce toast content to screen readers via a separate visually-hidden live region.
-        // This keeps announcement semantics separate from the interactive <li> element.
-        <Show when=move || !announce_text.get().is_empty()>
+        <AttributeInterceptor let:attrs>
+            {forwarded.set(attrs)}
+            // Announce toast content to screen readers via a separate visually-hidden live region.
+            // This keeps announcement semantics separate from the interactive <li> element.
+            <Show when=move || !announce_text.get().is_empty()>
             <ToastAnnounce
                 role="status"
                 aria_live=Signal::derive(move || match toast_type.get() {
@@ -246,7 +245,7 @@ pub fn Toast(
                                         element=html::li
                                         as_child=as_child
                                         node_ref=composed_refs
-                                        attr:class=move || class.get().unwrap_or_default()
+                                        {..forwarded.spread()}
                                         attr:tabindex="0"
                                         attr:data-state=move || if is_open.get() { "open" } else { "closed" }
                                         attr:data-swipe-direction=move || swipe_direction.get().as_str()
@@ -388,6 +387,7 @@ pub fn Toast(
                 </Provider>
             </Show>
         </Presence>
+        </AttributeInterceptor>
     }
 }
 
