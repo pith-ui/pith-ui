@@ -20,6 +20,7 @@ fn Index() -> impl IntoView {
             <li><a href="/interceptor-capture">"Interceptor Capture Scope"</a></li>
             <li><a href="/non-overridable-styles">"Non-Overridable Styles"</a></li>
             <li><a href="/popper-style-approaches">"Popper Style Approaches"</a></li>
+            <li><a href="/style-option">"style: with Option Values"</a></li>
             <li><a href="/as-child-chain">"asChild Chain (multi-level forwarding)"</a></li>
         </ul>
     }
@@ -43,6 +44,7 @@ pub fn App() -> impl IntoView {
                     <Route path=path!("/interceptor-capture") view=pages::interceptor_capture::InterceptorCapturePage />
                     <Route path=path!("/non-overridable-styles") view=pages::non_overridable_styles::NonOverridableStylesPage />
                     <Route path=path!("/popper-style-approaches") view=pages::popper_style_approaches::PopperStyleApproachesPage />
+                    <Route path=path!("/style-option") view=pages::style_option::StyleOptionPage />
                 </Routes>
             </main>
         </Router>
