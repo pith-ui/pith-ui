@@ -586,11 +586,10 @@ describe('Dropdown Menu', () => {
             });
         });
 
-        it('user attr:style can override popper-derived CSS vars', () => {
-            // In React, popper-derived CSS vars are non-overridable ({...props.style, internal}).
-            // In Leptos, these vars are set via content_style (attr:style) which the user's
-            // attr:style can override. Users should use style: directives for non-clobbering
-            // overrides. This test documents Leptos's current behavior.
+        it('user attr:style overrides popper-derived CSS vars (Leptos limitation)', () => {
+            // In React, popper-derived CSS vars are non-overridable ({…props.style, …internal}).
+            // In Leptos, content_style uses attr:style which the user's attr:style can override.
+            // This is a known divergence — users should avoid overriding these output-only vars.
             openMenu();
             cy.findByRole('menu').then(($el) => {
                 const style = getComputedStyle($el[0]);
