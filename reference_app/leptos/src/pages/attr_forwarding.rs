@@ -156,13 +156,13 @@ pub fn AttrForwardingPage() -> impl IntoView {
                 </AlertDialog>
             </section>
 
-            // ── Popover (open) ─────────────────────────────
+            // ── Popover (forceMount) ─────────────────────────
             <section>
                 <h3>"Popover"</h3>
-                <Popover default_open=true>
+                <Popover>
                     <PopoverTrigger attr:data-attr-test="popover-trigger">"Open"</PopoverTrigger>
-                    <PopoverPortal>
-                        <PopoverContent attr:data-attr-test="popover-content" side_offset=5.0>
+                    <PopoverPortal force_mount=true>
+                        <PopoverContent attr:data-attr-test="popover-content" force_mount=true side_offset=5.0>
                             "Content"
                             <PopoverClose attr:data-attr-test="popover-close">"X"</PopoverClose>
                             <PopoverArrow attr:data-attr-test="popover-arrow" />
@@ -254,30 +254,29 @@ pub fn AttrForwardingPage() -> impl IntoView {
                 </Select>
             </section>
 
-            // ── NavigationMenu ─────────────────────────────
+            // ── NavigationMenu (forceMount, no viewport for inline rendering) ──
             <section>
                 <h3>"NavigationMenu"</h3>
-                <NavigationMenu attr:data-attr-test="nav-menu-root" delay_duration=0.0 skip_delay_duration=0.0>
+                <NavigationMenu attr:data-attr-test="nav-menu-root" default_value="products" delay_duration=0.0 skip_delay_duration=0.0>
                     <NavigationMenuList attr:data-attr-test="nav-menu-list">
                         <NavigationMenuItem attr:data-attr-test="nav-menu-item" value="products".to_string()>
                             <NavigationMenuTrigger attr:data-attr-test="nav-menu-trigger">"Products"</NavigationMenuTrigger>
-                            <NavigationMenuContent attr:data-attr-test="nav-menu-content">
+                            <NavigationMenuContent attr:data-attr-test="nav-menu-content" force_mount=true>
                                 <NavigationMenuLink attr:data-attr-test="nav-menu-link" attr:href="#">"Link"</NavigationMenuLink>
                             </NavigationMenuContent>
                         </NavigationMenuItem>
                     </NavigationMenuList>
-                    <NavigationMenuViewport attr:data-attr-test="nav-menu-viewport" />
                 </NavigationMenu>
             </section>
 
-            // ── Menubar ────────────────────────────────────
+            // ── Menubar (forceMount) ──────────────────────────
             <section>
                 <h3>"Menubar"</h3>
                 <Menubar attr:data-attr-test="menubar-root">
                     <MenubarMenu>
                         <MenubarTrigger attr:data-attr-test="menubar-trigger">"File"</MenubarTrigger>
-                        <MenubarPortal>
-                            <MenubarContent attr:data-attr-test="menubar-content" side_offset=5.0>
+                        <MenubarPortal force_mount=true>
+                            <MenubarContent attr:data-attr-test="menubar-content" force_mount=true side_offset=5.0>
                                 <MenubarItem attr:data-attr-test="menubar-item">"New"</MenubarItem>
                             </MenubarContent>
                         </MenubarPortal>
