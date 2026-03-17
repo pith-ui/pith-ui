@@ -16,6 +16,7 @@ per-spec result files to:
 Each result.txt contains a structured header plus the full Cypress output for that spec.
 """
 
+import json
 import sys
 import re
 import shutil
@@ -137,6 +138,39 @@ def save_spec_result(
     return result_file, screenshots
 
 
+def update_runs_json(framework: str, timestamp: str, specs: list[dict], run_dir: Path):
+    """Append this run's summary to .results/runs.json."""
+    runs_file = RESULTS_DIR / "runs.json"
+
+    if runs_file.exists():
+        with open(runs_file) as f:
+            runs = json.load(f)
+    else:
+        runs = {}
+
+    spec_entries = {}
+    for spec in specs:
+        spec_name = spec["spec"].replace(".cy.js", "")
+        result_path = str((run_dir / spec_name / "result.txt").relative_to(REPO_ROOT))
+        spec_entries[spec_name] = {
+            "framework": framework,
+            "status": spec["status"].upper(),
+            "tests": spec["tests"],
+            "passing": spec["passing"],
+            "failing": spec["failing"],
+            "pending": spec["pending"],
+            "skipped": spec["skipped"],
+            "duration": spec["duration"],
+            "result_path": result_path,
+        }
+
+    runs[timestamp] = {"specs": spec_entries}
+
+    with open(runs_file, "w") as f:
+        json.dump(runs, f, indent=4)
+        f.write("\n")
+
+
 def main():
     if len(sys.argv) < 2:
         print("Usage: <command> | python3 scripts/save_e2e_results.py <framework>", file=sys.stderr)
@@ -170,6 +204,9 @@ def main():
         spec_output = extract_spec_output(all_lines, spec["spec"])
         result_file, screenshots = save_spec_result(framework, spec, spec_output, run_dir)
         saved.append((spec, result_file, screenshots))
+
+    # Update runs.json summary
+    update_runs_json(framework, timestamp, specs, run_dir)
 
     # Print summary
     print(f"\n{'─' * 60}", file=sys.stderr)
