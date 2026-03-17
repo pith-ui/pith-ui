@@ -158,16 +158,20 @@ fn use_image_loading_status(
     let (loading_status, set_loading_status) = signal(ImageLoadingStatus::Idle);
     let is_mounted = StoredValue::new(true);
 
-    let update_status_loaded: Closure<dyn Fn()> = Closure::new(move || {
-        if is_mounted.get_value() {
-            set_loading_status.set(ImageLoadingStatus::Loaded);
-        }
-    });
-    let update_status_error: Closure<dyn Fn()> = Closure::new(move || {
-        if is_mounted.get_value() {
-            set_loading_status.set(ImageLoadingStatus::Error);
-        }
-    });
+    // Wrap in StoredValue<SendWrapper<...>> so the closures are Copy + Send + Sync,
+    // allowing capture by both Effect and on_cleanup.
+    let update_status_loaded: StoredValue<SendWrapper<Closure<dyn Fn()>>> =
+        StoredValue::new(SendWrapper::new(Closure::new(move || {
+            if is_mounted.get_value() {
+                set_loading_status.set(ImageLoadingStatus::Loaded);
+            }
+        })));
+    let update_status_error: StoredValue<SendWrapper<Closure<dyn Fn()>>> =
+        StoredValue::new(SendWrapper::new(Closure::new(move || {
+            if is_mounted.get_value() {
+                set_loading_status.set(ImageLoadingStatus::Error);
+            }
+        })));
 
     // Track the previous image element so we can remove listeners when src changes.
     let prev_image: StoredValue<Option<SendWrapper<HtmlImageElement>>> = StoredValue::new(None);
@@ -175,14 +179,14 @@ fn use_image_loading_status(
     Effect::new(move |_| {
         // Remove listeners from previous image element (matches React's useLayoutEffect cleanup).
         if let Some(old_image) = prev_image.try_get_value().flatten() {
-            let _ = old_image.remove_event_listener_with_callback(
-                "load",
-                update_status_loaded.as_ref().unchecked_ref(),
-            );
-            let _ = old_image.remove_event_listener_with_callback(
-                "error",
-                update_status_error.as_ref().unchecked_ref(),
-            );
+            update_status_loaded.with_value(|c| {
+                let _ = old_image
+                    .remove_event_listener_with_callback("load", c.as_ref().unchecked_ref());
+            });
+            update_status_error.with_value(|c| {
+                let _ = old_image
+                    .remove_event_listener_with_callback("error", c.as_ref().unchecked_ref());
+            });
         }
         let _ = prev_image.try_set_value(None);
 
@@ -194,18 +198,16 @@ fn use_image_loading_status(
 
             set_loading_status.set(ImageLoadingStatus::Loading);
 
-            image
-                .add_event_listener_with_callback(
-                    "load",
-                    update_status_loaded.as_ref().unchecked_ref(),
-                )
-                .expect("Load event listener should be added.");
-            image
-                .add_event_listener_with_callback(
-                    "error",
-                    update_status_error.as_ref().unchecked_ref(),
-                )
-                .expect("Error event listener should be added.");
+            update_status_loaded.with_value(|c| {
+                image
+                    .add_event_listener_with_callback("load", c.as_ref().unchecked_ref())
+                    .expect("Load event listener should be added.");
+            });
+            update_status_error.with_value(|c| {
+                image
+                    .add_event_listener_with_callback("error", c.as_ref().unchecked_ref())
+                    .expect("Error event listener should be added.");
+            });
 
             // Set referrer_policy and cross_origin BEFORE src, since setting src triggers the load.
             if let Some(referrer_policy) = referrer_policy.get() {
@@ -227,14 +229,14 @@ fn use_image_loading_status(
         is_mounted.set_value(false);
         // Clean up listeners on unmount.
         if let Some(old_image) = prev_image.try_get_value().flatten() {
-            let _ = old_image.remove_event_listener_with_callback(
-                "load",
-                update_status_loaded.as_ref().unchecked_ref(),
-            );
-            let _ = old_image.remove_event_listener_with_callback(
-                "error",
-                update_status_error.as_ref().unchecked_ref(),
-            );
+            update_status_loaded.with_value(|c| {
+                let _ = old_image
+                    .remove_event_listener_with_callback("load", c.as_ref().unchecked_ref());
+            });
+            update_status_error.with_value(|c| {
+                let _ = old_image
+                    .remove_event_listener_with_callback("error", c.as_ref().unchecked_ref());
+            });
         }
     });
 
