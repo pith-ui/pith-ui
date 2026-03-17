@@ -51,8 +51,7 @@ pub fn SelectScrollUpButton(
                 on_auto_scroll=Callback::new(move |_: ()| {
                     if let Some(viewport_el) = viewport_ref.get_untracked() {
                         let viewport: web_sys::HtmlElement = (*viewport_el).clone().unchecked_into();
-                        // Scroll up by approximately one item height (32px default)
-                        let item_height = 32;
+                        let item_height = item_offset_height(&viewport);
                         viewport.set_scroll_top(viewport.scroll_top() - item_height);
                     }
                 })
@@ -122,7 +121,7 @@ pub fn SelectScrollDownButton(
                 on_auto_scroll=Callback::new(move |_: ()| {
                     if let Some(viewport_el) = viewport_ref.get_untracked() {
                         let viewport: web_sys::HtmlElement = (*viewport_el).clone().unchecked_into();
-                        let item_height = 32;
+                        let item_height = item_offset_height(&viewport);
                         viewport.set_scroll_top(viewport.scroll_top() + item_height);
                     }
                 })
@@ -235,4 +234,18 @@ fn SelectScrollButtonImpl(
             </Primitive>
         </AttributeInterceptor>
     }
+}
+
+/// Get the offset height of the first `[role="option"]` child in the viewport,
+/// falling back to 32px. Matches React's `selectedItem.offsetHeight`.
+fn item_offset_height(viewport: &web_sys::HtmlElement) -> i32 {
+    viewport
+        .query_selector("[role='option']")
+        .ok()
+        .flatten()
+        .map(|el| {
+            let el: &web_sys::HtmlElement = el.unchecked_ref();
+            el.offset_height()
+        })
+        .unwrap_or(32)
 }
