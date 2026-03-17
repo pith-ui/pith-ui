@@ -140,6 +140,26 @@ Known bugs:
 2. **Read the upstream Rust crate source** in `~/.cargo/registry/src/` and diff against the original JS.
 3. **Avoid prolonged printf-debugging.** If log statements don't yield a clear answer within a couple of iterations, pivot to source-level comparison.
 
+## Task Tracking (`tasks.json`)
+
+The root `tasks.json` file tracks work items (bugs, refactors, design-principle issues) across the project. Each task has: `id`, `component`, `principle`, `description`, `status` (`open` | `complete`), and `blockers`.
+
+### "What are good tasks to work next?"
+
+When the user asks what to work on next (or similar phrasing like "what's next?", "good candidates?", "what should we tackle?"):
+
+1. Read `tasks.json` and filter to non-`complete` tasks.
+2. Classify them by `principle` (bug, refactor, design principle name) and `component`.
+3. Present a concise summary: counts by category, then a few recommended options — prioritizing unblocked tasks, bugs, and tasks that cluster on the same component (efficient to batch).
+
+### "Add a task for …"
+
+When the user asks to add a task (or similar phrasing like "track this", "note this for later", "add this bug"):
+
+1. Read `tasks.json` to understand the existing ID scheme (`<component>-<principle-abbrev>-<n>`).
+2. Create a new task object with a unique `id`, appropriate `component`, `principle` (use `bug` or `refactor` for non-principle items), a clear `description`, `status: "open"`, and `blockers: []`.
+3. Append it to the array in `tasks.json` and write the file back.
+
 ## Conventions
 
 - Conventional commit messages: `fix:`, `feat:`, `chore:`, `docs:`
