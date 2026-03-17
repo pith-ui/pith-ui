@@ -48,6 +48,7 @@ The Cargo workspace is a monorepo under `packages/`:
   - `leptos-radix-rough-draft/` — A previous Leptos implementation. **Use for implementation hints only; always follow the React API per Rule 4.**
 - **`reference_app/`** — Cross-framework E2E testing harness (React + Leptos + Cypress). See `reference_app/CLAUDE.md` for full rules and testing methodology.
 - **`reference_experiments/`** — Leptos-only experiment sandbox. See `reference_experiments/CLAUDE.md` for details and `just test_experiment <name>` to run.
+- **`.results/`** — Gitignored E2E test result history. All `just test_leptos_*` and `just test_react_*` commands automatically save per-spec results here. Structure: `.results/<framework>/<timestamp>/<spec>/result.txt` + failure screenshots. `.results/runs.json` is an append-only index of all runs. Check this directory for historical test data before claiming a test is flaky or newly broken.
 
 ### Key Dependencies
 
