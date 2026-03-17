@@ -1604,7 +1604,7 @@
     "component": "primitives",
     "principle": "refactor",
     "description": "Create a generic ScopedPortal<T: PortalContext> component. Currently 5 portal components (Dialog, Popover, HoverCard, Tooltip, Select) are structurally identical: capture contexts outside the portal, re-provide them inside, each with a trivial *PortalContextValue that only holds force_mount: Signal<bool>. A generic component would eliminate ~20 lines per portal and prevent bugs when new contexts are added but forgotten in portals.",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {

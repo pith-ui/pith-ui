@@ -13,23 +13,22 @@ pub fn PopoverPortal(
 ) -> impl IntoView {
     let children = StoredValue::new(children);
 
-    // Capture contexts before the portal boundary for re-provision inside mount_to.
     let popover_context = expect_context::<PopoverContextValue>();
     let popper_scope = use_popper_scope();
 
-    // Always render the Portal and let PopoverContent handle its own Presence wrapper.
-    // A portal-level Presence would have no node_ref to observe, causing it to unmount
-    // immediately before exit animations can complete (same pattern as DialogPortal).
     view! {
-        <ScopedPortal container=container container_ref=container_ref force_mount=force_mount>
-            <Provider value=popover_context>
-                {
-                    if let Some(scope) = popper_scope {
-                        provide_popper_scope(scope);
-                    }
-                    children.with_value(|children| children())
+        <ScopedPortal
+            container=container
+            container_ref=container_ref
+            force_mount=force_mount
+            context_bridge=Callback::new(move |_| {
+                provide_context(popover_context);
+                if let Some(scope) = popper_scope {
+                    provide_popper_scope(scope);
                 }
-            </Provider>
+            })
+        >
+            {children.with_value(|children| children())}
         </ScopedPortal>
     }
 }

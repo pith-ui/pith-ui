@@ -12,12 +12,22 @@ pub struct PortalContextValue {
 }
 
 /// Portal wrapper that provides a shared [`PortalContextValue`] with `force_mount`.
-/// Component-specific portals wrap this and add their own context re-provision.
+///
+/// Component-specific portals (e.g. `PopoverPortal`, `TooltipPortal`) wrap this and pass a
+/// `context_bridge` callback to re-provide their Leptos contexts inside the portal boundary.
+/// Portals use `mount_to`, which creates a new reactive owner — any context provided outside
+/// the portal is invisible to children inside it. The bridge runs inside that new owner,
+/// calling `provide_context` for each value that needs to cross the boundary.
 #[component]
 pub fn ScopedPortal(
     #[prop(into, optional)] container: MaybeProp<SendWrapper<web_sys::Element>>,
     #[prop(optional)] container_ref: AnyNodeRef,
     #[prop(into, optional)] force_mount: MaybeProp<bool>,
+    /// Called inside the portal boundary before rendering children.
+    /// Use this to re-provide Leptos contexts that need to cross the portal boundary
+    /// (e.g. `provide_context(my_context)`, `provide_popper_scope(scope)`).
+    #[prop(into, optional)]
+    context_bridge: Option<Callback<()>>,
     children: ChildrenFn,
 ) -> impl IntoView {
     let children = StoredValue::new(children);
@@ -29,7 +39,12 @@ pub fn ScopedPortal(
     view! {
         <Provider value=portal_context>
             <Portal container=container container_ref=container_ref as_child=true>
-                {children.with_value(|children| children())}
+                {
+                    if let Some(bridge) = context_bridge {
+                        bridge.run(());
+                    }
+                    children.with_value(|children| children())
+                }
             </Portal>
         </Provider>
     }

@@ -13,27 +13,22 @@ pub fn HoverCardPortal(
 ) -> impl IntoView {
     let children = StoredValue::new(children);
 
-    // Capture contexts before the portal boundary for re-provision inside mount_to.
-    // React uses createContextScope with scope composition to automatically isolate
-    // contexts per component instance across portals. Leptos has no equivalent, so
-    // we explicitly capture and re-provide contexts to maintain the chain through
-    // the portal's mount_to owner boundary.
     let hover_card_context = expect_context::<HoverCardContextValue>();
     let popper_scope = use_popper_scope();
 
-    // Always render the Portal and let HoverCardContent handle its own Presence wrapper.
-    // A portal-level Presence would have no node_ref to observe, causing it to unmount
-    // immediately before exit animations can complete (same pattern as DialogPortal).
     view! {
-        <ScopedPortal container=container container_ref=container_ref force_mount=force_mount>
-            <Provider value=hover_card_context>
-                {
-                    if let Some(scope) = popper_scope {
-                        provide_popper_scope(scope);
-                    }
-                    children.with_value(|children| children())
+        <ScopedPortal
+            container=container
+            container_ref=container_ref
+            force_mount=force_mount
+            context_bridge=Callback::new(move |_| {
+                provide_context(hover_card_context);
+                if let Some(scope) = popper_scope {
+                    provide_popper_scope(scope);
                 }
-            </Provider>
+            })
+        >
+            {children.with_value(|children| children())}
         </ScopedPortal>
     }
 }

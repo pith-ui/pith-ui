@@ -13,24 +13,24 @@ pub fn TooltipPortal(
 ) -> impl IntoView {
     let children = StoredValue::new(children);
 
-    // Capture contexts before the portal boundary for re-provision inside mount_to.
     let tooltip_context = expect_context::<TooltipContextValue>();
     let provider_context = expect_context::<TooltipProviderContextValue>();
     let popper_scope = use_popper_scope();
 
-    // Always render the Portal and let TooltipContent handle its own Presence wrapper.
     view! {
-        <ScopedPortal container=container container_ref=container_ref force_mount=force_mount>
-            <Provider value=tooltip_context>
-                <Provider value=provider_context>
-                    {
-                        if let Some(scope) = popper_scope {
-                            provide_popper_scope(scope);
-                        }
-                        children.with_value(|children| children())
-                    }
-                </Provider>
-            </Provider>
+        <ScopedPortal
+            container=container
+            container_ref=container_ref
+            force_mount=force_mount
+            context_bridge=Callback::new(move |_| {
+                provide_context(tooltip_context);
+                provide_context(provider_context);
+                if let Some(scope) = popper_scope {
+                    provide_popper_scope(scope);
+                }
+            })
+        >
+            {children.with_value(|children| children())}
         </ScopedPortal>
     }
 }
