@@ -69,18 +69,19 @@ pub fn Checkbox(
     let button_ref = AnyNodeRef::new();
     let composed_refs = use_composed_refs(vec![node_ref, button_ref]);
 
+    // Default to true when ref is unavailable (SSR) so the hidden input renders
+    // and form events bubble without JS. Matches React's approach.
     let is_form_control = Signal::derive(move || {
         if form.get().is_some() {
             return true;
         }
-        button_ref
-            .get()
-            .and_then(|button| {
+        match button_ref.get() {
+            Some(button) => {
                 let el: &web_sys::Element = button.unchecked_ref();
-                el.closest("form").ok()
-            })
-            .flatten()
-            .is_some()
+                el.closest("form").ok().flatten().is_some()
+            }
+            None => true,
+        }
     });
     let (checked, set_checked) = use_controllable_state(UseControllableStateParams {
         prop: checked,

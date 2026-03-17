@@ -188,21 +188,20 @@ fn CollapsibleContentImpl(
     }));
     let raf_closure = StoredValue::new(raf_closure);
 
-    // Schedule rAF on mount
-    raf_closure.with_value(|closure| {
-        let window = web_sys::window().expect("Window should exist.");
-        let handle = window
-            .request_animation_frame(closure.as_ref().unchecked_ref())
-            .expect("requestAnimationFrame should succeed.");
-        raf_handle.set(Some(handle));
-    });
+    // Schedule rAF on mount (client-only — window is unavailable during SSR)
+    if let Some(window) = web_sys::window() {
+        raf_closure.with_value(|closure| {
+            if let Ok(handle) = window.request_animation_frame(closure.as_ref().unchecked_ref()) {
+                raf_handle.set(Some(handle));
+            }
+        });
+    }
 
     Owner::on_cleanup(move || {
         if let Some(handle) = raf_handle.get_untracked() {
-            web_sys::window()
-                .expect("Window should exist.")
-                .cancel_animation_frame(handle)
-                .expect("cancelAnimationFrame should succeed.");
+            if let Some(window) = web_sys::window() {
+                window.cancel_animation_frame(handle).ok();
+            }
         }
     });
 

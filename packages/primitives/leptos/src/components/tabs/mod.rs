@@ -329,12 +329,15 @@ fn TabsContentImpl(
     }));
     let raf_closure = StoredValue::new(raf_closure);
 
-    let raf_id = raf_closure.with_value(|closure| {
-        let window = web_sys::window().expect("Window should exist.");
-        window
-            .request_animation_frame(closure.as_ref().unchecked_ref())
-            .expect("requestAnimationFrame should succeed.")
-    });
+    // Schedule rAF on mount (client-only — window is unavailable during SSR)
+    let raf_id: RwSignal<Option<i32>> = RwSignal::new(None);
+    if let Some(window) = web_sys::window() {
+        raf_closure.with_value(|closure| {
+            if let Ok(id) = window.request_animation_frame(closure.as_ref().unchecked_ref()) {
+                raf_id.set(Some(id));
+            }
+        });
+    }
 
     // Cancel the rAF when the component unmounts to prevent invoking a dropped
     // Closure. When a tab change causes this content to unmount via Presence,
@@ -342,8 +345,10 @@ fn TabsContentImpl(
     // browser would fire the rAF callback on the dropped Closure, causing a
     // WASM "closure invoked after being dropped" panic.
     Owner::on_cleanup(move || {
-        if let Some(window) = web_sys::window() {
-            window.cancel_animation_frame(raf_id).ok();
+        if let Some(id) = raf_id.get_untracked() {
+            if let Some(window) = web_sys::window() {
+                window.cancel_animation_frame(id).ok();
+            }
         }
     });
 

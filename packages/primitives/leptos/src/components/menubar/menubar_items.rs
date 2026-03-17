@@ -254,24 +254,13 @@ pub fn MenubarSubTrigger(
     #[prop(into, optional)] node_ref: AnyNodeRef,
     children: ChildrenFn,
 ) -> impl IntoView {
-    let sub_trigger_ref = AnyNodeRef::new();
-    let composed_refs = use_composed_refs(vec![node_ref, sub_trigger_ref]);
-
-    // Set data-radix-menubar-subtrigger via Effect since MenuSubTrigger doesn't support
-    // arbitrary data attributes passthrough.
-    Effect::new(move |_| {
-        if let Some(el) = sub_trigger_ref.get() {
-            let el: &web_sys::Element = (*el).unchecked_ref();
-            el.set_attribute("data-radix-menubar-subtrigger", "").ok();
-        }
-    });
-
     view! {
         <MenuSubTrigger
             disabled=disabled
             text_value=text_value
             as_child=as_child
-            node_ref=composed_refs
+            node_ref=node_ref
+            attr:data-radix-menubar-subtrigger=""
         >
             {children()}
         </MenuSubTrigger>
@@ -300,19 +289,8 @@ pub fn MenubarSubContent(
     #[prop(into, optional)] node_ref: AnyNodeRef,
     children: ChildrenFn,
 ) -> impl IntoView {
-    let sub_content_ref = AnyNodeRef::new();
-    let composed_refs = use_composed_refs(vec![node_ref, sub_content_ref]);
-
     let on_escape_key_down = wrap_callback(on_escape_key_down);
     let on_focus_outside = wrap_callback(on_focus_outside);
-
-    // Set data-radix-menubar-content via Effect.
-    Effect::new(move |_| {
-        if let Some(el) = sub_content_ref.get() {
-            let el: &web_sys::Element = (*el).unchecked_ref();
-            el.set_attribute("data-radix-menubar-content", "").ok();
-        }
-    });
 
     view! {
         <MenuSubContent
@@ -327,7 +305,8 @@ pub fn MenubarSubContent(
             hide_when_detached=hide_when_detached
             r#loop=r#loop
             as_child=as_child
-            node_ref=composed_refs
+            node_ref=node_ref
+            attr:data-radix-menubar-content=""
             style:--radix-menubar-content-transform-origin="var(--radix-popper-transform-origin)"
             style:--radix-menubar-content-available-width="var(--radix-popper-available-width)"
             style:--radix-menubar-content-available-height="var(--radix-popper-available-height)"

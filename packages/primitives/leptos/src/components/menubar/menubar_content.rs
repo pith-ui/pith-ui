@@ -55,18 +55,7 @@ pub fn MenubarContent(
 
     let has_interacted_outside_ref = SendWrapper::new(Rc::new(Cell::new(false)));
 
-    let content_ref = AnyNodeRef::new();
-    let composed_refs = use_composed_refs(vec![node_ref, content_ref]);
-
-    // Set data-radix-menubar-content via Effect so it lands on the inner content
-    // element (where the keydown handler is attached), not the outer PopperContent
-    // wrapper. This matches the pattern used by MenubarSubContent.
-    Effect::new(move |_| {
-        if let Some(el) = content_ref.get() {
-            let el: &web_sys::Element = (*el).unchecked_ref();
-            el.set_attribute("data-radix-menubar-content", "").ok();
-        }
-    });
+    let composed_refs = node_ref;
 
     let align = prop_or(align, Align::Start);
 
@@ -84,6 +73,7 @@ pub fn MenubarContent(
             node_ref=composed_refs
             id=Signal::derive(move || Some(menu_context.content_id.get()))
             aria_labelledby=Signal::derive(move || Some(menu_context.trigger_id.get()))
+            attr:data-radix-menubar-content=""
             align=align
             align_offset=align_offset
             avoid_collisions=avoid_collisions

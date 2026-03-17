@@ -195,16 +195,16 @@
     "id": "checkbox-dsr-1",
     "component": "checkbox",
     "principle": "Design for Server Rendering",
-    "description": "The Leptos Checkbox component uses Effect::new (line 106 of /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/checkbox/mod.rs) for form reset handler registration and relies on button_ref.get() which returns None during SSR. The is_form_control signal (lines 73-85) calls button_ref.get() and el.closest('form'), both of which require a DOM node and will return false during SSR. This means the hidden BubbleInput (rendered via <Show when=is_form_control>) will not be included in the SSR HTML for checkboxes inside forms. The React reference handles this by defaulting isFormControl to true during SSR (line 86 of checkbox.tsx: 'We set this to true by default so that events bubble to forms without JS (SSR)'), ensuring correct initial HTML.",
-    "status": "open",
+    "description": "The Leptos Checkbox component uses Effect::new (line 106 of /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/checkbox/mod.rs) for form reset handler registration and relies on button_ref.get() which returns None during SSR. The is_form_control signal (lines 73-85) calls button_ref.get() and el.closest('form'), both of which require a DOM node and will return false during SSR. This means the hidden BubbleInput (rendered via <Show when=is_form_control>) will not be included in the SSR HTML for checkboxes inside forms. The React reference handles this by defaulting isFormControl to true during SSR (line 86 of checkbox.tsx: 'We set this to true by default so that events bubble to forms without JS (SSR)'), ensuring correct initial HTML. RESOLVED: is_form_control now defaults to true when button_ref is None (SSR), matching React's pattern. Hidden input renders during SSR for form event bubbling.",
+    "status": "complete",
     "blockers": []
   },
   {
     "id": "collapsible-dsr-1",
     "component": "collapsible",
     "principle": "Design for Server Rendering",
-    "description": "The Leptos CollapsibleContentImpl component calls `web_sys::window().expect(\"Window should exist.\")` directly at component body scope (lines 199 and 208 in /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/collapsible/mod.rs) for `request_animation_frame` and `cancel_animation_frame`. This code executes during component initialization, not inside an Effect or client-only guard, so it will panic during server-side rendering where `window` is not available.",
-    "status": "open",
+    "description": "The Leptos CollapsibleContentImpl component calls `web_sys::window().expect(\"Window should exist.\")` directly at component body scope (lines 199 and 208 in /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/collapsible/mod.rs) for `request_animation_frame` and `cancel_animation_frame`. This code executes during component initialization, not inside an Effect or client-only guard, so it will panic during server-side rendering where `window` is not available. RESOLVED: Guarded window().expect() with if let Some(window), preventing SSR panic. rAF scheduling is now a no-op during SSR.",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -595,24 +595,24 @@
     "id": "menubar-dsr-1",
     "component": "menubar",
     "principle": "Design for Server Rendering",
-    "description": "Leptos MenubarContent sets data-radix-menubar-content via a client-side Effect (menubar_content.rs lines 65-69) instead of rendering it in the initial HTML. On first server-rendered paint this attribute will be missing, which means the ArrowLeft/ArrowRight inter-menu keyboard navigation logic (menubar_content.rs line 175: target.closest(\"[data-radix-menubar-content]\")) would malfunction until the Effect runs on the client. The React reference sets data-radix-menubar-content as a static JSX prop (menubar.tsx line 323), ensuring it is present in server-rendered HTML.",
-    "status": "open",
+    "description": "Leptos MenubarContent sets data-radix-menubar-content via a client-side Effect (menubar_content.rs lines 65-69) instead of rendering it in the initial HTML. On first server-rendered paint this attribute will be missing, which means the ArrowLeft/ArrowRight inter-menu keyboard navigation logic (menubar_content.rs line 175: target.closest(\"[data-radix-menubar-content]\")) would malfunction until the Effect runs on the client. The React reference sets data-radix-menubar-content as a static JSX prop (menubar.tsx line 323), ensuring it is present in server-rendered HTML. RESOLVED: Moved data-radix-menubar-content from client-side Effect to static attr: on the MenuContent view. Attribute is now present in initial SSR HTML.",
+    "status": "complete",
     "blockers": []
   },
   {
     "id": "menubar-dsr-2",
     "component": "menubar",
     "principle": "Design for Server Rendering",
-    "description": "Leptos MenubarSubTrigger sets data-radix-menubar-subtrigger via a client-side Effect (menubar_items.rs lines 268-272) instead of in the initial HTML. The React reference sets it as a static JSX prop (menubar.tsx line 630). This attribute is used by the inter-menu keyboard navigation logic (menubar_content.rs line 171: target.hasAttribute(\"data-radix-menubar-subtrigger\")), so it must be present on first render for correct behavior.",
-    "status": "open",
+    "description": "Leptos MenubarSubTrigger sets data-radix-menubar-subtrigger via a client-side Effect (menubar_items.rs lines 268-272) instead of in the initial HTML. The React reference sets it as a static JSX prop (menubar.tsx line 630). This attribute is used by the inter-menu keyboard navigation logic (menubar_content.rs line 171: target.hasAttribute(\"data-radix-menubar-subtrigger\")), so it must be present on first render for correct behavior. RESOLVED: Moved data-radix-menubar-subtrigger from client-side Effect to static attr: on MenuSubTrigger. Attribute is now present in initial SSR HTML.",
+    "status": "complete",
     "blockers": []
   },
   {
     "id": "menubar-dsr-3",
     "component": "menubar",
     "principle": "Design for Server Rendering",
-    "description": "Leptos MenubarSubContent sets data-radix-menubar-content via a client-side Effect (menubar_items.rs lines 317-321) instead of in the initial HTML. The React reference sets it as a static JSX prop (menubar.tsx line 659).",
-    "status": "open",
+    "description": "Leptos MenubarSubContent sets data-radix-menubar-content via a client-side Effect (menubar_items.rs lines 317-321) instead of in the initial HTML. The React reference sets it as a static JSX prop (menubar.tsx line 659). RESOLVED: Moved data-radix-menubar-content from client-side Effect to static attr: on MenuSubContent. Attribute is now present in initial SSR HTML.",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -915,8 +915,8 @@
     "id": "radio-group-dsr-1",
     "component": "radio-group",
     "principle": "Design for Server Rendering",
-    "description": "The React reference (radio.tsx line 49) sets isFormControl to true by default for SSR (`const isFormControl = button ? form || !!button.closest('form') : true`), ensuring the hidden native <input> is rendered on first paint for form participation. The Leptos implementation in /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/radio_group/mod.rs (lines 149-161) uses a Signal that reads the DOM (item_ref.get() and closest('form')), which will be false during SSR, meaning the RadioBubbleInput will not be rendered in the initial server HTML when the radio is inside a <form>. This could cause missing form participation on first paint.",
-    "status": "open",
+    "description": "The React reference (radio.tsx line 49) sets isFormControl to true by default for SSR (`const isFormControl = button ? form || !!button.closest('form') : true`), ensuring the hidden native <input> is rendered on first paint for form participation. The Leptos implementation in /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/radio_group/mod.rs (lines 149-161) uses a Signal that reads the DOM (item_ref.get() and closest('form')), which will be false during SSR, meaning the RadioBubbleInput will not be rendered in the initial server HTML when the radio is inside a <form>. This could cause missing form participation on first paint. RESOLVED: is_form_control now defaults to true when item_ref is None (SSR), matching React's pattern.",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -1187,8 +1187,8 @@
     "id": "switch-dsr-1",
     "component": "switch",
     "principle": "Design for Server Rendering",
-    "description": "In the Leptos implementation, `is_form_control` relies on `button_ref.get()` which is `None` during SSR, causing the hidden `<input>` form control to not render on the server. The React reference handles this by defaulting `isFormControl` to `true` when `button` is null (line 51: `const isFormControl = button ? form || !!button.closest('form') : true`), so the hidden input is always present on first paint inside a form. The Leptos version at `/Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/switch/mod.rs` lines 46-58 will evaluate to `false` when the ref is not yet populated, meaning the BubbleInput is missing from the initial SSR HTML for switches inside forms.",
-    "status": "open",
+    "description": "In the Leptos implementation, `is_form_control` relies on `button_ref.get()` which is `None` during SSR, causing the hidden `<input>` form control to not render on the server. The React reference handles this by defaulting `isFormControl` to `true` when `button` is null (line 51: `const isFormControl = button ? form || !!button.closest('form') : true`), so the hidden input is always present on first paint inside a form. The Leptos version at `/Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/switch/mod.rs` lines 46-58 will evaluate to `false` when the ref is not yet populated, meaning the BubbleInput is missing from the initial SSR HTML for switches inside forms. RESOLVED: is_form_control now defaults to true when button_ref is None (SSR), matching React's pattern.",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -1243,8 +1243,8 @@
     "id": "tabs-dsr-1",
     "component": "tabs",
     "principle": "Design for Server Rendering",
-    "description": "Leptos TabsContentImpl (packages/primitives/leptos/src/components/tabs/mod.rs, lines 338-343) calls `web_sys::window().expect(\"Window should exist.\")` and `request_animation_frame` unconditionally during component initialization (outside of any Effect or client-only guard). During server-side rendering, `web_sys::window()` returns `None`, causing a panic. The React reference (reference/react-radix-primitives/packages/react/tabs/src/tabs.tsx, lines 237-239) safely wraps this in `React.useEffect` which only runs on the client.",
-    "status": "open",
+    "description": "Leptos TabsContentImpl (packages/primitives/leptos/src/components/tabs/mod.rs, lines 338-343) calls `web_sys::window().expect(\"Window should exist.\")` and `request_animation_frame` unconditionally during component initialization (outside of any Effect or client-only guard). During server-side rendering, `web_sys::window()` returns `None`, causing a panic. The React reference (reference/react-radix-primitives/packages/react/tabs/src/tabs.tsx, lines 237-239) safely wraps this in `React.useEffect` which only runs on the client. RESOLVED: Replaced window().expect() with if let Some(window) guard. rAF scheduling is now SSR-safe \u2014 the animation prevention flag stays true during SSR (no animation to suppress anyway).",
+    "status": "complete",
     "blockers": []
   },
   {

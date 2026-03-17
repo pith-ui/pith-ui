@@ -140,18 +140,19 @@ pub fn RadioGroupItem(
     let item_ref = AnyNodeRef::new();
     let composed_refs = use_composed_refs(vec![node_ref, item_ref]);
 
+    // Default to true when ref is unavailable (SSR) so the hidden input renders
+    // and form events bubble without JS. Matches React's approach.
     let is_form_control = Signal::derive(move || {
         if context.form.get().is_some() {
             return true;
         }
-        item_ref
-            .get()
-            .and_then(|button| {
+        match item_ref.get() {
+            Some(button) => {
                 let el: &web_sys::Element = button.unchecked_ref();
-                el.closest("form").ok()
-            })
-            .flatten()
-            .is_some()
+                el.closest("form").ok().flatten().is_some()
+            }
+            None => true,
+        }
     });
 
     // Track arrow key presses on document for auto-check-on-focus behavior.
