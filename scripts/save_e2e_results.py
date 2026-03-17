@@ -8,28 +8,28 @@ Usage:
 Where <framework> is "leptos" or "react".
 
 Reads Cypress stdout from stdin, echoes it to stdout (passthrough), and saves
-per-spec result files to .results/<framework>/<spec-name>/<timestamp>.txt
+per-spec result files to:
 
-Each result file contains the full output for that spec run, plus a summary header.
+    .results/<framework>/<timestamp>/<spec-name>/result.txt
+    .results/<framework>/<timestamp>/<spec-name>/*.png  (failure screenshots)
 
-Exit code: mirrors the Cypress exit code (number of failing specs).
+Each result.txt contains a structured header plus the full Cypress output for that spec.
 """
 
 import sys
-import os
 import re
+import shutil
 from datetime import datetime
 from pathlib import Path
 
-RESULTS_DIR = Path(__file__).resolve().parent.parent / ".results"
+REPO_ROOT = Path(__file__).resolve().parent.parent
+RESULTS_DIR = REPO_ROOT / ".results"
+SCREENSHOTS_DIR = REPO_ROOT / "reference_app" / "cypress" / "screenshots"
 
 
 def parse_specs(lines: list[str]) -> list[dict]:
     """Parse the final results table to extract per-spec summaries."""
     specs = []
-    # Match lines like:
-    #   │ ✔  dialog.cy.js                             00:11       47       47        -        -        - │
-    #   │ ✖  attr-forwarding.cy.js                    01:51       83       75        5        3        - │
     pattern = re.compile(
         r"│\s+([✔✖])\s+(\S+\.cy\.js)\s+"
         r"(\S+)\s+"        # duration
@@ -65,9 +65,7 @@ def extract_spec_output(lines: list[str], spec_name: str) -> list[str]:
     output_lines = []
     capturing = False
 
-    # Look for "Running:  <spec_name>" to start capture
     run_pattern = re.compile(r"Running:\s+" + re.escape(spec_name))
-    # Stop at next "Running:" or "(Run Finished)" or the results table
     stop_pattern = re.compile(r"Running:\s+\S+\.cy\.js|^\s*\(Run Finished\)")
 
     for line in lines:
@@ -83,23 +81,38 @@ def extract_spec_output(lines: list[str], spec_name: str) -> list[str]:
     return output_lines
 
 
+def copy_screenshots(spec_name: str, dest_dir: Path):
+    """Copy failure screenshots for a spec into the result directory."""
+    screenshot_source = SCREENSHOTS_DIR / spec_name
+    if not screenshot_source.is_dir():
+        return []
+
+    copied = []
+    for png in screenshot_source.glob("*.png"):
+        dest = dest_dir / png.name
+        shutil.copy2(png, dest)
+        copied.append(dest)
+
+    return copied
+
+
 def save_spec_result(
     framework: str,
     spec: dict,
     spec_output: list[str],
-    timestamp: str,
-):
-    """Save a single spec's results to .results/<framework>/<spec-name>/<timestamp>.txt"""
+    run_dir: Path,
+) -> Path:
+    """Save a single spec's results to <run_dir>/<spec-name>/result.txt"""
     spec_name = spec["spec"].replace(".cy.js", "")
-    spec_dir = RESULTS_DIR / framework / spec_name
+    spec_dir = run_dir / spec_name
     spec_dir.mkdir(parents=True, exist_ok=True)
 
-    result_file = spec_dir / f"{timestamp}.txt"
+    result_file = spec_dir / "result.txt"
 
     header = (
         f"# E2E Result: {spec['spec']}\n"
         f"# Framework:  {framework}\n"
-        f"# Timestamp:  {timestamp}\n"
+        f"# Timestamp:  {run_dir.name}\n"
         f"# Status:     {spec['status'].upper()}\n"
         f"# Tests:      {spec['tests']}\n"
         f"# Passing:    {spec['passing']}\n"
@@ -118,7 +131,10 @@ def save_spec_result(
             if not line.endswith("\n"):
                 f.write("\n")
 
-    return result_file
+    # Copy failure screenshots
+    screenshots = copy_screenshots(spec["spec"], spec_dir)
+
+    return result_file, screenshots
 
 
 def main():
@@ -142,27 +158,28 @@ def main():
     specs = parse_specs(all_lines)
 
     if not specs:
-        # No specs found — probably a build failure or no tests ran
         sys.exit(0)
 
-    timestamp = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
-    saved_files = []
+    timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    run_dir = RESULTS_DIR / framework / timestamp
+    run_dir.mkdir(parents=True, exist_ok=True)
+
+    saved = []
 
     for spec in specs:
         spec_output = extract_spec_output(all_lines, spec["spec"])
-        result_file = save_spec_result(framework, spec, spec_output, timestamp)
-        saved_files.append((spec, result_file))
+        result_file, screenshots = save_spec_result(framework, spec, spec_output, run_dir)
+        saved.append((spec, result_file, screenshots))
 
     # Print summary
-    total_pass = sum(1 for s in specs if s["status"] == "pass")
-    total_fail = sum(1 for s in specs if s["status"] == "fail")
-
     print(f"\n{'─' * 60}", file=sys.stderr)
-    print(f"Results saved to .results/{framework}/", file=sys.stderr)
-    for spec, path in saved_files:
+    print(f"Results saved to {run_dir.relative_to(REPO_ROOT)}/", file=sys.stderr)
+    for spec, path, screenshots in saved:
         icon = "✔" if spec["status"] == "pass" else "✖"
+        spec_name = spec["spec"].replace(".cy.js", "")
+        ss_note = f"  +{len(screenshots)} screenshots" if screenshots else ""
         print(
-            f"  {icon}  {spec['spec']:<35s} {spec['passing']}/{spec['tests']}  → {path.relative_to(RESULTS_DIR.parent)}",
+            f"  {icon}  {spec_name:<35s} {spec['passing']}/{spec['tests']}{ss_note}",
             file=sys.stderr,
         )
     print(f"{'─' * 60}", file=sys.stderr)
