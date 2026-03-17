@@ -1,6 +1,37 @@
 import '@testing-library/cypress/add-commands';
 import 'cypress-real-events/support';
 
+// ── Framework Detection ─────────────────────────────────────────────────────
+//
+// The justfile sets CYPRESS_FRAMEWORK=react|leptos when running tests.
+// Cypress auto-exposes CYPRESS_* env vars via Cypress.env().
+//
+// Use in tests to skip cases that only apply to one framework:
+//
+//   it.skipForFramework('react', 'React omits aria-pressed')('has aria-pressed', () => {
+//       ...
+//   });
+//
+
+/**
+ * Wrap `it()` to conditionally skip tests for a specific framework.
+ *
+ * Usage:
+ *   it.skipForFramework('react', 'React does not implement aria-pressed')('has aria-pressed', () => {
+ *       ...
+ *   });
+ *
+ * When the current framework matches, the test is registered via `it.skip()`
+ * so it shows as "pending" in the Cypress output — not as a failure.
+ */
+it.skipForFramework = (framework, reason) => {
+    const current = Cypress.env('FRAMEWORK');
+    if (current === framework) {
+        return (title, fn) => it.skip(`${title} [skipped: ${reason}]`, fn);
+    }
+    return it;
+};
+
 // ── Reactive Tracking Warning Detection ─────────────────────────────────────
 //
 // Intercepts console.warn to catch Leptos "outside a reactive tracking context"

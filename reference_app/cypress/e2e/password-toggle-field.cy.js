@@ -59,6 +59,14 @@ describe('PasswordToggleField', () => {
             iconToggle().should('have.prop', 'tagName', 'BUTTON');
             iconToggle().should('have.attr', 'type', 'button');
         });
+
+        it.skipForFramework('react', 'React omits aria-pressed')('toggle has aria-pressed reflecting visibility state', () => {
+            iconToggle().should('have.attr', 'aria-pressed', 'false');
+            iconToggle().click();
+            iconToggle().should('have.attr', 'aria-pressed', 'true');
+            iconToggle().click();
+            iconToggle().should('have.attr', 'aria-pressed', 'false');
+        });
     });
 
     // ── 1b. Input Attributes ─────────────────────────────────
