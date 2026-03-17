@@ -1179,8 +1179,8 @@
     "id": "slider-dsr-1",
     "component": "slider",
     "principle": "Design for Server Rendering",
-    "description": "In the Leptos SliderThumbImpl (slider_parts.rs lines 206-235), thumb registration uses an Effect to register thumbs with the context. During SSR, Effects do not run, so the thumbs collection will be empty on the server. The index Memo (slider_parts.rs lines 108-129) depends on thumb_ref.get() which returns None during SSR, so index will be -1. With index=-1, the thumb will render with value=None but the condition at line 291 (index >= 0 && value.is_none()) will be false, so display:none is NOT applied during SSR. However, the thumb will render at the wrong position (percent=0, default) until hydration corrects it, which can cause a visual layout shift.",
-    "status": "open",
+    "description": "In the Leptos SliderThumbImpl (slider_parts.rs lines 206-235), thumb registration uses an Effect to register thumbs with the context. During SSR, Effects do not run, so the thumbs collection will be empty on the server. The index Memo (slider_parts.rs lines 108-129) depends on thumb_ref.get() which returns None during SSR, so index will be -1. With index=-1, the thumb will render with value=None but the condition at line 291 (index >= 0 && value.is_none()) will be false, so display:none is NOT applied during SSR. However, the thumb will render at the wrong position (percent=0, default) until hydration corrects it, which can cause a visual layout shift. RESOLVED: Hide thumbs when value is None (matching React's `value === undefined ? { display: 'none' }` pattern), preventing wrong-position rendering during SSR. Also fixed is_form_control to default to true when ref is unavailable.",
+    "status": "complete",
     "blockers": []
   },
   {

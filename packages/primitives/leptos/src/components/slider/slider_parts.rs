@@ -228,19 +228,20 @@ fn SliderThumbImpl(
         }
     });
 
-    // Determine if this thumb is inside a form for bubble input rendering
+    // Default to true when ref is unavailable (SSR) so the hidden input renders
+    // and form events bubble without JS. Matches React's approach.
     let is_form_control = Memo::new(move |_| {
         let form_attr = context.form.get();
         if form_attr.is_some() {
             return true;
         }
-        thumb_ref
-            .get()
-            .and_then(|el| {
+        match thumb_ref.get() {
+            Some(el) => {
                 let el: &web_sys::Element = (*el).unchecked_ref();
-                el.closest("form").ok().flatten()
-            })
-            .is_some()
+                el.closest("form").ok().flatten().is_some()
+            }
+            None => true,
+        }
     });
 
     let computed_name = Memo::new(move |_| {
@@ -278,9 +279,10 @@ fn SliderThumbImpl(
                 style:right=move || (orientation.get().start_edge == "right").then(|| format!("calc({}% + {}px)", percent.get(), thumb_in_bounds_offset.get()))
                 style:top=move || (orientation.get().start_edge == "top").then(|| format!("calc({}% + {}px)", percent.get(), thumb_in_bounds_offset.get()))
                 style:bottom=move || (orientation.get().start_edge == "bottom").then(|| format!("calc({}% + {}px)", percent.get(), thumb_in_bounds_offset.get()))
-                // Only hide when we have a valid index but no value at that position.
-                // Don't hide when index is -1 (initial render before mount/indexing).
-                style:display=move || (index.get() >= 0 && value.get().is_none()).then_some("none")
+                // Hide when there is no value for this thumb. This covers both SSR
+                // (index=-1, value=None) and runtime (thumb exists but no corresponding
+                // value). Matches React's `value === undefined ? { display: 'none' }`.
+                style:display=move || value.get().is_none().then_some("none")
                 on:focus=move |_: ev::FocusEvent| {
                     let idx = index.get();
                     if idx >= 0 {
