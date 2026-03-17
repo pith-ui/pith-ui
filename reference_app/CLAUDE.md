@@ -117,11 +117,12 @@ just dev_leptos   # Start Leptos dev server on :3000
 just cy_open      # Open Cypress GUI (server must already be running)
 ```
 
-**Test output handling:** When running test commands, always capture output to a temp file using `tee` so you can examine failures without re-running:
-```bash
-just test_leptos_component <component> 2>&1 | tee /tmp/cypress-output.txt | tail -120
-```
-If you need more detail on failures, read from `/tmp/cypress-output.txt` — never re-run the test suite just to get different output formatting.
+**Test output handling:** When running the `just test_{leptos,react}_*` commands, the output is captured and summarized for later consumption within `.results/`.
+
+If you need more detail on failures, query that folder through the `scripts/query_e2e_results.py` script and its commands:
+
+- `history <spec>`: prints out a historical table of react and leptos runs for a particular component
+- `list`: shows all specs with their latest pass/fail status per framework
 
 ## RA Rule 6: Cypress Test Conventions
 
