@@ -1582,5 +1582,45 @@
     "description": "Multiple Leptos OneTimePasswordField behavioral failures compared to React: (1) default_value (uncontrolled mode) does not pre-fill inputs \u2014 'renders with default value pre-filled' fails. (2) auto_submit + on_auto_submit callback does not fire when all inputs are filled. (3) first input does not get autocomplete='one-time-code' when auto_complete=AutoComplete::OneTimeCode is set. (4) Vertical orientation arrow key navigation (ArrowDown/ArrowUp) does not work \u2014 the orientation prop may not be correctly switching arrow key behavior. Additionally, many pre-existing failures exist for keyboard navigation (ArrowRight, Home, End, Enter), backspace/delete, typing individual characters, aria-label generation, and data-radix-index attributes. These are all tests in one-time-password-field.cy.js that pass on React but fail on Leptos.",
     "status": "open",
     "blockers": []
+  },
+  {
+    "id": "refactor-prop-or-generic",
+    "component": "support",
+    "principle": "refactor",
+    "description": "Make prop_or helper generic over Get<Value = Option<T>> so it can be used with Signal<Option<T>> from use_controllable_state, not just MaybeProp<T>. ~22 inline Signal::derive(move || x.get().unwrap_or(...)) patterns remain. MaybeProp sites are already migrated. Compound patterns (e.g., force_mount.get().unwrap_or(false) || context.open.get()) cannot be simplified. Alternative: redesign use_controllable_state to return Signal<T> instead of Signal<Option<T>>.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "refactor-pub-crate-contexts",
+    "component": "primitives",
+    "principle": "refactor",
+    "description": "Make context types pub(crate) (or pub). Currently all context structs are private, making it impossible to write unit tests that provide mock contexts to inner components. This would enable isolated component testing.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "refactor-scoped-portal",
+    "component": "primitives",
+    "principle": "refactor",
+    "description": "Create a generic ScopedPortal<T: PortalContext> component. Currently 5 portal components (Dialog, Popover, HoverCard, Tooltip, Select) are structurally identical: capture contexts outside the portal, re-provide them inside, each with a trivial *PortalContextValue that only holds force_mount: Signal<bool>. A generic component would eliminate ~20 lines per portal and prevent bugs when new contexts are added but forgotten in portals.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "refactor-extract-state-machines",
+    "component": "primitives",
+    "principle": "refactor",
+    "description": "Extract state machines from component functions into standalone structs/functions. Components like Accordion and Tabs have non-trivial state machines (which items are open, roving focus index) buried inside #[component] functions. Extracting these would improve unit test coverage by enabling testing without mounting a view.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "refactor-consistent-impl-split",
+    "component": "primitives",
+    "principle": "refactor",
+    "description": "Standardize the \"logic shell\" / \"rendered impl\" component split pattern. Currently used inconsistently \u2014 some components use it (Dialog, Collapsible, Accordion) and others do not (Checkbox, Toggle). Consistently separating these across all components would make the codebase more predictable.",
+    "status": "open",
+    "blockers": []
   }
 ]
