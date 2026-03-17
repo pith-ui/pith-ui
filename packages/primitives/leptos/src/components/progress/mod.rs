@@ -45,12 +45,37 @@ pub fn Progress(
     let children = StoredValue::new(children);
 
     let max = Signal::derive(move || {
-        max.get()
+        let max_prop = max.get();
+        if let Some(m) = max_prop {
+            if !is_valid_max_number(m) {
+                leptos::logging::error!(
+                    "Invalid prop `max` of value `{}` supplied to `Progress`. Only numbers greater than 0 are valid max values. Defaulting to `{}`.",
+                    m,
+                    DEFAULT_MAX
+                );
+            }
+        }
+        max_prop
             .filter(|&m| is_valid_max_number(m))
             .unwrap_or(DEFAULT_MAX)
     });
-    let value =
-        Signal::derive(move || value.get().filter(|&v| is_valid_value_number(v, max.get())));
+    let value = Signal::derive(move || {
+        let value_prop = value.get();
+        if let Some(v) = value_prop {
+            if !is_valid_value_number(v, max.get()) {
+                leptos::logging::error!(
+                    "Invalid prop `value` of value `{}` supplied to `Progress`. The `value` prop must be:\n  \
+                     - a positive number\n  \
+                     - less than the value passed to `max` (or {} if no `max` prop is set)\n  \
+                     - `null` or `undefined` if the progress is indeterminate.\n\n\
+                     Defaulting to `null`.",
+                    v,
+                    DEFAULT_MAX
+                );
+            }
+        }
+        value_prop.filter(|&v| is_valid_value_number(v, max.get()))
+    });
 
     let value_label = Signal::derive(move || {
         value.get().map(|v| match get_value_label {

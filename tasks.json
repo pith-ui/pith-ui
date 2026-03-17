@@ -3,8 +3,8 @@
     "id": "accessible-icon-bp-1",
     "component": "accessible-icon",
     "principle": "Be Predictable",
-    "description": "The Leptos implementation does not enforce exactly one child like the React reference does (React uses React.Children.only which throws if not exactly one child). The Leptos version accepts TypedChildren which allows multiple children, meaning all children get aria-hidden and focusable attributes applied, which could produce unexpected behavior. See /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/accessible_icon/mod.rs line 12 vs /Users/adamduvick/Code/clones/rust-radix/reference/react-radix-primitives/packages/react/accessible-icon/src/accessible-icon.tsx line 16.",
-    "status": "open",
+    "description": "The Leptos implementation does not enforce exactly one child like the React reference does (React uses React.Children.only which throws if not exactly one child). The Leptos version accepts TypedChildren which allows multiple children, meaning all children get aria-hidden and focusable attributes applied, which could produce unexpected behavior. See /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/accessible_icon/mod.rs line 12 vs /Users/adamduvick/Code/clones/rust-radix/reference/react-radix-primitives/packages/react/accessible-icon/src/accessible-icon.tsx line 16. RESOLVED: This is a framework-level difference, not a fixable bug. React.Children.only can count children at runtime because they're an array. Leptos TypedChildren is a closure returning a view \u2014 there's no equivalent mechanism to enforce exactly one child. The component works correctly for its intended use case (wrapping a single icon).",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -883,8 +883,8 @@
     "id": "progress-bp-1",
     "component": "progress",
     "principle": "Be Predictable",
-    "description": "The Leptos implementation silently clamps out-of-range values (value is clamped via `.min(max).max(0.0)` at line 55) and silently ignores a zero max (falls back to DEFAULT_MAX at lines 48-54), whereas the React reference logs explicit console.error messages for invalid max and value props (lines 40-48 of progress.tsx). This behavioral difference means consumers get no feedback about misuse. File: /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/progress/mod.rs, lines 47-55.",
-    "status": "open",
+    "description": "The Leptos implementation silently clamps out-of-range values (value is clamped via `.min(max).max(0.0)` at line 55) and silently ignores a zero max (falls back to DEFAULT_MAX at lines 48-54), whereas the React reference logs explicit console.error messages for invalid max and value props (lines 40-48 of progress.tsx). This behavioral difference means consumers get no feedback about misuse. File: /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/progress/mod.rs, lines 47-55. RESOLVED: Added console.error messages matching the React reference for invalid max and value props.",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -1107,8 +1107,8 @@
     "id": "separator-bp-1",
     "component": "separator",
     "principle": "Be Predictable",
-    "description": "The React reference implementation in /Users/adamduvick/Code/clones/rust-radix/reference/react-radix-primitives/packages/react/separator/src/separator.tsx validates orientation at runtime via isValidOrientation() and falls back to DEFAULT_ORIENTATION ('horizontal') if an invalid string is passed (line 29). The Leptos implementation in /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/separator/mod.rs uses a Rust enum Orientation (line 7-12), which prevents invalid values at compile time but does not replicate the runtime fallback behavior for dynamic/string-based inputs. This is a minor behavioral divergence from the reference. No e2e test verifies behavior with invalid orientation values.",
-    "status": "open",
+    "description": "The React reference implementation in /Users/adamduvick/Code/clones/rust-radix/reference/react-radix-primitives/packages/react/separator/src/separator.tsx validates orientation at runtime via isValidOrientation() and falls back to DEFAULT_ORIENTATION ('horizontal') if an invalid string is passed (line 29). The Leptos implementation in /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/separator/mod.rs uses a Rust enum Orientation (line 7-12), which prevents invalid values at compile time but does not replicate the runtime fallback behavior for dynamic/string-based inputs. This is a minor behavioral divergence from the reference. No e2e test verifies behavior with invalid orientation values. RESOLVED: The Rust enum Orientation provides compile-time safety that is strictly superior to React's runtime isValidOrientation() fallback. Invalid values are impossible in Rust \u2014 no runtime fallback needed. This is an idiomatic improvement, not a divergence.",
+    "status": "complete",
     "blockers": []
   },
   {
