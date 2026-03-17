@@ -67,25 +67,28 @@ serve_react_storybook:
 
 # ── Start server + test (single command) ─────────────────
 
-# Start React servexr, run all tests, then shut down
+# Path to post-processing script (relative to repo root)
+save_results := justfile_directory() / "scripts/save_e2e_results.py"
+
+# Start React server, run all tests, then shut down
 [working-directory('reference_app')]
 test_react: free_port
-    pnpm cy:run:react
+    pnpm cy:run:react 2>&1 | python3 {{ save_results }} react
 
 # Start Leptos server, run all tests, then shut down
 [working-directory('reference_app')]
 test_leptos: kill_trunk free_port
-    pnpm cy:run:leptos
+    pnpm cy:run:leptos 2>&1 | python3 {{ save_results }} leptos
 
 # Start React server, test one component, then shut down
 [working-directory('reference_app')]
 test_react_component component: free_port
-    pnpm start-server-and-test react:dev http://localhost:3000 'cypress run --headless --spec "cypress/e2e/{{ component }}.cy.js"' 2>&1
+    pnpm start-server-and-test react:dev http://localhost:3000 'cypress run --headless --spec "cypress/e2e/{{ component }}.cy.js"' 2>&1 | python3 {{ save_results }} react
 
 # Start Leptos server, test one component, then shut down
 [working-directory('reference_app')]
 test_leptos_component component: kill_trunk free_port
-    pnpm start-server-and-test leptos:dev http://localhost:3000 'cypress run --headless --spec "cypress/e2e/{{ component }}.cy.js"' 2>&1
+    pnpm start-server-and-test leptos:dev http://localhost:3000 'cypress run --headless --spec "cypress/e2e/{{ component }}.cy.js"' 2>&1 | python3 {{ save_results }} leptos
 
 # Start React server, test multiple components sequentially, then shut down
 
@@ -94,7 +97,7 @@ test_leptos_component component: kill_trunk free_port
 test_react_components +components: free_port
     #!/usr/bin/env bash
     specs=$(echo "{{ components }}" | tr ' ' '\n' | sed 's|.*|cypress/e2e/&.cy.js|' | paste -sd, -)
-    pnpm start-server-and-test react:dev http://localhost:3000 "cypress run --headless --spec \"$specs\"" 2>&1
+    pnpm start-server-and-test react:dev http://localhost:3000 "cypress run --headless --spec \"$specs\"" 2>&1 | python3 {{ save_results }} react
 
 # Start Leptos server, test multiple components sequentially, then shut down
 
@@ -103,7 +106,7 @@ test_react_components +components: free_port
 test_leptos_components +components: kill_trunk free_port
     #!/usr/bin/env bash
     specs=$(echo "{{ components }}" | tr ' ' '\n' | sed 's|.*|cypress/e2e/&.cy.js|' | paste -sd, -)
-    pnpm start-server-and-test leptos:dev http://localhost:3000 "cypress run --headless --spec \"$specs\"" 2>&1
+    pnpm start-server-and-test leptos:dev http://localhost:3000 "cypress run --headless --spec \"$specs\"" 2>&1 | python3 {{ save_results }} leptos
 
 # ── Reference Experiments ─────────────────────────────────
 

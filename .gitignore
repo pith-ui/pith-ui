@@ -165,3 +165,6 @@ book/book/
 # Tailwind CSS ouput
 tailwind.output.css
 **/cypress/screenshots/*
+
+# E2E test result history
+.results/
