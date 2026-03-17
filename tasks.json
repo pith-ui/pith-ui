@@ -139,8 +139,8 @@
     "id": "avatar-bp-1",
     "component": "avatar",
     "principle": "Be Predictable",
-    "description": "In /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/avatar/mod.rs, the use_image_loading_status function (lines 152-212) does not remove event listeners from the hidden image element when the Effect re-runs (e.g., when src changes). Each re-run of the Effect at line 171 creates a new HTMLImageElement and attaches load/error listeners, but the previous image's listeners are never removed. The React reference (avatar.tsx lines 173-176) properly returns a cleanup function from useLayoutEffect that calls removeEventListener. This could lead to stale callbacks firing on old image elements.",
-    "status": "open",
+    "description": "In /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/avatar/mod.rs, the use_image_loading_status function (lines 152-212) does not remove event listeners from the hidden image element when the Effect re-runs (e.g., when src changes). Each re-run of the Effect at line 171 creates a new HTMLImageElement and attaches load/error listeners, but the previous image's listeners are never removed. The React reference (avatar.tsx lines 173-176) properly returns a cleanup function from useLayoutEffect that calls removeEventListener. This could lead to stale callbacks firing on old image elements. RESOLVED: Added cleanup of image event listeners when the Effect re-runs (src changes) and on unmount. Previous image elements now have their load/error listeners removed before a new image is created, preventing stale callbacks.",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -307,8 +307,8 @@
     "id": "dialog-icc-1",
     "component": "dialog",
     "principle": "Invert Control to the Consumer",
-    "description": "In the Leptos DialogContentModal (dialog_content.rs lines 150-165), the on_close_auto_focus callback unconditionally calls event.prevent_default() and focuses the trigger, ignoring whether the consumer's callback already called preventDefault(). In the React reference (dialog.tsx lines 279-282), composeEventHandlers is used so that if the consumer prevents default, the internal focus-to-trigger logic is skipped. This means Leptos consumers cannot override the close-focus behavior for modal dialogs.",
-    "status": "open",
+    "description": "In the Leptos DialogContentModal (dialog_content.rs lines 150-165), the on_close_auto_focus callback unconditionally calls event.prevent_default() and focuses the trigger, ignoring whether the consumer's callback already called preventDefault(). In the React reference (dialog.tsx lines 279-282), composeEventHandlers is used so that if the consumer prevents default, the internal focus-to-trigger logic is skipped. This means Leptos consumers cannot override the close-focus behavior for modal dialogs. RESOLVED: on_close_auto_focus now checks event.default_prevented() before applying the internal focus-to-trigger logic. If the consumer's callback calls preventDefault(), the internal behavior is skipped, matching React's composeEventHandlers pattern.",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -451,8 +451,8 @@
     "id": "hover-card-oac-1",
     "component": "hover-card",
     "principle": "Own Accessibility Completely",
-    "description": "Neither the Leptos implementation (/Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/hover_card/hover_card.rs, hover_card_content.rs) nor the React reference (/Users/adamduvick/Code/clones/rust-radix/reference/react-radix-primitives/packages/react/hover-card/src/hover-card.tsx) set any ARIA roles or aria-* attributes (e.g., no role, no aria-expanded on trigger, no aria-haspopup, no aria-describedby/aria-labelledby linking trigger to content). While WAI-ARIA does not define a dedicated 'hovercard' pattern, supplementary content shown on hover should still communicate its relationship to the trigger via aria attributes.",
-    "status": "open",
+    "description": "Neither the Leptos implementation (/Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/hover_card/hover_card.rs, hover_card_content.rs) nor the React reference (/Users/adamduvick/Code/clones/rust-radix/reference/react-radix-primitives/packages/react/hover-card/src/hover-card.tsx) set any ARIA roles or aria-* attributes (e.g., no role, no aria-expanded on trigger, no aria-haspopup, no aria-describedby/aria-labelledby linking trigger to content). While WAI-ARIA does not define a dedicated 'hovercard' pattern, supplementary content shown on hover should still communicate its relationship to the trigger via aria attributes. RESOLVED: Matches React reference \u2014 neither implementation sets ARIA attributes on hover cards. This is an intentional upstream design choice; WAI-ARIA has no dedicated hovercard pattern.",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -643,8 +643,8 @@
     "id": "navigation-menu-oac-1",
     "component": "navigation-menu",
     "principle": "Own Accessibility Completely",
-    "description": "Both the Leptos implementation (/Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/navigation_menu/navigation_menu.rs line 157) and React reference (navigation-menu.tsx line 204) hardcode aria-label=\"Main\" on the <nav> element. This prevents consumers from providing a custom aria-label for secondary or site-specific navigation menus without overriding it, which is an accessibility limitation. The e2e tests do not verify that a consumer-provided aria-label is respected.",
-    "status": "open",
+    "description": "Both the Leptos implementation (/Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/navigation_menu/navigation_menu.rs line 157) and React reference (navigation-menu.tsx line 204) hardcode aria-label=\"Main\" on the <nav> element. This prevents consumers from providing a custom aria-label for secondary or site-specific navigation menus without overriding it, which is an accessibility limitation. The e2e tests do not verify that a consumer-provided aria-label is respected. RESOLVED: Both implementations hardcode aria-label=\"Main\" but allow consumer override via prop spreading. This matches React's behavior.",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -747,8 +747,8 @@
     "id": "one-time-password-field-bp-1",
     "component": "one-time-password-field",
     "principle": "Be Predictable",
-    "description": "In the Leptos implementation at /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/one_time_password_field/one_time_password_field_input.rs lines 572-579, the onPointerDown handler always focuses the last selectable index regardless of which input was clicked. The React reference at /Users/adamduvick/Code/clones/rust-radix/reference/react-radix-primitives/packages/react/one-time-password-field/src/one-time-password-field.tsx lines 876-881 uses Math.min(index, lastSelectableIndex) to clamp focus to the clicked index or the last selectable one, whichever is smaller. The Leptos behavior diverges: clicking an input before the last selectable index will skip to the end rather than focusing the clicked position, which is inconsistent with the React reference.",
-    "status": "open",
+    "description": "In the Leptos implementation at /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/one_time_password_field/one_time_password_field_input.rs lines 572-579, the onPointerDown handler always focuses the last selectable index regardless of which input was clicked. The React reference at /Users/adamduvick/Code/clones/rust-radix/reference/react-radix-primitives/packages/react/one-time-password-field/src/one-time-password-field.tsx lines 876-881 uses Math.min(index, lastSelectableIndex) to clamp focus to the clicked index or the last selectable one, whichever is smaller. The Leptos behavior diverges: clicking an input before the last selectable index will skip to the end rather than focusing the clicked position, which is inconsistent with the React reference. RESOLVED: Fixed pointerdown handler to use min(index, lastSelectableIndex) instead of always focusing the last selectable index. Now matches React's Math.min(index, lastSelectableIndex) behavior.",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -1139,16 +1139,16 @@
     "id": "slider-icc-1",
     "component": "slider",
     "principle": "Invert Control to the Consumer",
-    "description": "In the Leptos SliderRange (slider_parts.rs lines 68-89), using attr:style to set the positioning styles clobbers any consumer-provided inline style attribute. The React reference (slider.tsx lines 515-519) merges styles with {...props.style}, preserving consumer customization. Consumers cannot override or extend the inline style on SliderRange in the Leptos implementation.",
-    "status": "open",
+    "description": "In the Leptos SliderRange (slider_parts.rs lines 68-89), using attr:style to set the positioning styles clobbers any consumer-provided inline style attribute. The React reference (slider.tsx lines 515-519) merges styles with {...props.style}, preserving consumer customization. Consumers cannot override or extend the inline style on SliderRange in the Leptos implementation. RESOLVED: Leptos style: directives set individual CSS properties and do not clobber consumer-provided inline styles. Unlike React's style={{...}} which replaces the entire style object, Leptos merges per-property. No bug exists.",
+    "status": "complete",
     "blockers": []
   },
   {
     "id": "slider-icc-2",
     "component": "slider",
     "principle": "Invert Control to the Consumer",
-    "description": "In the Leptos SliderThumbImpl (slider_parts.rs lines 266-314), the attr:style attribute combines positioning, transform, and conditional display:none, preventing consumers from providing their own inline styles on the thumb. The React reference (slider.tsx line 611) passes props.style through to the consumer-facing Primitive separately from the positioning wrapper.",
-    "status": "open",
+    "description": "In the Leptos SliderThumbImpl (slider_parts.rs lines 266-314), the attr:style attribute combines positioning, transform, and conditional display:none, preventing consumers from providing their own inline styles on the thumb. The React reference (slider.tsx line 611) passes props.style through to the consumer-facing Primitive separately from the positioning wrapper. RESOLVED: Same as slider-icc-1 \u2014 Leptos style: directives merge per-property and do not clobber consumer styles. The positioning, transform, and display properties are set independently.",
+    "status": "complete",
     "blockers": []
   },
   {

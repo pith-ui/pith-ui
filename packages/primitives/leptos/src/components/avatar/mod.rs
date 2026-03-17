@@ -1,6 +1,7 @@
 use crate::support::primitive::{Primitive, VoidPrimitive};
 use leptos::{context::Provider, html, prelude::*};
 use leptos_node_ref::AnyNodeRef;
+use send_wrapper::SendWrapper;
 use web_sys::{
     HtmlImageElement,
     wasm_bindgen::{JsCast, closure::Closure},
@@ -168,7 +169,23 @@ fn use_image_loading_status(
         }
     });
 
+    // Track the previous image element so we can remove listeners when src changes.
+    let prev_image: StoredValue<Option<SendWrapper<HtmlImageElement>>> = StoredValue::new(None);
+
     Effect::new(move |_| {
+        // Remove listeners from previous image element (matches React's useLayoutEffect cleanup).
+        if let Some(old_image) = prev_image.try_get_value().flatten() {
+            let _ = old_image.remove_event_listener_with_callback(
+                "load",
+                update_status_loaded.as_ref().unchecked_ref(),
+            );
+            let _ = old_image.remove_event_listener_with_callback(
+                "error",
+                update_status_error.as_ref().unchecked_ref(),
+            );
+        }
+        let _ = prev_image.try_set_value(None);
+
         if let Some(src) = src.get() {
             let image = document()
                 .create_element("img")
@@ -199,6 +216,8 @@ fn use_image_loading_status(
             }
 
             image.set_src(&src);
+
+            let _ = prev_image.try_set_value(Some(SendWrapper::new(image)));
         } else {
             set_loading_status.set(ImageLoadingStatus::Error);
         }
@@ -206,6 +225,17 @@ fn use_image_loading_status(
 
     on_cleanup(move || {
         is_mounted.set_value(false);
+        // Clean up listeners on unmount.
+        if let Some(old_image) = prev_image.try_get_value().flatten() {
+            let _ = old_image.remove_event_listener_with_callback(
+                "load",
+                update_status_loaded.as_ref().unchecked_ref(),
+            );
+            let _ = old_image.remove_event_listener_with_callback(
+                "error",
+                update_status_error.as_ref().unchecked_ref(),
+            );
+        }
     });
 
     loading_status

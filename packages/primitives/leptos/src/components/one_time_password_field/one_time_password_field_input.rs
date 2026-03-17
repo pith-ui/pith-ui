@@ -496,9 +496,11 @@ fn OneTimePasswordFieldInputInner(
             })), None)
             on:pointerdown=compose_callbacks(on_pointer_down, Some(Callback::new(move |event: ev::PointerEvent| {
                 event.prevent_default();
+                let index = resolved_index.get_untracked();
                 let last = last_selectable_index.get_untracked();
+                let index_to_focus = index.min(last);
                 let inputs = context.get_items.with_value(|g| collection_inputs(&g()));
-                let element = otp_input_at(&inputs, last as isize);
+                let element = otp_input_at(&inputs, index_to_focus as isize);
                 focus_input(element);
             })), None)
         >

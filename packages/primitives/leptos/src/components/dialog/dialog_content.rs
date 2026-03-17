@@ -157,10 +157,14 @@ fn DialogContentModal(
         // Without this, the trigger (inside an aria-hidden ancestor) would receive focus,
         // causing a "Blocked aria-hidden on a focused element's ancestor" browser warning.
         unhide_others(hidden_elements);
-        event.prevent_default();
-        if let Some(trigger) = context.trigger_ref.get_untracked() {
-            let trigger: &web_sys::HtmlElement = trigger.unchecked_ref();
-            trigger.focus().ok();
+        // Only apply default focus-to-trigger behavior if the consumer hasn't
+        // already called preventDefault() (matches React's composeEventHandlers).
+        if !event.default_prevented() {
+            event.prevent_default();
+            if let Some(trigger) = context.trigger_ref.get_untracked() {
+                let trigger: &web_sys::HtmlElement = trigger.unchecked_ref();
+                trigger.focus().ok();
+            }
         }
     });
 
