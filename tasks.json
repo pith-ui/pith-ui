@@ -691,24 +691,24 @@
     "id": "navigation-menu-dsr-1",
     "component": "navigation-menu",
     "principle": "Design for Server Rendering",
-    "description": "NavigationMenuList in /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/navigation_menu/navigation_menu_list.rs uses Effects (lines 108-127, 130-138, 142-147) to capture and forward user attributes from a hidden span to the <ul>, and to register the indicator track element. On first server-rendered paint, the <ul> will be missing any user-provided attributes (e.g., class, data-testid) until the client-side Effect runs, causing a potential mismatch.",
-    "status": "open",
+    "description": "NavigationMenuList in /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/navigation_menu/navigation_menu_list.rs uses Effects (lines 108-127, 130-138, 142-147) to capture and forward user attributes from a hidden span to the <ul>, and to register the indicator track element. On first server-rendered paint, the <ul> will be missing any user-provided attributes (e.g., class, data-testid) until the client-side Effect runs, causing a potential mismatch. RESOLVED: The ForwardedAttrs refactor replaced the Effect-based attribute capture. User attributes (class, data-testid, etc.) are now forwarded synchronously via ForwardedAttrs.set() + spread(). The only remaining Effect stores the indicator track DOM ref, which is inherently client-only.",
+    "status": "complete",
     "blockers": []
   },
   {
     "id": "navigation-menu-dsr-2",
     "component": "navigation-menu",
     "principle": "Design for Server Rendering",
-    "description": "NavigationMenuContent in /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/navigation_menu/navigation_menu_content.rs (lines 55-99) uses an Effect to capture user attributes from a hidden span and another Effect to register content data with the viewport. On SSR first paint, user attributes like data-testid and class will not be present on the content element until hydration Effects run.",
-    "status": "open",
+    "description": "NavigationMenuContent in /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/navigation_menu/navigation_menu_content.rs (lines 55-99) uses an Effect to capture user attributes from a hidden span and another Effect to register content data with the viewport. On SSR first paint, user attributes like data-testid and class will not be present on the content element until hydration Effects run. RESOLVED: The ForwardedAttrs refactor replaced the Effect-based attribute capture. User attrs are now forwarded synchronously. The remaining Effect registers content with the viewport, which is inherently client-only (portal rendering).",
+    "status": "complete",
     "blockers": []
   },
   {
     "id": "navigation-menu-dsr-3",
     "component": "navigation-menu",
     "principle": "Design for Server Rendering",
-    "description": "NavigationMenuIndicator in /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/navigation_menu/navigation_menu_indicator.rs (lines 27-46, 49-58) uses Effects for attribute capture and forwarding. The indicator content is portaled via mount_to inside an Effect (lines 92-111), meaning on SSR the indicator will be entirely absent from the initial HTML.",
-    "status": "open",
+    "description": "NavigationMenuIndicator in /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/navigation_menu/navigation_menu_indicator.rs (lines 27-46, 49-58) uses Effects for attribute capture and forwarding. The indicator content is portaled via mount_to inside an Effect (lines 92-111), meaning on SSR the indicator will be entirely absent from the initial HTML. RESOLVED: The indicator is a visual decoration (animated underline) that requires client-side DOM positioning. It is portaled into the indicator track via mount_to inside an Effect, which is expected client-only behavior. The indicator being absent from SSR HTML is correct \u2014 it has no semantic content.",
+    "status": "complete",
     "blockers": []
   },
   {
