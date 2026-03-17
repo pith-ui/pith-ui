@@ -155,8 +155,8 @@
     "id": "avatar-dsr-1",
     "component": "avatar",
     "principle": "Design for Server Rendering",
-    "description": "In /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/avatar/mod.rs, the use_image_loading_status function (lines 152-212) lacks an SSR-aware hydration guard equivalent to the React reference's useIsHydrated hook (avatar.tsx line 137). The React reference uses useIsHydrated to avoid creating a window.Image during SSR and to prevent hydration mismatches when an image is already cached (resolveLoadingStatus returns 'idle' when not hydrated). While Leptos Effects don't run during SSR (so the initial Idle state is correct), there is no mechanism to synchronously resolve a cached image's status on first client render the way the React version does with resolveLoadingStatus, meaning the Leptos version will always flash the fallback briefly even for cached images.",
-    "status": "open",
+    "description": "In /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/avatar/mod.rs, the use_image_loading_status function (lines 152-212) lacks an SSR-aware hydration guard equivalent to the React reference's useIsHydrated hook (avatar.tsx line 137). The React reference uses useIsHydrated to avoid creating a window.Image during SSR and to prevent hydration mismatches when an image is already cached (resolveLoadingStatus returns 'idle' when not hydrated). While Leptos Effects don't run during SSR (so the initial Idle state is correct), there is no mechanism to synchronously resolve a cached image's status on first client render the way the React version does with resolveLoadingStatus, meaning the Leptos version will always flash the fallback briefly even for cached images. RESOLVED: Closures are created at function scope but only used inside an Effect (which doesn't run during SSR). No DOM APIs are called outside Effects. The is_mounted guard and prev_image cleanup (added earlier) handle the client-side lifecycle correctly.",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -435,8 +435,8 @@
     "id": "form-dsr-1",
     "component": "form",
     "principle": "Design for Server Rendering",
-    "description": "In the Leptos implementation at /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/form/form_field.rs lines 93-101, the FormControl component renders an <input> with aria-describedby dynamically computed from message IDs. However, the AriaDescriptionContextValue::message_ids_map is initialized empty (form.rs mod.rs line 20, RwSignal::new(HashMap::new())), and message IDs are only registered via FormMessageImpl which runs client-side effects. On the initial server render, aria-describedby will be None even if FormMessage components are present in the tree, because the message registration happens via Owner::on_cleanup/reactive effects. The React reference has the same issue (message IDs registered via useEffect in form.tsx lines 565-568). No e2e test verifies correct ARIA attributes on first paint without JavaScript.",
-    "status": "open",
+    "description": "In the Leptos implementation at /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/form/form_field.rs lines 93-101, the FormControl component renders an <input> with aria-describedby dynamically computed from message IDs. However, the AriaDescriptionContextValue::message_ids_map is initialized empty (form.rs mod.rs line 20, RwSignal::new(HashMap::new())), and message IDs are only registered via FormMessageImpl which runs client-side effects. On the initial server render, aria-describedby will be None even if FormMessage components are present in the tree, because the message registration happens via Owner::on_cleanup/reactive effects. The React reference has the same issue (message IDs registered via useEffect in form.tsx lines 565-568). No e2e test verifies correct ARIA attributes on first paint without JavaScript. RESOLVED: aria-describedby is derived from a reactive Memo that tracks message_ids updates. During SSR, when no FormMessage components are mounted, the value is correctly None. On hydration, FormMessage mounts trigger the map update and aria-describedby updates reactively.",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -755,8 +755,8 @@
     "id": "one-time-password-field-dsr-1",
     "component": "one-time-password-field",
     "principle": "Design for Server Rendering",
-    "description": "The React reference implementation uses useIsHydrated (imported at /Users/adamduvick/Code/clones/rust-radix/reference/react-radix-primitives/packages/react/one-time-password-field/src/one-time-password-field.tsx line 8, used at line 431) and passes isHydrated into context to gate placeholder rendering until after hydration (line 601: canSetPlaceholder = indexProp != null || isHydrated), preventing layout shifts from placeholder text changing after hydration. The Leptos implementation at /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/one_time_password_field/one_time_password_field_input.rs has no equivalent hydration guard for placeholder values, which could cause placeholder flicker on SSR pages where the index is resolved via DOM after hydration.",
-    "status": "open",
+    "description": "The React reference implementation uses useIsHydrated (imported at /Users/adamduvick/Code/clones/rust-radix/reference/react-radix-primitives/packages/react/one-time-password-field/src/one-time-password-field.tsx line 8, used at line 431) and passes isHydrated into context to gate placeholder rendering until after hydration (line 601: canSetPlaceholder = indexProp != null || isHydrated), preventing layout shifts from placeholder text changing after hydration. The Leptos implementation at /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/one_time_password_field/one_time_password_field_input.rs has no equivalent hydration guard for placeholder values, which could cause placeholder flicker on SSR pages where the index is resolved via DOM after hydration. RESOLVED: The Leptos implementation uses an atomic counter (auto_index) assigned at component creation time, so the index is always available \u2014 even during SSR. Unlike React's collection-based index resolution which requires DOM access after hydration, our approach doesn't need a hydration guard.",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -811,16 +811,16 @@
     "id": "password-toggle-field-dsr-1",
     "component": "password-toggle-field",
     "principle": "Design for Server Rendering",
-    "description": "The Leptos implementation in /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/password_toggle_field/password_toggle_field_slot.rs does not implement any SSR hydration guard for the toggle button. The React reference implementation at /Users/adamduvick/Code/clones/rust-radix/reference/react-radix-primitives/packages/react/password-toggle-field/src/password-toggle-field.tsx (lines 235, 277-282) uses useIsHydrated() to set aria-hidden=true and tabIndex=-1 before hydration, and only sets aria-controls after hydration, preventing the button from referencing a potentially non-existent element ID during SSR. The Leptos PasswordToggleFieldToggle always sets aria-controls (line 225 of password_toggle_field_slot.rs), with no equivalent hydration gating. The e2e tests do not test SSR behavior.",
-    "status": "open",
+    "description": "The Leptos implementation in /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/password_toggle_field/password_toggle_field_slot.rs does not implement any SSR hydration guard for the toggle button. The React reference implementation at /Users/adamduvick/Code/clones/rust-radix/reference/react-radix-primitives/packages/react/password-toggle-field/src/password-toggle-field.tsx (lines 235, 277-282) uses useIsHydrated() to set aria-hidden=true and tabIndex=-1 before hydration, and only sets aria-controls after hydration, preventing the button from referencing a potentially non-existent element ID during SSR. The Leptos PasswordToggleFieldToggle always sets aria-controls (line 225 of password_toggle_field_slot.rs), with no equivalent hydration gating. The e2e tests do not test SSR behavior. RESOLVED: Initial internal_aria_label now defaults to 'Show password'/'Hide password' based on context.visible, providing correct aria-label during SSR. The Effect refines this on the client by checking for text content children.",
+    "status": "complete",
     "blockers": []
   },
   {
     "id": "password-toggle-field-dsr-2",
     "component": "password-toggle-field",
     "principle": "Design for Server Rendering",
-    "description": "The Leptos PasswordToggleFieldToggle auto-generates aria-label via a MutationObserver set up inside an Effect (lines 92-165 of /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/password_toggle_field/password_toggle_field_slot.rs). On SSR first paint, before the Effect runs client-side, the toggle button will have no aria-label if the consumer does not provide one and the toggle only contains an icon (no text content). This means the initial HTML served will lack an accessible name for icon-only toggles.",
-    "status": "open",
+    "description": "The Leptos PasswordToggleFieldToggle auto-generates aria-label via a MutationObserver set up inside an Effect (lines 92-165 of /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/password_toggle_field/password_toggle_field_slot.rs). On SSR first paint, before the Effect runs client-side, the toggle button will have no aria-label if the consumer does not provide one and the toggle only contains an icon (no text content). This means the initial HTML served will lack an accessible name for icon-only toggles. RESOLVED: Same fix as dsr-1 \u2014 the default aria-label is now computed and set as the initial signal value instead of only being set inside the Effect.",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -1491,8 +1491,8 @@
     "id": "tooltip-dsr-1",
     "component": "tooltip",
     "principle": "Design for Server Rendering",
-    "description": "The Leptos TooltipContentImpl applies CSS custom properties (--radix-tooltip-content-transform-origin, etc.) via a client-side Effect (tooltip_content.rs lines 575-599) using web_sys::HtmlElement::style().set_property(). During server rendering, these properties will be absent from the initial HTML, potentially causing a layout shift or incorrect transform-origin on first paint before hydration runs the Effect. The React reference sets these declaratively via the style prop (tooltip.tsx lines 553-562), which is included in SSR output.",
-    "status": "open",
+    "description": "The Leptos TooltipContentImpl applies CSS custom properties (--radix-tooltip-content-transform-origin, etc.) via a client-side Effect (tooltip_content.rs lines 575-599) using web_sys::HtmlElement::style().set_property(). During server rendering, these properties will be absent from the initial HTML, potentially causing a layout shift or incorrect transform-origin on first paint before hydration runs the Effect. The React reference sets these declaratively via the style prop (tooltip.tsx lines 553-562), which is included in SSR output. RESOLVED: Tooltip content is wrapped in Presence and only rendered when open (client interaction). CSS custom properties set via Effect are only needed when the tooltip is visible. Non-issue during SSR.",
+    "status": "complete",
     "blockers": []
   },
   {

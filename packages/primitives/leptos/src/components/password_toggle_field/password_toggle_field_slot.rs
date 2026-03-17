@@ -82,7 +82,15 @@ pub fn PasswordToggleFieldToggle(
 ) -> impl IntoView {
     let children = StoredValue::new(children);
     let context = expect_context::<PasswordToggleFieldContextValue>();
-    let (internal_aria_label, set_internal_aria_label) = signal::<Option<String>>(None);
+    // Default to "Show password" / "Hide password" so aria-label is present during SSR.
+    // The Effect below will refine this on the client (clearing it if children have text).
+    let initial_label = if context.visible.get_untracked() {
+        "Hide password"
+    } else {
+        "Show password"
+    };
+    let (internal_aria_label, set_internal_aria_label) =
+        signal::<Option<String>>(Some(initial_label.to_string()));
     let element_ref = AnyNodeRef::new();
     let composed_ref = use_composed_refs(vec![node_ref, element_ref]);
 
@@ -93,7 +101,7 @@ pub fn PasswordToggleFieldToggle(
         let visible = context.visible.get();
 
         let Some(node) = element_ref.get() else {
-            set_internal_aria_label.set(None);
+            // During SSR or before mount, keep the default label.
             return;
         };
 
