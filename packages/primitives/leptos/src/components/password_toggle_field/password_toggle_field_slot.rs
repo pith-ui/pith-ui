@@ -222,6 +222,7 @@ pub fn PasswordToggleFieldToggle(
                 as_child=as_child
                 node_ref=composed_ref
                 attr:r#type="button"
+                attr:aria-pressed=move || context.visible.get().to_string()
                 attr:aria-controls=move || aria_controls.get()
                 attr:aria-label=move || resolved_aria_label.get()
                 on:pointerdown=compose_callbacks(

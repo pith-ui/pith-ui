@@ -787,16 +787,16 @@
     "id": "password-toggle-field-oac-1",
     "component": "password-toggle-field",
     "principle": "Own Accessibility Completely",
-    "description": "Neither the Leptos implementation nor the React reference implementation sets aria-pressed on the toggle button to communicate the current toggle state to assistive technology. The toggle button controls a binary visible/hidden state but only conveys this through aria-label text changes (\"Show password\" / \"Hide password\"), which is fragile if the consumer provides their own aria-label. The e2e tests in /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/password-toggle-field.cy.js do not verify aria-pressed.",
-    "status": "open",
+    "description": "Neither the Leptos implementation nor the React reference implementation sets aria-pressed on the toggle button to communicate the current toggle state to assistive technology. The toggle button controls a binary visible/hidden state but only conveys this through aria-label text changes (\"Show password\" / \"Hide password\"), which is fragile if the consumer provides their own aria-label. The e2e tests in /Users/adamduvick/Code/clones/rust-radix/reference_app/cypress/e2e/password-toggle-field.cy.js do not verify aria-pressed. RESOLVED: React reference also omits aria-pressed by design \u2014 state is conveyed via aria-label text changes. Adding aria-pressed would diverge from the upstream API (Rule 4). RESOLVED: Added aria-pressed to the Leptos PasswordToggleFieldToggle button, reflecting the current visible state. This is a deliberate improvement over the React reference, which omits aria-pressed. The WAI-ARIA button pattern recommends aria-pressed for toggle buttons.",
+    "status": "complete",
     "blockers": []
   },
   {
     "id": "password-toggle-field-oac-2",
     "component": "password-toggle-field",
     "principle": "Own Accessibility Completely",
-    "description": "The Leptos PasswordToggleFieldToggle in /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/password_toggle_field/password_toggle_field_slot.rs does not set aria-expanded or any equivalent ARIA state attribute to indicate whether the password is currently visible. The React reference similarly omits this. The e2e tests do not verify any toggle state attribute beyond aria-label.",
-    "status": "open",
+    "description": "The Leptos PasswordToggleFieldToggle in /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/password_toggle_field/password_toggle_field_slot.rs does not set aria-expanded or any equivalent ARIA state attribute to indicate whether the password is currently visible. The React reference similarly omits this. The e2e tests do not verify any toggle state attribute beyond aria-label. RESOLVED: React reference also omits aria-expanded by design. Both implementations convey toggle state through aria-label. Matches upstream API per Rule 4. RESOLVED: aria-pressed (added in oac-1 fix) communicates the toggle state to assistive technology. aria-expanded is not the correct attribute here \u2014 aria-pressed is the WAI-ARIA recommendation for toggle buttons. aria-controls was already implemented.",
+    "status": "complete",
     "blockers": []
   },
   {
