@@ -1059,16 +1059,16 @@
     "id": "select-bp-1",
     "component": "select",
     "principle": "Be Predictable",
-    "description": "The Leptos implementation is missing the window blur/resize close behavior present in the React reference. React's SelectContentImpl (select.tsx lines 653-661) closes the select on window blur and resize events. The Leptos SelectContentImpl in /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/select/select_content.rs has no equivalent listeners, meaning the select could remain open when the browser tab loses focus or the window is resized.",
-    "status": "open",
+    "description": "The Leptos implementation is missing the window blur/resize close behavior present in the React reference. React's SelectContentImpl (select.tsx lines 653-661) closes the select on window blur and resize events. The Leptos SelectContentImpl in /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/select/select_content.rs has no equivalent listeners, meaning the select could remain open when the browser tab loses focus or the window is resized. RESOLVED: Window blur/resize close handlers were already implemented (select_content.rs lines 319-345).",
+    "status": "complete",
     "blockers": []
   },
   {
     "id": "select-bp-2",
     "component": "select",
     "principle": "Be Predictable",
-    "description": "The Leptos implementation is missing the pointer-move-delta guard from React's SelectContentImpl (select.tsx lines 617-651). React tracks pointer movement after opening via pointerdown to prevent accidental item selection on pointerup when the pointer hasn't moved significantly (threshold of 10px). The Leptos implementation stores trigger_pointer_down_pos_ref but never reads it in the content to implement this guard, potentially causing accidental selections on touch/pointer interactions.",
-    "status": "open",
+    "description": "The Leptos implementation is missing the pointer-move-delta guard from React's SelectContentImpl (select.tsx lines 617-651). React tracks pointer movement after opening via pointerdown to prevent accidental item selection on pointerup when the pointer hasn't moved significantly (threshold of 10px). The Leptos implementation stores trigger_pointer_down_pos_ref but never reads it in the content to implement this guard, potentially causing accidental selections on touch/pointer interactions. RESOLVED: Implemented pointer-move-delta guard matching React's behavior. Tracks pointer movement after opening and prevents accidental item selection on pointerup when delta < 10px. Closes on pointerup outside content when delta >= 10px.",
+    "status": "complete",
     "blockers": []
   },
   {

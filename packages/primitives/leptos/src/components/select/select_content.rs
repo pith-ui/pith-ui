@@ -316,6 +316,118 @@ fn SelectContentImpl(
         }
     });
 
+    // Prevent selecting items on `pointerup` in some cases after opening from `pointerdown`
+    // and close on `pointerup` outside. (matches React lines 614-651)
+    {
+        let pointer_move_closure: StoredValue<Option<SendWrapper<Closure<dyn Fn(web_sys::PointerEvent)>>>> =
+            StoredValue::new(None);
+        let pointer_up_closure: StoredValue<Option<SendWrapper<Closure<dyn Fn(web_sys::PointerEvent)>>>> =
+            StoredValue::new(None);
+
+        let cleanup_listeners = move || {
+            if let Some(doc) = web_sys::window().and_then(|w| w.document()) {
+                let _ = pointer_move_closure.try_with_value(|c| {
+                    if let Some(c) = c {
+                        let _ = doc.remove_event_listener_with_callback(
+                            "pointermove",
+                            c.as_ref().unchecked_ref(),
+                        );
+                    }
+                });
+                let _ = pointer_up_closure.try_with_value(|c| {
+                    if let Some(c) = c {
+                        let mut opts = web_sys::EventListenerOptions::new();
+                        opts.capture(true);
+                        let _ = doc.remove_event_listener_with_callback_and_event_listener_options(
+                            "pointerup",
+                            c.as_ref().unchecked_ref(),
+                            &opts,
+                        );
+                    }
+                });
+            }
+        };
+
+        Effect::new(move |_| {
+            // Clean up any previous listeners before setting up new ones.
+            cleanup_listeners();
+            let _ = pointer_move_closure.try_set_value(None);
+            let _ = pointer_up_closure.try_set_value(None);
+
+            let Some(content_el) = content_ref.get() else {
+                return;
+            };
+            let content_el: web_sys::HtmlElement = (*content_el).clone().unchecked_into();
+            let trigger_pos = context.trigger_pointer_down_pos_ref.try_get_value().flatten();
+
+            if trigger_pos.is_none() {
+                return;
+            }
+
+            let pointer_move_delta: Rc<Cell<(f64, f64)>> = Rc::new(Cell::new((0.0, 0.0)));
+
+            let delta_for_move = pointer_move_delta.clone();
+            let trigger_pos_for_move = trigger_pos;
+            let move_closure = SendWrapper::new(Closure::<dyn Fn(web_sys::PointerEvent)>::new(
+                move |event: web_sys::PointerEvent| {
+                    if let Some((tx, ty)) = trigger_pos_for_move {
+                        delta_for_move.set((
+                            (event.page_x() as f64 - tx).abs(),
+                            (event.page_y() as f64 - ty).abs(),
+                        ));
+                    }
+                },
+            ));
+
+            let up_closure = SendWrapper::new(Closure::<dyn Fn(web_sys::PointerEvent)>::new({
+                let content_el = content_el.clone();
+                let cleanup = cleanup_listeners;
+                move |event: web_sys::PointerEvent| {
+                    let (dx, dy) = pointer_move_delta.get();
+                    if dx <= 10.0 && dy <= 10.0 {
+                        event.prevent_default();
+                    } else {
+                        // If the pointer moved but the event was outside the content, close.
+                        if let Some(target) = event.target() {
+                            let target_node: &web_sys::Node = target.unchecked_ref();
+                            if !content_el.contains(Some(target_node)) {
+                                context.on_open_change.run(false);
+                            }
+                        }
+                    }
+                    cleanup();
+                    let _ = context.trigger_pointer_down_pos_ref.try_set_value(None);
+                }
+            }));
+
+            let document = web_sys::window()
+                .expect("Window should exist.")
+                .document()
+                .expect("Document should exist.");
+
+            let _ = document.add_event_listener_with_callback(
+                "pointermove",
+                move_closure.as_ref().unchecked_ref(),
+            );
+
+            let mut options = web_sys::AddEventListenerOptions::new();
+            options.capture(true);
+            options.once(true);
+            let _ = document.add_event_listener_with_callback_and_add_event_listener_options(
+                "pointerup",
+                up_closure.as_ref().unchecked_ref(),
+                &options,
+            );
+
+            let _ = pointer_move_closure.try_set_value(Some(move_closure));
+            let _ = pointer_up_closure.try_set_value(Some(up_closure));
+        });
+
+        on_cleanup(move || {
+            cleanup_listeners();
+        });
+    }
+
     // Close on window blur and resize (matches React lines 653-661)
     {
         let close_blur = SendWrapper::new(Closure::<dyn Fn()>::new(move || {
