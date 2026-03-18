@@ -1686,5 +1686,37 @@
     "description": "Leptos ContextMenuSubContent is missing on_pointer_down_outside and on_interact_outside props. In React, MenuSubContentProps inherits these from MenuContentImplProps (which gets them from DismissableLayerProps). The Leptos ContextMenuSubContent only exposes on_escape_key_down and on_focus_outside, but not on_pointer_down_outside or on_interact_outside. This means consumers cannot intercept or prevent-default on pointer-down-outside or general interact-outside events for submenus. See packages/primitives/leptos/src/components/context_menu/context_menu_content.rs ContextMenuSubContent vs React context-menu.tsx ContextMenuSubContentProps -> MenuSubContentProps.",
     "status": "open",
     "blockers": []
+  },
+  {
+    "id": "select-api-docs-1",
+    "component": "select",
+    "principle": "api-docs",
+    "description": "Leptos SelectViewport does not expose a `nonce` prop. React's SelectViewportProps includes `nonce?: string` which is passed to the injected <style> tag that hides scrollbars, allowing the style to comply with Content Security Policy. The Leptos implementation injects the <style> tag without a nonce. See packages/primitives/leptos/src/components/select/select_viewport.rs vs React select.tsx SelectViewportProps.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "select-api-docs-2",
+    "component": "select",
+    "principle": "api-docs",
+    "description": "Leptos SelectItemText copies only plain text content into SelectValue via textContent, while React uses ReactDOM.createPortal to portal the actual child nodes. This means if SelectItemText contains complex markup (e.g., icons + text), only the text string appears in the trigger's SelectValue span. This is a known framework limitation documented in the API notes, but could be improved by cloning DOM nodes instead of copying textContent. See packages/primitives/leptos/src/components/select/select_item.rs SelectItemText Effect vs React select.tsx SelectItemText ReactDOM.createPortal.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "dropdown-menu-api-docs-1",
+    "component": "dropdown-menu",
+    "principle": "api-docs",
+    "description": "Leptos DropdownMenuArrow (and underlying MenuArrow) does not expose width or height props. In React, DropdownMenuArrowProps extends MenuArrowProps extends PopperArrowProps extends ArrowProps, which includes width (default 10) and height (default 5). The Leptos MenuArrow only forwards as_child, node_ref, and children to PopperArrow, not width/height. Other components like HoverCardArrow do forward width and height to PopperArrow. See packages/primitives/leptos/src/components/menu/menu_separator.rs MenuArrow vs packages/primitives/leptos/src/components/hover_card/hover_card_content.rs HoverCardArrow.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "dropdown-menu-api-docs-2",
+    "component": "dropdown-menu",
+    "principle": "api-docs",
+    "description": "Leptos DropdownMenuSubContent is missing on_pointer_down_outside and on_interact_outside props. In React, DropdownMenuSubContentProps extends MenuSubContentProps which inherits onPointerDownOutside and onInteractOutside from MenuContentImplProps (via DismissableLayerProps). The Leptos DropdownMenuSubContent only exposes on_escape_key_down and on_focus_outside. This is the same issue as context-menu-api-docs-1 but for dropdown-menu. See packages/primitives/leptos/src/components/dropdown_menu/dropdown_menu_content.rs DropdownMenuSubContent.",
+    "status": "open",
+    "blockers": []
   }
 ]
