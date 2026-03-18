@@ -1835,8 +1835,8 @@
     "id": "cross-cutting-api-docs-8",
     "component": "global",
     "principle": "api-docs",
-    "description": "AccordionItem, TabsTrigger, and TabsContent use bare String (no #[prop(into)]) for their required value prop, requiring callers to use .to_string(). RadioGroupItem and SelectItem use #[prop(into)] String, accepting &str directly. The latter is more ergonomic and should be the standard for all required string value props.",
-    "status": "open",
+    "description": "AccordionItem, TabsTrigger, and TabsContent use bare String (no #[prop(into)]) for their required value prop, requiring callers to use .to_string(). RadioGroupItem and SelectItem use #[prop(into)] String, accepting &str directly. The latter is more ergonomic and should be the standard for all required string value props. RESOLVED: Added #[prop(into)] to value prop on AccordionItem, TabsTrigger, and TabsContent. Callers can now pass &str directly. E2E: accordion 44/44, tabs 55/55.",
+    "status": "complete",
     "blockers": []
   }
 ]

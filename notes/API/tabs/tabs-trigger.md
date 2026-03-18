@@ -20,7 +20,7 @@ interface TabsTriggerProps extends PrimitiveButtonProps {
 ```rust
 pub fn TabsTrigger(
     /// A unique value identifying this tab.
-    value: String,
+    #[prop(into)] value: String,
     #[prop(into, optional)] disabled: MaybeProp<bool>,
     #[prop(into, optional)] on_mouse_down: Option<Callback<ev::MouseEvent>>,
     #[prop(into, optional)] on_key_down: Option<Callback<ev::KeyboardEvent>>,

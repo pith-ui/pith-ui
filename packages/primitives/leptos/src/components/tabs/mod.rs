@@ -147,6 +147,7 @@ pub fn TabsList(
 #[component]
 pub fn TabsTrigger(
     /// A unique value identifying this tab.
+    #[prop(into)]
     value: String,
     #[prop(into, optional)] disabled: MaybeProp<bool>,
     #[prop(into, optional)] on_mouse_down: Option<Callback<ev::MouseEvent>>,
@@ -256,6 +257,7 @@ pub fn TabsTrigger(
 #[component]
 pub fn TabsContent(
     /// A unique value matching the corresponding TabsTrigger.
+    #[prop(into)]
     value: String,
     /// Force mount the content even when inactive (for animation control).
     #[prop(into, optional)]

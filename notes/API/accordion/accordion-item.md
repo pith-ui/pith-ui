@@ -18,7 +18,7 @@ interface AccordionItemProps
 
 ```rust
 pub fn AccordionItem(
-    value: String,
+    #[prop(into)] value: String,
     #[prop(into, optional)] disabled: MaybeProp<bool>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,

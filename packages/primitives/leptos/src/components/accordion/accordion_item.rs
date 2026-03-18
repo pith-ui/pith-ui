@@ -7,6 +7,7 @@ use super::*;
 #[component]
 pub fn AccordionItem(
     /// A unique string value for this item.
+    #[prop(into)]
     value: String,
     #[prop(into, optional)] disabled: MaybeProp<bool>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,

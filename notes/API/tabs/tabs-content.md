@@ -23,7 +23,7 @@ interface TabsContentProps extends PrimitiveDivProps {
 ```rust
 pub fn TabsContent(
     /// A unique value matching the corresponding TabsTrigger.
-    value: String,
+    #[prop(into)] value: String,
     /// Force mount the content even when inactive (for animation control).
     #[prop(into, optional)]
     force_mount: MaybeProp<bool>,
