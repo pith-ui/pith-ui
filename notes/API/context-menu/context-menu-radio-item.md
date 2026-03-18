@@ -23,7 +23,7 @@ interface MenuRadioItemProps extends MenuItemProps {
 
 ```rust
 pub fn ContextMenuRadioItem(
-    #[prop(into)] value: MaybeProp<String>,
+    #[prop(into)] value: String,
     #[prop(into, optional)] disabled: MaybeProp<bool>,
     #[prop(into, optional)] on_select: Option<Callback<ev::Event>>,
     #[prop(into, optional)] text_value: MaybeProp<String>,
@@ -37,7 +37,7 @@ pub fn ContextMenuRadioItem(
 
 | React Prop | Leptos Prop | Type (React) | Type (Leptos) | Description |
 |---|---|---|---|---|
-| `value` | `value` | `string` (required) | `MaybeProp<String>` (required, `#[prop(into)]`) | The unique value for this radio item. Compared against the parent `ContextMenuRadioGroup`'s `value` to determine checked state. |
+| `value` | `value` | `string` (required) | `String` (required, `#[prop(into)]`) | The unique value for this radio item. Compared against the parent `ContextMenuRadioGroup`'s `value` to determine checked state. |
 | `disabled` | `disabled` | `boolean` (default `false`) | `MaybeProp<bool>` (default `false`) | When `true`, the item cannot be selected and is skipped during keyboard navigation. |
 | `onSelect` | `on_select` | `(event: Event) => void` | `Option<Callback<ev::Event>>` | Called when the user selects the item. If `event.preventDefault()` is called, the menu will not close and the radio value will not change. |
 | `textValue` | `text_value` | `string` | `MaybeProp<String>` | Text value for typeahead matching. Defaults to the element's text content. |

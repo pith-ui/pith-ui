@@ -20,7 +20,7 @@ interface MenuRadioItemProps extends MenuItemProps {
 
 ```rust
 pub fn MenubarRadioItem(
-    #[prop(into)] value: MaybeProp<String>,
+    #[prop(into)] value: String,
     #[prop(into, optional)] disabled: MaybeProp<bool>,
     #[prop(into, optional)] on_select: Option<Callback<ev::Event>>,
     #[prop(into, optional)] text_value: MaybeProp<String>,
@@ -34,7 +34,7 @@ pub fn MenubarRadioItem(
 
 | React Prop | Leptos Prop | Type (React) | Type (Leptos) | Description |
 |---|---|---|---|---|
-| `value` | `value` | `string` (required) | `MaybeProp<String>` (required, `#[prop(into)]`) | The unique value for this radio item. Compared against the parent `MenubarRadioGroup`'s value to determine if this item is checked. |
+| `value` | `value` | `string` (required) | `String` (required, `#[prop(into)]`) | The unique value for this radio item. Compared against the parent `MenubarRadioGroup`'s value to determine if this item is checked. |
 | `disabled` | `disabled` | `boolean` (default `false`) | `MaybeProp<bool>` | Disables the item. |
 | `onSelect` | `on_select` | `(event: Event) => void` | `Option<Callback<ev::Event>>` | Called when the item is selected. Call `event.preventDefault()` to prevent the menu from closing. |
 | `textValue` | `text_value` | `string` | `MaybeProp<String>` | Text used for typeahead matching. |

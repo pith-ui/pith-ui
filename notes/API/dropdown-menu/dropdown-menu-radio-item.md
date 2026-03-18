@@ -26,7 +26,7 @@ interface MenuRadioItemProps extends MenuItemProps {
 
 ```rust
 pub fn DropdownMenuRadioItem(
-    #[prop(into)] value: MaybeProp<String>,
+    #[prop(into)] value: String,
     #[prop(into, optional)] disabled: MaybeProp<bool>,
     #[prop(into, optional)] on_select: Option<Callback<ev::Event>>,
     #[prop(into, optional)] text_value: MaybeProp<String>,
@@ -40,7 +40,7 @@ pub fn DropdownMenuRadioItem(
 
 | React Prop | Leptos Prop | Type (React) | Type (Leptos) | Description |
 |---|---|---|---|---|
-| `value` | `value` | `string` (required) | `MaybeProp<String>` (required, `#[prop(into)]`) | The unique value identifying this radio item within the group. Compared against the parent `DropdownMenuRadioGroup`'s `value` to determine checked state. |
+| `value` | `value` | `string` (required) | `String` (required, `#[prop(into)]`) | The unique value identifying this radio item within the group. Compared against the parent `DropdownMenuRadioGroup`'s `value` to determine checked state. |
 | `disabled` | `disabled` | `boolean` (default `false`) | `MaybeProp<bool>` (default `false`) | When `true`, the item cannot be selected and is skipped during keyboard navigation. |
 | `onSelect` | `on_select` | `(event: Event) => void` | `Option<Callback<ev::Event>>` | Called when the item is selected. The value change fires regardless of `preventDefault()` (`checkForDefaultPrevented: false` in React). |
 | `textValue` | `text_value` | `string \| undefined` | `MaybeProp<String>` | Optional text for typeahead. Defaults to the item's text content. |

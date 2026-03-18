@@ -252,7 +252,7 @@ pub fn DropdownMenuRadioGroup(
 
 #[component]
 pub fn DropdownMenuRadioItem(
-    #[prop(into)] value: MaybeProp<String>,
+    #[prop(into)] value: String,
     #[prop(into, optional)] disabled: MaybeProp<bool>,
     #[prop(into, optional)] on_select: Option<Callback<ev::Event>>,
     #[prop(into, optional)] text_value: MaybeProp<String>,

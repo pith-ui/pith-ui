@@ -1827,8 +1827,8 @@
     "id": "cross-cutting-api-docs-7",
     "component": "global",
     "principle": "api-docs",
-    "description": "RadioItem-family components (DropdownMenuRadioItem, MenubarRadioItem, MenuRadioItem) use MaybeProp<String> for required value prop. A required prop should use bare String with #[prop(into)] like SelectItem and RadioGroupItem do, since the value is never optional.",
-    "status": "open",
+    "description": "RadioItem-family components (DropdownMenuRadioItem, MenubarRadioItem, MenuRadioItem) use MaybeProp<String> for required value prop. A required prop should use bare String with #[prop(into)] like SelectItem and RadioGroupItem do, since the value is never optional. RESOLVED: Changed MenuRadioItem, DropdownMenuRadioItem, ContextMenuRadioItem, and MenubarRadioItem value prop from MaybeProp<String> to String with #[prop(into)]. Now matches SelectItem and RadioGroupItem. E2E: dropdown-menu 59/59, context-menu 43/43, menubar 55/55.",
+    "status": "complete",
     "blockers": []
   },
   {

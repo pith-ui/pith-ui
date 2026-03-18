@@ -77,7 +77,7 @@ pub fn MenuRadioGroup(
 
 #[component]
 pub fn MenuRadioItem(
-    #[prop(into)] value: MaybeProp<String>,
+    #[prop(into)] value: String,
     #[prop(into, optional)] disabled: MaybeProp<bool>,
     #[prop(into, optional)] on_select: Option<Callback<ev::Event>>,
     #[prop(into, optional)] text_value: MaybeProp<String>,
@@ -86,8 +86,9 @@ pub fn MenuRadioItem(
     children: ChildrenFn,
 ) -> impl IntoView {
     let radio_context = expect_context::<RadioGroupContextValue>();
+    let item_value = StoredValue::new(value);
     let checked = Signal::derive(move || {
-        let v = value.get().unwrap_or_default();
+        let v = item_value.get_value();
         radio_context
             .value
             .get()
@@ -103,9 +104,7 @@ pub fn MenuRadioItem(
         if let Some(on_select) = on_select {
             on_select.run(event);
         }
-        if let Some(v) = value.get_untracked() {
-            radio_context.on_value_change.run(v);
-        }
+        radio_context.on_value_change.run(item_value.get_value());
     });
 
     view! {
