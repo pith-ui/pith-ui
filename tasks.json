@@ -1627,8 +1627,8 @@
     "id": "aspect-ratio-api-docs-1",
     "component": "aspect-ratio",
     "principle": "api-docs",
-    "description": "AspectRatio node_ref prop is missing #[prop(into)] \u2014 it uses #[prop(optional)] only, while all other components (e.g., accordion) consistently use #[prop(into, optional)] for node_ref: AnyNodeRef. This is a minor inconsistency. See /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/aspect_ratio/mod.rs line 9.",
-    "status": "open",
+    "description": "AspectRatio node_ref prop is missing #[prop(into)] \u2014 it uses #[prop(optional)] only, while all other components (e.g., accordion) consistently use #[prop(into, optional)] for node_ref: AnyNodeRef. This is a minor inconsistency. See /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/aspect_ratio/mod.rs line 9. RESOLVED: Added #[prop(into)] to node_ref. E2E tests pass 23/23 matching baseline.",
+    "status": "complete",
     "blockers": []
   },
   {

@@ -6,7 +6,7 @@ use leptos_node_ref::AnyNodeRef;
 pub fn AspectRatio(
     #[prop(into, optional, default = 1.0.into())] ratio: Signal<f64>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
-    #[prop(optional)] node_ref: AnyNodeRef,
+    #[prop(into, optional)] node_ref: AnyNodeRef,
     children: ChildrenFn,
 ) -> impl IntoView {
     let children = StoredValue::new(children);
