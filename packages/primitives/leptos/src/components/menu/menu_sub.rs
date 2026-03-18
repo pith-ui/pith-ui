@@ -257,7 +257,9 @@ pub fn MenuSubContent(
     #[prop(into, optional)]
     r#loop: MaybeProp<bool>,
     #[prop(into, optional)] on_escape_key_down: Option<Callback<ev::KeyboardEvent>>,
+    #[prop(into, optional)] on_pointer_down_outside: Option<Callback<CustomEvent>>,
     #[prop(into, optional)] on_focus_outside: Option<Callback<CustomEvent>>,
+    #[prop(into, optional)] on_interact_outside: Option<Callback<CustomEvent>>,
     #[prop(into, optional)] on_key_down: Option<Callback<ev::KeyboardEvent>>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
@@ -278,6 +280,10 @@ pub fn MenuSubContent(
         Direction::Rtl => PopperSide::Left,
         Direction::Ltr => PopperSide::Right,
     });
+
+    // Wrap Option<Callback<T>> → Callback<T> for forwarding through view! macro.
+    let on_pointer_down_outside = wrap_callback(on_pointer_down_outside);
+    let on_interact_outside = wrap_callback(on_interact_outside);
 
     // Forward user attrs through CollectionProvider/Presence to the content element.
     let forwarded = ForwardedAttrs::new();
@@ -343,6 +349,8 @@ pub fn MenuSubContent(
                             // don't want it to refocus the trigger in that case so we handle trigger focus ourselves.
                             event.prevent_default();
                         })
+                        on_pointer_down_outside=on_pointer_down_outside
+                        on_interact_outside=on_interact_outside
                         on_focus_outside=compose_callbacks(on_focus_outside, Some(Callback::new(move |event: CustomEvent| {
                             // We prevent closing when the trigger is focused to avoid triggering a re-open animation
                             // on pointer interaction.

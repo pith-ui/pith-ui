@@ -321,6 +321,8 @@ pub fn DropdownMenuSeparator(
 
 #[component]
 pub fn DropdownMenuArrow(
+    #[prop(into, optional)] width: MaybeProp<f64>,
+    #[prop(into, optional)] height: MaybeProp<f64>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
     #[prop(optional)] children: Option<ChildrenFn>,
@@ -328,7 +330,7 @@ pub fn DropdownMenuArrow(
     let children = StoredValue::new(children);
 
     view! {
-        <MenuArrow as_child=as_child node_ref=node_ref>
+        <MenuArrow width=width height=height as_child=as_child node_ref=node_ref>
             {children.with_value(|children| children.as_ref().map(|children| children()))}
         </MenuArrow>
     }
@@ -408,13 +410,17 @@ pub fn DropdownMenuSubContent(
     #[prop(into, optional)] hide_when_detached: MaybeProp<bool>,
     #[prop(into, optional)] r#loop: MaybeProp<bool>,
     #[prop(into, optional)] on_escape_key_down: Option<Callback<ev::KeyboardEvent>>,
+    #[prop(into, optional)] on_pointer_down_outside: Option<Callback<ev::CustomEvent>>,
     #[prop(into, optional)] on_focus_outside: Option<Callback<ev::CustomEvent>>,
+    #[prop(into, optional)] on_interact_outside: Option<Callback<ev::CustomEvent>>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
     children: ChildrenFn,
 ) -> impl IntoView {
     let on_escape_key_down = wrap_callback(on_escape_key_down);
+    let on_pointer_down_outside = wrap_callback(on_pointer_down_outside);
     let on_focus_outside = wrap_callback(on_focus_outside);
+    let on_interact_outside = wrap_callback(on_interact_outside);
 
     view! {
         <MenuSubContent
@@ -436,7 +442,9 @@ pub fn DropdownMenuSubContent(
             style:--radix-dropdown-menu-trigger-width="var(--radix-popper-anchor-width)"
             style:--radix-dropdown-menu-trigger-height="var(--radix-popper-anchor-height)"
             on_escape_key_down=on_escape_key_down
+            on_pointer_down_outside=on_pointer_down_outside
             on_focus_outside=on_focus_outside
+            on_interact_outside=on_interact_outside
         >
             {children()}
         </MenuSubContent>
