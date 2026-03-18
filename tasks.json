@@ -1515,16 +1515,16 @@
     "id": "tooltip-dcnv-1",
     "component": "tooltip",
     "principle": "Document the Contract, Not the Visuals",
-    "description": "The documentation at book/src/primitives/components/tooltip.md documents the Yew framework API but does not document the Leptos API. The Leptos implementation is what is being evaluated and tested, but the docs reference radix-yew-tooltip, Yew types (Callback<TooltipTriggerChildProps, Html>), and Yew-specific installation instructions. There is no Leptos-specific documentation of the behavioral contract.",
-    "status": "open",
+    "description": "The documentation at book/src/primitives/components/tooltip.md documents the Yew framework API but does not document the Leptos API. The Leptos implementation is what is being evaluated and tested, but the docs reference radix-yew-tooltip, Yew types (Callback<TooltipTriggerChildProps, Html>), and Yew-specific installation instructions. There is no Leptos-specific documentation of the behavioral contract. RESOLVED: Added Leptos tabs with accurate API reference (all component props, types, defaults) alongside the existing Yew tabs.",
+    "status": "complete",
     "blockers": []
   },
   {
     "id": "tooltip-dcnv-2",
     "component": "tooltip",
     "principle": "Document the Contract, Not the Visuals",
-    "description": "The documentation Examples section is marked as TODO, and the Custom APIs section is marked as TODO, meaning the behavioral contract (state transitions, event timing, keyboard interactions) is only partially documented.",
-    "status": "open",
+    "description": "The documentation Examples section is marked as TODO, and the Custom APIs section is marked as TODO, meaning the behavioral contract (state transitions, event timing, keyboard interactions) is only partially documented. RESOLVED: Added Leptos examples (basic usage, controlled, custom delay). Removed empty Custom APIs section — the API Reference section already covers this.",
+    "status": "complete",
     "blockers": []
   },
   {
