@@ -3,6 +3,21 @@
 A popup that displays information related to an element when the element receives keyboard focus or the mouse hovers over it.
 
 {{#tabs global="framework" }}
+{{#tab name="Leptos" }}
+
+<div class="warning">
+
+This component is not yet updated to Leptos 0.7+.
+
+</div>
+
+<!-- ```toml,trunk
+package = "radix-leptos-book-primitives"
+features = ["tooltip"]
+files = ["src/tooltip.rs"]
+``` -->
+
+{{#endtab }}
 {{#tab name="Yew" }}
 
 ```toml,trunk
@@ -26,6 +41,15 @@ files = ["src/tooltip.rs"]
 Install the component from your command line.
 
 {{#tabs global="framework" }}
+{{#tab name="Leptos" }}
+
+```shell
+cargo add radix-leptos-tooltip
+```
+
+-   [View source](https://github.com/RustForWeb/radix/tree/main/packages/primitives/leptos/src/components/tooltip)
+
+{{#endtab }}
 {{#tab name="Yew" }}
 
 ```shell
@@ -44,6 +68,30 @@ cargo add radix-yew-tooltip
 Import all parts and piece them together.
 
 {{#tabs global="framework" }}
+{{#tab name="Leptos" }}
+
+```rust,ignore
+use leptos::prelude::*;
+use radix_leptos_primitives::tooltip::*;
+
+#[component]
+fn Anatomy() -> impl IntoView {
+    view! {
+        <TooltipProvider>
+            <Tooltip>
+                <TooltipTrigger />
+                <TooltipPortal>
+                    <TooltipContent>
+                        <TooltipArrow />
+                    </TooltipContent>
+                </TooltipPortal>
+            </Tooltip>
+        </TooltipProvider>
+    }
+}
+```
+
+{{#endtab }}
 {{#tab name="Yew" }}
 
 ```rust,ignore
@@ -77,6 +125,15 @@ fn Anatomy() -> Html {
 Wraps your app to provide global functionality to your tooltips.
 
 {{#tabs global="framework" }}
+{{#tab name="Leptos" }}
+
+| Prop                        | Type              | Default |
+| --------------------------- | ----------------- | ------- |
+| `delay_duration`            | `MaybeProp<f64>`  | `700.0` |
+| `skip_delay_duration`       | `MaybeProp<f64>`  | `300.0` |
+| `disable_hoverable_content` | `MaybeProp<bool>` | -       |
+
+{{#endtab }}
 {{#tab name="Yew" }}
 
 | Prop                        | Type           | Default |
@@ -93,6 +150,17 @@ Wraps your app to provide global functionality to your tooltips.
 Contains all the parts of a tooltip.
 
 {{#tabs global="framework" }}
+{{#tab name="Leptos" }}
+
+| Prop                        | Type                   | Default |
+| --------------------------- | ---------------------- | ------- |
+| `default_open`              | `MaybeProp<bool>`      | -       |
+| `open`                      | `MaybeProp<bool>`      | -       |
+| `on_open_change`            | `Option<Callback<bool>>` | -     |
+| `delay_duration`            | `MaybeProp<f64>`       | -       |
+| `disable_hoverable_content` | `MaybeProp<bool>`      | -       |
+
+{{#endtab }}
 {{#tab name="Yew" }}
 
 | Prop                        | Type             | Default |
@@ -111,6 +179,19 @@ Contains all the parts of a tooltip.
 The button that toggles the tooltip. By default, the `TooltipContent` will position itself against the trigger.
 
 {{#tabs global="framework" }}
+{{#tab name="Leptos" }}
+
+| Prop               | Type                                  | Default |
+| ------------------ | ------------------------------------- | ------- |
+| `as_child`         | `MaybeProp<bool>`                     | `false` |
+| `on_pointer_move`  | `Option<Callback<ev::PointerEvent>>`  | -       |
+| `on_pointer_leave` | `Option<Callback<ev::PointerEvent>>`  | -       |
+| `on_pointer_down`  | `Option<Callback<ev::PointerEvent>>`  | -       |
+| `on_focus`         | `Option<Callback<ev::FocusEvent>>`    | -       |
+| `on_blur`          | `Option<Callback<ev::FocusEvent>>`    | -       |
+| `on_click`         | `Option<Callback<ev::MouseEvent>>`    | -       |
+
+{{#endtab }}
 {{#tab name="Yew" }}
 
 | Prop       | Type                                       | Default |
@@ -131,6 +212,15 @@ The button that toggles the tooltip. By default, the `TooltipContent` will posit
 When used, portals the content part into the `body`.
 
 {{#tabs global="framework" }}
+{{#tab name="Leptos" }}
+
+| Prop            | Type                                      | Default |
+| --------------- | ----------------------------------------- | ------- |
+| `force_mount`   | `MaybeProp<bool>`                         | -       |
+| `container`     | `MaybeProp<SendWrapper<web_sys::Element>>` | -      |
+| `container_ref` | `AnyNodeRef`                              | -       |
+
+{{#endtab }}
 {{#tab name="Yew" }}
 
 | Prop            | Type                       | Default |
@@ -147,6 +237,27 @@ When used, portals the content part into the `body`.
 The component that pops out when the tooltip is open.
 
 {{#tabs global="framework" }}
+{{#tab name="Leptos" }}
+
+| Prop                         | Type                                                 | Default             |
+| ---------------------------- | ---------------------------------------------------- | ------------------- |
+| `as_child`                   | `MaybeProp<bool>`                                    | `false`             |
+| `aria_label`                 | `MaybeProp<String>`                                  | -                   |
+| `on_escape_key_down`         | `Option<Callback<web_sys::KeyboardEvent>>`           | -                   |
+| `on_pointer_down_outside`    | `Option<Callback<web_sys::CustomEvent>>`             | -                   |
+| `force_mount`                | `MaybeProp<bool>`                                    | -                   |
+| `side`                       | `Signal<Side>`                                       | `Side::Top`         |
+| `side_offset`                | `Signal<f64>`                                        | `0.0`               |
+| `align`                      | `Signal<Align>`                                      | `Align::Center`     |
+| `align_offset`               | `Signal<f64>`                                        | `0.0`               |
+| `avoid_collisions`           | `Signal<bool>`                                       | `true`              |
+| `collision_boundary`         | `Signal<SendWrapper<Vec<web_sys::Element>>>`         | `vec![]`            |
+| `collision_padding`          | `Signal<Padding>`                                    | `Padding::All(0.0)` |
+| `sticky`                     | `Signal<Sticky>`                                     | `Sticky::Partial`   |
+| `hide_when_detached`         | `Signal<bool>`                                       | `false`             |
+| `update_position_strategy`   | `Signal<UpdatePositionStrategy>`                     | `UpdatePositionStrategy::Optimized` |
+
+{{#endtab }}
 {{#tab name="Yew" }}
 
 | Prop                      | Type                                               | Default             |
@@ -191,6 +302,15 @@ The component that pops out when the tooltip is open.
 An optional arrow element to render alongside the tooltip. This can be used to help visually link the trigger with the `TooltipContent`. Must be rendered inside `TooltipContent`.
 
 {{#tabs global="framework" }}
+{{#tab name="Leptos" }}
+
+| Prop       | Type              | Default |
+| ---------- | ----------------- | ------- |
+| `as_child` | `MaybeProp<bool>` | `false` |
+| `width`    | `MaybeProp<f64>`  | -       |
+| `height`   | `MaybeProp<f64>`  | -       |
+
+{{#endtab }}
 {{#tab name="Yew" }}
 
 | Prop       | Type                                             | Default |
@@ -204,9 +324,96 @@ An optional arrow element to render alongside the tooltip. This can be used to h
 
 ## Examples
 
-TODO
+### Basic usage
+
+```rust,ignore
+use leptos::prelude::*;
+use radix_leptos_primitives::tooltip::*;
+
+#[component]
+fn BasicTooltip() -> impl IntoView {
+    view! {
+        <TooltipProvider>
+            <Tooltip>
+                <TooltipTrigger>
+                    <button>"Hover me"</button>
+                </TooltipTrigger>
+                <TooltipPortal>
+                    <TooltipContent side_offset=5.0>
+                        "Tooltip content"
+                        <TooltipArrow />
+                    </TooltipContent>
+                </TooltipPortal>
+            </Tooltip>
+        </TooltipProvider>
+    }
+}
+```
+
+### Controlled
+
+Use the `open` and `on_open_change` props to control the tooltip state programmatically.
+
+```rust,ignore
+use leptos::prelude::*;
+use radix_leptos_primitives::tooltip::*;
+
+#[component]
+fn ControlledTooltip() -> impl IntoView {
+    let (open, set_open) = signal(false);
+
+    view! {
+        <TooltipProvider>
+            <Tooltip
+                open=open
+                on_open_change=Callback::new(move |val: bool| set_open.set(val))
+            >
+                <TooltipTrigger>
+                    <button>"Controlled"</button>
+                </TooltipTrigger>
+                <TooltipPortal>
+                    <TooltipContent>
+                        "Controlled tooltip"
+                        <TooltipArrow />
+                    </TooltipContent>
+                </TooltipPortal>
+            </Tooltip>
+        </TooltipProvider>
+    }
+}
+```
+
+### Custom delay
+
+Override the global delay for a specific tooltip using the `delay_duration` prop.
+
+```rust,ignore
+use leptos::prelude::*;
+use radix_leptos_primitives::tooltip::*;
+
+#[component]
+fn InstantTooltip() -> impl IntoView {
+    view! {
+        <TooltipProvider>
+            <Tooltip delay_duration=0.0>
+                <TooltipTrigger>
+                    <button>"Instant"</button>
+                </TooltipTrigger>
+                <TooltipPortal>
+                    <TooltipContent>
+                        "Shows instantly"
+                        <TooltipArrow />
+                    </TooltipContent>
+                </TooltipPortal>
+            </Tooltip>
+        </TooltipProvider>
+    }
+}
+```
 
 ## Accessibility
+
+Adheres to the [Tooltip WAI-ARIA design pattern](https://www.w3.org/WAI/ARIA/apg/patterns/tooltip/).
 
 ### Keyboard Interactions
 
@@ -216,10 +423,6 @@ TODO
 | `Space`  | If open, closes the tooltip without delay. |
 | `Enter`  | If open, closes the tooltip without delay. |
 | `Escape` | If open, closes the tooltip without delay. |
-
-## Custom APIs
-
-TODO
 
 ## See Also
 
