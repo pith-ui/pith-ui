@@ -1654,5 +1654,21 @@
     "description": "Leptos Checkbox always renders aria-required=\"true\" or aria-required=\"false\" (lines 151-154 of mod.rs). React renders aria-required={required} which omits the attribute entirely when required is falsy. Per WAI-ARIA, aria-required=\"false\" is the default and should be omitted rather than explicitly set. Same pattern as switch-api-docs-1. See /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/checkbox/mod.rs lines 151-154 vs React checkbox.tsx line 162.",
     "status": "open",
     "blockers": []
+  },
+  {
+    "id": "slider-api-docs-1",
+    "component": "slider",
+    "principle": "api-docs",
+    "description": "Leptos SliderBubbleInput uses type=\"hidden\" on the form input (slider_parts.rs line 346), but the React implementation explicitly avoids type=\"hidden\" (slider.tsx lines 666-674) with a comment explaining that type=\"hidden\" prevents forms from accessing the value via the FormData API. The Leptos version also sets style:display=\"none\" redundantly alongside type=\"hidden\". The input should omit type=\"hidden\" (or use a non-hidden type) and rely solely on style:display=\"none\" to match React's behavior and preserve FormData accessibility.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "toggle-group-api-docs-1",
+    "component": "toggle-group",
+    "principle": "api-docs",
+    "description": "Leptos ToggleGroup uses a unified Vec<String> for value/default_value/on_value_change in both single and multiple modes. React uses string for single mode and string[] for multiple mode, enforced at the type level via a discriminated union. This means single-mode Leptos callers must wrap values in a vec (e.g., vec![\"a\".to_string()]) and receive a Vec<String> in on_value_change instead of a plain string. This is inconsistent with the Accordion port, where AccordionSingle uses String and AccordionMultiple uses Vec<String>. Consider whether ToggleGroup should be split into ToggleGroupSingle/ToggleGroupMultiple (matching Accordion) or whether the unified approach is intentional. See packages/primitives/leptos/src/components/toggle_group/mod.rs lines 41-64 vs React toggle-group.tsx lines 25-79.",
+    "status": "open",
+    "blockers": []
   }
 ]
