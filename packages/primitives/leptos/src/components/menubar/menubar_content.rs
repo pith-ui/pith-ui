@@ -64,7 +64,7 @@ pub fn MenubarContent(
     let on_pointer_down_outside = wrap_callback(on_pointer_down_outside);
 
     let was_keyboard = menu_context.was_keyboard_trigger_open_ref.clone();
-    let menu_value = menu_context.value;
+    let menu_value = menu_context.value.clone();
 
     view! {
         <MenuContent
@@ -198,7 +198,7 @@ pub fn MenubarContent(
 
                                 let current_index = candidate_values
                                     .iter()
-                                    .position(|v| *v == menu_value.get_untracked())
+                                    .position(|v| *v == menu_value)
                                     .unwrap_or(0);
 
                                 if context.r#loop.get_untracked() {

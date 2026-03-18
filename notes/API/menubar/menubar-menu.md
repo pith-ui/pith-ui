@@ -17,7 +17,7 @@ const MenubarMenu: React.FC<MenubarMenuProps> = (props) => { ... }
 
 ```rust
 pub fn MenubarMenu(
-    #[prop(into, optional)] value: MaybeProp<String>,
+    #[prop(into, optional)] value: Option<String>,
     children: ChildrenFn,
 ) -> impl IntoView
 ```
@@ -26,7 +26,7 @@ pub fn MenubarMenu(
 
 | React Prop | Leptos Prop | Type (React) | Type (Leptos) | Description |
 |---|---|---|---|---|
-| `value` | `value` | `string \| undefined` | `MaybeProp<String>` | A unique string identifying this menu within the menubar. This value is compared against the menubar's `value` prop to determine if this menu is open. If omitted, an auto-generated ID is used. Must be provided when using controlled mode on the parent `Menubar`. |
+| `value` | `value` | `string \| undefined` | `Option<String>` | A unique string identifying this menu within the menubar. This value is compared against the menubar's `value` prop to determine if this menu is open. If omitted, an auto-generated ID is used. Must be provided when using controlled mode on the parent `Menubar`. |
 | `children` | `children` | `React.ReactNode` | `ChildrenFn` | The menu's trigger and content. |
 
 ### Implicit behavior
