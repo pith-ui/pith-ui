@@ -1750,5 +1750,21 @@
     "description": "Leptos ToastAction does not validate that alt_text is non-empty. In React, ToastAction checks altText.trim() and logs a console error + returns null if it is empty (toast.tsx lines 759-764). The Leptos ToastAction (packages/primitives/leptos/src/components/toast/toast.rs ToastAction component) accepts any String including empty without validation. Consider adding a warning log or early return for empty alt_text to match React behavior.",
     "status": "open",
     "blockers": []
+  },
+  {
+    "id": "password-toggle-field-api-docs-1",
+    "component": "password-toggle-field",
+    "principle": "api-docs",
+    "description": "Leptos PasswordToggleFieldToggle sets aria-pressed to reflect the visibility state, but the React PasswordToggleFieldToggle does not render aria-pressed at all. Decide whether to keep the Leptos addition (arguably an accessibility improvement) or remove it for parity. See packages/primitives/leptos/src/components/password_toggle_field/password_toggle_field_slot.rs PasswordToggleFieldToggle vs reference/react-radix-primitives/packages/react/password-toggle-field/src/password-toggle-field.tsx PasswordToggleFieldToggle.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "password-toggle-field-api-docs-2",
+    "component": "password-toggle-field",
+    "principle": "api-docs",
+    "description": "React PasswordToggleField callback prop is named onVisiblityChange (typo: missing 'i' in 'Visibility'). Leptos corrects the spelling to on_visibility_change. This is an intentional divergence from the React API naming. Document this as a known naming difference — if React ever fixes the typo upstream, Leptos is already aligned with the corrected name.",
+    "status": "open",
+    "blockers": []
   }
 ]
