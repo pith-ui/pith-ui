@@ -6,11 +6,13 @@ use super::*;
 
 #[component]
 pub fn SelectViewport(
+    #[prop(into, optional)] nonce: Option<String>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
     #[prop(optional)] children: Option<ChildrenFn>,
 ) -> impl IntoView {
     let children = StoredValue::new(children);
+    let nonce = StoredValue::new(nonce);
 
     let content_context = expect_context::<SelectContentContextValue>();
     let composed_ref = use_composed_refs(vec![node_ref, content_context.viewport_ref]);
@@ -18,7 +20,7 @@ pub fn SelectViewport(
     view! {
         <>
             // Hide scrollbars cross-browser
-            <style>"[data-radix-select-viewport]{scrollbar-width:none;-ms-overflow-style:none;-webkit-overflow-scrolling:touch;}[data-radix-select-viewport]::-webkit-scrollbar{display:none}"</style>
+            <style nonce=nonce.get_value()>"[data-radix-select-viewport]{scrollbar-width:none;-ms-overflow-style:none;-webkit-overflow-scrolling:touch;}[data-radix-select-viewport]::-webkit-scrollbar{display:none}"</style>
             <CollectionSlot<SelectItemData> item_data_type=ITEM_DATA_PHANTOM>
                 <AttributeInterceptor let:attrs>
                     <Primitive
