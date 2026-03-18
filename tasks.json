@@ -1755,16 +1755,16 @@
     "id": "password-toggle-field-api-docs-1",
     "component": "password-toggle-field",
     "principle": "api-docs",
-    "description": "Leptos PasswordToggleFieldToggle sets aria-pressed to reflect the visibility state, but the React PasswordToggleFieldToggle does not render aria-pressed at all. Decide whether to keep the Leptos addition (arguably an accessibility improvement) or remove it for parity. See packages/primitives/leptos/src/components/password_toggle_field/password_toggle_field_slot.rs PasswordToggleFieldToggle vs reference/react-radix-primitives/packages/react/password-toggle-field/src/password-toggle-field.tsx PasswordToggleFieldToggle.",
-    "status": "open",
+    "description": "Leptos PasswordToggleFieldToggle sets aria-pressed to reflect the visibility state, but the React PasswordToggleFieldToggle does not render aria-pressed at all. Decide whether to keep the Leptos addition (arguably an accessibility improvement) or remove it for parity. See packages/primitives/leptos/src/components/password_toggle_field/password_toggle_field_slot.rs PasswordToggleFieldToggle vs reference/react-radix-primitives/packages/react/password-toggle-field/src/password-toggle-field.tsx PasswordToggleFieldToggle. RESOLVED: Removed aria-pressed from Leptos Toggle to match React. React uses an aria-label that updates between 'Show password' / 'Hide password' as the accessibility mechanism for conveying toggle state — aria-pressed is not needed and deviates from the reference.",
+    "status": "complete",
     "blockers": []
   },
   {
     "id": "password-toggle-field-api-docs-2",
     "component": "password-toggle-field",
     "principle": "api-docs",
-    "description": "React PasswordToggleField callback prop is named onVisiblityChange (typo: missing 'i' in 'Visibility'). Leptos corrects the spelling to on_visibility_change. This is an intentional divergence from the React API naming. Document this as a known naming difference \u2014 if React ever fixes the typo upstream, Leptos is already aligned with the corrected name.",
-    "status": "open",
+    "description": "React PasswordToggleField callback prop is named onVisiblityChange (typo: missing 'i' in 'Visibility'). Leptos corrects the spelling to on_visibility_change. This is an intentional divergence from the React API naming. Document this as a known naming difference \u2014 if React ever fixes the typo upstream, Leptos is already aligned with the corrected name. RESOLVED: Intentional divergence — we fix the typo in our API. The React prop 'onVisiblityChange' is missing the second 'i' in 'Visibility'. Our on_visibility_change uses the correct spelling. No code change needed.",
+    "status": "complete",
     "blockers": []
   },
   {
