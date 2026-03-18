@@ -1643,7 +1643,7 @@
     "id": "tabs-api-docs-1",
     "component": "tabs",
     "principle": "api-docs",
-    "description": "React TabsContent sets hidden={!present} on the rendered div, so force-mounted inactive panels are hidden via the HTML hidden attribute. The Leptos TabsContent does not set the hidden attribute — it relies solely on the Presence component for mount/unmount. This means force-mounted inactive content may remain visible in the DOM without hidden. See React tabs.tsx line 251 vs Leptos tabs/mod.rs TabsContentImpl (no hidden attr set).",
+    "description": "React TabsContent sets hidden={!present} on the rendered div, so force-mounted inactive panels are hidden via the HTML hidden attribute. The Leptos TabsContent does not set the hidden attribute \u2014 it relies solely on the Presence component for mount/unmount. This means force-mounted inactive content may remain visible in the DOM without hidden. See React tabs.tsx line 251 vs Leptos tabs/mod.rs TabsContentImpl (no hidden attr set).",
     "status": "open",
     "blockers": []
   },
@@ -1675,7 +1675,7 @@
     "id": "alert-dialog-api-docs-1",
     "component": "alert-dialog",
     "principle": "api-docs",
-    "description": "Leptos AlertDialogContent does not expose an on_focus_outside prop. In React, AlertDialogContentProps is Omit<DialogContentProps, 'onPointerDownOutside' | 'onInteractOutside'>, which means onFocusOutside IS part of the public API (inherited from DismissableLayerProps). The Leptos AlertDialogContent only exposes force_mount, on_open_auto_focus, on_close_auto_focus, and on_escape_key_down — missing on_focus_outside. This is likely a minor oversight since AlertDialog's modal content already prevents focus-outside by default, but it means consumers cannot hook into focus-outside events if needed. See packages/primitives/leptos/src/components/alert_dialog/mod.rs AlertDialogContent vs React alert-dialog.tsx AlertDialogContentProps type.",
+    "description": "Leptos AlertDialogContent does not expose an on_focus_outside prop. In React, AlertDialogContentProps is Omit<DialogContentProps, 'onPointerDownOutside' | 'onInteractOutside'>, which means onFocusOutside IS part of the public API (inherited from DismissableLayerProps). The Leptos AlertDialogContent only exposes force_mount, on_open_auto_focus, on_close_auto_focus, and on_escape_key_down \u2014 missing on_focus_outside. This is likely a minor oversight since AlertDialog's modal content already prevents focus-outside by default, but it means consumers cannot hook into focus-outside events if needed. See packages/primitives/leptos/src/components/alert_dialog/mod.rs AlertDialogContent vs React alert-dialog.tsx AlertDialogContentProps type.",
     "status": "open",
     "blockers": []
   },
@@ -1763,7 +1763,7 @@
     "id": "password-toggle-field-api-docs-2",
     "component": "password-toggle-field",
     "principle": "api-docs",
-    "description": "React PasswordToggleField callback prop is named onVisiblityChange (typo: missing 'i' in 'Visibility'). Leptos corrects the spelling to on_visibility_change. This is an intentional divergence from the React API naming. Document this as a known naming difference — if React ever fixes the typo upstream, Leptos is already aligned with the corrected name.",
+    "description": "React PasswordToggleField callback prop is named onVisiblityChange (typo: missing 'i' in 'Visibility'). Leptos corrects the spelling to on_visibility_change. This is an intentional divergence from the React API naming. Document this as a known naming difference \u2014 if React ever fixes the typo upstream, Leptos is already aligned with the corrected name.",
     "status": "open",
     "blockers": []
   },
@@ -1772,6 +1772,70 @@
     "component": "menu",
     "principle": "api-docs",
     "description": "Leptos MenuSubContent is missing on_pointer_down_outside and on_interact_outside props. React MenuSubContentProps inherits these from MenuContentImplProps (they are not in the Omit list). The Leptos MenuSubContent component signature only has on_escape_key_down, on_focus_outside, and on_key_down as DismissableLayer callback props. Check if these were intentionally omitted or missed during porting.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "cross-cutting-api-docs-1",
+    "component": "global",
+    "principle": "api-docs",
+    "description": "on_escape_key_down uses ev::KeyboardEvent in menu-family components (Menu, DropdownMenu, Menubar, ContextMenu) but web_sys::KeyboardEvent in DismissableLayer-family components (Dialog, AlertDialog, Popover, Select, Tooltip, HoverCard, NavigationMenu, Toast). Same underlying type but inconsistent import path in the public API. Should pick one and align.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "cross-cutting-api-docs-2",
+    "component": "global",
+    "principle": "api-docs",
+    "description": "on_close_auto_focus and on_open_auto_focus use ev::Event in menu-family components but web_sys::Event in DismissableLayer-family components (Dialog, AlertDialog, Popover, Select). Same ev vs web_sys split as cross-cutting-api-docs-1.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "cross-cutting-api-docs-3",
+    "component": "global",
+    "principle": "api-docs",
+    "description": "Popper positioning props (side, align, sticky, etc.) use MaybeProp<PopperSide>/MaybeProp<Align> with no defaults in menu-family components, but Signal<Side>/Signal<Align> with explicit defaults in Tooltip, HoverCard, Popover, and Select. Creates a different prop ergonomics depending on component family. Should align on one pattern.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "cross-cutting-api-docs-4",
+    "component": "global",
+    "principle": "api-docs",
+    "description": "force_mount in ScrollArea (ScrollAreaScrollbar, ScrollAreaThumb) uses Option<bool> instead of MaybeProp<bool>. This prevents consumers from passing reactive signals, unlike every other component that accepts force_mount. See scroll_area/mod.rs.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "cross-cutting-api-docs-5",
+    "component": "global",
+    "principle": "api-docs",
+    "description": "orientation prop in Toolbar uses #[prop(optional)] Option<Orientation> (missing into), and ScrollAreaScrollbar uses Option<Orientation> instead of MaybeProp<Orientation>. Both prevent reactive signal usage, unlike Accordion, Tabs, Separator, etc. which use MaybeProp<Orientation>.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "cross-cutting-api-docs-6",
+    "component": "global",
+    "principle": "api-docs",
+    "description": "MenubarMenu value prop uses Option<String> while all other controlled-value components use MaybeProp<String>. This prevents reactive signal usage for the menubar menu value.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "cross-cutting-api-docs-7",
+    "component": "global",
+    "principle": "api-docs",
+    "description": "RadioItem-family components (DropdownMenuRadioItem, MenubarRadioItem, MenuRadioItem) use MaybeProp<String> for required value prop. A required prop should use bare String with #[prop(into)] like SelectItem and RadioGroupItem do, since the value is never optional.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "cross-cutting-api-docs-8",
+    "component": "global",
+    "principle": "api-docs",
+    "description": "AccordionItem, TabsTrigger, and TabsContent use bare String (no #[prop(into)]) for their required value prop, requiring callers to use .to_string(). RadioGroupItem and SelectItem use #[prop(into)] String, accepting &str directly. The latter is more ergonomic and should be the standard for all required string value props.",
     "status": "open",
     "blockers": []
   }
