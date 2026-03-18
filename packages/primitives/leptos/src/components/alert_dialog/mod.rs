@@ -126,6 +126,7 @@ pub fn AlertDialogContent(
     #[prop(into, optional)] on_open_auto_focus: Option<Callback<ev::Event>>,
     #[prop(into, optional)] on_close_auto_focus: Option<Callback<ev::Event>>,
     #[prop(into, optional)] on_escape_key_down: Option<Callback<ev::KeyboardEvent>>,
+    #[prop(into, optional)] on_focus_outside: Option<Callback<ev::CustomEvent>>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
     #[prop(optional)] children: Option<ChildrenFn>,
@@ -174,6 +175,7 @@ pub fn AlertDialogContent(
                 on_open_auto_focus=alert_on_open_auto_focus
                 on_close_auto_focus=wrap_callback(on_close_auto_focus)
                 on_escape_key_down=wrap_callback(on_escape_key_down)
+                on_focus_outside=wrap_callback(on_focus_outside)
                 on_pointer_down_outside=prevent_pointer_outside
                 on_interact_outside=prevent_interact_outside
             >
