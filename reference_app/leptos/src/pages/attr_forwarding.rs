@@ -47,7 +47,7 @@ pub fn AttrForwardingPage() -> impl IntoView {
             // ── Accordion ──────────────────────────────────
             <section>
                 <h3>"Accordion"</h3>
-                <Accordion r#type=AccordionType::Single default_value="item1" attr:data-attr-test="accordion-root">
+                <AccordionSingle default_value="item1" attr:data-attr-test="accordion-root">
                     <AccordionItem value="item1".to_string() attr:data-attr-test="accordion-item">
                         <AccordionHeader attr:data-attr-test="accordion-header">
                             <AccordionTrigger attr:data-attr-test="accordion-trigger">"Open"</AccordionTrigger>
@@ -56,7 +56,7 @@ pub fn AttrForwardingPage() -> impl IntoView {
                             "Content"
                         </AccordionContent>
                     </AccordionItem>
-                </Accordion>
+                </AccordionSingle>
             </section>
 
             // ── Collapsible ────────────────────────────────

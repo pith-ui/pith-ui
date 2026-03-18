@@ -53,29 +53,27 @@ pub fn Single() -> impl IntoView {
 
     view! {
         <h1>"Uncontrolled"</h1>
-        <Accordion r#type=AccordionType::Single attr:class=accordion_classes::root>
+        <AccordionSingle attr:class=accordion_classes::root>
             {render_standard_items()}
-        </Accordion>
+        </AccordionSingle>
 
         <h1>"Controlled"</h1>
-        <Accordion
-            r#type=AccordionType::Single
+        <AccordionSingle
             value=value_one
             on_value_change=Callback::new(move |v: String| set_value_one.set(v))
             attr:class=accordion_classes::root
         >
             {render_standard_items()}
-        </Accordion>
+        </AccordionSingle>
 
         <h1>"Collapsible"</h1>
-        <Accordion
-            r#type=AccordionType::Single
+        <AccordionSingle
             default_value="one".to_string()
             collapsible=true
             attr:class=accordion_classes::root
         >
             {render_standard_items()}
-        </Accordion>
+        </AccordionSingle>
     }
 }
 
@@ -85,19 +83,18 @@ pub fn Multiple() -> impl IntoView {
 
     view! {
         <h1>"Uncontrolled"</h1>
-        <Accordion r#type=AccordionType::Multiple attr:class=accordion_classes::root>
+        <AccordionMultiple attr:class=accordion_classes::root>
             {render_standard_items()}
-        </Accordion>
+        </AccordionMultiple>
 
         <h1>"Controlled"</h1>
-        <Accordion
-            r#type=AccordionType::Multiple
+        <AccordionMultiple
             values=value
             on_values_change=Callback::new(move |v: Vec<String>| set_value.set(v))
             attr:class=accordion_classes::root
         >
             {render_standard_items()}
-        </Accordion>
+        </AccordionMultiple>
     }
 }
 
@@ -170,7 +167,7 @@ pub fn Animated() -> impl IntoView {
         <br />
 
         <h1>"Closed by default"</h1>
-        <Accordion r#type=AccordionType::Single attr:class=accordion_classes::root>
+        <AccordionSingle attr:class=accordion_classes::root>
             {values.iter().map(|value| {
                 let value = value.to_string();
                 let value_stored = StoredValue::new(value.clone());
@@ -195,10 +192,10 @@ pub fn Animated() -> impl IntoView {
                     </AccordionItem>
                 }
             }).collect_view()}
-        </Accordion>
+        </AccordionSingle>
 
         <h1>"Open by default"</h1>
-        <Accordion r#type=AccordionType::Single default_value="One".to_string() attr:class=accordion_classes::root>
+        <AccordionSingle default_value="One".to_string() attr:class=accordion_classes::root>
             {values.iter().map(|value| {
                 let value = value.to_string();
                 let value_stored = StoredValue::new(value.clone());
@@ -223,7 +220,7 @@ pub fn Animated() -> impl IntoView {
                     </AccordionItem>
                 }
             }).collect_view()}
-        </Accordion>
+        </AccordionSingle>
     }
 }
 
@@ -232,7 +229,7 @@ pub fn Animated2D() -> impl IntoView {
     let values: &[&str] = &["One", "Two", "Three", "Four"];
 
     view! {
-        <Accordion r#type=AccordionType::Single attr:class=accordion_classes::root>
+        <AccordionSingle attr:class=accordion_classes::root>
             {values.iter().map(|value| {
                 let value = value.to_string();
                 let value_stored = StoredValue::new(value.clone());
@@ -253,7 +250,7 @@ pub fn Animated2D() -> impl IntoView {
                     </AccordionItem>
                 }
             }).collect_view()}
-        </Accordion>
+        </AccordionSingle>
     }
 }
 
@@ -267,8 +264,7 @@ pub fn AnimatedControlled() -> impl IntoView {
     ]);
 
     view! {
-        <Accordion
-            r#type=AccordionType::Multiple
+        <AccordionMultiple
             values=value
             on_values_change=Callback::new(move |v: Vec<String>| set_value.set(v))
             attr:class=accordion_classes::root
@@ -308,7 +304,7 @@ pub fn AnimatedControlled() -> impl IntoView {
                     <button>"Cool"</button>
                 </AccordionContent>
             </AccordionItem>
-        </Accordion>
+        </AccordionMultiple>
     }
 }
 
@@ -318,9 +314,9 @@ pub fn OutsideViewport() -> impl IntoView {
         <p>"Scroll down to see tabs"</p>
         <div style="height: 150vh;" />
         <p>"When accordion buttons are focused and the user is navigating via keyboard, the page should not scroll unless the next tab is entering the viewport."</p>
-        <Accordion r#type=AccordionType::Single attr:class=accordion_classes::root>
+        <AccordionSingle attr:class=accordion_classes::root>
             {render_standard_items()}
-        </Accordion>
+        </AccordionSingle>
         <div style="height: 150vh;" />
     }
 }
@@ -329,9 +325,9 @@ pub fn OutsideViewport() -> impl IntoView {
 pub fn Horizontal() -> impl IntoView {
     view! {
         <h1>"Horizontal Orientation"</h1>
-        <Accordion r#type=AccordionType::Single orientation=Orientation::Horizontal attr:class=accordion_classes::root>
+        <AccordionSingle orientation=Orientation::Horizontal attr:class=accordion_classes::root>
             {render_standard_items()}
-        </Accordion>
+        </AccordionSingle>
     }
 }
 
@@ -343,44 +339,44 @@ pub fn Chromatic() -> impl IntoView {
     view! {
         <h1>"Uncontrolled"</h1>
         <h2>"Single closed"</h2>
-        <Accordion r#type=AccordionType::Single attr:class=accordion_classes::root>
+        <AccordionSingle attr:class=accordion_classes::root>
             {render_chromatic_items(items, text_suffix, accordion_classes::item, accordion_classes::header, accordion_classes::trigger, accordion_classes::content)}
-        </Accordion>
+        </AccordionSingle>
 
         <h2>"Single open"</h2>
-        <Accordion r#type=AccordionType::Single default_value="Two".to_string() attr:class=accordion_classes::root>
+        <AccordionSingle default_value="Two".to_string() attr:class=accordion_classes::root>
             {render_chromatic_items(items, text_suffix, accordion_classes::item, accordion_classes::header, accordion_classes::trigger, accordion_classes::content)}
-        </Accordion>
+        </AccordionSingle>
 
         <h2>"Multiple closed"</h2>
-        <Accordion r#type=AccordionType::Multiple attr:class=accordion_classes::root>
+        <AccordionMultiple attr:class=accordion_classes::root>
             {render_chromatic_items(items, text_suffix, accordion_classes::item, accordion_classes::header, accordion_classes::trigger, accordion_classes::content)}
-        </Accordion>
+        </AccordionMultiple>
 
         <h2>"Multiple open"</h2>
-        <Accordion r#type=AccordionType::Multiple default_values=vec!["One".to_string(), "Two".to_string()] attr:class=accordion_classes::root>
+        <AccordionMultiple default_values=vec!["One".to_string(), "Two".to_string()] attr:class=accordion_classes::root>
             {render_chromatic_items(items, text_suffix, accordion_classes::item, accordion_classes::header, accordion_classes::trigger, accordion_classes::content)}
-        </Accordion>
+        </AccordionMultiple>
 
         <h1>"Controlled"</h1>
         <h2>"Single open"</h2>
-        <Accordion r#type=AccordionType::Single value="Three".to_string() attr:class=accordion_classes::root>
+        <AccordionSingle value="Three".to_string() attr:class=accordion_classes::root>
             {render_chromatic_items(items, text_suffix, accordion_classes::item, accordion_classes::header, accordion_classes::trigger, accordion_classes::content)}
-        </Accordion>
+        </AccordionSingle>
 
         <h2>"Multiple open"</h2>
-        <Accordion r#type=AccordionType::Multiple values=vec!["Two".to_string(), "Three".to_string()] attr:class=accordion_classes::root>
+        <AccordionMultiple values=vec!["Two".to_string(), "Three".to_string()] attr:class=accordion_classes::root>
             {render_chromatic_items(items, text_suffix, accordion_classes::item, accordion_classes::header, accordion_classes::trigger, accordion_classes::content)}
-        </Accordion>
+        </AccordionMultiple>
 
         <h1>"Disabled (whole)"</h1>
-        <Accordion r#type=AccordionType::Single disabled=true attr:class=accordion_classes::root>
+        <AccordionSingle disabled=true attr:class=accordion_classes::root>
             {render_chromatic_items(items, text_suffix, accordion_classes::item, accordion_classes::header, accordion_classes::trigger, accordion_classes::content)}
-        </Accordion>
+        </AccordionSingle>
 
         <h1>"Disabled (item)"</h1>
         <h2>"Just item"</h2>
-        <Accordion r#type=AccordionType::Single attr:class=accordion_classes::root>
+        <AccordionSingle attr:class=accordion_classes::root>
             {items.iter().map(|item| {
                 let is_disabled = *item == "Two";
                 let label = StoredValue::new(item.to_string());
@@ -396,10 +392,10 @@ pub fn Chromatic() -> impl IntoView {
                     </AccordionItem>
                 }
             }).collect_view()}
-        </Accordion>
+        </AccordionSingle>
 
         <h2>"with disabled=false on top-level"</h2>
-        <Accordion r#type=AccordionType::Single disabled=false attr:class=accordion_classes::root>
+        <AccordionSingle disabled=false attr:class=accordion_classes::root>
             {items.iter().map(|item| {
                 let is_disabled = *item == "Two";
                 let label = StoredValue::new(item.to_string());
@@ -415,10 +411,10 @@ pub fn Chromatic() -> impl IntoView {
                     </AccordionItem>
                 }
             }).collect_view()}
-        </Accordion>
+        </AccordionSingle>
 
         <h1>"Force mounted contents"</h1>
-        <Accordion r#type=AccordionType::Single attr:class=accordion_classes::root>
+        <AccordionSingle attr:class=accordion_classes::root>
             {items.iter().map(|item| {
                 let label = StoredValue::new(item.to_string());
                 let content = StoredValue::new(format!("{item}{text_suffix}"));
@@ -433,16 +429,16 @@ pub fn Chromatic() -> impl IntoView {
                     </AccordionItem>
                 }
             }).collect_view()}
-        </Accordion>
+        </AccordionSingle>
 
         <h1>"State attributes"</h1>
         <h2>"Accordion disabled"</h2>
-        <Accordion r#type=AccordionType::Single default_value="Two".to_string() disabled=true attr:class=accordion_classes::rootAttr>
+        <AccordionSingle default_value="Two".to_string() disabled=true attr:class=accordion_classes::rootAttr>
             {render_chromatic_items(items, text_suffix, accordion_classes::itemAttr, accordion_classes::headerAttr, accordion_classes::triggerAttr, accordion_classes::contentAttr)}
-        </Accordion>
+        </AccordionSingle>
 
         <h2>"Accordion enabled with item override"</h2>
-        <Accordion r#type=AccordionType::Single default_value="Two".to_string() disabled=false attr:class=accordion_classes::rootAttr>
+        <AccordionSingle default_value="Two".to_string() disabled=false attr:class=accordion_classes::rootAttr>
             {items.iter().map(|item| {
                 let is_disabled = *item == "Two" || *item == "Four";
                 let label = StoredValue::new(item.to_string());
@@ -458,10 +454,10 @@ pub fn Chromatic() -> impl IntoView {
                     </AccordionItem>
                 }
             }).collect_view()}
-        </Accordion>
+        </AccordionSingle>
 
         <h2>"Accordion disabled with item override"</h2>
-        <Accordion r#type=AccordionType::Single default_value="Two".to_string() disabled=true attr:class=accordion_classes::rootAttr>
+        <AccordionSingle default_value="Two".to_string() disabled=true attr:class=accordion_classes::rootAttr>
             {items.iter().map(|item| {
                 // In React: disabled={['Two', 'Four'].includes(item) ? false : undefined}
                 // false = explicitly not disabled, undefined = inherit from parent
@@ -484,7 +480,7 @@ pub fn Chromatic() -> impl IntoView {
                     </AccordionItem>
                 }
             }).collect_view()}
-        </Accordion>
+        </AccordionSingle>
     }
 }
 

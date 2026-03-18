@@ -65,25 +65,23 @@ pub fn AccordionPage() -> impl IntoView {
         {move || {
             if is_multiple.get() {
                 view! {
-                    <Accordion
-                        r#type=AccordionType::Multiple
+                    <AccordionMultiple
                         class:accordion-root=true
                         attr:data-testid="accordion-root"
                     >
                         <AccordionItems />
-                    </Accordion>
-                }
+                    </AccordionMultiple>
+                }.into_any()
             } else {
                 view! {
-                    <Accordion
-                        r#type=AccordionType::Single
+                    <AccordionSingle
                         collapsible=collapsible
                         class:accordion-root=true
                         attr:data-testid="accordion-root"
                     >
                         <AccordionItems />
-                    </Accordion>
-                }
+                    </AccordionSingle>
+                }.into_any()
             }
         }}
 
@@ -165,8 +163,7 @@ fn ControlledAccordion() -> impl IntoView {
             "Close All"
         </button>
 
-        <Accordion
-            r#type=AccordionType::Single
+        <AccordionSingle
             collapsible=true
             value=controlled_value
             on_value_change=Callback::new(move |val: String| {
@@ -195,6 +192,6 @@ fn ControlledAccordion() -> impl IntoView {
                 </AccordionHeader>
                 <AccordionContent class:accordion-content=true>"Controlled Content 2"</AccordionContent>
             </AccordionItem>
-        </Accordion>
+        </AccordionSingle>
     }
 }

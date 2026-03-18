@@ -59,8 +59,8 @@
     "id": "accordion-kass-1",
     "component": "accordion",
     "principle": "Keep the API Surface Small",
-    "description": "The Leptos Accordion component in /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/accordion/accordion.rs (lines 8-44) merges single-mode and multiple-mode props into one flat component signature (value, default_value, on_value_change for single; values, default_values, on_values_change for multiple), resulting in 6 mode-specific props where only 3 are relevant at a time. The React reference avoids this by using discriminated union types (AccordionSingleProps | AccordionMultipleProps in accordion.tsx lines 35-40), making it impossible to pass invalid prop combinations. The Leptos version allows passing both single and multiple props simultaneously with no compile-time or runtime guard.",
-    "status": "open",
+    "description": "The Leptos Accordion component in /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/accordion/accordion.rs (lines 8-44) merges single-mode and multiple-mode props into one flat component signature (value, default_value, on_value_change for single; values, default_values, on_values_change for multiple), resulting in 6 mode-specific props where only 3 are relevant at a time. The React reference avoids this by using discriminated union types (AccordionSingleProps | AccordionMultipleProps in accordion.tsx lines 35-40), making it impossible to pass invalid prop combinations. The Leptos version allows passing both single and multiple props simultaneously with no compile-time or runtime guard. RESOLVED: Added AccordionSingle and AccordionMultiple as separate public components with only their relevant props. The original Accordion wrapper is kept for backwards compatibility but the new components are the preferred API. All stories and reference app pages updated to use the new components.",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -107,8 +107,8 @@
     "id": "aspect-ratio-icc-1",
     "component": "aspect-ratio",
     "principle": "Invert Control to the Consumer",
-    "description": "The outer wrapper <div> (mod.rs lines 16-23) is always rendered and cannot be replaced or removed by the consumer via as_child or any other mechanism. The as_child prop only affects the inner Primitive element, not the wrapper. This limits consumer control over the rendered DOM structure.",
-    "status": "open",
+    "description": "The outer wrapper <div> (mod.rs lines 16-23) is always rendered and cannot be replaced or removed by the consumer via as_child or any other mechanism. The as_child prop only affects the inner Primitive element, not the wrapper. This limits consumer control over the rendered DOM structure. RESOLVED: The React reference has the same non-replaceable wrapper div — the outer wrapper with position:relative and padding-bottom is an architectural requirement of the CSS aspect-ratio technique. This is by design, not a limitation.",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -363,8 +363,8 @@
     "id": "dropdown-menu-icc-1",
     "component": "dropdown-menu",
     "principle": "Invert Control to the Consumer",
-    "description": "DropdownMenuTrigger in /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/dropdown_menu/dropdown_menu.rs lines 73-131 does not accept consumer event handler props (e.g., `on_pointer_down`, `on_key_down`) for composition. The React reference (dropdown-menu.tsx lines 117-134) uses `composeEventHandlers(props.onPointerDown, ...)` and `composeEventHandlers(props.onKeyDown, ...)` to compose consumer handlers with internal ones. In the Leptos version, the `on:pointerdown` and `on:keydown` handlers are hard-coded directly on the Primitive element, potentially preventing consumers from adding their own handlers that compose correctly with the component's internal logic.",
-    "status": "open",
+    "description": "DropdownMenuTrigger in /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/dropdown_menu/dropdown_menu.rs lines 73-131 does not accept consumer event handler props (e.g., `on_pointer_down`, `on_key_down`) for composition. The React reference (dropdown-menu.tsx lines 117-134) uses `composeEventHandlers(props.onPointerDown, ...)` and `composeEventHandlers(props.onKeyDown, ...)` to compose consumer handlers with internal ones. In the Leptos version, the `on:pointerdown` and `on:keydown` handlers are hard-coded directly on the Primitive element, potentially preventing consumers from adding their own handlers that compose correctly with the component's internal logic. RESOLVED: Added on_pointer_down and on_key_down consumer event handler props, composed with internal handlers via compose_callbacks.",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -587,8 +587,8 @@
     "id": "menubar-icc-1",
     "component": "menubar",
     "principle": "Invert Control to the Consumer",
-    "description": "Leptos MenubarTrigger does not expose or compose consumer-provided event handler props (on_pointer_down, on_key_down, on_focus, on_blur, on_pointer_enter). The React reference uses composeEventHandlers(props.onPointerDown, ...) etc. to let consumers intercept/augment all event handlers. In the Leptos version (menubar.rs lines 207-247), handlers are set directly via on:pointerdown, on:keydown, on:focus, on:blur, on:pointerenter with no consumer composition mechanism, preventing consumers from hooking into these events on the trigger element.",
-    "status": "open",
+    "description": "Leptos MenubarTrigger does not expose or compose consumer-provided event handler props (on_pointer_down, on_key_down, on_focus, on_blur, on_pointer_enter). The React reference uses composeEventHandlers(props.onPointerDown, ...) etc. to let consumers intercept/augment all event handlers. In the Leptos version (menubar.rs lines 207-247), handlers are set directly via on:pointerdown, on:keydown, on:focus, on:blur, on:pointerenter with no consumer composition mechanism, preventing consumers from hooking into these events on the trigger element. RESOLVED: Added on_pointer_down, on_pointer_enter, on_key_down, on_focus, and on_blur consumer event handler props, composed with internal handlers via compose_callbacks.",
+    "status": "complete",
     "blockers": []
   },
   {

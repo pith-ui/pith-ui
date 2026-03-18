@@ -1,7 +1,104 @@
 use super::*;
 
 /* -------------------------------------------------------------------------------------------------
- * Accordion
+ * AccordionSingle
+ * -----------------------------------------------------------------------------------------------*/
+
+#[component]
+pub fn AccordionSingle(
+    /// The controlled value of the open item.
+    #[prop(into, optional)]
+    value: MaybeProp<String>,
+    /// The default open item value.
+    #[prop(into, optional)]
+    default_value: MaybeProp<String>,
+    /// Callback when value changes.
+    #[prop(into, optional)]
+    on_value_change: Option<Callback<String>>,
+    /// Whether an item can be collapsed after opening. Default false.
+    #[prop(into, optional)]
+    collapsible: MaybeProp<bool>,
+
+    #[prop(into, optional)] disabled: MaybeProp<bool>,
+    #[prop(into, optional)] dir: MaybeProp<Direction>,
+    #[prop(into, optional)] orientation: MaybeProp<Orientation>,
+    #[prop(into, optional)] as_child: MaybeProp<bool>,
+    #[prop(into, optional)] node_ref: AnyNodeRef,
+    children: ChildrenFn,
+) -> impl IntoView {
+    let children = StoredValue::new(children);
+
+    let (value_context, collapsible_context) =
+        create_single_contexts(value, default_value, on_value_change, collapsible);
+
+    view! {
+        <Provider value=value_context>
+            <Provider value=collapsible_context>
+                <CollectionProvider item_data_type=ITEM_DATA_PHANTOM>
+                    <AccordionImpl
+                        disabled=disabled
+                        dir=dir
+                        orientation=orientation
+                        as_child=as_child
+                        node_ref=node_ref
+                    >
+                        {children.with_value(|children| children())}
+                    </AccordionImpl>
+                </CollectionProvider>
+            </Provider>
+        </Provider>
+    }
+}
+
+/* -------------------------------------------------------------------------------------------------
+ * AccordionMultiple
+ * -----------------------------------------------------------------------------------------------*/
+
+#[component]
+pub fn AccordionMultiple(
+    /// The controlled values of open items.
+    #[prop(into, optional)]
+    values: MaybeProp<Vec<String>>,
+    /// The default open item values.
+    #[prop(into, optional)]
+    default_values: MaybeProp<Vec<String>>,
+    /// Callback when values change.
+    #[prop(into, optional)]
+    on_values_change: Option<Callback<Vec<String>>>,
+
+    #[prop(into, optional)] disabled: MaybeProp<bool>,
+    #[prop(into, optional)] dir: MaybeProp<Direction>,
+    #[prop(into, optional)] orientation: MaybeProp<Orientation>,
+    #[prop(into, optional)] as_child: MaybeProp<bool>,
+    #[prop(into, optional)] node_ref: AnyNodeRef,
+    children: ChildrenFn,
+) -> impl IntoView {
+    let children = StoredValue::new(children);
+
+    let (value_context, collapsible_context) =
+        create_multiple_contexts(values, default_values, on_values_change);
+
+    view! {
+        <Provider value=value_context>
+            <Provider value=collapsible_context>
+                <CollectionProvider item_data_type=ITEM_DATA_PHANTOM>
+                    <AccordionImpl
+                        disabled=disabled
+                        dir=dir
+                        orientation=orientation
+                        as_child=as_child
+                        node_ref=node_ref
+                    >
+                        {children.with_value(|children| children())}
+                    </AccordionImpl>
+                </CollectionProvider>
+            </Provider>
+        </Provider>
+    }
+}
+
+/* -------------------------------------------------------------------------------------------------
+ * Accordion (convenience wrapper — delegates to AccordionSingle or AccordionMultiple)
  * -----------------------------------------------------------------------------------------------*/
 
 #[component]
@@ -10,29 +107,15 @@ pub fn Accordion(
     r#type: AccordionType,
 
     // -- Single mode props --
-    /// The controlled value of the open item (single mode).
-    #[prop(into, optional)]
-    value: MaybeProp<String>,
-    /// The default open item value (single mode).
-    #[prop(into, optional)]
-    default_value: MaybeProp<String>,
-    /// Callback when value changes (single mode).
-    #[prop(into, optional)]
-    on_value_change: Option<Callback<String>>,
-    /// Whether an item can be collapsed after opening (single mode). Default false.
-    #[prop(into, optional)]
-    collapsible: MaybeProp<bool>,
+    #[prop(into, optional)] value: MaybeProp<String>,
+    #[prop(into, optional)] default_value: MaybeProp<String>,
+    #[prop(into, optional)] on_value_change: Option<Callback<String>>,
+    #[prop(into, optional)] collapsible: MaybeProp<bool>,
 
     // -- Multiple mode props --
-    /// The controlled values of open items (multiple mode).
-    #[prop(into, optional)]
-    values: MaybeProp<Vec<String>>,
-    /// The default open item values (multiple mode).
-    #[prop(into, optional)]
-    default_values: MaybeProp<Vec<String>>,
-    /// Callback when values change (multiple mode).
-    #[prop(into, optional)]
-    on_values_change: Option<Callback<Vec<String>>>,
+    #[prop(into, optional)] values: MaybeProp<Vec<String>>,
+    #[prop(into, optional)] default_values: MaybeProp<Vec<String>>,
+    #[prop(into, optional)] on_values_change: Option<Callback<Vec<String>>>,
 
     // -- Shared props --
     #[prop(into, optional)] disabled: MaybeProp<bool>,
@@ -44,8 +127,6 @@ pub fn Accordion(
 ) -> impl IntoView {
     let children = StoredValue::new(children);
 
-    // Create context values based on type. Each is wrapped in a <Provider> to create
-    // a child Owner, ensuring sibling Accordion instances get isolated context scopes.
     let (value_context, collapsible_context) = match r#type {
         AccordionType::Single => {
             create_single_contexts(value, default_value, on_value_change, collapsible)
