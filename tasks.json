@@ -1670,5 +1670,13 @@
     "description": "Leptos ToggleGroup uses a unified Vec<String> for value/default_value/on_value_change in both single and multiple modes. React uses string for single mode and string[] for multiple mode, enforced at the type level via a discriminated union. This means single-mode Leptos callers must wrap values in a vec (e.g., vec![\"a\".to_string()]) and receive a Vec<String> in on_value_change instead of a plain string. This is inconsistent with the Accordion port, where AccordionSingle uses String and AccordionMultiple uses Vec<String>. Consider whether ToggleGroup should be split into ToggleGroupSingle/ToggleGroupMultiple (matching Accordion) or whether the unified approach is intentional. See packages/primitives/leptos/src/components/toggle_group/mod.rs lines 41-64 vs React toggle-group.tsx lines 25-79.",
     "status": "open",
     "blockers": []
+  },
+  {
+    "id": "alert-dialog-api-docs-1",
+    "component": "alert-dialog",
+    "principle": "api-docs",
+    "description": "Leptos AlertDialogContent does not expose an on_focus_outside prop. In React, AlertDialogContentProps is Omit<DialogContentProps, 'onPointerDownOutside' | 'onInteractOutside'>, which means onFocusOutside IS part of the public API (inherited from DismissableLayerProps). The Leptos AlertDialogContent only exposes force_mount, on_open_auto_focus, on_close_auto_focus, and on_escape_key_down — missing on_focus_outside. This is likely a minor oversight since AlertDialog's modal content already prevents focus-outside by default, but it means consumers cannot hook into focus-outside events if needed. See packages/primitives/leptos/src/components/alert_dialog/mod.rs AlertDialogContent vs React alert-dialog.tsx AlertDialogContentProps type.",
+    "status": "open",
+    "blockers": []
   }
 ]
