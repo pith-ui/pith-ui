@@ -439,20 +439,30 @@ pub fn ToastAction(
     /// who will not be able to navigate to the button easily/quickly.
     #[prop(into)]
     alt_text: String,
+    #[prop(into, optional)] on_click: Option<Callback<ev::MouseEvent>>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     children: ChildrenFn,
 ) -> impl IntoView {
     let children = StoredValue::new(children);
+
+    if alt_text.trim().is_empty() {
+        web_sys::console::error_1(
+            &"Invalid prop `alt_text` supplied to `ToastAction`. Expected non-empty `String`."
+                .into(),
+        );
+        return Either::Left(());
+    }
+
     let alt_text = StoredValue::new(alt_text);
 
-    view! {
+    Either::Right(view! {
         <ToastAnnounceExclude alt_text=alt_text.get_value()>
-            <ToastClose node_ref=node_ref as_child=as_child>
+            <ToastClose on_click=on_click node_ref=node_ref as_child=as_child>
                 {children.with_value(|children| children())}
             </ToastClose>
         </ToastAnnounceExclude>
-    }
+    })
 }
 
 /* -------------------------------------------------------------------------------------------------
@@ -461,6 +471,7 @@ pub fn ToastAction(
 
 #[component]
 pub fn ToastClose(
+    #[prop(into, optional)] on_click: Option<Option<Callback<ev::MouseEvent>>>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     children: ChildrenFn,
@@ -475,9 +486,9 @@ pub fn ToastClose(
                 as_child=as_child
                 node_ref=node_ref
                 attr:r#type="button"
-                on:click=move |_: web_sys::MouseEvent| {
+                on:click=compose_callbacks(on_click.flatten(), Some(Callback::new(move |_: ev::MouseEvent| {
                     interactive_context.on_close.run(());
-                }
+                })), None)
             >
                 {children.with_value(|children| children())}
             </Primitive>
