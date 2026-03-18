@@ -341,9 +341,12 @@ fn SliderBubbleInput(
     });
 
     view! {
+        // NOTE: We intentionally avoid type="hidden" here — hidden inputs are not
+        // included in the form's elements list and cannot be accessed via FormData.
+        // We use display:none instead to hide the input visually while preserving
+        // form participation (matching the React reference approach).
         <input
             node_ref=input_ref
-            type="hidden"
             name=move || name.get()
             form=move || form.get()
             value=move || value.get().map(|v| v.to_string()).unwrap_or_default()

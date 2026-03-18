@@ -1659,8 +1659,8 @@
     "id": "slider-api-docs-1",
     "component": "slider",
     "principle": "api-docs",
-    "description": "Leptos SliderBubbleInput uses type=\"hidden\" on the form input (slider_parts.rs line 346), but the React implementation explicitly avoids type=\"hidden\" (slider.tsx lines 666-674) with a comment explaining that type=\"hidden\" prevents forms from accessing the value via the FormData API. The Leptos version also sets style:display=\"none\" redundantly alongside type=\"hidden\". The input should omit type=\"hidden\" (or use a non-hidden type) and rely solely on style:display=\"none\" to match React's behavior and preserve FormData accessibility.",
-    "status": "open",
+    "description": "Leptos SliderBubbleInput uses type=\"hidden\" on the form input (slider_parts.rs line 346), but the React implementation explicitly avoids type=\"hidden\" (slider.tsx lines 666-674) with a comment explaining that type=\"hidden\" prevents forms from accessing the value via the FormData API. The Leptos version also sets style:display=\"none\" redundantly alongside type=\"hidden\". The input should omit type=\"hidden\" (or use a non-hidden type) and rely solely on style:display=\"none\" to match React's behavior and preserve FormData accessibility. RESOLVED: Removed type=\"hidden\" from SliderBubbleInput, keeping only style:display=\"none\". Now matches React behavior and preserves FormData access. E2E: slider 50/50.",
+    "status": "complete",
     "blockers": []
   },
   {
