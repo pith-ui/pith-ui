@@ -107,7 +107,7 @@
     "id": "aspect-ratio-icc-1",
     "component": "aspect-ratio",
     "principle": "Invert Control to the Consumer",
-    "description": "The outer wrapper <div> (mod.rs lines 16-23) is always rendered and cannot be replaced or removed by the consumer via as_child or any other mechanism. The as_child prop only affects the inner Primitive element, not the wrapper. This limits consumer control over the rendered DOM structure. RESOLVED: The React reference has the same non-replaceable wrapper div — the outer wrapper with position:relative and padding-bottom is an architectural requirement of the CSS aspect-ratio technique. This is by design, not a limitation.",
+    "description": "The outer wrapper <div> (mod.rs lines 16-23) is always rendered and cannot be replaced or removed by the consumer via as_child or any other mechanism. The as_child prop only affects the inner Primitive element, not the wrapper. This limits consumer control over the rendered DOM structure. RESOLVED: The React reference has the same non-replaceable wrapper div \u2014 the outer wrapper with position:relative and padding-bottom is an architectural requirement of the CSS aspect-ratio technique. This is by design, not a limitation.",
     "status": "complete",
     "blockers": []
   },
@@ -547,7 +547,7 @@
     "id": "menu-msc-1",
     "component": "menu",
     "principle": "Make State Controllable",
-    "description": "The Leptos Menu component's `open` prop (in /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/menu/menu.rs line 5) and MenuSub's `open` prop (in /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/menu/menu_sub.rs line 5) use `prop_or_default(open)` which simply derives a Signal from the consumer-provided value or falls back to `false`. However, there is no internal state management for the uncontrolled case -- the component never creates its own RwSignal to track open state when the consumer does not provide the `open` prop. This means the menu cannot function in uncontrolled mode: without passing `open`, the menu is permanently closed since nothing internally toggles it. The React reference (menu.tsx line 88) similarly defaults `open` to `false` but this is because Menu is a low-level building block always controlled by higher-level components (DropdownMenu, ContextMenu). Both implementations match, but the e2e tests do not verify uncontrolled/controlled toggling of the `open` prop since the test page uses an always-open menu. RESOLVED: Matches React reference — Menu is a low-level building block always controlled by parent components (DropdownMenu, ContextMenu). Adding uncontrolled mode would diverge from upstream.",
+    "description": "The Leptos Menu component's `open` prop (in /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/menu/menu.rs line 5) and MenuSub's `open` prop (in /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/menu/menu_sub.rs line 5) use `prop_or_default(open)` which simply derives a Signal from the consumer-provided value or falls back to `false`. However, there is no internal state management for the uncontrolled case -- the component never creates its own RwSignal to track open state when the consumer does not provide the `open` prop. This means the menu cannot function in uncontrolled mode: without passing `open`, the menu is permanently closed since nothing internally toggles it. The React reference (menu.tsx line 88) similarly defaults `open` to `false` but this is because Menu is a low-level building block always controlled by higher-level components (DropdownMenu, ContextMenu). Both implementations match, but the e2e tests do not verify uncontrolled/controlled toggling of the `open` prop since the test page uses an always-open menu. RESOLVED: Matches React reference \u2014 Menu is a low-level building block always controlled by parent components (DropdownMenu, ContextMenu). Adding uncontrolled mode would diverge from upstream.",
     "status": "complete",
     "blockers": []
   },
@@ -555,7 +555,7 @@
     "id": "menu-msc-2",
     "component": "menu",
     "principle": "Make State Controllable",
-    "description": "MenuCheckboxItem's `checked` prop (in /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/menu/menu_checkbox_item.rs line 5) uses `prop_or(checked, CheckedState::False)` but has no internal state -- the consumer must provide both `checked` and `on_checked_change` to make it work. Similarly, MenuRadioGroup's `value` prop (line 58) has no internal state. The React reference has the same pattern (props with no internal state), but neither implementation supports true uncontrolled mode where the component manages its own state when no controlled prop is provided. The e2e tests (menu.cy.js) test checkbox toggling (lines 295-306) and radio selection (lines 373-375) but these rely on the test page wiring up the state externally, never testing uncontrolled mode. RESOLVED: Matches React reference — MenuCheckboxItem and MenuRadioGroup have no internal state in React either. This is by design for these low-level primitives.",
+    "description": "MenuCheckboxItem's `checked` prop (in /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/menu/menu_checkbox_item.rs line 5) uses `prop_or(checked, CheckedState::False)` but has no internal state -- the consumer must provide both `checked` and `on_checked_change` to make it work. Similarly, MenuRadioGroup's `value` prop (line 58) has no internal state. The React reference has the same pattern (props with no internal state), but neither implementation supports true uncontrolled mode where the component manages its own state when no controlled prop is provided. The e2e tests (menu.cy.js) test checkbox toggling (lines 295-306) and radio selection (lines 373-375) but these rely on the test page wiring up the state externally, never testing uncontrolled mode. RESOLVED: Matches React reference \u2014 MenuCheckboxItem and MenuRadioGroup have no internal state in React either. This is by design for these low-level primitives.",
     "status": "complete",
     "blockers": []
   },
@@ -867,7 +867,7 @@
     "id": "progress-msc-1",
     "component": "progress",
     "principle": "Make State Controllable",
-    "description": "The Leptos Progress component only supports a controlled `value` prop (MaybeProp<f64>). There is no built-in uncontrolled mode with internal default state and an optional `default_value` prop. The consumer must always manage the value signal externally. The React reference also lacks an uncontrolled mode, but this principle requires every stateful value to support both uncontrolled (internal) and controlled (consumer-driven) modes seamlessly. File: /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/progress/mod.rs, lines 38-39. RESOLVED: Matches React reference — Progress is a display-only component with no uncontrolled mode in React either.",
+    "description": "The Leptos Progress component only supports a controlled `value` prop (MaybeProp<f64>). There is no built-in uncontrolled mode with internal default state and an optional `default_value` prop. The consumer must always manage the value signal externally. The React reference also lacks an uncontrolled mode, but this principle requires every stateful value to support both uncontrolled (internal) and controlled (consumer-driven) modes seamlessly. File: /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/progress/mod.rs, lines 38-39. RESOLVED: Matches React reference \u2014 Progress is a display-only component with no uncontrolled mode in React either.",
     "status": "complete",
     "blockers": []
   },
@@ -947,7 +947,7 @@
     "id": "scroll-area-oac-1",
     "component": "scroll-area",
     "principle": "Own Accessibility Completely",
-    "description": "Neither the Leptos implementation nor the React reference implementation applies any ARIA roles, aria-* attributes, or keyboard navigation to the scroll area components. There is no role='scrollbar' on the scrollbar elements, no aria-controls linking scrollbar to viewport, no aria-valuenow/aria-valuemin/aria-valuemax on the thumb, and no keyboard support (arrow keys, page up/down) for the custom scrollbar. The WAI-ARIA scrollbar pattern (https://www.w3.org/WAI/ARIA/apg/patterns/scrollbar/) is not implemented. While the React reference also omits these, the principle requires full WAI-ARIA pattern compliance. RESOLVED: Neither Radix UI nor Base UI (its successor) implements the WAI-ARIA scrollbar pattern. Both intentionally rely on native browser scrolling for accessibility — the custom scrollbar is a purely visual overlay over a native overflow-scrolling div. Adding role='scrollbar' and ARIA attributes would duplicate what the browser already provides and could confuse assistive technology. Accessibility experts (Adrian Roselli, WCAG/WAI) recommend native scroll mechanisms over custom ARIA scrollbar widgets.",
+    "description": "Neither the Leptos implementation nor the React reference implementation applies any ARIA roles, aria-* attributes, or keyboard navigation to the scroll area components. There is no role='scrollbar' on the scrollbar elements, no aria-controls linking scrollbar to viewport, no aria-valuenow/aria-valuemin/aria-valuemax on the thumb, and no keyboard support (arrow keys, page up/down) for the custom scrollbar. The WAI-ARIA scrollbar pattern (https://www.w3.org/WAI/ARIA/apg/patterns/scrollbar/) is not implemented. While the React reference also omits these, the principle requires full WAI-ARIA pattern compliance. RESOLVED: Neither Radix UI nor Base UI (its successor) implements the WAI-ARIA scrollbar pattern. Both intentionally rely on native browser scrolling for accessibility \u2014 the custom scrollbar is a purely visual overlay over a native overflow-scrolling div. Adding role='scrollbar' and ARIA attributes would duplicate what the browser already provides and could confuse assistive technology. Accessibility experts (Adrian Roselli, WCAG/WAI) recommend native scroll mechanisms over custom ARIA scrollbar widgets.",
     "status": "complete",
     "blockers": []
   },
@@ -963,7 +963,7 @@
     "id": "scroll-area-msc-1",
     "component": "scroll-area",
     "principle": "Make State Controllable",
-    "description": "The ScrollArea component's scroll position is not exposed as a controllable prop. The consumer cannot provide a controlled scroll position value or receive callbacks when the scroll position changes. The scroll_type and scroll_hide_delay are configuration props, not controllable stateful values. The internal visibility state of scrollbars (visible/hidden in Hover/Scroll/Auto modes) is entirely internal with no controlled mode exposed to the consumer. The React reference has the same limitation. RESOLVED: Matches React reference — scroll position and scrollbar visibility are not controllable in React Radix either.",
+    "description": "The ScrollArea component's scroll position is not exposed as a controllable prop. The consumer cannot provide a controlled scroll position value or receive callbacks when the scroll position changes. The scroll_type and scroll_hide_delay are configuration props, not controllable stateful values. The internal visibility state of scrollbars (visible/hidden in Hover/Scroll/Auto modes) is entirely internal with no controlled mode exposed to the consumer. The React reference has the same limitation. RESOLVED: Matches React reference \u2014 scroll position and scrollbar visibility are not controllable in React Radix either.",
     "status": "complete",
     "blockers": []
   },
@@ -1523,7 +1523,7 @@
     "id": "tooltip-dcnv-2",
     "component": "tooltip",
     "principle": "Document the Contract, Not the Visuals",
-    "description": "The documentation Examples section is marked as TODO, and the Custom APIs section is marked as TODO, meaning the behavioral contract (state transitions, event timing, keyboard interactions) is only partially documented. RESOLVED: Added Leptos examples (basic usage, controlled, custom delay). Removed empty Custom APIs section — the API Reference section already covers this.",
+    "description": "The documentation Examples section is marked as TODO, and the Custom APIs section is marked as TODO, meaning the behavioral contract (state transitions, event timing, keyboard interactions) is only partially documented. RESOLVED: Added Leptos examples (basic usage, controlled, custom delay). Removed empty Custom APIs section \u2014 the API Reference section already covers this.",
     "status": "complete",
     "blockers": []
   },
@@ -1620,6 +1620,14 @@
     "component": "primitives",
     "principle": "refactor",
     "description": "Standardize the \"logic shell\" / \"rendered impl\" component split pattern. Currently used inconsistently \u2014 some components use it (Dialog, Collapsible, Accordion) and others do not (Checkbox, Toggle). Consistently separating these across all components would make the codebase more predictable.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "aspect-ratio-api-docs-1",
+    "component": "aspect-ratio",
+    "principle": "api-docs",
+    "description": "AspectRatio node_ref prop is missing #[prop(into)] \u2014 it uses #[prop(optional)] only, while all other components (e.g., accordion) consistently use #[prop(into, optional)] for node_ref: AnyNodeRef. This is a minor inconsistency. See /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/aspect_ratio/mod.rs line 9.",
     "status": "open",
     "blockers": []
   }
