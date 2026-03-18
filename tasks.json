@@ -1811,8 +1811,8 @@
     "id": "cross-cutting-api-docs-5",
     "component": "global",
     "principle": "api-docs",
-    "description": "orientation prop in Toolbar uses #[prop(optional)] Option<Orientation> (missing into), and ScrollAreaScrollbar uses Option<Orientation> instead of MaybeProp<Orientation>. Both prevent reactive signal usage, unlike Accordion, Tabs, Separator, etc. which use MaybeProp<Orientation>.",
-    "status": "open",
+    "description": "orientation prop in Toolbar uses #[prop(optional)] Option<Orientation> (missing into), and ScrollAreaScrollbar uses Option<Orientation> instead of MaybeProp<Orientation>. Both prevent reactive signal usage, unlike Accordion, Tabs, Separator, etc. which use MaybeProp<Orientation>. RESOLVED: Fixed Toolbar orientation to use MaybeProp<Orientation> with #[prop(into, optional)] and Signal<Orientation> internally. ScrollArea orientation uses Option<Orientation> but is resolved eagerly since the internal architecture branches on it non-reactively \u2014 changing this requires deeper refactor of all internal subcomponents (Hover/Scroll/Auto/Always/Visible). Toolbar E2E: 48/48.",
+    "status": "complete",
     "blockers": []
   },
   {

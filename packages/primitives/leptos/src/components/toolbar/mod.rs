@@ -13,9 +13,9 @@ use web_sys::wasm_bindgen::JsCast;
  * ToolbarContext
  * -----------------------------------------------------------------------------------------------*/
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Copy, Debug)]
 struct ToolbarContextValue {
-    orientation: Orientation,
+    orientation: Signal<Orientation>,
     dir: Signal<Direction>,
 }
 
@@ -25,7 +25,7 @@ struct ToolbarContextValue {
 
 #[component]
 pub fn Toolbar(
-    #[prop(optional)] orientation: Option<Orientation>,
+    #[prop(into, optional)] orientation: MaybeProp<Orientation>,
     #[prop(into, optional)] dir: MaybeProp<Direction>,
     #[prop(into, optional)] r#loop: MaybeProp<bool>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
@@ -34,7 +34,9 @@ pub fn Toolbar(
 ) -> impl IntoView {
     let children = StoredValue::new(children);
 
-    let orientation = orientation.unwrap_or(Orientation::Horizontal);
+    let orientation = Signal::derive(move || {
+        orientation.get().unwrap_or(Orientation::Horizontal)
+    });
     let direction = use_direction(dir);
 
     let context = ToolbarContextValue {
@@ -55,9 +57,9 @@ pub fn Toolbar(
                     as_child=as_child
                     node_ref=node_ref
                     attr:role="toolbar"
-                    attr:aria-orientation=orientation.to_string()
+                    attr:aria-orientation=move || orientation.get().to_string()
                     attr:dir=move || direction.get().to_string()
-                    attr:data-orientation=orientation.to_string()
+                    attr:data-orientation=move || orientation.get().to_string()
                 >
                     {children.with_value(|children| children())}
                 </Primitive>
@@ -80,16 +82,14 @@ pub fn ToolbarSeparator(
     let children = StoredValue::new(children);
 
     let context = expect_context::<ToolbarContextValue>();
-    let perpendicular_orientation = match context.orientation {
-        Orientation::Horizontal => Orientation::Vertical,
-        Orientation::Vertical => Orientation::Horizontal,
-    };
 
-    // Map from roving_focus::Orientation to separator::Orientation
-    let separator_orientation = match perpendicular_orientation {
-        Orientation::Horizontal => crate::separator::Orientation::Horizontal,
-        Orientation::Vertical => crate::separator::Orientation::Vertical,
-    };
+    let separator_orientation = Signal::derive(move || {
+        // Map from roving_focus::Orientation to separator::Orientation, perpendicular to toolbar
+        match context.orientation.get() {
+            Orientation::Horizontal => crate::separator::Orientation::Vertical,
+            Orientation::Vertical => crate::separator::Orientation::Horizontal,
+        }
+    });
 
     view! {
         <Separator
@@ -192,7 +192,6 @@ pub fn ToolbarToggleGroup(
     let children = StoredValue::new(children);
 
     let context = expect_context::<ToolbarContextValue>();
-    let orientation = context.orientation;
 
     view! {
         <ToggleGroup
@@ -206,11 +205,11 @@ pub fn ToolbarToggleGroup(
             })
             disabled=disabled
             roving_focus=false
-            orientation=orientation
+            orientation=context.orientation
             dir=context.dir
             as_child=as_child
             node_ref=node_ref
-            attr:data-orientation=orientation.to_string()
+            attr:data-orientation=move || context.orientation.get().to_string()
         >
             {children.with_value(|children| children())}
         </ToggleGroup>

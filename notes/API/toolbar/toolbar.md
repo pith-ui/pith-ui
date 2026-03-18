@@ -61,7 +61,7 @@ interface ToolbarProps extends PrimitiveDivProps {
 
 ```rust
 pub fn Toolbar(
-    #[prop(optional)] orientation: Option<Orientation>,
+    #[prop(into, optional)] orientation: MaybeProp<Orientation>,
     #[prop(into, optional)] dir: MaybeProp<Direction>,
     #[prop(into, optional)] r#loop: MaybeProp<bool>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
