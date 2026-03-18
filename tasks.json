@@ -947,8 +947,8 @@
     "id": "scroll-area-oac-1",
     "component": "scroll-area",
     "principle": "Own Accessibility Completely",
-    "description": "Neither the Leptos implementation nor the React reference implementation applies any ARIA roles, aria-* attributes, or keyboard navigation to the scroll area components. There is no role='scrollbar' on the scrollbar elements, no aria-controls linking scrollbar to viewport, no aria-valuenow/aria-valuemin/aria-valuemax on the thumb, and no keyboard support (arrow keys, page up/down) for the custom scrollbar. The WAI-ARIA scrollbar pattern (https://www.w3.org/WAI/ARIA/apg/patterns/scrollbar/) is not implemented. While the React reference also omits these, the principle requires full WAI-ARIA pattern compliance.",
-    "status": "open",
+    "description": "Neither the Leptos implementation nor the React reference implementation applies any ARIA roles, aria-* attributes, or keyboard navigation to the scroll area components. There is no role='scrollbar' on the scrollbar elements, no aria-controls linking scrollbar to viewport, no aria-valuenow/aria-valuemin/aria-valuemax on the thumb, and no keyboard support (arrow keys, page up/down) for the custom scrollbar. The WAI-ARIA scrollbar pattern (https://www.w3.org/WAI/ARIA/apg/patterns/scrollbar/) is not implemented. While the React reference also omits these, the principle requires full WAI-ARIA pattern compliance. RESOLVED: Neither Radix UI nor Base UI (its successor) implements the WAI-ARIA scrollbar pattern. Both intentionally rely on native browser scrolling for accessibility — the custom scrollbar is a purely visual overlay over a native overflow-scrolling div. Adding role='scrollbar' and ARIA attributes would duplicate what the browser already provides and could confuse assistive technology. Accessibility experts (Adrian Roselli, WCAG/WAI) recommend native scroll mechanisms over custom ARIA scrollbar widgets.",
+    "status": "complete",
     "blockers": []
   },
   {
