@@ -1819,8 +1819,8 @@
     "id": "cross-cutting-api-docs-6",
     "component": "global",
     "principle": "api-docs",
-    "description": "MenubarMenu value prop uses Option<String> while all other controlled-value components use MaybeProp<String>. This prevents reactive signal usage for the menubar menu value.",
-    "status": "open",
+    "description": "MenubarMenu value prop uses Option<String> while all other controlled-value components use MaybeProp<String>. This prevents reactive signal usage for the menubar menu value. RESOLVED: Changed MenubarMenu value prop from Option<String> to MaybeProp<String>, with Memo<String> internally. Now consistent with NavigationMenuItem and other components. E2E: menubar 55/55.",
+    "status": "complete",
     "blockers": []
   },
   {

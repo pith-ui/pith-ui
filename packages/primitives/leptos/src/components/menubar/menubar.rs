@@ -92,21 +92,18 @@ pub fn Menubar(
 
 #[component]
 pub fn MenubarMenu(
-    #[prop(into, optional)] value: Option<String>,
+    #[prop(into, optional)] value: MaybeProp<String>,
     children: ChildrenFn,
 ) -> impl IntoView {
     let children = StoredValue::new(children);
     let auto_value = use_id(None);
     // We need to provide an initial deterministic value as `use_id` will return
     // empty string on the first render and we don't want to match our internal "closed" value.
-    let value = value.unwrap_or_else(|| auto_value.get_untracked());
+    let value = Memo::new(move |_| value.get().unwrap_or_else(|| auto_value.get()));
     let context = expect_context::<MenubarContextValue>();
     let trigger_ref = AnyNodeRef::new();
     let was_keyboard_trigger_open_ref = SendWrapper::new(Rc::new(Cell::new(false)));
-    let open = {
-        let value = value.clone();
-        Signal::derive(move || context.value.get() == value)
-    };
+    let open = Signal::derive(move || context.value.get() == value.get());
 
     let trigger_id = use_id(None);
     let content_id = use_id(None);
@@ -121,7 +118,7 @@ pub fn MenubarMenu(
     }
 
     let menu_context = MenubarMenuContextValue {
-        value: value.clone(),
+        value,
         trigger_id,
         trigger_ref,
         content_id,
@@ -173,8 +170,8 @@ pub fn MenubarTrigger(
     let disabled = prop_or_default(disabled);
     let is_focused = RwSignal::new(false);
 
-    let value = StoredValue::new(menu_context.value.clone());
-    let open = Signal::derive(move || context.value.get() == value.get_value());
+    let value = menu_context.value;
+    let open = Signal::derive(move || context.value.get() == value.get());
 
     let was_keyboard = StoredValue::new(menu_context.was_keyboard_trigger_open_ref.clone());
 
@@ -187,12 +184,12 @@ pub fn MenubarTrigger(
     view! {
         <CollectionItemSlot
             item_data_type=ITEM_DATA_PHANTOM
-            item_data=Signal::derive(move || ItemData { value: value.get_value(), disabled: disabled.get() })
+            item_data=Signal::derive(move || ItemData { value: value.get(), disabled: disabled.get() })
         >
             <RovingFocusGroupItem
                 as_child=true
                 focusable=Signal::derive(move || !disabled.get())
-                tab_stop_id=Signal::derive(move || value.get_value())
+                tab_stop_id=Signal::derive(move || value.get())
             >
                 <MenuAnchor as_child=true>
                     <Primitive
@@ -215,7 +212,7 @@ pub fn MenubarTrigger(
                                 // only call handler if it's the left button (mousedown gets triggered by all mouse buttons)
                                 // but not when the control key is pressed (avoiding MacOS right click)
                                 if !disabled.get_untracked() && event.button() == 0 && !event.ctrl_key() {
-                                    context.on_menu_open.run(value.get_value());
+                                    context.on_menu_open.run(value.get_untracked());
                                     // prevent trigger focusing when opening
                                     // this allows the content to be given focus without competition
                                     if !open.get_untracked() {
@@ -230,7 +227,7 @@ pub fn MenubarTrigger(
                             Some(Callback::new(move |_event: ev::PointerEvent| {
                                 let menubar_open = !context.value.get_untracked().is_empty();
                                 if menubar_open && !open.get_untracked() {
-                                    context.on_menu_open.run(value.get_value());
+                                    context.on_menu_open.run(value.get_untracked());
                                     if let Some(el) = trigger_ref.get() {
                                         let el: web_sys::HtmlElement = el.unchecked_into();
                                         el.focus().ok();
@@ -246,10 +243,10 @@ pub fn MenubarTrigger(
                                     return;
                                 }
                                 if event.key() == "Enter" || event.key() == " " {
-                                    context.on_menu_toggle.run(value.get_value());
+                                    context.on_menu_toggle.run(value.get_untracked());
                                 }
                                 if event.key() == "ArrowDown" {
-                                    context.on_menu_open.run(value.get_value());
+                                    context.on_menu_open.run(value.get_untracked());
                                 }
                                 // prevent keydown from scrolling window / first focused item to execute
                                 // that keydown (inadvertently closing the menu)

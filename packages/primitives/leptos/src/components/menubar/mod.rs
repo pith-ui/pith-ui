@@ -54,7 +54,7 @@ struct MenubarContextValue {
 
 #[derive(Clone)]
 struct MenubarMenuContextValue {
-    value: String,
+    value: Memo<String>,
     trigger_id: ReadSignal<String>,
     trigger_ref: AnyNodeRef,
     content_id: ReadSignal<String>,

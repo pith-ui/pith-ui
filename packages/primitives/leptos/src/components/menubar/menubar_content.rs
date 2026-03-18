@@ -64,7 +64,7 @@ pub fn MenubarContent(
     let on_pointer_down_outside = wrap_callback(on_pointer_down_outside);
 
     let was_keyboard = menu_context.was_keyboard_trigger_open_ref.clone();
-    let menu_value = menu_context.value.clone();
+    let menu_value = menu_context.value;
 
     view! {
         <MenuContent
@@ -155,7 +155,6 @@ pub fn MenubarContent(
             on_key_down=compose_callbacks(
                 on_key_down,
                 Some(Callback::new({
-                    let menu_value = menu_value.clone();
                     move |event: ev::KeyboardEvent| {
                         if event.key() == "ArrowRight" || event.key() == "ArrowLeft" {
                             let Some(target) = event.target() else { return; };
@@ -199,7 +198,7 @@ pub fn MenubarContent(
 
                                 let current_index = candidate_values
                                     .iter()
-                                    .position(|v| *v == menu_value)
+                                    .position(|v| *v == menu_value.get_untracked())
                                     .unwrap_or(0);
 
                                 if context.r#loop.get_untracked() {
