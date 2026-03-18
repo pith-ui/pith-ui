@@ -16,6 +16,7 @@ interface SelectViewportProps extends PrimitiveDivProps {
 
 ```rust
 pub fn SelectViewport(
+    #[prop(into, optional)] nonce: Option<String>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
     #[prop(optional)] children: Option<ChildrenFn>,
@@ -26,7 +27,7 @@ pub fn SelectViewport(
 
 | React Prop | Leptos Prop | Type (React) | Type (Leptos) | Description |
 |---|---|---|---|---|
-| `nonce` | -- | `string` | -- | CSP nonce for the injected `<style>` tag that hides scrollbars. Not implemented in Leptos. |
+| `nonce` | `nonce` | `string` | `Option<String>` | CSP nonce for the injected `<style>` tag that hides scrollbars. Passed through to the `<style>` element's `nonce` attribute. |
 | `ref` | `node_ref` | `React.Ref` | `AnyNodeRef` | Ref to the rendered DOM element (`<div>`). |
 | `asChild` | `as_child` | `boolean` | `MaybeProp<bool>` | When `true`, renders the child directly instead of wrapping in a `<div>`, merging props and refs. |
 | `children` | `children` | `React.ReactNode` | `Option<ChildrenFn>` | The viewport children (items, groups, separators, etc.). |

@@ -21,6 +21,8 @@ interface ContextMenuArrowProps extends MenuArrowProps {}
 
 ```rust
 pub fn ContextMenuArrow(
+    #[prop(into, optional)] width: MaybeProp<f64>,
+    #[prop(into, optional)] height: MaybeProp<f64>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
     #[prop(optional)] children: Option<ChildrenFn>,
@@ -31,8 +33,8 @@ pub fn ContextMenuArrow(
 
 | React Prop | Leptos Prop | Type (React) | Type (Leptos) | Description |
 |---|---|---|---|---|
-| `width` | — | `number` (default `10`) | — | The width of the arrow SVG in pixels. Not currently exposed in Leptos. |
-| `height` | — | `number` (default `5`) | — | The height of the arrow SVG in pixels. Not currently exposed in Leptos. |
+| `width` | `width` | `number` (default `10`) | `MaybeProp<f64>` | The width of the arrow SVG in pixels. |
+| `height` | `height` | `number` (default `5`) | `MaybeProp<f64>` | The height of the arrow SVG in pixels. |
 | `ref` | `node_ref` | `React.Ref` | `AnyNodeRef` | Ref to the rendered SVG element. |
 | `asChild` | `as_child` | `boolean` | `MaybeProp<bool>` | When `true`, renders the child directly instead of the default arrow SVG, merging props and refs. |
 | `children` | `children` | `React.ReactNode` | `Option<ChildrenFn>` | Optional custom arrow content. Leptos wraps in `Option`. |

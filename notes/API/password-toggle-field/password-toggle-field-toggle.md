@@ -53,6 +53,6 @@ No custom data attributes are rendered.
 - Always renders with `type="button"` to prevent accidental form submission.
 - On click, toggles the visibility state. If the click was triggered by a pointer (not keyboard), focus is moved to the input and the previous cursor/selection position is restored.
 - `aria-controls` is set to the input's `id` (auto-derived from context).
-- `aria-pressed` is set to reflect the current visibility state. **Note:** This attribute is set in the Leptos implementation but not in the React implementation.
+- `aria-pressed` is not set. Neither the React nor Leptos implementation renders this attribute.
 - Auto-generates an `aria-label` of `"Show password"` (when hidden) or `"Hide password"` (when visible) if the button has no visible text content and no explicit `aria-label` is provided. A `MutationObserver` monitors text changes to update this dynamically.
 - A global `pointerup` listener resets the internal click-tracking state after the pointer is released, ensuring consistent behavior even if the pointer moves outside the button.

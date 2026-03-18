@@ -101,7 +101,7 @@ pub fn Toast(
     /// given to `ToastProvider`.
     #[prop(into, optional)]
     duration: MaybeProp<i32>,
-    #[prop(into, optional)] on_escape_key_down: Option<Callback<web_sys::KeyboardEvent>>,
+    #[prop(into, optional)] on_escape_key_down: Option<Callback<ev::KeyboardEvent>>,
     #[prop(into, optional)] on_pause: Option<Callback<()>>,
     #[prop(into, optional)] on_resume: Option<Callback<()>>,
     #[prop(into, optional)] on_swipe_start: Option<Callback<SwipeEvent>>,
@@ -124,7 +124,7 @@ pub fn Toast(
 | `forceMount` | `force_mount` | `true \| undefined` | `Option<bool>` | Forces the toast to remain mounted in the DOM even when closed. Useful for controlling exit animations with CSS or animation libraries. |
 | `type` | `r#type` | `'foreground' \| 'background'` (default `'foreground'`) | `MaybeProp<ToastType>` (default `Foreground`) | Controls the urgency of the screen reader announcement. `Foreground` uses `aria-live="assertive"` and `Background` uses `aria-live="polite"`. |
 | `duration` | `duration` | `number \| undefined` | `MaybeProp<i32>` | Time in milliseconds the toast remains visible. Overrides the provider-level `duration`. Omit to inherit from `ToastProvider`. |
-| `onEscapeKeyDown` | `on_escape_key_down` | `(event: KeyboardEvent) => void` | `Option<Callback<web_sys::KeyboardEvent>>` | Callback fired when the escape key is pressed while the toast has focus. Call `event.preventDefault()` to prevent the toast from closing. |
+| `onEscapeKeyDown` | `on_escape_key_down` | `(event: KeyboardEvent) => void` | `Option<Callback<ev::KeyboardEvent>>` | Callback fired when the escape key is pressed while the toast has focus. Call `event.preventDefault()` to prevent the toast from closing. |
 | `onPause` | `on_pause` | `() => void` | `Option<Callback<()>>` | Callback fired when the auto-close timer is paused (e.g., when the viewport receives focus or pointer hover). |
 | `onResume` | `on_resume` | `() => void` | `Option<Callback<()>>` | Callback fired when the auto-close timer resumes after being paused. |
 | `onSwipeStart` | `on_swipe_start` | `(event: SwipeEvent) => void` | `Option<Callback<SwipeEvent>>` | Callback fired when a swipe gesture begins (pointer moves past the start buffer in the configured swipe direction). |

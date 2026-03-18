@@ -15,6 +15,7 @@ interface ToastCloseProps extends PrimitiveButtonProps {}
 
 ```rust
 pub fn ToastClose(
+    #[prop(into, optional)] on_click: Option<Option<Callback<ev::MouseEvent>>>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     children: ChildrenFn,
@@ -25,6 +26,7 @@ pub fn ToastClose(
 
 | React Prop | Leptos Prop | Type (React) | Type (Leptos) | Description |
 |---|---|---|---|---|
+| *(via spread)* | `on_click` | `onClick` via `...PrimitiveButtonProps` | `Option<Option<Callback<ev::MouseEvent>>>` | Click handler composed with the internal close handler. In React this comes through the spread; Leptos exposes it as an explicit prop. The double `Option` allows distinguishing "not provided" from "explicitly set to `None`". |
 | `ref` | `node_ref` | `React.Ref` | `AnyNodeRef` | Ref to the rendered DOM element (`<button>`). |
 | `asChild` | `as_child` | `boolean` | `MaybeProp<bool>` | When `true`, renders the child directly instead of wrapping in a `<button>`, merging props and refs. The child must be a focusable, clickable element. |
 | `children` | `children` | `React.ReactNode` | `ChildrenFn` | The close button content (text or icon). |
@@ -34,7 +36,7 @@ pub fn ToastClose(
 
 - Renders a `<button type="button">` element.
 - On click, calls the `onClose` handler from the `ToastInteractiveContext`, which dismisses the toast by setting `open` to `false`.
-- In React, the click handler is composed with any user-provided `onClick` via `composeEventHandlers`. In Leptos, the click handler directly calls `interactive_context.on_close.run(())`.
+- The click handler is composed with the user-provided `on_click` callback — the user callback runs first, and then the internal close handler runs (unless the event's default is prevented).
 - Wrapped in a `ToastAnnounceExclude` so the close button's text is excluded from the screen reader announcement of the toast content.
 
 ### Data attributes (rendered on DOM)

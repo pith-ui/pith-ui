@@ -45,8 +45,8 @@ interface TooltipContentImplProps extends Omit<PopperContentProps, 'onPlaced'> {
 pub fn TooltipContent(
     #[prop(into, optional)] force_mount: MaybeProp<bool>,
     #[prop(into, optional)] aria_label: MaybeProp<String>,
-    #[prop(into, optional)] on_escape_key_down: Option<Callback<web_sys::KeyboardEvent>>,
-    #[prop(into, optional)] on_pointer_down_outside: Option<Callback<web_sys::CustomEvent>>,
+    #[prop(into, optional)] on_escape_key_down: Option<Callback<ev::KeyboardEvent>>,
+    #[prop(into, optional)] on_pointer_down_outside: Option<Callback<ev::CustomEvent>>,
     // PopperContent forwarded props
     #[prop(into, optional, default = Side::Top.into())] side: Signal<Side>,
     #[prop(into, optional, default = 0.0.into())] side_offset: Signal<f64>,
@@ -76,8 +76,8 @@ pub fn TooltipContent(
 |---|---|---|---|---|
 | `forceMount` | `force_mount` | `true \| undefined` | `MaybeProp<bool>` | Forces the content to stay mounted in the DOM even when closed. Inherits from `TooltipPortal`'s `forceMount` if not set directly. Useful for CSS or JS animations that need the element present in the DOM for exit transitions. |
 | `aria-label` | `aria_label` | `string \| undefined` | `MaybeProp<String>` | An accessible label for the tooltip. When provided, the visually hidden `role="tooltip"` element uses this string instead of the visible content text. Use when the visual content is rich/complex but the accessible description should be a simple string. |
-| `onEscapeKeyDown` | `on_escape_key_down` | `(event: KeyboardEvent) => void` | `Option<Callback<web_sys::KeyboardEvent>>` | Called when the Escape key is pressed while the tooltip is open. Call `event.preventDefault()` to prevent the tooltip from closing. |
-| `onPointerDownOutside` | `on_pointer_down_outside` | `(event: CustomEvent) => void` | `Option<Callback<web_sys::CustomEvent>>` | Called when a pointer down occurs outside the tooltip content. Call `event.preventDefault()` to prevent the tooltip from closing. Useful for keeping the tooltip open when clicking the trigger. |
+| `onEscapeKeyDown` | `on_escape_key_down` | `(event: KeyboardEvent) => void` | `Option<Callback<ev::KeyboardEvent>>` | Called when the Escape key is pressed while the tooltip is open. Call `event.preventDefault()` to prevent the tooltip from closing. |
+| `onPointerDownOutside` | `on_pointer_down_outside` | `(event: CustomEvent) => void` | `Option<Callback<ev::CustomEvent>>` | Called when a pointer down occurs outside the tooltip content. Call `event.preventDefault()` to prevent the tooltip from closing. Useful for keeping the tooltip open when clicking the trigger. |
 
 ### Positioning props (forwarded to PopperContent)
 

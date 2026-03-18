@@ -379,7 +379,7 @@ Implements the [WAI-ARIA Checkbox pattern](https://www.w3.org/WAI/ARIA/apd/patte
 | ---------- | --------------- | ---------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `Checkbox` | `role`          | `"checkbox"`                       | Identifies the element as a checkbox.                                                                                                                    |
 | `Checkbox` | `aria-checked`  | `"true" \| "false" \| "mixed"`    | Reflects the current checked state. `"mixed"` corresponds to the indeterminate state.                                                                    |
-| `Checkbox` | `aria-required` | `"true" \| "false"`                | Set based on the `required` prop.                                                                                                                        |
+| `Checkbox` | `aria-required` | `"true"` or omitted                | Set to `"true"` when the `required` prop is `true`; omitted entirely when `false`.                                                                       |
 | `Checkbox` | `disabled`      | *(HTML attribute, not ARIA)*       | Set when the checkbox is disabled. Native `<button>` disabled behavior prevents interaction.                                                             |
 
 ### Behavioral Notes

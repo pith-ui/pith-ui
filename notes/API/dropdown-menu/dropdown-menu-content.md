@@ -59,10 +59,10 @@ pub fn DropdownMenuContent(
     #[prop(into, optional)] hide_when_detached: MaybeProp<bool>,
     #[prop(into, optional)] r#loop: MaybeProp<bool>,
     #[prop(into, optional)] on_close_auto_focus: Option<Callback<ev::Event>>,
-    #[prop(into, optional)] on_interact_outside: Option<Callback<web_sys::CustomEvent>>,
+    #[prop(into, optional)] on_interact_outside: Option<Callback<ev::CustomEvent>>,
     #[prop(into, optional)] on_escape_key_down: Option<Callback<ev::KeyboardEvent>>,
-    #[prop(into, optional)] on_pointer_down_outside: Option<Callback<web_sys::CustomEvent>>,
-    #[prop(into, optional)] on_focus_outside: Option<Callback<web_sys::CustomEvent>>,
+    #[prop(into, optional)] on_pointer_down_outside: Option<Callback<ev::CustomEvent>>,
+    #[prop(into, optional)] on_focus_outside: Option<Callback<ev::CustomEvent>>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
     children: ChildrenFn,
@@ -94,9 +94,9 @@ pub fn DropdownMenuContent(
 | `loop` | `r#loop` | `boolean` (default `false`) | `MaybeProp<bool>` (default `false`) | Whether keyboard navigation should loop from the last item to the first and vice versa. |
 | `onCloseAutoFocus` | `on_close_auto_focus` | `(event: Event) => void` | `Option<Callback<ev::Event>>` | Called when focus would move back to the trigger after closing. Call `event.preventDefault()` to prevent focus from moving. The internal handler always prevents default and manually focuses the trigger (unless the user interacted outside). |
 | `onEscapeKeyDown` | `on_escape_key_down` | `(event: KeyboardEvent) => void` | `Option<Callback<ev::KeyboardEvent>>` | Called when the Escape key is pressed. Call `event.preventDefault()` to prevent the menu from closing. |
-| `onPointerDownOutside` | `on_pointer_down_outside` | `(event: CustomEvent) => void` | `Option<Callback<web_sys::CustomEvent>>` | Called when a pointer down event occurs outside the content. Call `event.preventDefault()` to prevent the menu from closing. |
-| `onFocusOutside` | `on_focus_outside` | `(event: CustomEvent) => void` | `Option<Callback<web_sys::CustomEvent>>` | Called when focus moves outside the content. Call `event.preventDefault()` to prevent the menu from closing. In modal mode, this is automatically prevented. |
-| `onInteractOutside` | `on_interact_outside` | `(event: CustomEvent) => void` | `Option<Callback<web_sys::CustomEvent>>` | Called when any interaction (pointer or focus) occurs outside the content. The internal handler tracks whether the interaction was outside to control focus restoration behavior. |
+| `onPointerDownOutside` | `on_pointer_down_outside` | `(event: CustomEvent) => void` | `Option<Callback<ev::CustomEvent>>` | Called when a pointer down event occurs outside the content. Call `event.preventDefault()` to prevent the menu from closing. |
+| `onFocusOutside` | `on_focus_outside` | `(event: CustomEvent) => void` | `Option<Callback<ev::CustomEvent>>` | Called when focus moves outside the content. Call `event.preventDefault()` to prevent the menu from closing. In modal mode, this is automatically prevented. |
+| `onInteractOutside` | `on_interact_outside` | `(event: CustomEvent) => void` | `Option<Callback<ev::CustomEvent>>` | Called when any interaction (pointer or focus) occurs outside the content. The internal handler tracks whether the interaction was outside to control focus restoration behavior. |
 | `ref` | `node_ref` | `React.Ref` | `AnyNodeRef` | Ref to the rendered DOM element (`<div>`). |
 | `asChild` | `as_child` | `boolean` | `MaybeProp<bool>` | When `true`, renders the child directly instead of wrapping in a `<div>`, merging props and refs. |
 | *(spread)* | -- | `...Omit<MenuContentProps, 'onEntryFocus'>` | -- | React allows spreading any `<div>` HTML attribute. Leptos uses `attr:` directives instead. |

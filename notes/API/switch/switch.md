@@ -90,7 +90,7 @@ pub fn Switch(
 
 - The component renders `role="switch"` and `type="button"` on the underlying `<button>` element.
 - `aria-checked` is set to `"true"` or `"false"` based on the checked state.
-- `aria-required` is set based on the `required` prop.
+- `aria-required` is set to `"true"` when the `required` prop is `true`. When `required` is `false` (or not set), `aria-required` is omitted entirely rather than being set to `"false"`.
 - When the switch is inside a form (detected by `button.closest("form")`) or has a `form` prop, a hidden `<input type="checkbox">` (the "bubble input") is rendered alongside the button. This input mirrors the switch state and enables native form submission and validation. It is visually hidden (`opacity: 0`, `position: absolute`, `pointer-events: none`) and `aria-hidden`.
 - Clicking the button toggles the checked state. If inside a form, the click event on the button is stopped to prevent double-propagation -- the hidden input dispatches its own click event for form change tracking.
 - The hidden input's dimensions are synchronized to the button's size via `useSize`, so it occupies the same space for hit-testing purposes.
@@ -241,7 +241,7 @@ Implements the [WAI-ARIA Switch pattern](https://www.w3.org/WAI/ARIA/apd/pattern
 |---|---|---|---|
 | `Switch` (button) | `role` | `"switch"` | Identifies the element as a switch. |
 | `Switch` (button) | `aria-checked` | `"true" \| "false"` | Reflects the current checked state. |
-| `Switch` (button) | `aria-required` | `"true" \| "false"` | Set based on the `required` prop. |
+| `Switch` (button) | `aria-required` | `"true"` or omitted | Set to `"true"` when the `required` prop is `true`; omitted entirely when `false`. |
 | `Switch` (button) | `type` | `"button"` | Prevents form submission when pressed. |
 | Hidden input | `aria-hidden` | `"true"` | Hides the input from the accessibility tree. |
 

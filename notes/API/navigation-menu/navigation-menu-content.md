@@ -30,10 +30,10 @@ pub fn NavigationMenuContent(
     #[prop(into, optional)] force_mount: MaybeProp<bool>,
     #[prop(into, optional)] on_pointer_enter: Option<Callback<ev::PointerEvent>>,
     #[prop(into, optional)] on_pointer_leave: Option<Callback<ev::PointerEvent>>,
-    #[prop(into, optional)] on_escape_key_down: Option<Callback<web_sys::KeyboardEvent>>,
-    #[prop(into, optional)] on_focus_outside: Option<Callback<web_sys::CustomEvent>>,
-    #[prop(into, optional)] on_pointer_down_outside: Option<Callback<web_sys::CustomEvent>>,
-    #[prop(into, optional)] on_interact_outside: Option<Callback<web_sys::CustomEvent>>,
+    #[prop(into, optional)] on_escape_key_down: Option<Callback<ev::KeyboardEvent>>,
+    #[prop(into, optional)] on_focus_outside: Option<Callback<ev::CustomEvent>>,
+    #[prop(into, optional)] on_pointer_down_outside: Option<Callback<ev::CustomEvent>>,
+    #[prop(into, optional)] on_interact_outside: Option<Callback<ev::CustomEvent>>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
     #[prop(optional)] children: Option<ChildrenFn>,
@@ -45,10 +45,10 @@ pub fn NavigationMenuContent(
 | React Prop | Leptos Prop | Type (React) | Type (Leptos) | Description |
 |---|---|---|---|---|
 | `forceMount` | `force_mount` | `true \| undefined` | `MaybeProp<bool>` | Forces the content to stay mounted in the DOM even when its item is not active. Useful when controlling open/close animations with CSS or animation libraries. |
-| `onEscapeKeyDown` | `on_escape_key_down` | `(event: KeyboardEvent) => void` | `Option<Callback<web_sys::KeyboardEvent>>` | Called when the Escape key is pressed while content has focus. Called before the content is dismissed. Call `event.preventDefault()` to prevent dismissal. |
-| `onPointerDownOutside` | `on_pointer_down_outside` | `(event: CustomEvent) => void` | `Option<Callback<web_sys::CustomEvent>>` | Called when a pointer-down occurs outside the content. By default, clicks on triggers or the viewport are prevented from dismissing. |
-| `onFocusOutside` | `on_focus_outside` | `(event: CustomEvent) => void` | `Option<Callback<web_sys::CustomEvent>>` | Called when focus moves outside the content. By default, focus moving within the root navigation menu does not dismiss (prevented internally). |
-| `onInteractOutside` | `on_interact_outside` | `(event: CustomEvent) => void` | `Option<Callback<web_sys::CustomEvent>>` | Called for any interaction outside the content (union of pointer-down-outside and focus-outside). |
+| `onEscapeKeyDown` | `on_escape_key_down` | `(event: KeyboardEvent) => void` | `Option<Callback<ev::KeyboardEvent>>` | Called when the Escape key is pressed while content has focus. Called before the content is dismissed. Call `event.preventDefault()` to prevent dismissal. |
+| `onPointerDownOutside` | `on_pointer_down_outside` | `(event: CustomEvent) => void` | `Option<Callback<ev::CustomEvent>>` | Called when a pointer-down occurs outside the content. By default, clicks on triggers or the viewport are prevented from dismissing. |
+| `onFocusOutside` | `on_focus_outside` | `(event: CustomEvent) => void` | `Option<Callback<ev::CustomEvent>>` | Called when focus moves outside the content. By default, focus moving within the root navigation menu does not dismiss (prevented internally). |
+| `onInteractOutside` | `on_interact_outside` | `(event: CustomEvent) => void` | `Option<Callback<ev::CustomEvent>>` | Called for any interaction outside the content (union of pointer-down-outside and focus-outside). |
 | -- | `on_pointer_enter` | *(via spread)* | `Option<Callback<ev::PointerEvent>>` | Composed with the internal handler that cancels the close timer. In React, passed via `onPointerEnter` spread prop. |
 | -- | `on_pointer_leave` | *(via spread)* | `Option<Callback<ev::PointerEvent>>` | Composed with the internal handler that starts the close timer (mouse only). In React, passed via `onPointerLeave` spread prop. |
 | `ref` | `node_ref` | `React.Ref` | `AnyNodeRef` | Ref to the rendered DOM element (`<div>`, wrapped by `DismissableLayer`). |

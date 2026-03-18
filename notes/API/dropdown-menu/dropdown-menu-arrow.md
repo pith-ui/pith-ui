@@ -17,6 +17,8 @@ interface DropdownMenuArrowProps extends MenuArrowProps {}
 
 ```rust
 pub fn DropdownMenuArrow(
+    #[prop(into, optional)] width: MaybeProp<f64>,
+    #[prop(into, optional)] height: MaybeProp<f64>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
     #[prop(optional)] children: Option<ChildrenFn>,
@@ -27,8 +29,8 @@ pub fn DropdownMenuArrow(
 
 | React Prop | Leptos Prop | Type (React) | Type (Leptos) | Description |
 |---|---|---|---|---|
-| `width` | -- | `number` (default `10`) | -- | The width of the arrow in pixels. Not currently exposed on the Leptos `DropdownMenuArrow`; uses the underlying `PopperArrow` default. |
-| `height` | -- | `number` (default `5`) | -- | The height of the arrow in pixels. Not currently exposed on the Leptos `DropdownMenuArrow`; uses the underlying `PopperArrow` default. |
+| `width` | `width` | `number` (default `10`) | `MaybeProp<f64>` | The width of the arrow in pixels. |
+| `height` | `height` | `number` (default `5`) | `MaybeProp<f64>` | The height of the arrow in pixels. |
 | `ref` | `node_ref` | `React.Ref` | `AnyNodeRef` | Ref to the rendered DOM element. |
 | `asChild` | `as_child` | `boolean` | `MaybeProp<bool>` | When `true`, renders the child directly instead of the default SVG arrow, merging props and refs. |
 | `children` | `children` | `React.ReactNode` | `Option<ChildrenFn>` | Optional custom arrow content. Wrapped in `Option` in Leptos. |

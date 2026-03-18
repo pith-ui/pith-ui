@@ -36,7 +36,9 @@ pub fn MenuSubContent(
     #[prop(into, optional)]
     r#loop: MaybeProp<bool>,
     #[prop(into, optional)] on_escape_key_down: Option<Callback<ev::KeyboardEvent>>,
-    #[prop(into, optional)] on_focus_outside: Option<Callback<CustomEvent>>,
+    #[prop(into, optional)] on_pointer_down_outside: Option<Callback<ev::CustomEvent>>,
+    #[prop(into, optional)] on_focus_outside: Option<Callback<ev::CustomEvent>>,
+    #[prop(into, optional)] on_interact_outside: Option<Callback<ev::CustomEvent>>,
     #[prop(into, optional)] on_key_down: Option<Callback<ev::KeyboardEvent>>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
@@ -66,7 +68,9 @@ pub fn MenuSubContent(
 | `forceMount` | `force_mount` | `true \| undefined` | `MaybeProp<bool>` | Forces the content to stay mounted even when the submenu is closed. |
 | `loop` | `r#loop` | `boolean` (default `false`) | `MaybeProp<bool>` | Whether keyboard navigation loops within the submenu. |
 | `onEscapeKeyDown` | `on_escape_key_down` | `(event: KeyboardEvent) => void` | `Option<Callback<ev::KeyboardEvent>>` | Called when Escape is pressed. Composed with internal handler that closes the entire menu tree. |
-| `onFocusOutside` | `on_focus_outside` | `(event: CustomEvent) => void` | `Option<Callback<CustomEvent>>` | Called when focus moves outside. Composed with internal handler that closes the submenu (unless focus moved to the trigger). |
+| `onPointerDownOutside` | `on_pointer_down_outside` | `(event: CustomEvent) => void` | `Option<Callback<ev::CustomEvent>>` | Called when a pointer down event occurs outside the sub-content. |
+| `onFocusOutside` | `on_focus_outside` | `(event: CustomEvent) => void` | `Option<Callback<ev::CustomEvent>>` | Called when focus moves outside. Composed with internal handler that closes the submenu (unless focus moved to the trigger). |
+| `onInteractOutside` | `on_interact_outside` | `(event: CustomEvent) => void` | `Option<Callback<ev::CustomEvent>>` | Called when any interaction (pointer or focus) occurs outside the sub-content. |
 | `onKeyDown` | `on_key_down` | `(event: KeyboardEvent) => void` | `Option<Callback<ev::KeyboardEvent>>` | Called on keydown. Composed with internal handler for sub-close keys. |
 | `ref` | `node_ref` | `React.Ref` | `AnyNodeRef` | Ref to the content DOM element. |
 | `asChild` | `as_child` | `boolean` | `MaybeProp<bool>` | When `true`, renders the child directly instead of wrapping. |

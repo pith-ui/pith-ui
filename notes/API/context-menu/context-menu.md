@@ -143,12 +143,12 @@ pub fn ContextMenu(
   <ContextMenuTrigger>"Right click here"</ContextMenuTrigger>
   <ContextMenuPortal>
     <ContextMenuContent>
-      <ContextMenuItem on_select=Callback::new(move |_: web_sys::Event| { /* undo */ })>"Undo"</ContextMenuItem>
-      <ContextMenuItem on_select=Callback::new(move |_: web_sys::Event| { /* redo */ })>"Redo"</ContextMenuItem>
+      <ContextMenuItem on_select=Callback::new(move |_: ev::Event| { /* undo */ })>"Undo"</ContextMenuItem>
+      <ContextMenuItem on_select=Callback::new(move |_: ev::Event| { /* redo */ })>"Redo"</ContextMenuItem>
       <ContextMenuSeparator />
       <ContextMenuItem disabled=true>"Cut"</ContextMenuItem>
-      <ContextMenuItem on_select=Callback::new(move |_: web_sys::Event| { /* copy */ })>"Copy"</ContextMenuItem>
-      <ContextMenuItem on_select=Callback::new(move |_: web_sys::Event| { /* paste */ })>"Paste"</ContextMenuItem>
+      <ContextMenuItem on_select=Callback::new(move |_: ev::Event| { /* copy */ })>"Copy"</ContextMenuItem>
+      <ContextMenuItem on_select=Callback::new(move |_: ev::Event| { /* paste */ })>"Paste"</ContextMenuItem>
     </ContextMenuContent>
   </ContextMenuPortal>
 </ContextMenu>
@@ -318,7 +318,7 @@ let (file, set_file) = signal("index.js".to_string());
 
 ```rust
 <ContextMenuItem
-  on_select=Callback::new(move |event: web_sys::Event| {
+  on_select=Callback::new(move |event: ev::Event| {
     event.prevent_default();
     web_sys::window().unwrap().alert_with_message("This action keeps the menu open").ok();
   })

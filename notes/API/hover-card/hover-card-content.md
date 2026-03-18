@@ -64,10 +64,10 @@ interface PopperContentProps extends PrimitiveDivProps {
 ```rust
 pub fn HoverCardContent(
     #[prop(into, optional)] force_mount: MaybeProp<bool>,
-    #[prop(into, optional)] on_escape_key_down: Option<Callback<web_sys::KeyboardEvent>>,
-    #[prop(into, optional)] on_pointer_down_outside: Option<Callback<web_sys::CustomEvent>>,
-    #[prop(into, optional)] on_focus_outside: Option<Callback<web_sys::CustomEvent>>,
-    #[prop(into, optional)] on_interact_outside: Option<Callback<web_sys::CustomEvent>>,
+    #[prop(into, optional)] on_escape_key_down: Option<Callback<ev::KeyboardEvent>>,
+    #[prop(into, optional)] on_pointer_down_outside: Option<Callback<ev::CustomEvent>>,
+    #[prop(into, optional)] on_focus_outside: Option<Callback<ev::CustomEvent>>,
+    #[prop(into, optional)] on_interact_outside: Option<Callback<ev::CustomEvent>>,
     #[prop(into, optional)] on_pointer_enter: Option<Callback<ev::PointerEvent>>,
     #[prop(into, optional)] on_pointer_leave: Option<Callback<ev::PointerEvent>>,
     // PopperContent forwarded props
@@ -97,10 +97,10 @@ pub fn HoverCardContent(
 | React Prop | Leptos Prop | Type (React) | Type (Leptos) | Description |
 |---|---|---|---|---|
 | `forceMount` | `force_mount` | `true \| undefined` | `MaybeProp<bool>` | Forces the content to stay mounted in the DOM even when the hover card is closed. When used inside a `HoverCardPortal` with its own `forceMount`, this prop inherits the portal's value unless explicitly overridden. |
-| `onEscapeKeyDown` | `on_escape_key_down` | `(event: KeyboardEvent) => void` | `Option<Callback<web_sys::KeyboardEvent>>` | Called when the Escape key is pressed. Call `preventDefault()` on the event to prevent dismissal. |
-| `onPointerDownOutside` | `on_pointer_down_outside` | `(event: CustomEvent) => void` | `Option<Callback<web_sys::CustomEvent>>` | Called when a pointer-down occurs outside the content. Call `preventDefault()` to prevent dismissal. |
-| `onFocusOutside` | `on_focus_outside` | `(event: CustomEvent) => void` | `Option<Callback<web_sys::CustomEvent>>` | Called when focus moves outside the content. By default, `preventDefault()` is always called internally to prevent the hover card from closing on focus-out (focus should not dismiss a hover card). The user handler is called before this default prevention. |
-| `onInteractOutside` | `on_interact_outside` | `(event: CustomEvent) => void` | `Option<Callback<web_sys::CustomEvent>>` | Called on any outside interaction (pointer-down or focus-out). Call `preventDefault()` to prevent dismissal. |
+| `onEscapeKeyDown` | `on_escape_key_down` | `(event: KeyboardEvent) => void` | `Option<Callback<ev::KeyboardEvent>>` | Called when the Escape key is pressed. Call `preventDefault()` on the event to prevent dismissal. |
+| `onPointerDownOutside` | `on_pointer_down_outside` | `(event: CustomEvent) => void` | `Option<Callback<ev::CustomEvent>>` | Called when a pointer-down occurs outside the content. Call `preventDefault()` to prevent dismissal. |
+| `onFocusOutside` | `on_focus_outside` | `(event: CustomEvent) => void` | `Option<Callback<ev::CustomEvent>>` | Called when focus moves outside the content. By default, `preventDefault()` is always called internally to prevent the hover card from closing on focus-out (focus should not dismiss a hover card). The user handler is called before this default prevention. |
+| `onInteractOutside` | `on_interact_outside` | `(event: CustomEvent) => void` | `Option<Callback<ev::CustomEvent>>` | Called on any outside interaction (pointer-down or focus-out). Call `preventDefault()` to prevent dismissal. |
 
 ### Pointer event handlers
 

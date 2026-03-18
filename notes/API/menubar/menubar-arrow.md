@@ -17,6 +17,8 @@ interface MenubarArrowProps extends MenuArrowProps {}
 
 ```rust
 pub fn MenubarArrow(
+    #[prop(into, optional)] width: MaybeProp<f64>,
+    #[prop(into, optional)] height: MaybeProp<f64>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
     #[prop(optional)] children: Option<ChildrenFn>,
@@ -30,8 +32,8 @@ pub fn MenubarArrow(
 | `ref` | `node_ref` | `React.Ref` | `AnyNodeRef` | Ref to the rendered SVG element. |
 | `asChild` | `as_child` | `boolean` | `MaybeProp<bool>` | When `true`, renders the child directly instead of the default arrow SVG, merging props and refs. |
 | `children` | `children` | `React.ReactNode` | `Option<ChildrenFn>` | Optional custom arrow content. Leptos wraps in `Option`. |
-| `width` | -- | `number` (default `10`) | -- | Width of the arrow in pixels. Not directly exposed in the Leptos menubar wrapper; available on the underlying `MenuArrow`/`PopperArrow`. |
-| `height` | -- | `number` (default `5`) | -- | Height of the arrow in pixels. Not directly exposed in the Leptos menubar wrapper. |
+| `width` | `width` | `number` (default `10`) | `MaybeProp<f64>` | Width of the arrow in pixels. |
+| `height` | `height` | `number` (default `5`) | `MaybeProp<f64>` | Height of the arrow in pixels. |
 | *(spread)* | -- | `...PopperArrowProps` | -- | React allows spreading SVG attributes. Leptos uses `attr:` directives instead. |
 
 ### Implicit behavior

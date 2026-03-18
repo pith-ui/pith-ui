@@ -19,7 +19,7 @@ const NavigationMenuLink = React.forwardRef<NavigationMenuLinkElement, Navigatio
 ```rust
 pub fn NavigationMenuLink(
     #[prop(into, optional)] active: MaybeProp<bool>,
-    #[prop(into, optional)] on_select: Option<Callback<web_sys::Event>>,
+    #[prop(into, optional)] on_select: Option<Callback<ev::Event>>,
     #[prop(into, optional)] on_click: Option<Callback<ev::MouseEvent>>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
@@ -32,7 +32,7 @@ pub fn NavigationMenuLink(
 | React Prop | Leptos Prop | Type (React) | Type (Leptos) | Description |
 |---|---|---|---|---|
 | `active` | `active` | `boolean` | `MaybeProp<bool>` | Marks this link as the currently active page. When `true`, sets `data-active` and `aria-current="page"` on the element. |
-| `onSelect` | `on_select` | `(event: Event) => void` | `Option<Callback<web_sys::Event>>` | Called when the link is selected (clicked). Receives a custom `navigationMenu.linkSelect` event. Call `event.preventDefault()` to prevent the default behavior of closing the menu after selection. |
+| `onSelect` | `on_select` | `(event: Event) => void` | `Option<Callback<ev::Event>>` | Called when the link is selected (clicked). Receives a custom `navigationMenu.linkSelect` event. Call `event.preventDefault()` to prevent the default behavior of closing the menu after selection. |
 | -- | `on_click` | *(via spread)* | `Option<Callback<ev::MouseEvent>>` | Composed with the internal click handler. In React, passed via `onClick` spread prop. |
 | `ref` | `node_ref` | `React.Ref` | `AnyNodeRef` | Ref to the rendered DOM element (`<a>`). |
 | `asChild` | `as_child` | `boolean` | `MaybeProp<bool>` | When `true`, renders the child directly instead of wrapping in an `<a>`, merging props and refs. Useful for integrating with a router's link component. |

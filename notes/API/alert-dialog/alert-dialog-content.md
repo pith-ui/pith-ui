@@ -50,9 +50,10 @@ interface DialogContentImplProps extends Omit<DismissableLayerProps, 'onDismiss'
 ```rust
 pub fn AlertDialogContent(
     #[prop(into, optional)] force_mount: MaybeProp<bool>,
-    #[prop(into, optional)] on_open_auto_focus: Option<Callback<web_sys::Event>>,
-    #[prop(into, optional)] on_close_auto_focus: Option<Callback<web_sys::Event>>,
-    #[prop(into, optional)] on_escape_key_down: Option<Callback<web_sys::KeyboardEvent>>,
+    #[prop(into, optional)] on_open_auto_focus: Option<Callback<ev::Event>>,
+    #[prop(into, optional)] on_close_auto_focus: Option<Callback<ev::Event>>,
+    #[prop(into, optional)] on_escape_key_down: Option<Callback<ev::KeyboardEvent>>,
+    #[prop(into, optional)] on_focus_outside: Option<Callback<ev::CustomEvent>>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
     #[prop(optional)] children: Option<ChildrenFn>,
@@ -64,9 +65,10 @@ pub fn AlertDialogContent(
 | React Prop | Leptos Prop | Type (React) | Type (Leptos) | Description |
 |---|---|---|---|---|
 | `forceMount` | `force_mount` | `true \| undefined` | `MaybeProp<bool>` | Forces the content to stay mounted in the DOM even when closed. Inherits from `AlertDialogPortal`'s `forceMount` if not set. Useful for controlling enter/exit animations. |
-| `onOpenAutoFocus` | `on_open_auto_focus` | `(event: Event) => void` | `Option<Callback<web_sys::Event>>` | Callback fired when focus is about to move into the content on open. Call `event.preventDefault()` to prevent the default focus behavior. In React, the default behavior focuses the Cancel button via `cancelRef`. In Leptos, FocusScope's `focus_first()` focuses the first tabbable element instead. |
-| `onCloseAutoFocus` | `on_close_auto_focus` | `(event: Event) => void` | `Option<Callback<web_sys::Event>>` | Callback fired when focus is about to move back to the trigger on close. Call `event.preventDefault()` to prevent default focus restoration. |
-| `onEscapeKeyDown` | `on_escape_key_down` | `(event: KeyboardEvent) => void` | `Option<Callback<web_sys::KeyboardEvent>>` | Callback fired when the Escape key is pressed. Call `event.preventDefault()` to prevent the dialog from closing. |
+| `onOpenAutoFocus` | `on_open_auto_focus` | `(event: Event) => void` | `Option<Callback<ev::Event>>` | Callback fired when focus is about to move into the content on open. Call `event.preventDefault()` to prevent the default focus behavior. In React, the default behavior focuses the Cancel button via `cancelRef`. In Leptos, FocusScope's `focus_first()` focuses the first tabbable element instead. |
+| `onCloseAutoFocus` | `on_close_auto_focus` | `(event: Event) => void` | `Option<Callback<ev::Event>>` | Callback fired when focus is about to move back to the trigger on close. Call `event.preventDefault()` to prevent default focus restoration. |
+| `onEscapeKeyDown` | `on_escape_key_down` | `(event: KeyboardEvent) => void` | `Option<Callback<ev::KeyboardEvent>>` | Callback fired when the Escape key is pressed. Call `event.preventDefault()` to prevent the dialog from closing. |
+| `onFocusOutside` | `on_focus_outside` | *(omitted via `Omit<>` in React)* | `Option<Callback<ev::CustomEvent>>` | Called when focus moves outside the content. In Leptos, this is exposed for user-space handling even though AlertDialog internally prevents outside interactions. |
 | `onPointerDownOutside` | -- | omitted via `Omit<>` | -- | Not exposed. AlertDialog always prevents outside pointer interactions. Internally calls `event.preventDefault()`. |
 | `onInteractOutside` | -- | omitted via `Omit<>` | -- | Not exposed. AlertDialog always prevents outside interactions. Internally calls `event.preventDefault()`. |
 | `ref` | `node_ref` | `React.Ref` | `AnyNodeRef` | Ref to the rendered DOM element. |

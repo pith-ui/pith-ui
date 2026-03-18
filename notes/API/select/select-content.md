@@ -36,9 +36,9 @@ When `position="popper"`, the following `PopperContent` props are also accepted:
 ```rust
 pub fn SelectContent(
     #[prop(into, optional)] position: MaybeProp<String>,
-    #[prop(into, optional)] on_close_auto_focus: Option<Callback<web_sys::Event>>,
-    #[prop(into, optional)] on_escape_key_down: Option<Callback<web_sys::KeyboardEvent>>,
-    #[prop(into, optional)] on_pointer_down_outside: Option<Callback<web_sys::CustomEvent>>,
+    #[prop(into, optional)] on_close_auto_focus: Option<Callback<ev::Event>>,
+    #[prop(into, optional)] on_escape_key_down: Option<Callback<ev::KeyboardEvent>>,
+    #[prop(into, optional)] on_pointer_down_outside: Option<Callback<ev::CustomEvent>>,
     // PopperContent forwarded props
     #[prop(into, optional, default = Side::Bottom.into())] side: Signal<Side>,
     #[prop(into, optional, default = 0.0.into())] side_offset: Signal<f64>,
@@ -67,9 +67,9 @@ pub fn SelectContent(
 | React Prop | Leptos Prop | Type (React) | Type (Leptos) | Description |
 |---|---|---|---|---|
 | `position` | `position` | `'item-aligned' \| 'popper'` (default `'item-aligned'`) | `MaybeProp<String>` (default `"item-aligned"`) | The positioning mode. `"item-aligned"` aligns the selected item with the trigger. `"popper"` uses floating-UI-based positioning. |
-| `onCloseAutoFocus` | `on_close_auto_focus` | `(event: Event) => void` | `Option<Callback<web_sys::Event>>` | Called when auto-focusing on close. Call `event.preventDefault()` to prevent default focus restoration to the trigger. |
-| `onEscapeKeyDown` | `on_escape_key_down` | `(event: KeyboardEvent) => void` | `Option<Callback<web_sys::KeyboardEvent>>` | Called when the Escape key is pressed. Call `event.preventDefault()` to prevent closing. |
-| `onPointerDownOutside` | `on_pointer_down_outside` | `(event: CustomEvent) => void` | `Option<Callback<web_sys::CustomEvent>>` | Called when a pointer down occurs outside the content. Call `event.preventDefault()` to prevent closing. |
+| `onCloseAutoFocus` | `on_close_auto_focus` | `(event: Event) => void` | `Option<Callback<ev::Event>>` | Called when auto-focusing on close. Call `event.preventDefault()` to prevent default focus restoration to the trigger. |
+| `onEscapeKeyDown` | `on_escape_key_down` | `(event: KeyboardEvent) => void` | `Option<Callback<ev::KeyboardEvent>>` | Called when the Escape key is pressed. Call `event.preventDefault()` to prevent closing. |
+| `onPointerDownOutside` | `on_pointer_down_outside` | `(event: CustomEvent) => void` | `Option<Callback<ev::CustomEvent>>` | Called when a pointer down occurs outside the content. Call `event.preventDefault()` to prevent closing. |
 | `ref` | `node_ref` | `React.Ref` | `AnyNodeRef` | Ref to the rendered content DOM element (`<div>`). |
 | `asChild` | `as_child` | `boolean` | `MaybeProp<bool>` | When `true`, renders the child directly instead of wrapping in a `<div>`, merging props and refs. |
 | `children` | `children` | `React.ReactNode` | `Option<ChildrenFn>` | The content children (viewport, scroll buttons, etc.). |

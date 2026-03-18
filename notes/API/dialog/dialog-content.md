@@ -51,12 +51,12 @@ pub fn DialogContent(
     /// AlertDialog overrides this to `"alertdialog"`.
     #[prop(into, optional)]
     role: Option<String>,
-    #[prop(into, optional)] on_open_auto_focus: Option<Callback<web_sys::Event>>,
-    #[prop(into, optional)] on_close_auto_focus: Option<Callback<web_sys::Event>>,
-    #[prop(into, optional)] on_escape_key_down: Option<Callback<web_sys::KeyboardEvent>>,
-    #[prop(into, optional)] on_pointer_down_outside: Option<Callback<web_sys::CustomEvent>>,
-    #[prop(into, optional)] on_focus_outside: Option<Callback<web_sys::CustomEvent>>,
-    #[prop(into, optional)] on_interact_outside: Option<Callback<web_sys::CustomEvent>>,
+    #[prop(into, optional)] on_open_auto_focus: Option<Callback<ev::Event>>,
+    #[prop(into, optional)] on_close_auto_focus: Option<Callback<ev::Event>>,
+    #[prop(into, optional)] on_escape_key_down: Option<Callback<ev::KeyboardEvent>>,
+    #[prop(into, optional)] on_pointer_down_outside: Option<Callback<ev::CustomEvent>>,
+    #[prop(into, optional)] on_focus_outside: Option<Callback<ev::CustomEvent>>,
+    #[prop(into, optional)] on_interact_outside: Option<Callback<ev::CustomEvent>>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
     #[prop(optional)] children: Option<ChildrenFn>,
@@ -69,12 +69,12 @@ pub fn DialogContent(
 |---|---|---|---|---|
 | `forceMount` | `force_mount` | `true \| undefined` | `MaybeProp<bool>` | Forces the content to stay mounted in the DOM even when closed. Falls back to the portal-level `forceMount` if not set. Useful for exit animations. |
 | -- | `role` | -- | `Option<String>` (default `"dialog"`) | Leptos-only. The ARIA role for the content element. Defaults to `"dialog"`. Exposed so that `AlertDialog` can override it to `"alertdialog"`. Not part of the React public API (React hardcodes `role="dialog"` internally). |
-| `onOpenAutoFocus` | `on_open_auto_focus` | `(event: Event) => void` | `Option<Callback<web_sys::Event>>` | Called when the content auto-focuses on mount. Call `event.preventDefault()` to prevent default auto-focus behavior and handle focus manually. |
-| `onCloseAutoFocus` | `on_close_auto_focus` | `(event: Event) => void` | `Option<Callback<web_sys::Event>>` | Called when auto-focus returns on unmount. Call `event.preventDefault()` to prevent default focus-return behavior (which focuses the trigger). |
-| `onEscapeKeyDown` | `on_escape_key_down` | `(event: KeyboardEvent) => void` | `Option<Callback<web_sys::KeyboardEvent>>` | Called when Escape is pressed. Call `event.preventDefault()` to prevent the dialog from closing. Inherited from `DismissableLayer`. |
-| `onPointerDownOutside` | `on_pointer_down_outside` | `(event: CustomEvent) => void` | `Option<Callback<web_sys::CustomEvent>>` | Called when a pointer down occurs outside the content. Call `event.preventDefault()` to prevent dismissal. The event's `detail.originalEvent` contains the native pointer event. Inherited from `DismissableLayer`. |
-| `onFocusOutside` | `on_focus_outside` | `(event: CustomEvent) => void` | `Option<Callback<web_sys::CustomEvent>>` | Called when focus moves outside the content. In modal mode, this is always prevented internally (focus is trapped). Inherited from `DismissableLayer`. |
-| `onInteractOutside` | `on_interact_outside` | `(event: CustomEvent) => void` | `Option<Callback<web_sys::CustomEvent>>` | Called on any outside interaction (pointer or focus). Call `event.preventDefault()` to prevent dismissal. Inherited from `DismissableLayer`. |
+| `onOpenAutoFocus` | `on_open_auto_focus` | `(event: Event) => void` | `Option<Callback<ev::Event>>` | Called when the content auto-focuses on mount. Call `event.preventDefault()` to prevent default auto-focus behavior and handle focus manually. |
+| `onCloseAutoFocus` | `on_close_auto_focus` | `(event: Event) => void` | `Option<Callback<ev::Event>>` | Called when auto-focus returns on unmount. Call `event.preventDefault()` to prevent default focus-return behavior (which focuses the trigger). |
+| `onEscapeKeyDown` | `on_escape_key_down` | `(event: KeyboardEvent) => void` | `Option<Callback<ev::KeyboardEvent>>` | Called when Escape is pressed. Call `event.preventDefault()` to prevent the dialog from closing. Inherited from `DismissableLayer`. |
+| `onPointerDownOutside` | `on_pointer_down_outside` | `(event: CustomEvent) => void` | `Option<Callback<ev::CustomEvent>>` | Called when a pointer down occurs outside the content. Call `event.preventDefault()` to prevent dismissal. The event's `detail.originalEvent` contains the native pointer event. Inherited from `DismissableLayer`. |
+| `onFocusOutside` | `on_focus_outside` | `(event: CustomEvent) => void` | `Option<Callback<ev::CustomEvent>>` | Called when focus moves outside the content. In modal mode, this is always prevented internally (focus is trapped). Inherited from `DismissableLayer`. |
+| `onInteractOutside` | `on_interact_outside` | `(event: CustomEvent) => void` | `Option<Callback<ev::CustomEvent>>` | Called on any outside interaction (pointer or focus). Call `event.preventDefault()` to prevent dismissal. Inherited from `DismissableLayer`. |
 | `ref` | `node_ref` | `React.Ref` | `AnyNodeRef` | Ref to the rendered DOM element (the `DismissableLayer` root, typically a `<div>`). |
 | `asChild` | `as_child` | `boolean` | `MaybeProp<bool>` | When `true`, renders the child directly instead of wrapping in a container element, merging props and refs. |
 | `children` | `children` | `React.ReactNode` | `Option<ChildrenFn>` | The dialog content. Leptos wraps this in `Option` to allow an empty content region. |

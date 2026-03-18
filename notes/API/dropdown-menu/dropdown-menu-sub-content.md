@@ -43,7 +43,9 @@ pub fn DropdownMenuSubContent(
     #[prop(into, optional)] hide_when_detached: MaybeProp<bool>,
     #[prop(into, optional)] r#loop: MaybeProp<bool>,
     #[prop(into, optional)] on_escape_key_down: Option<Callback<ev::KeyboardEvent>>,
-    #[prop(into, optional)] on_focus_outside: Option<Callback<web_sys::CustomEvent>>,
+    #[prop(into, optional)] on_pointer_down_outside: Option<Callback<ev::CustomEvent>>,
+    #[prop(into, optional)] on_focus_outside: Option<Callback<ev::CustomEvent>>,
+    #[prop(into, optional)] on_interact_outside: Option<Callback<ev::CustomEvent>>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
     children: ChildrenFn,
@@ -72,7 +74,9 @@ pub fn DropdownMenuSubContent(
 | `forceMount` | `force_mount` | `true \| undefined` | `MaybeProp<bool>` | Forces the content to stay in the DOM when closed. Useful for controlling animations. |
 | `loop` | `r#loop` | `boolean` (default `false`) | `MaybeProp<bool>` (default `false`) | Whether keyboard navigation should loop around within the submenu. |
 | `onEscapeKeyDown` | `on_escape_key_down` | `(event: KeyboardEvent) => void` | `Option<Callback<ev::KeyboardEvent>>` | Called when the Escape key is pressed. The internal handler closes the entire menu tree and calls `preventDefault()` to avoid exiting fullscreen. |
-| `onFocusOutside` | `on_focus_outside` | `(event: CustomEvent) => void` | `Option<Callback<web_sys::CustomEvent>>` | Called when focus moves outside the sub-content. The internal handler closes the submenu unless focus moved to the sub-trigger (to avoid a re-open animation loop). |
+| `onPointerDownOutside` | `on_pointer_down_outside` | `(event: CustomEvent) => void` | `Option<Callback<ev::CustomEvent>>` | Called when a pointer down event occurs outside the sub-content. |
+| `onFocusOutside` | `on_focus_outside` | `(event: CustomEvent) => void` | `Option<Callback<ev::CustomEvent>>` | Called when focus moves outside the sub-content. The internal handler closes the submenu unless focus moved to the sub-trigger (to avoid a re-open animation loop). |
+| `onInteractOutside` | `on_interact_outside` | `(event: CustomEvent) => void` | `Option<Callback<ev::CustomEvent>>` | Called when any interaction (pointer or focus) occurs outside the sub-content. |
 | `ref` | `node_ref` | `React.Ref` | `AnyNodeRef` | Ref to the rendered DOM element (`<div>`). |
 | `asChild` | `as_child` | `boolean` | `MaybeProp<bool>` | When `true`, renders the child directly instead of wrapping in a `<div>`, merging props and refs. |
 | *(spread)* | -- | remaining `PopperContentProps` | -- | React allows spreading popper content props. Leptos uses `attr:` directives instead. |

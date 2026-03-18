@@ -19,8 +19,8 @@ All standard `<input>` HTML attributes are accepted via `PrimitiveInputProps`.
 pub fn FormControl(
     #[prop(into, optional)] id: Option<String>,
     #[prop(into, optional)] name: Option<String>,
-    #[prop(into, optional)] on_invalid: Option<Callback<web_sys::Event>>,
-    #[prop(into, optional)] on_change: Option<Callback<web_sys::Event>>,
+    #[prop(into, optional)] on_invalid: Option<Callback<ev::Event>>,
+    #[prop(into, optional)] on_change: Option<Callback<ev::Event>>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
     #[prop(optional)] children: Option<ChildrenFn>,
@@ -33,8 +33,8 @@ pub fn FormControl(
 |---|---|---|---|---|
 | `id` | `id` | `string \| undefined` | `Option<String>` | The `id` attribute for the input. Defaults to the parent `FormField`'s auto-generated `id`. Override when you need a specific `id` (and update `FormLabel`'s `htmlFor` to match). |
 | `name` | `name` | `string \| undefined` | `Option<String>` | The `name` attribute for the input. Defaults to the parent `FormField`'s `name` prop. |
-| `onInvalid` | `on_invalid` | `React.FormEventHandler` | `Option<Callback<web_sys::Event>>` | Called when the control's `invalid` event fires (during form submission if the control fails validation). The component also runs its own validity update logic after this callback. |
-| `onChange` | `on_change` | `React.ChangeEventHandler` | `Option<Callback<web_sys::Event>>` | Called when the user modifies the control's value. In React, this fires on the `input` event (React's synthetic `onChange`). In Leptos, this is wired to the native `input` event. The component clears existing validation after this callback runs. |
+| `onInvalid` | `on_invalid` | `React.FormEventHandler` | `Option<Callback<ev::Event>>` | Called when the control's `invalid` event fires (during form submission if the control fails validation). The component also runs its own validity update logic after this callback. |
+| `onChange` | `on_change` | `React.ChangeEventHandler` | `Option<Callback<ev::Event>>` | Called when the user modifies the control's value. In React, this fires on the `input` event (React's synthetic `onChange`). In Leptos, this is wired to the native `input` event. The component clears existing validation after this callback runs. |
 | `ref` | `node_ref` | `React.Ref` | `AnyNodeRef` | Ref to the rendered DOM element (`<input>`). |
 | `asChild` | `as_child` | `boolean` | `MaybeProp<bool>` | When `true`, renders the child directly instead of wrapping in an `<input>`, merging props and refs. |
 | `children` | `children` | `React.ReactNode` | `Option<ChildrenFn>` | Optional children. Typically unused since `<input>` is a void element, but supported for `asChild` usage. |

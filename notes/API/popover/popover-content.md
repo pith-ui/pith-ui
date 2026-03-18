@@ -59,12 +59,12 @@ interface PopperContentProps extends PrimitiveDivProps {
 ```rust
 pub fn PopoverContent(
     #[prop(into, optional)] force_mount: MaybeProp<bool>,
-    #[prop(into, optional)] on_open_auto_focus: Option<Callback<web_sys::Event>>,
-    #[prop(into, optional)] on_close_auto_focus: Option<Callback<web_sys::Event>>,
-    #[prop(into, optional)] on_escape_key_down: Option<Callback<web_sys::KeyboardEvent>>,
-    #[prop(into, optional)] on_pointer_down_outside: Option<Callback<web_sys::CustomEvent>>,
-    #[prop(into, optional)] on_focus_outside: Option<Callback<web_sys::CustomEvent>>,
-    #[prop(into, optional)] on_interact_outside: Option<Callback<web_sys::CustomEvent>>,
+    #[prop(into, optional)] on_open_auto_focus: Option<Callback<ev::Event>>,
+    #[prop(into, optional)] on_close_auto_focus: Option<Callback<ev::Event>>,
+    #[prop(into, optional)] on_escape_key_down: Option<Callback<ev::KeyboardEvent>>,
+    #[prop(into, optional)] on_pointer_down_outside: Option<Callback<ev::CustomEvent>>,
+    #[prop(into, optional)] on_focus_outside: Option<Callback<ev::CustomEvent>>,
+    #[prop(into, optional)] on_interact_outside: Option<Callback<ev::CustomEvent>>,
     // PopperContent forwarded props
     #[prop(into, optional, default = Side::Bottom.into())] side: Signal<Side>,
     #[prop(into, optional, default = 0.0.into())] side_offset: Signal<f64>,
@@ -108,12 +108,12 @@ pub fn PopoverContent(
 | React Prop | Leptos Prop | Type (React) | Type (Leptos) | Description |
 |---|---|---|---|---|
 | `forceMount` | `force_mount` | `true \| undefined` | `MaybeProp<bool>` | Forces the content to stay mounted even when closed. Falls back to the value from `PopoverPortal` context if not set. |
-| `onOpenAutoFocus` | `on_open_auto_focus` | `(event: Event) => void` | `Option<Callback<web_sys::Event>>` | Called when focus is about to move into the content on open. Call `event.preventDefault()` to prevent auto-focus. |
-| `onCloseAutoFocus` | `on_close_auto_focus` | `(event: Event) => void` | `Option<Callback<web_sys::Event>>` | Called when focus is about to return to the trigger on close. Call `event.preventDefault()` to prevent auto-focus. |
-| `onEscapeKeyDown` | `on_escape_key_down` | `(event: KeyboardEvent) => void` | `Option<Callback<web_sys::KeyboardEvent>>` | Called when the Escape key is pressed. Call `event.preventDefault()` to prevent dismissal. |
-| `onPointerDownOutside` | `on_pointer_down_outside` | `(event: CustomEvent) => void` | `Option<Callback<web_sys::CustomEvent>>` | Called when a pointer down event occurs outside the content. Call `event.preventDefault()` to prevent dismissal. |
-| `onFocusOutside` | `on_focus_outside` | `(event: CustomEvent) => void` | `Option<Callback<web_sys::CustomEvent>>` | Called when focus moves outside the content. Call `event.preventDefault()` to prevent dismissal. |
-| `onInteractOutside` | `on_interact_outside` | `(event: CustomEvent) => void` | `Option<Callback<web_sys::CustomEvent>>` | Called when any interaction (pointer or focus) occurs outside the content. Call `event.preventDefault()` to prevent dismissal. |
+| `onOpenAutoFocus` | `on_open_auto_focus` | `(event: Event) => void` | `Option<Callback<ev::Event>>` | Called when focus is about to move into the content on open. Call `event.preventDefault()` to prevent auto-focus. |
+| `onCloseAutoFocus` | `on_close_auto_focus` | `(event: Event) => void` | `Option<Callback<ev::Event>>` | Called when focus is about to return to the trigger on close. Call `event.preventDefault()` to prevent auto-focus. |
+| `onEscapeKeyDown` | `on_escape_key_down` | `(event: KeyboardEvent) => void` | `Option<Callback<ev::KeyboardEvent>>` | Called when the Escape key is pressed. Call `event.preventDefault()` to prevent dismissal. |
+| `onPointerDownOutside` | `on_pointer_down_outside` | `(event: CustomEvent) => void` | `Option<Callback<ev::CustomEvent>>` | Called when a pointer down event occurs outside the content. Call `event.preventDefault()` to prevent dismissal. |
+| `onFocusOutside` | `on_focus_outside` | `(event: CustomEvent) => void` | `Option<Callback<ev::CustomEvent>>` | Called when focus moves outside the content. Call `event.preventDefault()` to prevent dismissal. |
+| `onInteractOutside` | `on_interact_outside` | `(event: CustomEvent) => void` | `Option<Callback<ev::CustomEvent>>` | Called when any interaction (pointer or focus) occurs outside the content. Call `event.preventDefault()` to prevent dismissal. |
 
 ### Standard props
 

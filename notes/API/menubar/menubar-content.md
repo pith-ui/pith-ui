@@ -45,9 +45,9 @@ pub fn MenubarContent(
     #[prop(into, optional)] side_offset: MaybeProp<f64>,
     #[prop(into, optional)] on_close_auto_focus: Option<Callback<ev::Event>>,
     #[prop(into, optional)] on_escape_key_down: Option<Callback<ev::KeyboardEvent>>,
-    #[prop(into, optional)] on_pointer_down_outside: Option<Callback<web_sys::CustomEvent>>,
-    #[prop(into, optional)] on_focus_outside: Option<Callback<web_sys::CustomEvent>>,
-    #[prop(into, optional)] on_interact_outside: Option<Callback<web_sys::CustomEvent>>,
+    #[prop(into, optional)] on_pointer_down_outside: Option<Callback<ev::CustomEvent>>,
+    #[prop(into, optional)] on_focus_outside: Option<Callback<ev::CustomEvent>>,
+    #[prop(into, optional)] on_interact_outside: Option<Callback<ev::CustomEvent>>,
     #[prop(into, optional)] on_key_down: Option<Callback<ev::KeyboardEvent>>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
@@ -80,9 +80,9 @@ pub fn MenubarContent(
 | `loop` | `r#loop` | `boolean` (default `false`) | `MaybeProp<bool>` | Whether keyboard navigation within the menu should loop from the last item back to the first. |
 | `onCloseAutoFocus` | `on_close_auto_focus` | `(event: Event) => void` | `Option<Callback<ev::Event>>` | Called when auto-focusing on close. Call `event.preventDefault()` to prevent default focus behavior. |
 | `onEscapeKeyDown` | `on_escape_key_down` | `(event: KeyboardEvent) => void` | `Option<Callback<ev::KeyboardEvent>>` | Called when the Escape key is pressed. Call `event.preventDefault()` to prevent the menu from closing. |
-| `onPointerDownOutside` | `on_pointer_down_outside` | `(event: CustomEvent) => void` | `Option<Callback<web_sys::CustomEvent>>` | Called when a pointer-down event occurs outside the content. Call `event.preventDefault()` to prevent the menu from closing. |
-| `onFocusOutside` | `on_focus_outside` | `(event: CustomEvent) => void` | `Option<Callback<web_sys::CustomEvent>>` | Called when focus moves outside the content. Call `event.preventDefault()` to prevent the menu from closing. |
-| `onInteractOutside` | `on_interact_outside` | `(event: CustomEvent) => void` | `Option<Callback<web_sys::CustomEvent>>` | Called when any interaction occurs outside the content (superset of pointer-down and focus). |
+| `onPointerDownOutside` | `on_pointer_down_outside` | `(event: CustomEvent) => void` | `Option<Callback<ev::CustomEvent>>` | Called when a pointer-down event occurs outside the content. Call `event.preventDefault()` to prevent the menu from closing. |
+| `onFocusOutside` | `on_focus_outside` | `(event: CustomEvent) => void` | `Option<Callback<ev::CustomEvent>>` | Called when focus moves outside the content. Call `event.preventDefault()` to prevent the menu from closing. |
+| `onInteractOutside` | `on_interact_outside` | `(event: CustomEvent) => void` | `Option<Callback<ev::CustomEvent>>` | Called when any interaction occurs outside the content (superset of pointer-down and focus). |
 | -- | `on_key_down` | *(via spread)* | `Option<Callback<ev::KeyboardEvent>>` | User-provided key-down handler composed with the internal handler that manages cross-menu navigation. In React this is passed via spread props. |
 | `ref` | `node_ref` | `React.Ref` | `AnyNodeRef` | Ref to the rendered DOM element. |
 | `asChild` | `as_child` | `boolean` | `MaybeProp<bool>` | When `true`, renders the child directly, merging props and refs. |

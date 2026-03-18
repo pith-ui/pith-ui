@@ -198,7 +198,7 @@ let (open, set_open) = signal(false);
     <DialogPortal>
         <DialogOverlay />
         <DialogContent
-            on_interact_outside=Callback::new(|event: web_sys::CustomEvent| {
+            on_interact_outside=Callback::new(|event: ev::CustomEvent| {
                 event.prevent_default();
             })
         >
@@ -253,7 +253,7 @@ let search_field_ref = AnyNodeRef::new();
     <DialogPortal>
         <DialogOverlay />
         <DialogContent
-            on_open_auto_focus=Callback::new(move |event: web_sys::Event| {
+            on_open_auto_focus=Callback::new(move |event: ev::Event| {
                 event.prevent_default();
                 if let Some(el) = first_name_ref.get_untracked() {
                     use web_sys::wasm_bindgen::JsCast;
@@ -261,7 +261,7 @@ let search_field_ref = AnyNodeRef::new();
                     el.focus().ok();
                 }
             })
-            on_close_auto_focus=Callback::new(move |event: web_sys::Event| {
+            on_close_auto_focus=Callback::new(move |event: ev::Event| {
                 event.prevent_default();
                 if let Some(el) = search_field_ref.get_untracked() {
                     use web_sys::wasm_bindgen::JsCast;

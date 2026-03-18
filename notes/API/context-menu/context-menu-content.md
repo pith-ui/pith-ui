@@ -45,10 +45,10 @@ pub fn ContextMenuContent(
     #[prop(into, optional)] hide_when_detached: MaybeProp<bool>,
     #[prop(into, optional)] r#loop: MaybeProp<bool>,
     #[prop(into, optional)] on_close_auto_focus: Option<Callback<ev::Event>>,
-    #[prop(into, optional)] on_interact_outside: Option<Callback<web_sys::CustomEvent>>,
+    #[prop(into, optional)] on_interact_outside: Option<Callback<ev::CustomEvent>>,
     #[prop(into, optional)] on_escape_key_down: Option<Callback<ev::KeyboardEvent>>,
-    #[prop(into, optional)] on_pointer_down_outside: Option<Callback<web_sys::CustomEvent>>,
-    #[prop(into, optional)] on_focus_outside: Option<Callback<web_sys::CustomEvent>>,
+    #[prop(into, optional)] on_pointer_down_outside: Option<Callback<ev::CustomEvent>>,
+    #[prop(into, optional)] on_focus_outside: Option<Callback<ev::CustomEvent>>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
     children: ChildrenFn,
@@ -63,9 +63,9 @@ pub fn ContextMenuContent(
 | `loop` | `r#loop` | `boolean` | `MaybeProp<bool>` | Whether keyboard navigation should loop from last item back to first and vice versa. |
 | `onCloseAutoFocus` | `on_close_auto_focus` | `(event: Event) => void` | `Option<Callback<ev::Event>>` | Called when auto-focus fires after the menu closes. Call `event.preventDefault()` to prevent the default focus behavior. |
 | `onEscapeKeyDown` | `on_escape_key_down` | `(event: KeyboardEvent) => void` | `Option<Callback<ev::KeyboardEvent>>` | Called when the Escape key is pressed while the menu is open. Call `event.preventDefault()` to prevent the menu from closing. |
-| `onPointerDownOutside` | `on_pointer_down_outside` | `(event: PointerDownOutsideEvent) => void` | `Option<Callback<web_sys::CustomEvent>>` | Called when a pointer down event occurs outside the content. Call `event.preventDefault()` to prevent the menu from closing. |
-| `onFocusOutside` | `on_focus_outside` | `(event: FocusOutsideEvent) => void` | `Option<Callback<web_sys::CustomEvent>>` | Called when focus moves outside the content. Call `event.preventDefault()` to prevent the menu from closing. |
-| `onInteractOutside` | `on_interact_outside` | `(event: PointerDownOutsideEvent \| FocusOutsideEvent) => void` | `Option<Callback<web_sys::CustomEvent>>` | Called when any interaction (pointer or focus) occurs outside the content. Fires in addition to the more specific handlers above. |
+| `onPointerDownOutside` | `on_pointer_down_outside` | `(event: PointerDownOutsideEvent) => void` | `Option<Callback<ev::CustomEvent>>` | Called when a pointer down event occurs outside the content. Call `event.preventDefault()` to prevent the menu from closing. |
+| `onFocusOutside` | `on_focus_outside` | `(event: FocusOutsideEvent) => void` | `Option<Callback<ev::CustomEvent>>` | Called when focus moves outside the content. Call `event.preventDefault()` to prevent the menu from closing. |
+| `onInteractOutside` | `on_interact_outside` | `(event: PointerDownOutsideEvent \| FocusOutsideEvent) => void` | `Option<Callback<ev::CustomEvent>>` | Called when any interaction (pointer or focus) occurs outside the content. Fires in addition to the more specific handlers above. |
 | `alignOffset` | `align_offset` | `number` (default `0`) | `MaybeProp<f64>` | Offset in pixels from the `"start"` alignment edge. |
 | `avoidCollisions` | `avoid_collisions` | `boolean` (default `true`) | `MaybeProp<bool>` | Whether the content should shift to stay within the viewport when it would otherwise overflow. |
 | `collisionBoundary` | `collision_boundary` | `Element \| Element[] \| null` | `MaybeProp<SendWrapper<Vec<web_sys::Element>>>` | Elements to use as collision boundaries for overflow detection, in addition to the viewport. |
