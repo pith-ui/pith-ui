@@ -1,4 +1,5 @@
 pub mod as_child_chain;
+pub mod generic_toggle_group;
 pub mod attribute_clone;
 pub mod class_override;
 pub mod forwarded_attrs;

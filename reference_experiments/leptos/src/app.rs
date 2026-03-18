@@ -21,6 +21,7 @@ fn Index() -> impl IntoView {
             <li><a href="/non-overridable-styles">"Non-Overridable Styles"</a></li>
             <li><a href="/popper-style-approaches">"Popper Style Approaches"</a></li>
             <li><a href="/style-option">"style: with Option Values"</a></li>
+            <li><a href="/generic-toggle-group">"Generic Toggle Group (type-safe modes)"</a></li>
             <li><a href="/as-child-chain">"asChild Chain (multi-level forwarding)"</a></li>
         </ul>
     }
@@ -33,6 +34,7 @@ pub fn App() -> impl IntoView {
             <main>
                 <Routes fallback=|| "Not found.".into_view()>
                     <Route path=path!("/") view=Index />
+                    <Route path=path!("/generic-toggle-group") view=pages::generic_toggle_group::GenericToggleGroupPage />
                     <Route path=path!("/as-child-chain") view=pages::as_child_chain::AsChildChainPage />
                     <Route path=path!("/attribute-clone") view=pages::attribute_clone::AttributeClonePage />
                     <Route path=path!("/class-override") view=pages::class_override::ClassOverridePage />
