@@ -12,7 +12,7 @@ use crate::support::primitive::{Primitive, adapt_callback};
 use crate::support::use_controllable_state::{UseControllableStateParams, use_controllable_state};
 use crate::support::visually_hidden::VisuallyHidden;
 use leptos::attribute_interceptor::AttributeInterceptor;
-use leptos::{context::Provider, html, prelude::*};
+use leptos::{context::Provider, ev, html, prelude::*};
 use leptos_node_ref::AnyNodeRef;
 use send_wrapper::SendWrapper;
 use wasm_bindgen::JsCast;

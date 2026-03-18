@@ -94,8 +94,8 @@ pub fn FormLabel(
 pub fn FormControl(
     #[prop(into, optional)] id: Option<String>,
     #[prop(into, optional)] name: Option<String>,
-    #[prop(into, optional)] on_invalid: Option<Callback<web_sys::Event>>,
-    #[prop(into, optional)] on_change: Option<Callback<web_sys::Event>>,
+    #[prop(into, optional)] on_invalid: Option<Callback<ev::Event>>,
+    #[prop(into, optional)] on_change: Option<Callback<ev::Event>>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
     #[prop(optional)] children: Option<ChildrenFn>,

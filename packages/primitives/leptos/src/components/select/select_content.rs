@@ -9,9 +9,9 @@ use super::*;
 #[component]
 pub fn SelectContent(
     #[prop(into, optional)] position: MaybeProp<String>,
-    #[prop(into, optional)] on_close_auto_focus: Option<Callback<web_sys::Event>>,
-    #[prop(into, optional)] on_escape_key_down: Option<Callback<web_sys::KeyboardEvent>>,
-    #[prop(into, optional)] on_pointer_down_outside: Option<Callback<web_sys::CustomEvent>>,
+    #[prop(into, optional)] on_close_auto_focus: Option<Callback<ev::Event>>,
+    #[prop(into, optional)] on_escape_key_down: Option<Callback<ev::KeyboardEvent>>,
+    #[prop(into, optional)] on_pointer_down_outside: Option<Callback<ev::CustomEvent>>,
     // PopperContent forwarded props
     #[prop(into, optional, default = Side::Bottom.into())] side: Signal<Side>,
     #[prop(into, optional, default = 0.0.into())] side_offset: Signal<f64>,

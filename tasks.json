@@ -1779,16 +1779,16 @@
     "id": "cross-cutting-api-docs-1",
     "component": "global",
     "principle": "api-docs",
-    "description": "on_escape_key_down uses ev::KeyboardEvent in menu-family components (Menu, DropdownMenu, Menubar, ContextMenu) but web_sys::KeyboardEvent in DismissableLayer-family components (Dialog, AlertDialog, Popover, Select, Tooltip, HoverCard, NavigationMenu, Toast). Same underlying type but inconsistent import path in the public API. Should pick one and align.",
-    "status": "open",
+    "description": "on_escape_key_down uses ev::KeyboardEvent in menu-family components (Menu, DropdownMenu, Menubar, ContextMenu) but web_sys::KeyboardEvent in DismissableLayer-family components (Dialog, AlertDialog, Popover, Select, Tooltip, HoverCard, NavigationMenu, Toast). Same underlying type but inconsistent import path in the public API. Should pick one and align. RESOLVED: Standardized all public component prop signatures to use ev:: re-exports (ev::KeyboardEvent, ev::Event, ev::CustomEvent) instead of web_sys:: imports. These are the same types \u2014 ev:: is the idiomatic Leptos namespace. E2E: dialog 47/47, popover 39/39, tooltip 24/24, dropdown-menu 59/59.",
+    "status": "complete",
     "blockers": []
   },
   {
     "id": "cross-cutting-api-docs-2",
     "component": "global",
     "principle": "api-docs",
-    "description": "on_close_auto_focus and on_open_auto_focus use ev::Event in menu-family components but web_sys::Event in DismissableLayer-family components (Dialog, AlertDialog, Popover, Select). Same ev vs web_sys split as cross-cutting-api-docs-1.",
-    "status": "open",
+    "description": "on_close_auto_focus and on_open_auto_focus use ev::Event in menu-family components but web_sys::Event in DismissableLayer-family components (Dialog, AlertDialog, Popover, Select). Same ev vs web_sys split as cross-cutting-api-docs-1. RESOLVED: Standardized alongside cross-cutting-api-docs-1. All on_close_auto_focus and on_open_auto_focus props now use ev::Event consistently.",
+    "status": "complete",
     "blockers": []
   },
   {

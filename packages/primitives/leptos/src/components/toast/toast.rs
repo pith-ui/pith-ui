@@ -26,7 +26,7 @@ pub fn Toast(
     /// given to `ToastProvider`.
     #[prop(into, optional)]
     duration: MaybeProp<i32>,
-    #[prop(into, optional)] on_escape_key_down: Option<Callback<web_sys::KeyboardEvent>>,
+    #[prop(into, optional)] on_escape_key_down: Option<Callback<ev::KeyboardEvent>>,
     #[prop(into, optional)] on_pause: Option<Callback<()>>,
     #[prop(into, optional)] on_resume: Option<Callback<()>>,
     #[prop(into, optional)] on_swipe_start: Option<Callback<SwipeEvent>>,
