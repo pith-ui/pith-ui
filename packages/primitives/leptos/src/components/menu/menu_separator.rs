@@ -26,6 +26,8 @@ pub fn MenuSeparator(
 
 #[component]
 pub fn MenuArrow(
+    #[prop(into, optional)] width: MaybeProp<f64>,
+    #[prop(into, optional)] height: MaybeProp<f64>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
     #[prop(optional)] children: Option<ChildrenFn>,
@@ -34,6 +36,8 @@ pub fn MenuArrow(
 
     view! {
         <PopperArrow
+            width=width
+            height=height
             as_child=as_child
             node_ref=node_ref
         >
