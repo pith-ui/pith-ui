@@ -1630,5 +1630,13 @@
     "description": "AspectRatio node_ref prop is missing #[prop(into)] \u2014 it uses #[prop(optional)] only, while all other components (e.g., accordion) consistently use #[prop(into, optional)] for node_ref: AnyNodeRef. This is a minor inconsistency. See /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/aspect_ratio/mod.rs line 9.",
     "status": "open",
     "blockers": []
+  },
+  {
+    "id": "switch-api-docs-1",
+    "component": "switch",
+    "principle": "api-docs",
+    "description": "Leptos Switch always renders aria-required=\"false\" when the required prop is not set. React renders aria-required={required} which omits the attribute from the DOM when required is undefined. The Leptos behavior adds a redundant attribute to the DOM. See /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/switch/mod.rs lines 82-85 vs React switch.tsx line 65.",
+    "status": "open",
+    "blockers": []
   }
 ]
