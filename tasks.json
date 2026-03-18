@@ -1684,7 +1684,7 @@
     "component": "context-menu",
     "principle": "api-docs",
     "description": "Leptos ContextMenuSubContent is missing on_pointer_down_outside and on_interact_outside props. In React, MenuSubContentProps inherits these from MenuContentImplProps (which gets them from DismissableLayerProps). The Leptos ContextMenuSubContent only exposes on_escape_key_down and on_focus_outside, but not on_pointer_down_outside or on_interact_outside. This means consumers cannot intercept or prevent-default on pointer-down-outside or general interact-outside events for submenus. See packages/primitives/leptos/src/components/context_menu/context_menu_content.rs ContextMenuSubContent vs React context-menu.tsx ContextMenuSubContentProps -> MenuSubContentProps.",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -1708,7 +1708,7 @@
     "component": "dropdown-menu",
     "principle": "api-docs",
     "description": "Leptos DropdownMenuArrow (and underlying MenuArrow) does not expose width or height props. In React, DropdownMenuArrowProps extends MenuArrowProps extends PopperArrowProps extends ArrowProps, which includes width (default 10) and height (default 5). The Leptos MenuArrow only forwards as_child, node_ref, and children to PopperArrow, not width/height. Other components like HoverCardArrow do forward width and height to PopperArrow. See packages/primitives/leptos/src/components/menu/menu_separator.rs MenuArrow vs packages/primitives/leptos/src/components/hover_card/hover_card_content.rs HoverCardArrow.",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -1716,7 +1716,7 @@
     "component": "dropdown-menu",
     "principle": "api-docs",
     "description": "Leptos DropdownMenuSubContent is missing on_pointer_down_outside and on_interact_outside props. In React, DropdownMenuSubContentProps extends MenuSubContentProps which inherits onPointerDownOutside and onInteractOutside from MenuContentImplProps (via DismissableLayerProps). The Leptos DropdownMenuSubContent only exposes on_escape_key_down and on_focus_outside. This is the same issue as context-menu-api-docs-1 but for dropdown-menu. See packages/primitives/leptos/src/components/dropdown_menu/dropdown_menu_content.rs DropdownMenuSubContent.",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -1724,7 +1724,7 @@
     "component": "menubar",
     "principle": "api-docs",
     "description": "Leptos MenubarArrow (and underlying MenuArrow) does not expose width or height props. In React, MenubarArrowProps extends MenuArrowProps extends PopperArrowProps, which includes width (default 10) and height (default 5). The Leptos MenubarArrow only forwards as_child, node_ref, and children. Same root cause as dropdown-menu-api-docs-1 since both flow through MenuArrow. See packages/primitives/leptos/src/components/menubar/menubar_items.rs MenubarArrow and packages/primitives/leptos/src/components/menu/menu_separator.rs MenuArrow.",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -1732,7 +1732,7 @@
     "component": "menubar",
     "principle": "api-docs",
     "description": "Leptos MenubarSubContent is missing on_pointer_down_outside and on_interact_outside props. In React, MenubarSubContentProps extends MenuSubContentProps which inherits onPointerDownOutside and onInteractOutside from MenuContentImplProps (via DismissableLayerProps). The Leptos MenubarSubContent only exposes on_escape_key_down and on_focus_outside. Same root cause as context-menu-api-docs-1 and dropdown-menu-api-docs-2 since all flow through MenuSubContent. See packages/primitives/leptos/src/components/menubar/menubar_items.rs MenubarSubContent.",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -1740,7 +1740,7 @@
     "component": "toast",
     "principle": "api-docs",
     "description": "Leptos ToastClose does not compose a user-provided on_click callback with the internal close handler. In React, ToastClose uses composeEventHandlers(props.onClick, interactiveContext.onClose), which means a user-provided onClick runs first and can call preventDefault() to block the close. The Leptos ToastClose (packages/primitives/leptos/src/components/toast/toast.rs ToastClose component) directly calls interactive_context.on_close.run(()) with no way for the user to intercept or compose a click handler. Consider exposing an on_click prop and composing it with the close handler.",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -1748,7 +1748,7 @@
     "component": "toast",
     "principle": "api-docs",
     "description": "Leptos ToastAction does not validate that alt_text is non-empty. In React, ToastAction checks altText.trim() and logs a console error + returns null if it is empty (toast.tsx lines 759-764). The Leptos ToastAction (packages/primitives/leptos/src/components/toast/toast.rs ToastAction component) accepts any String including empty without validation. Consider adding a warning log or early return for empty alt_text to match React behavior.",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -1772,7 +1772,7 @@
     "component": "menu",
     "principle": "api-docs",
     "description": "Leptos MenuSubContent is missing on_pointer_down_outside and on_interact_outside props. React MenuSubContentProps inherits these from MenuContentImplProps (they are not in the Omit list). The Leptos MenuSubContent component signature only has on_escape_key_down, on_focus_outside, and on_key_down as DismissableLayer callback props. Check if these were intentionally omitted or missed during porting.",
-    "status": "open",
+    "status": "complete",
     "blockers": []
   },
   {
