@@ -1638,5 +1638,21 @@
     "description": "Leptos Switch always renders aria-required=\"false\" when the required prop is not set. React renders aria-required={required} which omits the attribute from the DOM when required is undefined. The Leptos behavior adds a redundant attribute to the DOM. See /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/switch/mod.rs lines 82-85 vs React switch.tsx line 65.",
     "status": "open",
     "blockers": []
+  },
+  {
+    "id": "tabs-api-docs-1",
+    "component": "tabs",
+    "principle": "api-docs",
+    "description": "React TabsContent sets hidden={!present} on the rendered div, so force-mounted inactive panels are hidden via the HTML hidden attribute. The Leptos TabsContent does not set the hidden attribute — it relies solely on the Presence component for mount/unmount. This means force-mounted inactive content may remain visible in the DOM without hidden. See React tabs.tsx line 251 vs Leptos tabs/mod.rs TabsContentImpl (no hidden attr set).",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "checkbox-api-docs-1",
+    "component": "checkbox",
+    "principle": "api-docs",
+    "description": "Leptos Checkbox always renders aria-required=\"true\" or aria-required=\"false\" (lines 151-154 of mod.rs). React renders aria-required={required} which omits the attribute entirely when required is falsy. Per WAI-ARIA, aria-required=\"false\" is the default and should be omitted rather than explicitly set. Same pattern as switch-api-docs-1. See /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/checkbox/mod.rs lines 151-154 vs React checkbox.tsx line 162.",
+    "status": "open",
+    "blockers": []
   }
 ]
