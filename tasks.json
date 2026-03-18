@@ -1635,8 +1635,8 @@
     "id": "switch-api-docs-1",
     "component": "switch",
     "principle": "api-docs",
-    "description": "Leptos Switch always renders aria-required=\"false\" when the required prop is not set. React renders aria-required={required} which omits the attribute from the DOM when required is undefined. The Leptos behavior adds a redundant attribute to the DOM. See /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/switch/mod.rs lines 82-85 vs React switch.tsx line 65.",
-    "status": "open",
+    "description": "Leptos Switch always renders aria-required=\"false\" when the required prop is not set. React renders aria-required={required} which omits the attribute from the DOM when required is undefined. The Leptos behavior adds a redundant attribute to the DOM. See /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/switch/mod.rs lines 82-85 vs React switch.tsx line 65. RESOLVED: Changed to only render aria-required when true, using .then_some(\"true\"). E2E: switch 24/24.",
+    "status": "complete",
     "blockers": []
   },
   {
@@ -1651,8 +1651,8 @@
     "id": "checkbox-api-docs-1",
     "component": "checkbox",
     "principle": "api-docs",
-    "description": "Leptos Checkbox always renders aria-required=\"true\" or aria-required=\"false\" (lines 151-154 of mod.rs). React renders aria-required={required} which omits the attribute entirely when required is falsy. Per WAI-ARIA, aria-required=\"false\" is the default and should be omitted rather than explicitly set. Same pattern as switch-api-docs-1. See /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/checkbox/mod.rs lines 151-154 vs React checkbox.tsx line 162.",
-    "status": "open",
+    "description": "Leptos Checkbox always renders aria-required=\"true\" or aria-required=\"false\" (lines 151-154 of mod.rs). React renders aria-required={required} which omits the attribute entirely when required is falsy. Per WAI-ARIA, aria-required=\"false\" is the default and should be omitted rather than explicitly set. Same pattern as switch-api-docs-1. See /Users/adamduvick/Code/clones/rust-radix/packages/primitives/leptos/src/components/checkbox/mod.rs lines 151-154 vs React checkbox.tsx line 162. RESOLVED: Changed to only render aria-required when true, using .then_some(\"true\"). E2E: checkbox 28/28.",
+    "status": "complete",
     "blockers": []
   },
   {

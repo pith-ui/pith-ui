@@ -79,10 +79,7 @@ pub fn Switch(
                         true => "true",
                         false => "false",
                     }
-                    attr:aria-required=move || match required.get() {
-                        true => "true",
-                        false => "false",
-                    }
+                    attr:aria-required=move || required.get().then_some("true")
                     attr:data-state=move || get_state(checked.get())
                     attr:data-disabled=data_attr(disabled)
                     attr:disabled=data_attr(disabled)
