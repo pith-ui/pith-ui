@@ -1718,5 +1718,21 @@
     "description": "Leptos DropdownMenuSubContent is missing on_pointer_down_outside and on_interact_outside props. In React, DropdownMenuSubContentProps extends MenuSubContentProps which inherits onPointerDownOutside and onInteractOutside from MenuContentImplProps (via DismissableLayerProps). The Leptos DropdownMenuSubContent only exposes on_escape_key_down and on_focus_outside. This is the same issue as context-menu-api-docs-1 but for dropdown-menu. See packages/primitives/leptos/src/components/dropdown_menu/dropdown_menu_content.rs DropdownMenuSubContent.",
     "status": "open",
     "blockers": []
+  },
+  {
+    "id": "menubar-api-docs-1",
+    "component": "menubar",
+    "principle": "api-docs",
+    "description": "Leptos MenubarArrow (and underlying MenuArrow) does not expose width or height props. In React, MenubarArrowProps extends MenuArrowProps extends PopperArrowProps, which includes width (default 10) and height (default 5). The Leptos MenubarArrow only forwards as_child, node_ref, and children. Same root cause as dropdown-menu-api-docs-1 since both flow through MenuArrow. See packages/primitives/leptos/src/components/menubar/menubar_items.rs MenubarArrow and packages/primitives/leptos/src/components/menu/menu_separator.rs MenuArrow.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "menubar-api-docs-2",
+    "component": "menubar",
+    "principle": "api-docs",
+    "description": "Leptos MenubarSubContent is missing on_pointer_down_outside and on_interact_outside props. In React, MenubarSubContentProps extends MenuSubContentProps which inherits onPointerDownOutside and onInteractOutside from MenuContentImplProps (via DismissableLayerProps). The Leptos MenubarSubContent only exposes on_escape_key_down and on_focus_outside. Same root cause as context-menu-api-docs-1 and dropdown-menu-api-docs-2 since all flow through MenuSubContent. See packages/primitives/leptos/src/components/menubar/menubar_items.rs MenubarSubContent.",
+    "status": "open",
+    "blockers": []
   }
 ]
