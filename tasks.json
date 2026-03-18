@@ -1734,5 +1734,21 @@
     "description": "Leptos MenubarSubContent is missing on_pointer_down_outside and on_interact_outside props. In React, MenubarSubContentProps extends MenuSubContentProps which inherits onPointerDownOutside and onInteractOutside from MenuContentImplProps (via DismissableLayerProps). The Leptos MenubarSubContent only exposes on_escape_key_down and on_focus_outside. Same root cause as context-menu-api-docs-1 and dropdown-menu-api-docs-2 since all flow through MenuSubContent. See packages/primitives/leptos/src/components/menubar/menubar_items.rs MenubarSubContent.",
     "status": "open",
     "blockers": []
+  },
+  {
+    "id": "toast-api-docs-1",
+    "component": "toast",
+    "principle": "api-docs",
+    "description": "Leptos ToastClose does not compose a user-provided on_click callback with the internal close handler. In React, ToastClose uses composeEventHandlers(props.onClick, interactiveContext.onClose), which means a user-provided onClick runs first and can call preventDefault() to block the close. The Leptos ToastClose (packages/primitives/leptos/src/components/toast/toast.rs ToastClose component) directly calls interactive_context.on_close.run(()) with no way for the user to intercept or compose a click handler. Consider exposing an on_click prop and composing it with the close handler.",
+    "status": "open",
+    "blockers": []
+  },
+  {
+    "id": "toast-api-docs-2",
+    "component": "toast",
+    "principle": "api-docs",
+    "description": "Leptos ToastAction does not validate that alt_text is non-empty. In React, ToastAction checks altText.trim() and logs a console error + returns null if it is empty (toast.tsx lines 759-764). The Leptos ToastAction (packages/primitives/leptos/src/components/toast/toast.rs ToastAction component) accepts any String including empty without validation. Consider adding a warning log or early return for empty alt_text to match React behavior.",
+    "status": "open",
+    "blockers": []
   }
 ]
