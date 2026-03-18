@@ -155,6 +155,11 @@ pub fn MenubarMenu(
 #[component]
 pub fn MenubarTrigger(
     #[prop(into, optional)] disabled: MaybeProp<bool>,
+    #[prop(into, optional)] on_pointer_down: Option<Callback<ev::PointerEvent>>,
+    #[prop(into, optional)] on_pointer_enter: Option<Callback<ev::PointerEvent>>,
+    #[prop(into, optional)] on_key_down: Option<Callback<ev::KeyboardEvent>>,
+    #[prop(into, optional)] on_focus: Option<Callback<ev::FocusEvent>>,
+    #[prop(into, optional)] on_blur: Option<Callback<ev::FocusEvent>>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
     children: ChildrenFn,
@@ -172,6 +177,12 @@ pub fn MenubarTrigger(
     let open = Signal::derive(move || context.value.get() == value.get_value());
 
     let was_keyboard = StoredValue::new(menu_context.was_keyboard_trigger_open_ref.clone());
+
+    let on_pointer_down = StoredValue::new(on_pointer_down);
+    let on_pointer_enter = StoredValue::new(on_pointer_enter);
+    let on_key_down = StoredValue::new(on_key_down);
+    let on_focus = StoredValue::new(on_focus);
+    let on_blur = StoredValue::new(on_blur);
 
     view! {
         <CollectionItemSlot
@@ -198,47 +209,71 @@ pub fn MenubarTrigger(
                         attr:data-state=move || if open.get() { "open" } else { "closed" }
                         attr:data-disabled=data_attr(disabled)
                         attr:disabled=data_attr(disabled)
-                        on:pointerdown=move |event: ev::PointerEvent| {
-                            // only call handler if it's the left button (mousedown gets triggered by all mouse buttons)
-                            // but not when the control key is pressed (avoiding MacOS right click)
-                            if !disabled.get_untracked() && event.button() == 0 && !event.ctrl_key() {
-                                context.on_menu_open.run(value.get_value());
-                                // prevent trigger focusing when opening
-                                // this allows the content to be given focus without competition
-                                if !open.get_untracked() {
+                        on:pointerdown=compose_callbacks(
+                            on_pointer_down.get_value(),
+                            Some(Callback::new(move |event: ev::PointerEvent| {
+                                // only call handler if it's the left button (mousedown gets triggered by all mouse buttons)
+                                // but not when the control key is pressed (avoiding MacOS right click)
+                                if !disabled.get_untracked() && event.button() == 0 && !event.ctrl_key() {
+                                    context.on_menu_open.run(value.get_value());
+                                    // prevent trigger focusing when opening
+                                    // this allows the content to be given focus without competition
+                                    if !open.get_untracked() {
+                                        event.prevent_default();
+                                    }
+                                }
+                            })),
+                            None,
+                        )
+                        on:pointerenter=compose_callbacks(
+                            on_pointer_enter.get_value(),
+                            Some(Callback::new(move |_event: ev::PointerEvent| {
+                                let menubar_open = !context.value.get_untracked().is_empty();
+                                if menubar_open && !open.get_untracked() {
+                                    context.on_menu_open.run(value.get_value());
+                                    if let Some(el) = trigger_ref.get() {
+                                        let el: web_sys::HtmlElement = el.unchecked_into();
+                                        el.focus().ok();
+                                    }
+                                }
+                            })),
+                            None,
+                        )
+                        on:keydown=compose_callbacks(
+                            on_key_down.get_value(),
+                            Some(Callback::new(move |event: ev::KeyboardEvent| {
+                                if disabled.get_untracked() {
+                                    return;
+                                }
+                                if event.key() == "Enter" || event.key() == " " {
+                                    context.on_menu_toggle.run(value.get_value());
+                                }
+                                if event.key() == "ArrowDown" {
+                                    context.on_menu_open.run(value.get_value());
+                                }
+                                // prevent keydown from scrolling window / first focused item to execute
+                                // that keydown (inadvertently closing the menu)
+                                if event.key() == "Enter" || event.key() == " " || event.key() == "ArrowDown" {
+                                    was_keyboard.with_value(|w| w.set(true));
                                     event.prevent_default();
                                 }
-                            }
-                        }
-                        on:pointerenter=move |_event: ev::PointerEvent| {
-                            let menubar_open = !context.value.get_untracked().is_empty();
-                            if menubar_open && !open.get_untracked() {
-                                context.on_menu_open.run(value.get_value());
-                                if let Some(el) = trigger_ref.get() {
-                                    let el: web_sys::HtmlElement = el.unchecked_into();
-                                    el.focus().ok();
-                                }
-                            }
-                        }
-                        on:keydown=move |event: ev::KeyboardEvent| {
-                            if disabled.get_untracked() {
-                                return;
-                            }
-                            if event.key() == "Enter" || event.key() == " " {
-                                context.on_menu_toggle.run(value.get_value());
-                            }
-                            if event.key() == "ArrowDown" {
-                                context.on_menu_open.run(value.get_value());
-                            }
-                            // prevent keydown from scrolling window / first focused item to execute
-                            // that keydown (inadvertently closing the menu)
-                            if event.key() == "Enter" || event.key() == " " || event.key() == "ArrowDown" {
-                                was_keyboard.with_value(|w| w.set(true));
-                                event.prevent_default();
-                            }
-                        }
-                        on:focus=move |_| is_focused.set(true)
-                        on:blur=move |_| is_focused.set(false)
+                            })),
+                            None,
+                        )
+                        on:focus=compose_callbacks(
+                            on_focus.get_value(),
+                            Some(Callback::new(move |_: ev::FocusEvent| {
+                                is_focused.set(true);
+                            })),
+                            None,
+                        )
+                        on:blur=compose_callbacks(
+                            on_blur.get_value(),
+                            Some(Callback::new(move |_: ev::FocusEvent| {
+                                is_focused.set(false);
+                            })),
+                            None,
+                        )
                     >
                         {children.with_value(|children| children())}
                     </Primitive>

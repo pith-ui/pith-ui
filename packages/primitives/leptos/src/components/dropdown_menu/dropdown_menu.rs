@@ -66,6 +66,8 @@ pub fn DropdownMenu(
 #[component]
 pub fn DropdownMenuTrigger(
     #[prop(into, optional)] disabled: MaybeProp<bool>,
+    #[prop(into, optional)] on_pointer_down: Option<Callback<ev::PointerEvent>>,
+    #[prop(into, optional)] on_key_down: Option<Callback<ev::KeyboardEvent>>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
     children: ChildrenFn,
@@ -74,6 +76,9 @@ pub fn DropdownMenuTrigger(
     let context = expect_context::<DropdownMenuContextValue>();
     let composed_refs = use_composed_refs(vec![node_ref, context.trigger_ref]);
     let disabled = prop_or_default(disabled);
+
+    let on_pointer_down = StoredValue::new(on_pointer_down);
+    let on_key_down = StoredValue::new(on_key_down);
 
     view! {
         <MenuAnchor as_child=true>
@@ -89,34 +94,42 @@ pub fn DropdownMenuTrigger(
                 attr:data-state=move || if context.open.get() { "open" } else { "closed" }
                 attr:data-disabled=data_attr(disabled)
                 attr:disabled=data_attr(disabled)
-                on:pointerdown=move |event: ev::PointerEvent| {
-                    // Only call handler if it's the left button (mousedown gets triggered by all mouse buttons)
-                    // but not when the control key is pressed (avoiding MacOS right click).
-                    if !disabled.get_untracked() && event.button() == 0 && !event.ctrl_key() {
-                        context.on_open_toggle.run(());
-                        // Prevent trigger focusing when opening.
-                        // This allows the content to be given focus without competition.
-                        if !context.open.get_untracked() {
+                on:pointerdown=compose_callbacks(
+                    on_pointer_down.get_value(),
+                    Some(Callback::new(move |event: ev::PointerEvent| {
+                        // Only call handler if it's the left button (mousedown gets triggered by all mouse buttons)
+                        // but not when the control key is pressed (avoiding MacOS right click).
+                        if !disabled.get_untracked() && event.button() == 0 && !event.ctrl_key() {
+                            context.on_open_toggle.run(());
+                            // Prevent trigger focusing when opening.
+                            // This allows the content to be given focus without competition.
+                            if !context.open.get_untracked() {
+                                event.prevent_default();
+                            }
+                        }
+                    })),
+                    None,
+                )
+                on:keydown=compose_callbacks(
+                    on_key_down.get_value(),
+                    Some(Callback::new(move |event: ev::KeyboardEvent| {
+                        if disabled.get_untracked() {
+                            return;
+                        }
+                        if event.key() == "Enter" || event.key() == " " {
+                            context.on_open_toggle.run(());
+                        }
+                        if event.key() == "ArrowDown" {
+                            context.on_open_change.run(true);
+                        }
+                        // Prevent keydown from scrolling window / first focused item to execute
+                        // that keydown (inadvertently closing the menu).
+                        if event.key() == "Enter" || event.key() == " " || event.key() == "ArrowDown" {
                             event.prevent_default();
                         }
-                    }
-                }
-                on:keydown=move |event: ev::KeyboardEvent| {
-                    if disabled.get_untracked() {
-                        return;
-                    }
-                    if event.key() == "Enter" || event.key() == " " {
-                        context.on_open_toggle.run(());
-                    }
-                    if event.key() == "ArrowDown" {
-                        context.on_open_change.run(true);
-                    }
-                    // Prevent keydown from scrolling window / first focused item to execute
-                    // that keydown (inadvertently closing the menu).
-                    if event.key() == "Enter" || event.key() == " " || event.key() == "ArrowDown" {
-                        event.prevent_default();
-                    }
-                }
+                    })),
+                    None,
+                )
             >
                 {children.with_value(|children| children())}
             </Primitive>
