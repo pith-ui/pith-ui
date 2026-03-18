@@ -1766,5 +1766,13 @@
     "description": "React PasswordToggleField callback prop is named onVisiblityChange (typo: missing 'i' in 'Visibility'). Leptos corrects the spelling to on_visibility_change. This is an intentional divergence from the React API naming. Document this as a known naming difference — if React ever fixes the typo upstream, Leptos is already aligned with the corrected name.",
     "status": "open",
     "blockers": []
+  },
+  {
+    "id": "menu-api-docs-1",
+    "component": "menu",
+    "principle": "api-docs",
+    "description": "Leptos MenuSubContent is missing on_pointer_down_outside and on_interact_outside props. React MenuSubContentProps inherits these from MenuContentImplProps (they are not in the Omit list). The Leptos MenuSubContent component signature only has on_escape_key_down, on_focus_outside, and on_key_down as DismissableLayer callback props. Check if these were intentionally omitted or missed during porting.",
+    "status": "open",
+    "blockers": []
   }
 ]
