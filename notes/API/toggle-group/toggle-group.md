@@ -5,7 +5,7 @@
 The expected component nesting structure:
 
 ```
-ToggleGroup
+ToggleGroupSingle or ToggleGroupMultiple (or ToggleGroup convenience wrapper)
 └── ToggleGroupItem (one per option, each with a unique `value`)
 ```
 
@@ -22,11 +22,11 @@ ToggleGroup
 ### Leptos
 
 ```rust
-<ToggleGroup r#type=ToggleGroupType::Single default_value=vec!["a".to_string()]>
+<ToggleGroupSingle default_value="a">
   <ToggleGroupItem value="a">"Option A"</ToggleGroupItem>
   <ToggleGroupItem value="b">"Option B"</ToggleGroupItem>
   <ToggleGroupItem value="c">"Option C"</ToggleGroupItem>
-</ToggleGroup>
+</ToggleGroupSingle>
 ```
 
 ## React Signature
@@ -86,29 +86,21 @@ interface ToggleGroupImplProps extends PrimitiveDivProps {
 }
 ```
 
-## Leptos Signature
+## Leptos Signatures
 
-Leptos uses a single unified `ToggleGroup` component rather than splitting into separate `ToggleGroupSingle` / `ToggleGroupMultiple` components. The `type` prop selects single vs. multiple mode. Unlike the Accordion port (which has `AccordionSingle` and `AccordionMultiple`), ToggleGroup always uses `Vec<String>` for value props regardless of mode.
+Leptos splits this into `ToggleGroupSingle` and `ToggleGroupMultiple` for compile-time type safety, plus a convenience `ToggleGroup` wrapper for React API parity.
+
+Internally, both components delegate to a generic `toggle_group_core<M>()` function parameterized by a `ToggleGroupMode` trait, eliminating logic duplication.
+
+### ToggleGroupSingle
 
 ```rust
-pub fn ToggleGroup(
-    /// Whether the group is single or multiple selection.
-    r#type: ToggleGroupType,
-    /// The controlled value of the pressed items.
-    #[prop(into, optional)]
-    value: MaybeProp<Vec<String>>,
-    /// The default value of the pressed items when uncontrolled.
-    #[prop(into, optional)]
-    default_value: MaybeProp<Vec<String>>,
-    /// Callback when the value changes.
-    #[prop(into, optional)]
-    on_value_change: Option<Callback<Vec<String>>>,
-    /// Whether the group is disabled from user interaction.
-    #[prop(into, optional)]
-    disabled: MaybeProp<bool>,
-    /// Whether the group should maintain roving focus of its buttons.
-    #[prop(into, optional)]
-    roving_focus: MaybeProp<bool>,
+pub fn ToggleGroupSingle(
+    #[prop(into, optional)] value: MaybeProp<String>,
+    #[prop(into, optional)] default_value: MaybeProp<String>,
+    #[prop(into, optional)] on_value_change: Option<Callback<String>>,
+    #[prop(into, optional)] disabled: MaybeProp<bool>,
+    #[prop(into, optional)] roving_focus: MaybeProp<bool>,
     #[prop(into, optional)] r#loop: MaybeProp<bool>,
     #[prop(into, optional)] orientation: MaybeProp<Orientation>,
     #[prop(into, optional)] dir: MaybeProp<Direction>,
@@ -118,27 +110,64 @@ pub fn ToggleGroup(
 ) -> impl IntoView
 ```
 
+### ToggleGroupMultiple
+
+```rust
+pub fn ToggleGroupMultiple(
+    #[prop(into, optional)] value: MaybeProp<Vec<String>>,
+    #[prop(into, optional)] default_value: MaybeProp<Vec<String>>,
+    #[prop(into, optional)] on_value_change: Option<Callback<Vec<String>>>,
+    #[prop(into, optional)] disabled: MaybeProp<bool>,
+    #[prop(into, optional)] roving_focus: MaybeProp<bool>,
+    #[prop(into, optional)] r#loop: MaybeProp<bool>,
+    #[prop(into, optional)] orientation: MaybeProp<Orientation>,
+    #[prop(into, optional)] dir: MaybeProp<Direction>,
+    #[prop(into, optional)] as_child: MaybeProp<bool>,
+    #[prop(into, optional)] node_ref: AnyNodeRef,
+    children: ChildrenFn,
+) -> impl IntoView
+```
+
+### ToggleGroup (convenience wrapper)
+
+```rust
+pub fn ToggleGroup(
+    r#type: ToggleGroupType,
+    #[prop(into, optional)] value: MaybeProp<Vec<String>>,
+    #[prop(into, optional)] default_value: MaybeProp<Vec<String>>,
+    #[prop(into, optional)] on_value_change: Option<Callback<Vec<String>>>,
+    #[prop(into, optional)] disabled: MaybeProp<bool>,
+    #[prop(into, optional)] roving_focus: MaybeProp<bool>,
+    #[prop(into, optional)] r#loop: MaybeProp<bool>,
+    #[prop(into, optional)] orientation: MaybeProp<Orientation>,
+    #[prop(into, optional)] dir: MaybeProp<Direction>,
+    #[prop(into, optional)] as_child: MaybeProp<bool>,
+    #[prop(into, optional)] node_ref: AnyNodeRef,
+    children: ChildrenFn,
+) -> impl IntoView
+```
+
+The convenience wrapper delegates to `toggle_group_core::<Single>` or `toggle_group_core::<Multiple>` based on `type`, adapting `Vec<String>` props to `String` at the boundary for single mode.
+
 ## Prop Mapping
 
-### Single-mode value props
+### Single-mode props
 
-In React, single mode uses `string` for the value; in Leptos, single mode still uses `Vec<String>` (the same type as multiple mode). The component internally treats a single-element vec as the selected value and an empty vec as no selection.
+| React Prop      | Leptos Prop       | Type (React)              | Type (Leptos)              | Description                                                                                       |
+| --------------- | ----------------- | ------------------------- | -------------------------- | ------------------------------------------------------------------------------------------------- |
+| `type`          | —                 | `'single'`                | *(use `ToggleGroupSingle`)* | In React, a discriminator. In Leptos, use the `ToggleGroupSingle` component directly.            |
+| `value`         | `value`           | `string \| undefined`     | `MaybeProp<String>`        | The controlled value of the pressed item. When set, the component becomes controlled.             |
+| `defaultValue`  | `default_value`   | `string \| undefined`     | `MaybeProp<String>`        | The value of the pressed item on initial render.                                                  |
+| `onValueChange` | `on_value_change` | `(value: string) => void` | `Option<Callback<String>>` | Callback fired when the pressed item changes. Receives the new value string (empty for deselect). |
 
-| React Prop      | Leptos Prop       | Type (React)              | Type (Leptos)                   | Description                                                                                                                                                                          |
-| --------------- | ----------------- | ------------------------- | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `type`          | `r#type`          | `'single'`                | `ToggleGroupType::Single`       | Discriminator selecting single-item mode.                                                                                                                                            |
-| `value`         | `value`           | `string \| undefined`     | `MaybeProp<Vec<String>>`        | The controlled value of the pressed item. React accepts a single string; Leptos uses `Vec<String>` (wrap in a one-element vec). See **API Divergence** note below.                   |
-| `defaultValue`  | `default_value`   | `string \| undefined`     | `MaybeProp<Vec<String>>`        | The value of the pressed item on initial render. React accepts a string; Leptos accepts `Vec<String>`.                                                                               |
-| `onValueChange` | `on_value_change` | `(value: string) => void` | `Option<Callback<Vec<String>>>` | Callback fired when the pressed item changes. React passes a single string (or empty string `""` for deselection); Leptos passes `Vec<String>` (empty vec for deselection). See **API Divergence** note below. |
+### Multiple-mode props
 
-### Multiple-mode value props
-
-| React Prop      | Leptos Prop       | Type (React)                | Type (Leptos)                   | Description                                                                                          |
-| --------------- | ----------------- | --------------------------- | ------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| `type`          | `r#type`          | `'multiple'`                | `ToggleGroupType::Multiple`     | Discriminator selecting multi-item mode.                                                             |
-| `value`         | `value`           | `string[] \| undefined`     | `MaybeProp<Vec<String>>`        | The controlled list of pressed item values. Same type in both frameworks (array/vec).                |
-| `defaultValue`  | `default_value`   | `string[] \| undefined`     | `MaybeProp<Vec<String>>`        | The values of the pressed items on initial render.                                                   |
-| `onValueChange` | `on_value_change` | `(value: string[]) => void` | `Option<Callback<Vec<String>>>` | Callback fired when the set of pressed items changes. Receives the full updated list.                |
+| React Prop      | Leptos Prop       | Type (React)                | Type (Leptos)                   | Description                                                                                    |
+| --------------- | ----------------- | --------------------------- | ------------------------------- | ---------------------------------------------------------------------------------------------- |
+| `type`          | —                 | `'multiple'`                | *(use `ToggleGroupMultiple`)*   | In React, a discriminator. In Leptos, use the `ToggleGroupMultiple` component directly.        |
+| `value`         | `value`           | `string[] \| undefined`     | `MaybeProp<Vec<String>>`       | The controlled list of pressed item values.                                                    |
+| `defaultValue`  | `default_value`   | `string[] \| undefined`     | `MaybeProp<Vec<String>>`       | The values of the pressed items on initial render.                                             |
+| `onValueChange` | `on_value_change` | `(value: string[]) => void` | `Option<Callback<Vec<String>>>` | Callback fired when the set of pressed items changes. Receives the full updated list.          |
 
 ### Shared props (both modes)
 
@@ -153,7 +182,7 @@ In React, single mode uses `string` for the value; in Leptos, single mode still 
 | `asChild`     | `as_child`     | `boolean`                                            | `MaybeProp<bool>`                             | When `true`, the component renders its child directly instead of wrapping in a `<div>`, merging props and refs onto the child.                                                   |
 | *(spread)*    | --             | `...PrimitiveDivProps`                               | --                                            | React allows spreading any `<div>` HTML attribute. Leptos uses `attr:` directives on the call site instead.                                                                      |
 
-### Leptos-only: `ToggleGroupType` enum
+### Leptos-only types
 
 ```rust
 pub enum ToggleGroupType {
@@ -167,16 +196,6 @@ pub enum ToggleGroupType {
 | Attribute          | Value                        | Description                      |
 | ------------------ | ---------------------------- | -------------------------------- |
 | `data-orientation` | `"horizontal" \| "vertical"` | Reflects the `orientation` prop. Only rendered when `orientation` is explicitly set. |
-
-### API Divergence: Unified `Vec<String>` value type
-
-React uses different value types for single mode (`string`) and multiple mode (`string[]`), enforced at the type level by the `type` discriminated union. The Leptos port uses a single `ToggleGroup` component with `Vec<String>` for all value-related props in both modes.
-
-This means:
-- **Single mode, React:** `value="a"`, `onValueChange` receives `"a"` or `""` (empty string for deselection)
-- **Single mode, Leptos:** `value=vec!["a".to_string()]`, `on_value_change` receives `vec!["a".to_string()]` or `vec![]` (empty vec for deselection)
-
-This differs from the Accordion pattern where the Leptos port split into `AccordionSingle` (with `String` value) and `AccordionMultiple` (with `Vec<String>` values). A task has been filed to track this inconsistency.
 
 ## Usage Examples
 
@@ -195,15 +214,11 @@ This differs from the Accordion pattern where the Leptos port split into `Accord
 #### Leptos
 
 ```rust
-<ToggleGroup
-  r#type=ToggleGroupType::Single
-  default_value=vec!["1".to_string()]
-  attr:aria-label="Options"
->
+<ToggleGroupSingle default_value="1" attr:aria-label="Options">
   <ToggleGroupItem value="1">"Option 1"</ToggleGroupItem>
   <ToggleGroupItem value="2">"Option 2"</ToggleGroupItem>
   <ToggleGroupItem value="3">"Option 3"</ToggleGroupItem>
-</ToggleGroup>
+</ToggleGroupSingle>
 ```
 
 ### Single mode (controlled)
@@ -221,15 +236,14 @@ const [value, setValue] = React.useState<string>();
 #### Leptos
 
 ```rust
-let (value, set_value) = signal::<Vec<String>>(vec![]);
+let (value, set_value) = signal(String::new());
 
-<ToggleGroup
-  r#type=ToggleGroupType::Single
+<ToggleGroupSingle
   value=value
-  on_value_change=Callback::new(move |v: Vec<String>| set_value.set(v))
+  on_value_change=Callback::new(move |v: String| set_value.set(v))
 >
   // ...items
-</ToggleGroup>
+</ToggleGroupSingle>
 ```
 
 ### Multiple mode (uncontrolled)
@@ -247,15 +261,11 @@ let (value, set_value) = signal::<Vec<String>>(vec![]);
 #### Leptos
 
 ```rust
-<ToggleGroup
-  r#type=ToggleGroupType::Multiple
-  default_value=vec!["1".to_string()]
-  attr:aria-label="Options"
->
+<ToggleGroupMultiple default_value=vec!["1".into()] attr:aria-label="Options">
   <ToggleGroupItem value="1">"Option 1"</ToggleGroupItem>
   <ToggleGroupItem value="2">"Option 2"</ToggleGroupItem>
   <ToggleGroupItem value="3">"Option 3"</ToggleGroupItem>
-</ToggleGroup>
+</ToggleGroupMultiple>
 ```
 
 ### Multiple mode (controlled)
@@ -273,15 +283,14 @@ const [value, setValue] = React.useState<string[]>([]);
 #### Leptos
 
 ```rust
-let (value, set_value) = signal::<Vec<String>>(vec![]);
+let (value, set_value) = signal(Vec::<String>::new());
 
-<ToggleGroup
-  r#type=ToggleGroupType::Multiple
+<ToggleGroupMultiple
   value=value
   on_value_change=Callback::new(move |v: Vec<String>| set_value.set(v))
 >
   // ...items
-</ToggleGroup>
+</ToggleGroupMultiple>
 ```
 
 ### Disabled item
@@ -315,13 +324,9 @@ let (value, set_value) = signal::<Vec<String>>(vec![]);
 #### Leptos
 
 ```rust
-<ToggleGroup
-  r#type=ToggleGroupType::Single
-  orientation=Orientation::Vertical
-  default_value=vec!["1".to_string()]
->
+<ToggleGroupSingle orientation=Orientation::Vertical default_value="1">
   // ...items
-</ToggleGroup>
+</ToggleGroupSingle>
 ```
 
 ### Without roving focus
@@ -337,9 +342,9 @@ let (value, set_value) = signal::<Vec<String>>(vec![]);
 #### Leptos
 
 ```rust
-<ToggleGroup r#type=ToggleGroupType::Single roving_focus=false>
+<ToggleGroupSingle roving_focus=false>
   // ...items — each receives regular tab focus
-</ToggleGroup>
+</ToggleGroupSingle>
 ```
 
 ## Accessibility
@@ -375,7 +380,7 @@ Implements the [WAI-ARIA Toolbar pattern](https://www.w3.org/WAI/ARIA/apd/patter
 - The root element renders as a `<div>` with `role="group"`.
 - Items render as `<button type="button">` elements.
 - Disabled items are skipped during roving focus keyboard navigation.
-- In single mode, clicking an already-pressed item deselects it (value becomes empty string in React, empty vec in Leptos).
+- In single mode, clicking an already-pressed item deselects it (value becomes empty string).
 - In multiple mode, items toggle independently. Clicking a pressed item removes it from the value array; clicking an unpressed item adds it.
 - When `rovingFocus` is `false`, the `RovingFocusGroup` wrapper is not rendered; items receive normal tab-order focus and arrow keys do not navigate between items.
 - Arrow key navigation is provided by the `RovingFocusGroup` primitive and follows `orientation` and `dir` props.

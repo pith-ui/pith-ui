@@ -10,7 +10,7 @@ use leptos::{
 use leptos_node_ref::AnyNodeRef;
 
 /* -------------------------------------------------------------------------------------------------
- * ToggleGroupType
+ * ToggleGroupType (kept for convenience wrapper)
  * -----------------------------------------------------------------------------------------------*/
 
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
@@ -20,7 +20,78 @@ pub enum ToggleGroupType {
 }
 
 /* -------------------------------------------------------------------------------------------------
- * ToggleGroup
+ * ToggleGroupMode trait + implementations
+ * -----------------------------------------------------------------------------------------------*/
+
+pub trait ToggleGroupMode: Send + 'static {
+    type Value: Clone + PartialEq + Send + Sync + 'static;
+
+    fn default_value() -> Self::Value;
+    fn to_vec(value: &Self::Value) -> Vec<String>;
+    fn on_activate(current: &Self::Value, item: &str) -> Self::Value;
+    fn on_deactivate(current: &Self::Value, item: &str) -> Self::Value;
+    fn toggle_group_type() -> ToggleGroupType;
+}
+
+pub struct Single;
+pub struct Multiple;
+
+impl ToggleGroupMode for Single {
+    type Value = String;
+
+    fn default_value() -> String {
+        String::new()
+    }
+
+    fn to_vec(value: &String) -> Vec<String> {
+        if value.is_empty() {
+            vec![]
+        } else {
+            vec![value.clone()]
+        }
+    }
+
+    fn on_activate(_current: &String, item: &str) -> String {
+        item.to_string()
+    }
+
+    fn on_deactivate(_current: &String, _item: &str) -> String {
+        String::new()
+    }
+
+    fn toggle_group_type() -> ToggleGroupType {
+        ToggleGroupType::Single
+    }
+}
+
+impl ToggleGroupMode for Multiple {
+    type Value = Vec<String>;
+
+    fn default_value() -> Vec<String> {
+        vec![]
+    }
+
+    fn to_vec(value: &Vec<String>) -> Vec<String> {
+        value.clone()
+    }
+
+    fn on_activate(current: &Vec<String>, item: &str) -> Vec<String> {
+        let mut v = current.clone();
+        v.push(item.to_string());
+        v
+    }
+
+    fn on_deactivate(current: &Vec<String>, item: &str) -> Vec<String> {
+        current.iter().filter(|v| v.as_str() != item).cloned().collect()
+    }
+
+    fn toggle_group_type() -> ToggleGroupType {
+        ToggleGroupType::Multiple
+    }
+}
+
+/* -------------------------------------------------------------------------------------------------
+ * Context types (unchanged — internal, uses Vec<String>)
  * -----------------------------------------------------------------------------------------------*/
 
 #[derive(Clone, Debug)]
@@ -37,30 +108,26 @@ struct ToggleGroupContextValue {
     disabled: Signal<bool>,
 }
 
-#[component]
-pub fn ToggleGroup(
-    /// Whether the group is single or multiple selection.
-    r#type: ToggleGroupType,
-    /// The controlled value of the pressed items.
-    #[prop(into, optional)]
-    value: MaybeProp<Vec<String>>,
-    /// The default value of the pressed items when uncontrolled.
-    #[prop(into, optional)]
-    default_value: MaybeProp<Vec<String>>,
-    /// Callback when the value changes.
-    #[prop(into, optional)]
-    on_value_change: Option<Callback<Vec<String>>>,
-    /// Whether the group is disabled from user interaction.
-    #[prop(into, optional)]
+/* -------------------------------------------------------------------------------------------------
+ * Generic core function
+ * -----------------------------------------------------------------------------------------------*/
+
+/// Generic core logic for ToggleGroup, parameterized by mode.
+///
+/// Handles `use_controllable_state` with mode-appropriate value types,
+/// converts to `Vec<String>` internally for the context, and renders `ToggleGroupImpl`.
+#[allow(clippy::too_many_arguments)]
+fn toggle_group_core<M: ToggleGroupMode>(
+    value: MaybeProp<M::Value>,
+    default_value: MaybeProp<M::Value>,
+    on_value_change: Option<Callback<M::Value>>,
     disabled: MaybeProp<bool>,
-    /// Whether the group should maintain roving focus of its buttons.
-    #[prop(into, optional)]
     roving_focus: MaybeProp<bool>,
-    #[prop(into, optional)] r#loop: MaybeProp<bool>,
-    #[prop(into, optional)] orientation: MaybeProp<Orientation>,
-    #[prop(into, optional)] dir: MaybeProp<Direction>,
-    #[prop(into, optional)] as_child: MaybeProp<bool>,
-    #[prop(into, optional)] node_ref: AnyNodeRef,
+    r#loop: MaybeProp<bool>,
+    orientation: MaybeProp<Orientation>,
+    dir: MaybeProp<Direction>,
+    as_child: MaybeProp<bool>,
+    node_ref: AnyNodeRef,
     children: ChildrenFn,
 ) -> impl IntoView {
     let children = StoredValue::new(children);
@@ -70,45 +137,25 @@ pub fn ToggleGroup(
         default_prop: default_value,
         on_change: adapt_callback(on_value_change),
     });
-    let current_value = Signal::derive(move || current_value.get().unwrap_or_default());
+    let current_value =
+        Signal::derive(move || current_value.get().unwrap_or_else(M::default_value));
 
-    let on_item_activate = match r#type {
-        ToggleGroupType::Single => Callback::new(move |item_value: String| {
-            set_value.run(Some(toggle_group_activate(
-                vec![],
-                item_value,
-                ToggleGroupType::Single,
-            )));
-        }),
-        ToggleGroupType::Multiple => Callback::new(move |item_value: String| {
-            set_value.run(Some(toggle_group_activate(
-                current_value.get(),
-                item_value,
-                ToggleGroupType::Multiple,
-            )));
-        }),
-    };
+    // Convert mode-specific value to Vec<String> for the context
+    let value_as_vec = Signal::derive(move || M::to_vec(&current_value.get()));
 
-    let on_item_deactivate = match r#type {
-        ToggleGroupType::Single => Callback::new(move |item_value: String| {
-            set_value.run(Some(toggle_group_deactivate(
-                vec![],
-                &item_value,
-                ToggleGroupType::Single,
-            )));
-        }),
-        ToggleGroupType::Multiple => Callback::new(move |item_value: String| {
-            set_value.run(Some(toggle_group_deactivate(
-                current_value.get(),
-                &item_value,
-                ToggleGroupType::Multiple,
-            )));
-        }),
-    };
+    let on_item_activate = Callback::new(move |item_value: String| {
+        let new_val = M::on_activate(&current_value.get(), &item_value);
+        set_value.run(Some(new_val));
+    });
+
+    let on_item_deactivate = Callback::new(move |item_value: String| {
+        let new_val = M::on_deactivate(&current_value.get(), &item_value);
+        set_value.run(Some(new_val));
+    });
 
     let value_context = ToggleGroupValueContextValue {
-        r#type,
-        value: current_value,
+        r#type: M::toggle_group_type(),
+        value: value_as_vec,
         on_item_activate,
         on_item_deactivate,
     };
@@ -138,6 +185,171 @@ pub fn ToggleGroup(
                 </ToggleGroupImpl>
             </Provider>
         </Provider>
+    }
+}
+
+/* -------------------------------------------------------------------------------------------------
+ * ToggleGroupSingle
+ * -----------------------------------------------------------------------------------------------*/
+
+#[component]
+pub fn ToggleGroupSingle(
+    /// The controlled value of the pressed item.
+    #[prop(into, optional)]
+    value: MaybeProp<String>,
+    /// The default value of the pressed item when uncontrolled.
+    #[prop(into, optional)]
+    default_value: MaybeProp<String>,
+    /// Callback when the value changes.
+    #[prop(into, optional)]
+    on_value_change: Option<Callback<String>>,
+    /// Whether the group is disabled from user interaction.
+    #[prop(into, optional)]
+    disabled: MaybeProp<bool>,
+    /// Whether the group should maintain roving focus of its buttons.
+    #[prop(into, optional)]
+    roving_focus: MaybeProp<bool>,
+    #[prop(into, optional)] r#loop: MaybeProp<bool>,
+    #[prop(into, optional)] orientation: MaybeProp<Orientation>,
+    #[prop(into, optional)] dir: MaybeProp<Direction>,
+    #[prop(into, optional)] as_child: MaybeProp<bool>,
+    #[prop(into, optional)] node_ref: AnyNodeRef,
+    children: ChildrenFn,
+) -> impl IntoView {
+    toggle_group_core::<Single>(
+        value,
+        default_value,
+        on_value_change,
+        disabled,
+        roving_focus,
+        r#loop,
+        orientation,
+        dir,
+        as_child,
+        node_ref,
+        children,
+    )
+}
+
+/* -------------------------------------------------------------------------------------------------
+ * ToggleGroupMultiple
+ * -----------------------------------------------------------------------------------------------*/
+
+#[component]
+pub fn ToggleGroupMultiple(
+    /// The controlled values of the pressed items.
+    #[prop(into, optional)]
+    value: MaybeProp<Vec<String>>,
+    /// The default values of the pressed items when uncontrolled.
+    #[prop(into, optional)]
+    default_value: MaybeProp<Vec<String>>,
+    /// Callback when the values change.
+    #[prop(into, optional)]
+    on_value_change: Option<Callback<Vec<String>>>,
+    /// Whether the group is disabled from user interaction.
+    #[prop(into, optional)]
+    disabled: MaybeProp<bool>,
+    /// Whether the group should maintain roving focus of its buttons.
+    #[prop(into, optional)]
+    roving_focus: MaybeProp<bool>,
+    #[prop(into, optional)] r#loop: MaybeProp<bool>,
+    #[prop(into, optional)] orientation: MaybeProp<Orientation>,
+    #[prop(into, optional)] dir: MaybeProp<Direction>,
+    #[prop(into, optional)] as_child: MaybeProp<bool>,
+    #[prop(into, optional)] node_ref: AnyNodeRef,
+    children: ChildrenFn,
+) -> impl IntoView {
+    toggle_group_core::<Multiple>(
+        value,
+        default_value,
+        on_value_change,
+        disabled,
+        roving_focus,
+        r#loop,
+        orientation,
+        dir,
+        as_child,
+        node_ref,
+        children,
+    )
+}
+
+/* -------------------------------------------------------------------------------------------------
+ * ToggleGroup (convenience wrapper for React API parity)
+ * -----------------------------------------------------------------------------------------------*/
+
+#[component]
+pub fn ToggleGroup(
+    /// Whether the group is single or multiple selection.
+    r#type: ToggleGroupType,
+    /// The controlled value of the pressed items.
+    #[prop(into, optional)]
+    value: MaybeProp<Vec<String>>,
+    /// The default value of the pressed items when uncontrolled.
+    #[prop(into, optional)]
+    default_value: MaybeProp<Vec<String>>,
+    /// Callback when the value changes.
+    #[prop(into, optional)]
+    on_value_change: Option<Callback<Vec<String>>>,
+    /// Whether the group is disabled from user interaction.
+    #[prop(into, optional)]
+    disabled: MaybeProp<bool>,
+    /// Whether the group should maintain roving focus of its buttons.
+    #[prop(into, optional)]
+    roving_focus: MaybeProp<bool>,
+    #[prop(into, optional)] r#loop: MaybeProp<bool>,
+    #[prop(into, optional)] orientation: MaybeProp<Orientation>,
+    #[prop(into, optional)] dir: MaybeProp<Direction>,
+    #[prop(into, optional)] as_child: MaybeProp<bool>,
+    #[prop(into, optional)] node_ref: AnyNodeRef,
+    children: ChildrenFn,
+) -> impl IntoView {
+    match r#type {
+        ToggleGroupType::Single => {
+            // Adapt Vec<String> props to String for the single-mode core.
+            let single_value: MaybeProp<String> = Signal::derive(move || {
+                value.get().and_then(|v| v.into_iter().next())
+            })
+            .into();
+            let single_default: MaybeProp<String> = Signal::derive(move || {
+                default_value.get().and_then(|v| v.into_iter().next())
+            })
+            .into();
+            let single_cb = on_value_change.map(|cb| {
+                Callback::new(move |v: String| {
+                    cb.run(if v.is_empty() { vec![] } else { vec![v] });
+                })
+            });
+
+            toggle_group_core::<Single>(
+                single_value,
+                single_default,
+                single_cb,
+                disabled,
+                roving_focus,
+                r#loop,
+                orientation,
+                dir,
+                as_child,
+                node_ref,
+                children,
+            )
+            .into_any()
+        }
+        ToggleGroupType::Multiple => toggle_group_core::<Multiple>(
+            value,
+            default_value,
+            on_value_change,
+            disabled,
+            roving_focus,
+            r#loop,
+            orientation,
+            dir,
+            as_child,
+            node_ref,
+            children,
+        )
+        .into_any(),
     }
 }
 
@@ -330,78 +542,60 @@ fn ToggleGroupItemImpl(
     }
 }
 
-fn toggle_group_activate(
-    current: Vec<String>,
-    item: String,
-    r#type: ToggleGroupType,
-) -> Vec<String> {
-    match r#type {
-        ToggleGroupType::Single => vec![item],
-        ToggleGroupType::Multiple => {
-            let mut values = current;
-            values.push(item);
-            values
-        }
-    }
-}
-
-fn toggle_group_deactivate(
-    current: Vec<String>,
-    item: &str,
-    r#type: ToggleGroupType,
-) -> Vec<String> {
-    match r#type {
-        ToggleGroupType::Single => vec![],
-        ToggleGroupType::Multiple => current.into_iter().filter(|v| v != item).collect(),
-    }
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
 
-    // ── toggle_group_activate ───────────────────────────────
+    // ── Single mode (via trait) ─────────────────────────────
 
     #[test]
-    fn activate_single_replaces() {
-        let result = toggle_group_activate(vec!["a".into()], "b".into(), ToggleGroupType::Single);
-        assert_eq!(result, vec!["b"]);
+    fn single_activate_replaces() {
+        assert_eq!(Single::on_activate(&"a".into(), "b"), "b");
     }
 
     #[test]
-    fn activate_multiple_appends() {
-        let result = toggle_group_activate(vec!["a".into()], "b".into(), ToggleGroupType::Multiple);
-        assert_eq!(result, vec!["a", "b"]);
+    fn single_deactivate_clears() {
+        assert_eq!(Single::on_deactivate(&"a".into(), "a"), "");
     }
 
     #[test]
-    fn activate_multiple_from_empty() {
-        let result = toggle_group_activate(vec![], "a".into(), ToggleGroupType::Multiple);
-        assert_eq!(result, vec!["a"]);
-    }
-
-    // ── toggle_group_deactivate ─────────────────────────────
-
-    #[test]
-    fn deactivate_single_clears() {
-        let result = toggle_group_deactivate(vec!["a".into()], "a", ToggleGroupType::Single);
-        assert!(result.is_empty());
+    fn single_to_vec_empty() {
+        assert_eq!(Single::to_vec(&String::new()), Vec::<String>::new());
     }
 
     #[test]
-    fn deactivate_multiple_removes_item() {
-        let result = toggle_group_deactivate(
-            vec!["a".into(), "b".into(), "c".into()],
-            "b",
-            ToggleGroupType::Multiple,
+    fn single_to_vec_value() {
+        assert_eq!(Single::to_vec(&"a".into()), vec!["a"]);
+    }
+
+    // ── Multiple mode (via trait) ───────────────────────────
+
+    #[test]
+    fn multiple_activate_appends() {
+        assert_eq!(
+            Multiple::on_activate(&vec!["a".into()], "b"),
+            vec!["a", "b"]
         );
-        assert_eq!(result, vec!["a", "c"]);
     }
 
     #[test]
-    fn deactivate_multiple_nonexistent() {
-        let result =
-            toggle_group_deactivate(vec!["a".into(), "b".into()], "z", ToggleGroupType::Multiple);
-        assert_eq!(result, vec!["a", "b"]);
+    fn multiple_activate_from_empty() {
+        assert_eq!(Multiple::on_activate(&vec![], "a"), vec!["a"]);
+    }
+
+    #[test]
+    fn multiple_deactivate_removes() {
+        assert_eq!(
+            Multiple::on_deactivate(&vec!["a".into(), "b".into(), "c".into()], "b"),
+            vec!["a", "c"]
+        );
+    }
+
+    #[test]
+    fn multiple_deactivate_nonexistent() {
+        assert_eq!(
+            Multiple::on_deactivate(&vec!["a".into(), "b".into()], "z"),
+            vec!["a", "b"]
+        );
     }
 }

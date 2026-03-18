@@ -6,13 +6,8 @@ pub fn ToggleGroupPage() -> impl IntoView {
     let (type_value, set_type_value) = signal("single".to_string());
     let (orientation, set_orientation) = signal("horizontal".to_string());
     let (disabled, set_disabled) = signal(false);
-    let (single_value, set_single_value) = signal(Vec::<String>::new());
+    let (single_value, set_single_value) = signal(String::new());
     let (multiple_value, set_multiple_value) = signal(Vec::<String>::new());
-
-    let toggle_type = Signal::derive(move || match type_value.get().as_str() {
-        "multiple" => ToggleGroupType::Multiple,
-        _ => ToggleGroupType::Single,
-    });
 
     let orient = Signal::derive(move || match orientation.get().as_str() {
         "vertical" => radix_leptos_primitives::roving_focus::Orientation::Vertical,
@@ -24,11 +19,10 @@ pub fn ToggleGroupPage() -> impl IntoView {
 
     view! {
         <Show
-            when=move || matches!(toggle_type.get(), ToggleGroupType::Single)
+            when=move || type_value.get() == "single"
             fallback=move || {
                 view! {
-                    <ToggleGroup
-                        r#type=ToggleGroupType::Multiple
+                    <ToggleGroupMultiple
                         orientation=orient
                         disabled=disabled
                         class:toggle-group-root=true
@@ -45,18 +39,17 @@ pub fn ToggleGroupPage() -> impl IntoView {
                         <ToggleGroupItem value="3" class:toggle-group-item=true>
                             "Item 3"
                         </ToggleGroupItem>
-                    </ToggleGroup>
+                    </ToggleGroupMultiple>
                 }
             }
         >
-            <ToggleGroup
-                r#type=ToggleGroupType::Single
+            <ToggleGroupSingle
                 orientation=orient
                 disabled=disabled
                 class:toggle-group-root=true
                 attr:aria-label="Options"
                 value=single_value_signal
-                on_value_change=Callback::new(move |v: Vec<String>| set_single_value.set(v))
+                on_value_change=Callback::new(move |v: String| set_single_value.set(v))
             >
                 <ToggleGroupItem value="1" class:toggle-group-item=true>
                     "Item 1"
@@ -67,7 +60,7 @@ pub fn ToggleGroupPage() -> impl IntoView {
                 <ToggleGroupItem value="3" class:toggle-group-item=true>
                     "Item 3"
                 </ToggleGroupItem>
-            </ToggleGroup>
+            </ToggleGroupSingle>
         </Show>
 
         <br /><br />
@@ -139,14 +132,14 @@ pub fn ToggleGroupPage() -> impl IntoView {
 
         <span data-testid="toggle-value">{move || {
             if type_value.get() == "single" {
-                single_value.get().join(",")
+                single_value.get()
             } else {
                 multiple_value.get().join(",")
             }
         }}</span>
         <button data-testid="set-item3" on:click=move |_| {
             if type_value.get() == "single" {
-                set_single_value.set(vec!["3".to_string()]);
+                set_single_value.set("3".to_string());
             } else {
                 set_multiple_value.set(vec!["3".to_string()]);
             }
@@ -155,7 +148,7 @@ pub fn ToggleGroupPage() -> impl IntoView {
         </button>
         <button data-testid="clear-value" on:click=move |_| {
             if type_value.get() == "single" {
-                set_single_value.set(vec![]);
+                set_single_value.set(String::new());
             } else {
                 set_multiple_value.set(vec![]);
             }

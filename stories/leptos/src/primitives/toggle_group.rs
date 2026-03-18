@@ -6,14 +6,13 @@ stylance::import_crate_style!(classes, "src/primitives/toggle-group.stories.modu
 
 #[component]
 pub fn Single() -> impl IntoView {
-    let (value, set_value) = signal::<Vec<String>>(vec![]);
-    let on_change = Callback::new(move |v| set_value.set(v));
+    let (value, set_value) = signal::<String>(String::new());
+    let on_change = Callback::new(move |v: String| set_value.set(v));
 
     view! {
         <h1>"Uncontrolled"</h1>
-        <ToggleGroup
-            r#type=ToggleGroupType::Single
-            default_value=vec!["1".to_string()]
+        <ToggleGroupSingle
+            default_value="1".to_string()
             attr:class=classes::root
             attr:aria-label="Options"
         >
@@ -26,11 +25,10 @@ pub fn Single() -> impl IntoView {
             <ToggleGroupItem value="3" attr:class=classes::item>
                 "Option 3"
             </ToggleGroupItem>
-        </ToggleGroup>
+        </ToggleGroupSingle>
 
         <h1>"Controlled"</h1>
-        <ToggleGroup
-            r#type=ToggleGroupType::Single
+        <ToggleGroupSingle
             value=value
             on_value_change=on_change
             attr:class=classes::root
@@ -45,17 +43,16 @@ pub fn Single() -> impl IntoView {
             <ToggleGroupItem value="3" attr:class=classes::item>
                 "Option 3"
             </ToggleGroupItem>
-        </ToggleGroup>
+        </ToggleGroupSingle>
     }
 }
 
 #[component]
 pub fn Vertical() -> impl IntoView {
     view! {
-        <ToggleGroup
-            r#type=ToggleGroupType::Single
+        <ToggleGroupSingle
             orientation=radix_leptos_primitives::roving_focus::Orientation::Vertical
-            default_value=vec!["1".to_string()]
+            default_value="1".to_string()
             attr:class=classes::root
             attr:aria-label="Options"
         >
@@ -68,19 +65,18 @@ pub fn Vertical() -> impl IntoView {
             <ToggleGroupItem value="3" attr:class=classes::item>
                 "Option 3"
             </ToggleGroupItem>
-        </ToggleGroup>
+        </ToggleGroupSingle>
     }
 }
 
 #[component]
 pub fn Multiple() -> impl IntoView {
     let (value, set_value) = signal::<Vec<String>>(vec![]);
-    let on_change = Callback::new(move |v| set_value.set(v));
+    let on_change = Callback::new(move |v: Vec<String>| set_value.set(v));
 
     view! {
         <h1>"Uncontrolled"</h1>
-        <ToggleGroup
-            r#type=ToggleGroupType::Multiple
+        <ToggleGroupMultiple
             default_value=vec!["1".to_string()]
             attr:class=classes::root
             attr:aria-label="Options"
@@ -94,11 +90,10 @@ pub fn Multiple() -> impl IntoView {
             <ToggleGroupItem value="3" attr:class=classes::item>
                 "Option 3"
             </ToggleGroupItem>
-        </ToggleGroup>
+        </ToggleGroupMultiple>
 
         <h1>"Controlled"</h1>
-        <ToggleGroup
-            r#type=ToggleGroupType::Multiple
+        <ToggleGroupMultiple
             value=value
             on_value_change=on_change
             attr:class=classes::root
@@ -113,7 +108,7 @@ pub fn Multiple() -> impl IntoView {
             <ToggleGroupItem value="3" attr:class=classes::item>
                 "Option 3"
             </ToggleGroupItem>
-        </ToggleGroup>
+        </ToggleGroupMultiple>
     }
 }
 
@@ -122,7 +117,7 @@ pub fn Chromatic() -> impl IntoView {
     view! {
         <h1>"Single"</h1>
         <h2>"Off"</h2>
-        <ToggleGroup r#type=ToggleGroupType::Single attr:class=classes::root>
+        <ToggleGroupSingle attr:class=classes::root>
             <ToggleGroupItem value="1" attr:class=classes::item>
                 "Option 1"
             </ToggleGroupItem>
@@ -132,12 +127,11 @@ pub fn Chromatic() -> impl IntoView {
             <ToggleGroupItem value="3" disabled=true attr:class=classes::item>
                 "Option 3"
             </ToggleGroupItem>
-        </ToggleGroup>
+        </ToggleGroupSingle>
 
         <h2>"On"</h2>
-        <ToggleGroup
-            r#type=ToggleGroupType::Single
-            default_value=vec!["1".to_string()]
+        <ToggleGroupSingle
+            default_value="1".to_string()
             attr:class=classes::root
         >
             <ToggleGroupItem value="1" attr:class=classes::item>
@@ -149,10 +143,10 @@ pub fn Chromatic() -> impl IntoView {
             <ToggleGroupItem value="3" disabled=true attr:class=classes::item>
                 "Option 3"
             </ToggleGroupItem>
-        </ToggleGroup>
+        </ToggleGroupSingle>
 
         <h2>"Disabled"</h2>
-        <ToggleGroup r#type=ToggleGroupType::Single disabled=true attr:class=classes::root>
+        <ToggleGroupSingle disabled=true attr:class=classes::root>
             <ToggleGroupItem value="1" attr:class=classes::item>
                 "Option 1"
             </ToggleGroupItem>
@@ -162,11 +156,11 @@ pub fn Chromatic() -> impl IntoView {
             <ToggleGroupItem value="3" attr:class=classes::item>
                 "Option 3"
             </ToggleGroupItem>
-        </ToggleGroup>
+        </ToggleGroupSingle>
 
         <h1>"Multiple"</h1>
         <h2>"Off"</h2>
-        <ToggleGroup r#type=ToggleGroupType::Multiple attr:class=classes::root>
+        <ToggleGroupMultiple attr:class=classes::root>
             <ToggleGroupItem value="1" attr:class=classes::item>
                 "Option 1"
             </ToggleGroupItem>
@@ -176,11 +170,10 @@ pub fn Chromatic() -> impl IntoView {
             <ToggleGroupItem value="3" disabled=true attr:class=classes::item>
                 "Option 3"
             </ToggleGroupItem>
-        </ToggleGroup>
+        </ToggleGroupMultiple>
 
         <h2>"One on"</h2>
-        <ToggleGroup
-            r#type=ToggleGroupType::Multiple
+        <ToggleGroupMultiple
             default_value=vec!["1".to_string()]
             attr:class=classes::root
         >
@@ -193,11 +186,10 @@ pub fn Chromatic() -> impl IntoView {
             <ToggleGroupItem value="3" disabled=true attr:class=classes::item>
                 "Option 3"
             </ToggleGroupItem>
-        </ToggleGroup>
+        </ToggleGroupMultiple>
 
         <h2>"One and two on"</h2>
-        <ToggleGroup
-            r#type=ToggleGroupType::Multiple
+        <ToggleGroupMultiple
             default_value=vec!["1".to_string(), "2".to_string()]
             attr:class=classes::root
         >
@@ -210,10 +202,10 @@ pub fn Chromatic() -> impl IntoView {
             <ToggleGroupItem value="3" attr:class=classes::item>
                 "Option 3"
             </ToggleGroupItem>
-        </ToggleGroup>
+        </ToggleGroupMultiple>
 
         <h2>"Disabled"</h2>
-        <ToggleGroup r#type=ToggleGroupType::Multiple disabled=true attr:class=classes::root>
+        <ToggleGroupMultiple disabled=true attr:class=classes::root>
             <ToggleGroupItem value="1" attr:class=classes::item>
                 "Option 1"
             </ToggleGroupItem>
@@ -223,13 +215,12 @@ pub fn Chromatic() -> impl IntoView {
             <ToggleGroupItem value="3" attr:class=classes::item>
                 "Option 3"
             </ToggleGroupItem>
-        </ToggleGroup>
+        </ToggleGroupMultiple>
 
         <h1>"Direction"</h1>
         <h2>"Prop"</h2>
-        <ToggleGroup
-            r#type=ToggleGroupType::Single
-            default_value=vec!["1".to_string()]
+        <ToggleGroupSingle
+            default_value="1".to_string()
             dir=radix_leptos_primitives::direction::Direction::Rtl
             attr:class=classes::root
         >
@@ -242,13 +233,12 @@ pub fn Chromatic() -> impl IntoView {
             <ToggleGroupItem value="3" disabled=true attr:class=classes::item>
                 "Option 3"
             </ToggleGroupItem>
-        </ToggleGroup>
+        </ToggleGroupSingle>
 
         <h2>"Inherited"</h2>
         <DirectionProvider direction=Signal::derive(|| radix_leptos_primitives::direction::Direction::Rtl)>
-            <ToggleGroup
-                r#type=ToggleGroupType::Single
-                default_value=vec!["1".to_string()]
+            <ToggleGroupSingle
+                default_value="1".to_string()
                 attr:class=classes::root
             >
                 <ToggleGroupItem value="1" attr:class=classes::item>
@@ -260,13 +250,12 @@ pub fn Chromatic() -> impl IntoView {
                 <ToggleGroupItem value="3" disabled=true attr:class=classes::item>
                     "Option 3"
                 </ToggleGroupItem>
-            </ToggleGroup>
+            </ToggleGroupSingle>
         </DirectionProvider>
 
         <h1>"State attributes"</h1>
         <h2>"Group disabled"</h2>
-        <ToggleGroup
-            r#type=ToggleGroupType::Multiple
+        <ToggleGroupMultiple
             default_value=vec!["1".to_string(), "2".to_string()]
             disabled=true
             attr:class=classes::root
@@ -283,11 +272,10 @@ pub fn Chromatic() -> impl IntoView {
             <ToggleGroupItem value="4" attr:class=classes::itemAttr>
                 "Option 4"
             </ToggleGroupItem>
-        </ToggleGroup>
+        </ToggleGroupMultiple>
 
         <h2>"Group enabled with button override"</h2>
-        <ToggleGroup
-            r#type=ToggleGroupType::Multiple
+        <ToggleGroupMultiple
             default_value=vec!["1".to_string(), "2".to_string()]
             disabled=false
             attr:class=classes::root
@@ -304,11 +292,10 @@ pub fn Chromatic() -> impl IntoView {
             <ToggleGroupItem value="4" disabled=true attr:class=classes::itemAttr>
                 "Option 4"
             </ToggleGroupItem>
-        </ToggleGroup>
+        </ToggleGroupMultiple>
 
         <h2>"Group disabled with button override"</h2>
-        <ToggleGroup
-            r#type=ToggleGroupType::Multiple
+        <ToggleGroupMultiple
             default_value=vec!["1".to_string(), "2".to_string()]
             disabled=true
             attr:class=classes::root
@@ -325,6 +312,6 @@ pub fn Chromatic() -> impl IntoView {
             <ToggleGroupItem value="4" disabled=false attr:class=classes::itemAttr>
                 "Option 4"
             </ToggleGroupItem>
-        </ToggleGroup>
+        </ToggleGroupMultiple>
     }
 }

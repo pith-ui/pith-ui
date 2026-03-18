@@ -1667,8 +1667,8 @@
     "id": "toggle-group-api-docs-1",
     "component": "toggle-group",
     "principle": "api-docs",
-    "description": "Leptos ToggleGroup uses a unified Vec<String> for value/default_value/on_value_change in both single and multiple modes. React uses string for single mode and string[] for multiple mode, enforced at the type level via a discriminated union. This means single-mode Leptos callers must wrap values in a vec (e.g., vec![\"a\".to_string()]) and receive a Vec<String> in on_value_change instead of a plain string. This is inconsistent with the Accordion port, where AccordionSingle uses String and AccordionMultiple uses Vec<String>. Consider whether ToggleGroup should be split into ToggleGroupSingle/ToggleGroupMultiple (matching Accordion) or whether the unified approach is intentional. See packages/primitives/leptos/src/components/toggle_group/mod.rs lines 41-64 vs React toggle-group.tsx lines 25-79.",
-    "status": "open",
+    "description": "Leptos ToggleGroup uses a unified Vec<String> for value/default_value/on_value_change in both single and multiple modes. React uses string for single mode and string[] for multiple mode, enforced at the type level via a discriminated union. This means single-mode Leptos callers must wrap values in a vec (e.g., vec![\"a\".to_string()]) and receive a Vec<String> in on_value_change instead of a plain string. This is inconsistent with the Accordion port, where AccordionSingle uses String and AccordionMultiple uses Vec<String>. Consider whether ToggleGroup should be split into ToggleGroupSingle/ToggleGroupMultiple (matching Accordion) or whether the unified approach is intentional. See packages/primitives/leptos/src/components/toggle_group/mod.rs lines 41-64 vs React toggle-group.tsx lines 25-79. RESOLVED: Refactored ToggleGroup to use generic ToggleGroupMode trait with Single/Multiple implementations. Added ToggleGroupSingle (String value) and ToggleGroupMultiple (Vec<String> value) components. Kept ToggleGroup convenience wrapper that delegates to the generic core. Matches Accordion pattern. E2E: toggle-group 48/48, toolbar 48/48.",
+    "status": "complete",
     "blockers": []
   },
   {
