@@ -1643,8 +1643,8 @@
     "id": "tabs-api-docs-1",
     "component": "tabs",
     "principle": "api-docs",
-    "description": "React TabsContent sets hidden={!present} on the rendered div, so force-mounted inactive panels are hidden via the HTML hidden attribute. The Leptos TabsContent does not set the hidden attribute \u2014 it relies solely on the Presence component for mount/unmount. This means force-mounted inactive content may remain visible in the DOM without hidden. See React tabs.tsx line 251 vs Leptos tabs/mod.rs TabsContentImpl (no hidden attr set).",
-    "status": "open",
+    "description": "React TabsContent sets hidden={!present} on the rendered div, so force-mounted inactive panels are hidden via the HTML hidden attribute. The Leptos TabsContent does not set the hidden attribute \u2014 it relies solely on the Presence component for mount/unmount. This means force-mounted inactive content may remain visible in the DOM without hidden. See React tabs.tsx line 251 vs Leptos tabs/mod.rs TabsContentImpl (no hidden attr set). RESOLVED: Added hidden attribute to TabsContentImpl that is set when the panel is not selected. Force-mounted inactive panels are now hidden from the DOM like React. E2E: tabs 55/55.",
+    "status": "complete",
     "blockers": []
   },
   {

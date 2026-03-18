@@ -365,6 +365,7 @@ fn TabsContentImpl(
             attr:role="tabpanel"
             attr:aria-labelledby=move || trigger_id.get()
             attr:id=move || content_id.get()
+            attr:hidden=move || (!is_selected.get()).then_some("")
             attr:tabindex="0"
         >
             {children.with_value(|children| children.as_ref().map(|children| children()))}
