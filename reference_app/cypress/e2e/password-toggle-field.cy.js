@@ -60,12 +60,8 @@ describe('PasswordToggleField', () => {
             iconToggle().should('have.attr', 'type', 'button');
         });
 
-        it.skipForFramework('react', 'React omits aria-pressed')('toggle has aria-pressed reflecting visibility state', () => {
-            iconToggle().should('have.attr', 'aria-pressed', 'false');
-            iconToggle().click();
-            iconToggle().should('have.attr', 'aria-pressed', 'true');
-            iconToggle().click();
-            iconToggle().should('have.attr', 'aria-pressed', 'false');
+        it('toggle does not have aria-pressed (removed to match React)', () => {
+            iconToggle().should('not.have.attr', 'aria-pressed');
         });
     });
 
