@@ -23,8 +23,8 @@ The public surface is `ScrollAreaScrollbarProps`. Internally, the component dele
 
 ```rust
 pub fn ScrollAreaScrollbar(
-    #[prop(into, optional)] orientation: Option<Orientation>,
-    #[prop(into, optional)] force_mount: Option<bool>,
+    #[prop(into, optional)] orientation: MaybeProp<Orientation>,
+    #[prop(into, optional)] force_mount: MaybeProp<bool>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
     children: ChildrenFn,
@@ -35,8 +35,8 @@ pub fn ScrollAreaScrollbar(
 
 | React Prop | Leptos Prop | Type (React) | Type (Leptos) | Description |
 |---|---|---|---|---|
-| `orientation` | `orientation` | `'horizontal' \| 'vertical'` (default `'vertical'`) | `Option<Orientation>` (default `Vertical`) | Which scroll axis this scrollbar controls. You typically mount two `ScrollAreaScrollbar` instances — one vertical and one horizontal — if the content can scroll in both directions. |
-| `forceMount` | `force_mount` | `true \| undefined` | `Option<bool>` (default `false`) | Forces the scrollbar to remain mounted in the DOM even when it would normally be hidden. Useful when controlling show/hide animations with CSS or animation libraries. Does not apply when `type="always"` (the scrollbar is always mounted in that case). |
+| `orientation` | `orientation` | `'horizontal' \| 'vertical'` (default `'vertical'`) | `MaybeProp<Orientation>` (default `Vertical`) | Which scroll axis this scrollbar controls. You typically mount two `ScrollAreaScrollbar` instances — one vertical and one horizontal — if the content can scroll in both directions. |
+| `forceMount` | `force_mount` | `true \| undefined` | `MaybeProp<bool>` (default `false`) | Forces the scrollbar to remain mounted in the DOM even when it would normally be hidden. Useful when controlling show/hide animations with CSS or animation libraries. Does not apply when `type="always"` (the scrollbar is always mounted in that case). |
 | `ref` | `node_ref` | `React.Ref` | `AnyNodeRef` | Ref to the scrollbar DOM element (`<div>`). |
 | `asChild` | `as_child` | `boolean` | `MaybeProp<bool>` | When `true`, renders the child directly instead of wrapping in a `<div>`, merging props and refs. |
 | *(spread)* | — | `...PrimitiveDivProps` | — | React allows spreading any `<div>` HTML attribute. Leptos uses `attr:` directives instead. |

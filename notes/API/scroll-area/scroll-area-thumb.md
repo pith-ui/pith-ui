@@ -23,7 +23,7 @@ interface ScrollAreaThumbImplProps extends PrimitiveDivProps {}
 
 ```rust
 pub fn ScrollAreaThumb(
-    #[prop(into, optional)] force_mount: Option<bool>,
+    #[prop(into, optional)] force_mount: MaybeProp<bool>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
     children: ChildrenFn,
@@ -34,7 +34,7 @@ pub fn ScrollAreaThumb(
 
 | React Prop | Leptos Prop | Type (React) | Type (Leptos) | Description |
 |---|---|---|---|---|
-| `forceMount` | `force_mount` | `true \| undefined` | `Option<bool>` (default `false`) | Forces the thumb to remain mounted in the DOM even when it would normally be hidden (e.g., when viewport size equals or exceeds content size). Useful for controlling animations with CSS or animation libraries. |
+| `forceMount` | `force_mount` | `true \| undefined` | `MaybeProp<bool>` (default `false`) | Forces the thumb to remain mounted in the DOM even when it would normally be hidden (e.g., when viewport size equals or exceeds content size). Useful for controlling animations with CSS or animation libraries. |
 | `ref` | `node_ref` | `React.Ref` | `AnyNodeRef` | Ref to the thumb DOM element (`<div>`). |
 | `asChild` | `as_child` | `boolean` | `MaybeProp<bool>` | When `true`, renders the child directly instead of wrapping in a `<div>`, merging props and refs. |
 | *(spread)* | — | `...PrimitiveDivProps` | — | React allows spreading any `<div>` HTML attribute. Leptos uses `attr:` directives instead. |

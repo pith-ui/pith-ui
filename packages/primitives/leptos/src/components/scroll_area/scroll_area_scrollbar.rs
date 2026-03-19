@@ -6,15 +6,15 @@ use super::*;
 
 #[component]
 pub fn ScrollAreaScrollbar(
-    #[prop(into, optional)] orientation: Option<Orientation>,
-    #[prop(into, optional)] force_mount: Option<bool>,
+    #[prop(into, optional)] orientation: MaybeProp<Orientation>,
+    #[prop(into, optional)] force_mount: MaybeProp<bool>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
     children: ChildrenFn,
 ) -> impl IntoView {
     let children = StoredValue::new(children);
-    let orientation = orientation.unwrap_or_default();
-    let force_mount = force_mount.unwrap_or(false);
+    let orientation = orientation.get_untracked().unwrap_or_default();
+    let force_mount = force_mount.get_untracked().unwrap_or(false);
     let context = expect_context::<ScrollAreaContextValue>();
 
     let is_horizontal = orientation == Orientation::Horizontal;

@@ -6,13 +6,13 @@ use super::*;
 
 #[component]
 pub fn ScrollAreaThumb(
-    #[prop(into, optional)] force_mount: Option<bool>,
+    #[prop(into, optional)] force_mount: MaybeProp<bool>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
     children: ChildrenFn,
 ) -> impl IntoView {
     let children = StoredValue::new(children);
-    let force_mount = force_mount.unwrap_or(false);
+    let force_mount = force_mount.get_untracked().unwrap_or(false);
     let scrollbar_context = expect_context::<ScrollbarContextValue>();
 
     let presence_ref = AnyNodeRef::new();

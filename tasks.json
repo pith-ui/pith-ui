@@ -1803,8 +1803,8 @@
     "id": "cross-cutting-api-docs-4",
     "component": "global",
     "principle": "api-docs",
-    "description": "force_mount in ScrollArea (ScrollAreaScrollbar, ScrollAreaThumb) uses Option<bool> instead of MaybeProp<bool>. This prevents consumers from passing reactive signals, unlike every other component that accepts force_mount. See scroll_area/mod.rs.",
-    "status": "open",
+    "description": "force_mount in ScrollArea (ScrollAreaScrollbar, ScrollAreaThumb) uses Option<bool> instead of MaybeProp<bool>. This prevents consumers from passing reactive signals, unlike every other component that accepts force_mount. See scroll_area/mod.rs. RESOLVED: Changed ScrollAreaScrollbar orientation from Option<Orientation> to MaybeProp<Orientation>, and force_mount on both ScrollAreaScrollbar and ScrollAreaThumb from Option<bool> to MaybeProp<bool>. Values resolved eagerly via get_untracked() since internal subcomponents use bare types. E2E: scroll-area 29/29.",
+    "status": "complete",
     "blockers": []
   },
   {
