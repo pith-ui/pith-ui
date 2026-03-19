@@ -59,6 +59,7 @@ toolbar = ["separator", "toggle-group"]
 # Non-component features
 colors = []
 icons = []
+internals = []
 
 # Leaf features (no component deps)
 accessible-icon = []

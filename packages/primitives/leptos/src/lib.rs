@@ -21,29 +21,50 @@ pub mod colors;
 #[cfg(feature = "icons")]
 pub mod icons;
 
-// ── Re-export support modules at crate level ──
-pub use support::announce;
-pub use support::aria_hidden;
+// ── Re-export public support modules at crate level ──
 pub use support::arrow;
-pub use support::collection;
-pub use support::compose_refs;
 pub use support::direction;
-pub use support::dismissable_layer;
-pub use support::focus_guards;
-pub use support::focus_scope;
-pub use support::id;
-pub use support::popper;
 pub use support::portal;
-pub use support::presence;
 pub use support::primitive;
-pub use support::roving_focus;
-pub use support::scroll_lock;
-pub use support::use_controllable_state;
-pub use support::use_escape_keydown;
-pub use support::use_previous;
-pub use support::use_rect;
-pub use support::use_size;
 pub use support::visually_hidden;
+
+// ── Re-export internal support modules behind `internals` feature ──
+// These are building blocks used by components internally. Not part of the
+// public consumer API, but exposed for stories, testing, and power users.
+#[cfg(feature = "internals")]
+pub use support::announce;
+#[cfg(feature = "internals")]
+pub use support::aria_hidden;
+#[cfg(feature = "internals")]
+pub use support::collection;
+#[cfg(feature = "internals")]
+pub use support::compose_refs;
+#[cfg(feature = "internals")]
+pub use support::dismissable_layer;
+#[cfg(feature = "internals")]
+pub use support::focus_guards;
+#[cfg(feature = "internals")]
+pub use support::focus_scope;
+#[cfg(feature = "internals")]
+pub use support::id;
+#[cfg(feature = "internals")]
+pub use support::popper;
+#[cfg(feature = "internals")]
+pub use support::presence;
+#[cfg(feature = "internals")]
+pub use support::roving_focus;
+#[cfg(feature = "internals")]
+pub use support::scroll_lock;
+#[cfg(feature = "internals")]
+pub use support::use_controllable_state;
+#[cfg(feature = "internals")]
+pub use support::use_escape_keydown;
+#[cfg(feature = "internals")]
+pub use support::use_previous;
+#[cfg(feature = "internals")]
+pub use support::use_rect;
+#[cfg(feature = "internals")]
+pub use support::use_size;
 
 // ── Re-export feature-gated components at crate level ──
 #[cfg(feature = "accessible-icon")]

@@ -16,8 +16,8 @@ use crate::support::focus_guards::use_focus_guards;
 use crate::support::focus_scope::FocusScope;
 use crate::support::id::use_id;
 use crate::support::popper::{
-    Align, Padding, Popper, PopperAnchor, PopperArrow, PopperContent, Side, Sticky,
-    UpdatePositionStrategy, provide_popper_scope, use_popper_scope,
+    Popper, PopperAnchor, PopperArrow, PopperContent, UpdatePositionStrategy, provide_popper_scope,
+    use_popper_scope,
 };
 use crate::support::portal::ScopedPortal;
 use crate::support::primitive::{
@@ -41,6 +41,7 @@ mod select_separator;
 mod select_value;
 mod select_viewport;
 
+pub use crate::support::popper::{Align, Padding, Side, Sticky};
 pub use select::*;
 pub use select_content::*;
 pub use select_item::*;

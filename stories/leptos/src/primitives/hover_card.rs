@@ -3,7 +3,6 @@ use radix_leptos_primitives::dialog::{
     Dialog, DialogClose, DialogContent, DialogTitle, DialogTrigger,
 };
 use radix_leptos_primitives::hover_card::*;
-use radix_leptos_primitives::popper::{Align, Side};
 use web_sys::wasm_bindgen::JsCast;
 
 stylance::import_crate_style!(classes, "src/primitives/hover_card.stories.module.css");

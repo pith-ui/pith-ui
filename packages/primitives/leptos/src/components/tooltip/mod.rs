@@ -6,8 +6,8 @@ use crate::support::compose_refs::use_composed_refs;
 use crate::support::dismissable_layer::DismissableLayer;
 use crate::support::id::use_id;
 use crate::support::popper::{
-    Align, Padding, Popper, PopperAnchor, PopperArrow, PopperContent, Side, Sticky,
-    UpdatePositionStrategy, provide_popper_scope, use_popper_scope,
+    Popper, PopperAnchor, PopperArrow, PopperContent, UpdatePositionStrategy, provide_popper_scope,
+    use_popper_scope,
 };
 use crate::support::portal::{ScopedPortal, resolve_force_mount};
 use crate::support::presence::Presence;
@@ -26,6 +26,7 @@ mod tooltip;
 mod tooltip_content;
 mod tooltip_provider;
 
+pub use crate::support::popper::{Align, Padding, Side, Sticky};
 pub use tooltip::*;
 pub use tooltip_content::*;
 pub use tooltip_provider::*;

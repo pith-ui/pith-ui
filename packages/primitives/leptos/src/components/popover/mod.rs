@@ -5,8 +5,8 @@ use crate::support::focus_guards::use_focus_guards;
 use crate::support::focus_scope::FocusScope;
 use crate::support::id::use_id;
 use crate::support::popper::{
-    Align, Padding, Popper, PopperAnchor, PopperArrow, PopperContent, Side, Sticky,
-    UpdatePositionStrategy, provide_popper_scope, use_popper_scope,
+    Popper, PopperAnchor, PopperArrow, PopperContent, UpdatePositionStrategy, provide_popper_scope,
+    use_popper_scope,
 };
 use crate::support::portal::{ScopedPortal, resolve_force_mount};
 use crate::support::presence::Presence;
@@ -26,6 +26,7 @@ use web_sys::wasm_bindgen::closure::Closure;
 mod popover;
 mod popover_content;
 
+pub use crate::support::popper::{Align, Padding, Side, Sticky};
 pub use popover::*;
 pub use popover_content::*;
 

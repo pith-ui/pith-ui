@@ -1,8 +1,8 @@
 use crate::support::compose_refs::use_composed_refs;
 use crate::support::dismissable_layer::DismissableLayer;
 use crate::support::popper::{
-    Align, Padding, Popper, PopperAnchor, PopperArrow, PopperContent, Side, Sticky,
-    UpdatePositionStrategy, provide_popper_scope, use_popper_scope,
+    Popper, PopperAnchor, PopperArrow, PopperContent, UpdatePositionStrategy, provide_popper_scope,
+    use_popper_scope,
 };
 use crate::support::portal::{ScopedPortal, resolve_force_mount};
 use crate::support::presence::Presence;
@@ -19,6 +19,7 @@ use web_sys::wasm_bindgen::closure::Closure;
 mod hover_card;
 mod hover_card_content;
 
+pub use crate::support::popper::{Align, Padding, Side, Sticky};
 pub use hover_card::*;
 pub use hover_card_content::*;
 

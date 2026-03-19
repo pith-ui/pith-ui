@@ -3,9 +3,9 @@ use leptos_node_ref::AnyNodeRef;
 use radix_leptos_primitives::dialog::{
     Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle, DialogTrigger,
 };
-use radix_leptos_primitives::popper::{Align, Side};
 use radix_leptos_primitives::tooltip::{
-    Tooltip, TooltipArrow, TooltipContent, TooltipPortal, TooltipProvider, TooltipTrigger,
+    Align, Side, Tooltip, TooltipArrow, TooltipContent, TooltipPortal, TooltipProvider,
+    TooltipTrigger,
 };
 use wasm_bindgen::JsCast;
 
