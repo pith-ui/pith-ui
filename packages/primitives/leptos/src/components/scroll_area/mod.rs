@@ -1,3 +1,43 @@
+//! Custom scrollable area with styled scrollbars.
+//!
+//! Replaces native scrollbar rendering with custom-styled scrollbar
+//! overlays while preserving native scroll behavior. Supports horizontal
+//! and vertical scrollbars with configurable visibility modes.
+//!
+//! # Anatomy
+//!
+//! ```text
+//! <ScrollArea>
+//!     <ScrollAreaViewport />
+//!     <ScrollAreaScrollbar orientation="vertical">
+//!         <ScrollAreaThumb />
+//!     </ScrollAreaScrollbar>
+//!     <ScrollAreaScrollbar orientation="horizontal">
+//!         <ScrollAreaThumb />
+//!     </ScrollAreaScrollbar>
+//!     <ScrollAreaCorner />
+//! </ScrollArea>
+//! ```
+//!
+//! # Features
+//!
+//! - Native scroll behavior with custom styled scrollbars
+//! - Auto, always, scroll, and hover visibility modes
+//! - Horizontal and vertical scrollbars
+//! - Drag-to-scroll on thumb
+//! - Click-to-jump on track
+//! - Corner element when both scrollbars are visible
+//! - RTL support
+//!
+//! # Data Attributes
+//!
+//! **ScrollAreaScrollbar:**
+//!
+//! | Attribute | Values |
+//! |-----------|--------|
+//! | `data-state` | `visible`, `hidden` |
+//! | `data-orientation` | `horizontal`, `vertical` |
+
 use std::collections::HashMap;
 use std::fmt::{self, Display, Formatter};
 
@@ -24,19 +64,21 @@ pub use scroll_area_corner::*;
 pub use scroll_area_scrollbar::*;
 pub use scroll_area_thumb::*;
 
-/* -------------------------------------------------------------------------------------------------
- * Types
- * -----------------------------------------------------------------------------------------------*/
-
+/// Controls when scrollbars become visible.
 #[derive(Clone, Copy, Debug, Default, Eq, Hash, PartialEq)]
 pub enum ScrollAreaType {
+    /// Scrollbars visible when content overflows.
     Auto,
+    /// Scrollbars always visible.
     Always,
+    /// Scrollbars visible while scrolling.
     Scroll,
+    /// Scrollbars visible on pointer hover (default).
     #[default]
     Hover,
 }
 
+/// The orientation of a scrollbar.
 #[derive(Clone, Copy, Debug, Default, Eq, Hash, PartialEq)]
 pub enum Orientation {
     Horizontal,

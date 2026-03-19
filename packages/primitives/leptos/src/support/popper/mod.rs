@@ -1,3 +1,11 @@
+//! Floating UI positioning layer.
+//!
+//! Wraps `floating-ui-leptos` to provide declarative floating element
+//! positioning. Manages anchor/content pairing, side/alignment, collision
+//! avoidance (flip, shift, hide), offset, and arrow placement. Used by
+//! popover, tooltip, hover card, dropdown menu, select, and other
+//! floating components.
+
 use crate::support::arrow::Arrow as ArrowPrimitive;
 use crate::support::compose_refs::use_composed_refs;
 use crate::support::primitive::Primitive;

@@ -1,3 +1,10 @@
+//! Portal for rendering children into a different DOM node.
+//!
+//! Portals render their children outside of the parent DOM hierarchy
+//! (typically into `document.body`) while maintaining the Leptos reactive
+//! context. Used by overlay components (dialog, popover, tooltip, etc.)
+//! to escape parent overflow/stacking constraints.
+
 use crate::support::primitive::{Primitive, prop_or_default};
 use leptos::{context::Provider, html, prelude::*};
 use leptos_node_ref::AnyNodeRef;

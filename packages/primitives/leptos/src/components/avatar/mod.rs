@@ -1,3 +1,23 @@
+//! Avatar image with automatic fallback.
+//!
+//! Displays a user avatar image with a fallback for when the image fails
+//! to load or while it is loading. The fallback can optionally be delayed.
+//!
+//! # Anatomy
+//!
+//! ```text
+//! <Avatar>
+//!     <AvatarImage />
+//!     <AvatarFallback />
+//! </Avatar>
+//! ```
+//!
+//! # Features
+//!
+//! - Automatic loading status detection (idle, loading, loaded, error)
+//! - Fallback displayed on error or while loading
+//! - Optional delay before showing fallback (avoids flicker for fast loads)
+
 use crate::support::primitive::{Primitive, VoidPrimitive};
 use leptos::{context::Provider, html, prelude::*};
 use leptos_node_ref::AnyNodeRef;
@@ -7,11 +27,16 @@ use web_sys::{
     wasm_bindgen::{JsCast, closure::Closure},
 };
 
+/// The loading status of the avatar image.
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
 pub enum ImageLoadingStatus {
+    /// No image source set.
     Idle,
+    /// Image is currently loading.
     Loading,
+    /// Image loaded successfully.
     Loaded,
+    /// Image failed to load.
     Error,
 }
 
@@ -21,6 +46,10 @@ struct AvatarContextValue {
     on_image_loading_status_change: Callback<ImageLoadingStatus>,
 }
 
+/// Root avatar container.
+///
+/// Renders as a `<span>`. Manages image loading state and provides
+/// context for [`AvatarImage`] and [`AvatarFallback`].
 #[component]
 pub fn Avatar(
     #[prop(into, optional)] as_child: MaybeProp<bool>,
@@ -51,6 +80,10 @@ pub fn Avatar(
     }
 }
 
+/// The avatar image element.
+///
+/// Renders as an `<img>` only when the image has loaded successfully.
+/// Reports loading status to the parent [`Avatar`] context.
 #[component]
 pub fn AvatarImage(
     #[prop(into, optional)] src: MaybeProp<String>,
@@ -97,9 +130,16 @@ pub fn AvatarImage(
     }
 }
 
+/// Fallback content displayed while the image is loading or on error.
+///
+/// Renders as a `<span>`. Shown when the image has not loaded. Can be
+/// delayed to avoid flickering on fast connections.
 #[component]
 pub fn AvatarFallback(
-    #[prop(into, optional)] delay_ms: MaybeProp<i32>,
+    /// Delay in milliseconds before showing the fallback. Useful to avoid
+    /// a flash of fallback content on fast connections.
+    #[prop(into, optional)]
+    delay_ms: MaybeProp<i32>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
     #[prop(optional)] children: Option<ChildrenFn>,

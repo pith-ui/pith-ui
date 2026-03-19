@@ -1,3 +1,50 @@
+//! Alert dialog for critical confirmations.
+//!
+//! A modal dialog variant for actions that require explicit confirmation.
+//! Unlike [`Dialog`](crate::dialog), alert dialogs are always modal and
+//! require the user to acknowledge or cancel before continuing.
+//!
+//! Implements the [WAI-ARIA Alert Dialog pattern](https://www.w3.org/WAI/ARIA/apd/patterns/alertdialog/).
+//!
+//! # Anatomy
+//!
+//! ```text
+//! <AlertDialog>
+//!     <AlertDialogTrigger />
+//!     <AlertDialogPortal>
+//!         <AlertDialogOverlay />
+//!         <AlertDialogContent>
+//!             <AlertDialogTitle />
+//!             <AlertDialogDescription />
+//!             <AlertDialogCancel />
+//!             <AlertDialogAction />
+//!         </AlertDialogContent>
+//!     </AlertDialogPortal>
+//! </AlertDialog>
+//! ```
+//!
+//! # Features
+//!
+//! - Always modal with focus trapping and scroll locking
+//! - Cancel button receives focus on open (prevents accidental destructive actions)
+//! - Esc key triggers cancel (not just close)
+//! - Click outside does not dismiss (user must explicitly choose)
+//!
+//! # Keyboard Interactions
+//!
+//! | Key | Action |
+//! |-----|--------|
+//! | Escape | Closes the dialog (triggers cancel) |
+//! | Tab | Cycles focus within the dialog |
+//!
+//! # Data Attributes
+//!
+//! **AlertDialogOverlay, AlertDialogContent:**
+//!
+//! | Attribute | Values |
+//! |-----------|--------|
+//! | `data-state` | `open`, `closed` |
+
 use crate::dialog::*;
 use crate::support::compose_refs::use_composed_refs;
 use crate::support::primitive::wrap_callback;
@@ -5,10 +52,10 @@ use leptos::{context::Provider, ev, prelude::*};
 use leptos_node_ref::AnyNodeRef;
 use send_wrapper::SendWrapper;
 
-/* -------------------------------------------------------------------------------------------------
- * AlertDialog
- * -----------------------------------------------------------------------------------------------*/
-
+/// Root alert dialog component.
+///
+/// Wraps [`Dialog`](crate::dialog::Dialog) with `modal=true`. Manages
+/// open state and provides context for all alert dialog sub-components.
 #[component]
 pub fn AlertDialog(
     #[prop(into, optional)] open: MaybeProp<bool>,

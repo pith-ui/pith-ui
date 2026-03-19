@@ -1,3 +1,50 @@
+//! Group of toggle buttons with single or multiple selection.
+//!
+//! A set of two-state buttons where one or multiple can be pressed. In
+//! single mode, items use `role="radio"` with `aria-checked`; in multiple
+//! mode, items use `aria-pressed`. Supports roving focus and keyboard
+//! navigation.
+//!
+//! # Anatomy
+//!
+//! ```text
+//! <ToggleGroup>          // or ToggleGroupSingle / ToggleGroupMultiple
+//!     <ToggleGroupItem />
+//!     <ToggleGroupItem />
+//! </ToggleGroup>
+//! ```
+//!
+//! # Features
+//!
+//! - Single selection (radio-like) or multiple selection
+//! - Controlled and uncontrolled value state
+//! - Roving focus with arrow key navigation (optional)
+//! - Horizontal and vertical orientation
+//! - RTL support
+//!
+//! # Keyboard Interactions
+//!
+//! | Key | Action |
+//! |-----|--------|
+//! | Tab | Moves focus to the pressed item (or first item) |
+//! | ArrowRight | Focuses next item (horizontal) |
+//! | ArrowLeft | Focuses previous item (horizontal) |
+//! | ArrowDown | Focuses next item (vertical) |
+//! | ArrowUp | Focuses previous item (vertical) |
+//! | Home | Focuses first item |
+//! | End | Focuses last item |
+//! | Space / Enter | Toggles the focused item |
+//!
+//! # Data Attributes
+//!
+//! **ToggleGroupItem:**
+//!
+//! | Attribute | Values |
+//! |-----------|--------|
+//! | `data-state` | `on`, `off` |
+//! | `data-disabled` | Present when disabled |
+//! | `data-orientation` | `horizontal`, `vertical` (on group container) |
+
 use crate::support::direction::{Direction, use_direction};
 use crate::support::primitive::{
     Primitive, adapt_callback, compose_callbacks, data_attr, prop_or, prop_or_default,
@@ -9,13 +56,12 @@ use leptos::{
 };
 use leptos_node_ref::AnyNodeRef;
 
-/* -------------------------------------------------------------------------------------------------
- * ToggleGroupType (kept for convenience wrapper)
- * -----------------------------------------------------------------------------------------------*/
-
+/// The selection mode of a toggle group.
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
 pub enum ToggleGroupType {
+    /// Only one item can be pressed at a time.
     Single,
+    /// Multiple items can be pressed simultaneously.
     Multiple,
 }
 
@@ -23,6 +69,7 @@ pub enum ToggleGroupType {
  * ToggleGroupMode trait + implementations
  * -----------------------------------------------------------------------------------------------*/
 
+/// Trait abstracting single vs. multiple selection behavior.
 pub trait ToggleGroupMode: Send + 'static {
     type Value: Clone + PartialEq + Send + Sync + 'static;
 
@@ -33,7 +80,9 @@ pub trait ToggleGroupMode: Send + 'static {
     fn toggle_group_type() -> ToggleGroupType;
 }
 
+/// Single-selection mode marker type.
 pub struct Single;
+/// Multiple-selection mode marker type.
 pub struct Multiple;
 
 impl ToggleGroupMode for Single {
@@ -192,10 +241,11 @@ fn toggle_group_core<M: ToggleGroupMode>(
     }
 }
 
-/* -------------------------------------------------------------------------------------------------
- * ToggleGroupSingle
- * -----------------------------------------------------------------------------------------------*/
-
+/// Toggle group with single selection (at most one item pressed).
+///
+/// Renders as a `<div>` with `role="group"`. Items use `role="radio"`
+/// with `aria-checked`. For a convenience wrapper that accepts a `type`
+/// prop, see [`ToggleGroup`].
 #[component]
 pub fn ToggleGroupSingle(
     /// The controlled value of the pressed item.
@@ -235,10 +285,10 @@ pub fn ToggleGroupSingle(
     )
 }
 
-/* -------------------------------------------------------------------------------------------------
- * ToggleGroupMultiple
- * -----------------------------------------------------------------------------------------------*/
-
+/// Toggle group with multiple selection (any number of items pressed).
+///
+/// Renders as a `<div>` with `role="group"`. Items use `aria-pressed`.
+/// For a convenience wrapper that accepts a `type` prop, see [`ToggleGroup`].
 #[component]
 pub fn ToggleGroupMultiple(
     /// The controlled values of the pressed items.
@@ -278,10 +328,12 @@ pub fn ToggleGroupMultiple(
     )
 }
 
-/* -------------------------------------------------------------------------------------------------
- * ToggleGroup (convenience wrapper for React API parity)
- * -----------------------------------------------------------------------------------------------*/
-
+/// Convenience wrapper that delegates to [`ToggleGroupSingle`] or
+/// [`ToggleGroupMultiple`] based on the `type` prop.
+///
+/// Matches the React API where a single `ToggleGroup` component accepts
+/// a `type` discriminator. Prefer the typed variants for stronger
+/// compile-time guarantees.
 #[component]
 pub fn ToggleGroup(
     /// Whether the group is single or multiple selection.
@@ -412,10 +464,11 @@ fn ToggleGroupImpl(
     }
 }
 
-/* -------------------------------------------------------------------------------------------------
- * ToggleGroupItem
- * -----------------------------------------------------------------------------------------------*/
-
+/// An individual toggle button within the group.
+///
+/// Renders as a `<button>`. In single mode, uses `role="radio"` +
+/// `aria-checked`; in multiple mode, uses `aria-pressed`.
+/// Must be a descendant of a toggle group component.
 #[component]
 pub fn ToggleGroupItem(
     /// A string value for the toggle group item. All items within a toggle group should use a unique value.

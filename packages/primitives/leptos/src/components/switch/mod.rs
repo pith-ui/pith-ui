@@ -1,3 +1,41 @@
+//! Toggle switch for on/off states.
+//!
+//! An accessible form control that toggles between on and off. Renders as a
+//! `<button>` with `role="switch"` and a hidden `<input>` for native form
+//! participation.
+//!
+//! Implements the [WAI-ARIA Switch pattern](https://www.w3.org/WAI/ARIA/apd/patterns/switch/).
+//!
+//! # Anatomy
+//!
+//! ```text
+//! <Switch>
+//!     <SwitchThumb />
+//! </Switch>
+//! ```
+//!
+//! # Features
+//!
+//! - Controlled and uncontrolled checked state
+//! - Native form participation via hidden `<input>`
+//! - Keyboard accessible (Space and Enter toggle via native button)
+//!
+//! # Data Attributes
+//!
+//! **Switch:**
+//!
+//! | Attribute | Values |
+//! |-----------|--------|
+//! | `data-state` | `checked`, `unchecked` |
+//! | `data-disabled` | Present when disabled |
+//!
+//! **SwitchThumb:**
+//!
+//! | Attribute | Values |
+//! |-----------|--------|
+//! | `data-state` | `checked`, `unchecked` |
+//! | `data-disabled` | Present when disabled |
+
 use crate::support::compose_refs::use_composed_refs;
 use crate::support::primitive::{Primitive, adapt_callback, compose_callbacks, data_attr, prop_or};
 use crate::support::use_controllable_state::{UseControllableStateParams, use_controllable_state};
@@ -15,6 +53,10 @@ struct SwitchContextValue {
     disabled: Signal<bool>,
 }
 
+/// Root switch component.
+///
+/// Renders as a `<button>` with `role="switch"`. Manages checked state
+/// and provides context for [`SwitchThumb`].
 #[component]
 pub fn Switch(
     #[prop(into, optional)] name: MaybeProp<String>,
@@ -117,6 +159,10 @@ pub fn Switch(
     }
 }
 
+/// Thumb element that visually indicates the switch state.
+///
+/// Renders as a `<span>` styled via `data-state`. Must be a descendant
+/// of [`Switch`].
 #[component]
 pub fn SwitchThumb(
     #[prop(into, optional)] as_child: MaybeProp<bool>,

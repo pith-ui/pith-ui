@@ -1,3 +1,8 @@
+//! Reactive element size observer.
+//!
+//! Provides [`use_size`] which returns a signal containing the element's
+//! `borderBoxSize` (width and height), updated via `ResizeObserver`.
+
 use std::sync::{Arc, Mutex};
 
 use leptos::prelude::*;

@@ -1,3 +1,59 @@
+//! Range slider for selecting numeric values.
+//!
+//! An accessible range input that supports single or multiple thumbs,
+//! horizontal or vertical orientation, and RTL direction. Renders as a
+//! `<span>` with `role="slider"` on each thumb.
+//!
+//! Implements the [WAI-ARIA Slider pattern](https://www.w3.org/WAI/ARIA/apd/patterns/slider-multithumb/).
+//!
+//! # Anatomy
+//!
+//! ```text
+//! <Slider>
+//!     <SliderTrack>
+//!         <SliderRange />
+//!     </SliderTrack>
+//!     <SliderThumb />
+//! </Slider>
+//! ```
+//!
+//! # Features
+//!
+//! - Single or multiple thumbs
+//! - Controlled and uncontrolled value state
+//! - Horizontal and vertical orientation
+//! - RTL support
+//! - Min step distance between thumbs
+//! - Native form participation via hidden `<input>`
+//! - Touch device support with pointer capture
+//!
+//! # Keyboard Interactions
+//!
+//! | Key | Action |
+//! |-----|--------|
+//! | ArrowRight / ArrowUp | Increase value by one step |
+//! | ArrowLeft / ArrowDown | Decrease value by one step |
+//! | PageUp | Increase value by 10 steps |
+//! | PageDown | Decrease value by 10 steps |
+//! | Shift + Arrow | Increase/decrease by 10 steps |
+//! | Home | Set to minimum value |
+//! | End | Set to maximum value |
+//!
+//! # Data Attributes
+//!
+//! **Slider, SliderTrack, SliderRange, SliderThumb:**
+//!
+//! | Attribute | Values |
+//! |-----------|--------|
+//! | `data-orientation` | `horizontal`, `vertical` |
+//! | `data-disabled` | Present when disabled |
+//!
+//! # CSS Custom Properties
+//!
+//! | Property | Description |
+//! |----------|-------------|
+//! | `--radix-slider-thumb-transform` | Transform applied to thumb for centering |
+
 use std::marker::PhantomData;
 
 use crate::internal::number::clamp;
@@ -69,10 +125,13 @@ struct SliderContextValue {
     form: Signal<Option<String>>,
 }
 
+/// The orientation of a slider.
 #[derive(Clone, Copy, Debug, Default, PartialEq)]
 pub enum Orientation {
+    /// Horizontal slider (default).
     #[default]
     Horizontal,
+    /// Vertical slider.
     Vertical,
 }
 

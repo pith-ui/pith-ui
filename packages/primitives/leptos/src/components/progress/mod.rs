@@ -1,3 +1,42 @@
+//! Progress bar indicating task completion.
+//!
+//! Displays determinate or indeterminate progress with full ARIA support.
+//! Renders as a `<div>` with `role="progressbar"` and exposes value/max
+//! via ARIA attributes and data attributes.
+//!
+//! # Anatomy
+//!
+//! ```text
+//! <Progress>
+//!     <ProgressIndicator />
+//! </Progress>
+//! ```
+//!
+//! # Features
+//!
+//! - Determinate progress (value between 0 and max)
+//! - Indeterminate state when value is `None`
+//! - Customizable value label via `get_value_label` callback
+//! - Runtime validation of value and max props
+//!
+//! # Data Attributes
+//!
+//! **Progress:**
+//!
+//! | Attribute | Values |
+//! |-----------|--------|
+//! | `data-state` | `indeterminate`, `loading`, `complete` |
+//! | `data-value` | Current value (absent when indeterminate) |
+//! | `data-max` | Maximum value |
+//!
+//! **ProgressIndicator:**
+//!
+//! | Attribute | Values |
+//! |-----------|--------|
+//! | `data-state` | `indeterminate`, `loading`, `complete` |
+//! | `data-value` | Current value (absent when indeterminate) |
+//! | `data-max` | Maximum value |
+
 use std::fmt::{Display, Formatter};
 
 use crate::support::primitive::Primitive;
@@ -6,10 +45,14 @@ use leptos_node_ref::AnyNodeRef;
 
 const DEFAULT_MAX: f64 = 100.0;
 
+/// The state of a progress bar.
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
 pub enum ProgressState {
+    /// No value set; progress is unknown.
     Indeterminate,
+    /// Value equals max; task is finished.
     Complete,
+    /// Value is between 0 and max; task is in progress.
     Loading,
 }
 
@@ -33,11 +76,19 @@ struct ProgressContextValue {
     max: Signal<f64>,
 }
 
+/// Root progress component.
+///
+/// Renders as a `<div>` with `role="progressbar"`. Manages value/max state
+/// and provides context for [`ProgressIndicator`].
 #[component]
 pub fn Progress(
     #[prop(into, optional)] value: MaybeProp<f64>,
     #[prop(into, optional)] max: MaybeProp<f64>,
-    #[prop(into, optional)] get_value_label: Option<Callback<(f64, f64), String>>,
+    /// Customizes the human-readable value label used for `aria-valuetext`.
+    /// Receives `(value, max)` and returns a label string. Defaults to a
+    /// percentage like `"50%"`.
+    #[prop(into, optional)]
+    get_value_label: Option<Callback<(f64, f64), String>>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
     children: ChildrenFn,
@@ -107,6 +158,10 @@ pub fn Progress(
     }
 }
 
+/// Visual indicator for the progress bar.
+///
+/// Renders as a `<div>` with data attributes mirroring the parent
+/// [`Progress`] state. Must be a descendant of [`Progress`].
 #[component]
 pub fn ProgressIndicator(
     #[prop(into, optional)] as_child: MaybeProp<bool>,

@@ -1,3 +1,10 @@
+//! Focus guard elements to prevent focus from escaping a modal.
+//!
+//! Inserts invisible sentinel elements at the start and end of `<body>`
+//! that redirect focus back into the active focus scope. Prevents focus
+//! from leaving the page entirely when tabbing past the last (or before
+//! the first) focusable element in a modal.
+
 use std::sync::atomic::{AtomicU64, Ordering};
 
 use leptos::prelude::*;

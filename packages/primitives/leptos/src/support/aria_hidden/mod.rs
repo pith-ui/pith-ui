@@ -1,3 +1,9 @@
+//! Utility for hiding sibling DOM elements from assistive technology.
+//!
+//! Sets `aria-hidden="true"` on body's direct children that don't contain
+//! the specified content element. Used by modal components (dialog, popover)
+//! to isolate focus to the overlay content.
+
 use leptos::prelude::*;
 use send_wrapper::SendWrapper;
 

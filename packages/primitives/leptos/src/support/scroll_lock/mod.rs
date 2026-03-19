@@ -1,3 +1,9 @@
+//! Body scroll locking for modal overlays.
+//!
+//! Prevents background page scrolling while a modal component (dialog,
+//! popover, select) is open. Compensates for scrollbar width to avoid
+//! layout shift.
+
 use leptos::prelude::*;
 
 /// Sets `overflow: hidden` on `<body>` while the calling component is mounted,

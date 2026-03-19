@@ -1,3 +1,12 @@
+//! Low-level element rendering primitive.
+//!
+//! Provides [`Primitive`] and [`VoidPrimitive`] components used by all
+//! Radix components to render their root element. Supports the `as_child`
+//! pattern for merging props into a consumer-provided child element.
+//!
+//! Also provides utility functions for prop defaults, callback composition,
+//! and data attribute helpers used across the component library.
+
 use leptos::{
     either::Either,
     ev::Event,
@@ -8,6 +17,11 @@ use leptos::{
 };
 use leptos_node_ref::{AnyNodeRef, any_node_ref};
 
+/// Base rendering primitive for all Radix components.
+///
+/// When `as_child` is false (default), renders the specified HTML element.
+/// When `as_child` is true, delegates rendering to the child, merging
+/// attributes and refs onto it.
 #[component]
 pub fn Primitive<E>(
     element: fn() -> HtmlElement<E, (), ()>,

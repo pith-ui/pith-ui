@@ -1,5 +1,13 @@
+//! Controlled/uncontrolled state management hook.
+//!
+//! Provides [`use_controllable_state`] which unifies the controlled
+//! (consumer-provided signal) and uncontrolled (internal default) state
+//! patterns into a single API. Fires an `on_change` callback when the
+//! value changes regardless of which mode is active.
+
 use leptos::prelude::*;
 
+/// Parameters for [`use_controllable_state`].
 pub struct UseControllableStateParams<T: Send + Sync + 'static> {
     pub prop: MaybeProp<T>,
     pub default_prop: MaybeProp<T>,

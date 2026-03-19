@@ -1,3 +1,65 @@
+//! Navigation menu with animated content panels.
+//!
+//! A horizontal navigation component where each item can open a content
+//! panel with animated transitions. Content panels can display links,
+//! descriptions, and other navigation aids. Supports viewport-based
+//! rendering for smooth animations between panels.
+//!
+//! Implements the [WAI-ARIA Navigation pattern](https://www.w3.org/TR/wai-aria-1.2/#navigation).
+//!
+//! # Anatomy
+//!
+//! ```text
+//! <NavigationMenu>
+//!     <NavigationMenuList>
+//!         <NavigationMenuItem>
+//!             <NavigationMenuTrigger />
+//!             <NavigationMenuContent />
+//!         </NavigationMenuItem>
+//!         <NavigationMenuItem>
+//!             <NavigationMenuLink />
+//!         </NavigationMenuItem>
+//!     </NavigationMenuList>
+//!     <NavigationMenuViewport />
+//!     <NavigationMenuIndicator />
+//! </NavigationMenu>
+//! ```
+//!
+//! # Features
+//!
+//! - Animated content panel transitions
+//! - Viewport-based rendering for smooth cross-fade animations
+//! - Active indicator with animated position tracking
+//! - Keyboard navigation with arrow keys
+//! - Pointer "grace area" to prevent accidental close
+//! - Sub-navigation support
+//!
+//! # Keyboard Interactions
+//!
+//! | Key | Action |
+//! |-----|--------|
+//! | Space / Enter | Opens/activates menu item |
+//! | ArrowRight | Focuses next trigger |
+//! | ArrowLeft | Focuses previous trigger |
+//! | Tab | Moves focus out of navigation |
+//! | Escape | Closes open content |
+//!
+//! # Data Attributes
+//!
+//! **NavigationMenuTrigger:**
+//!
+//! | Attribute | Values |
+//! |-----------|--------|
+//! | `data-state` | `open`, `closed` |
+//! | `data-disabled` | Present when disabled |
+//!
+//! **NavigationMenuContent:**
+//!
+//! | Attribute | Values |
+//! |-----------|--------|
+//! | `data-state` | `open`, `closed` |
+//! | `data-motion` | `from-start`, `from-end`, `to-start`, `to-end` |
+
 use std::collections::HashMap;
 use std::fmt::{Display, Formatter};
 use std::marker::PhantomData;

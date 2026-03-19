@@ -1,3 +1,50 @@
+//! Toast notification system.
+//!
+//! Displays temporary, auto-dismissing notifications that stack in a
+//! viewport region. Supports pause-on-hover, swipe-to-dismiss, and
+//! keyboard-accessible navigation via a hotkey.
+//!
+//! # Anatomy
+//!
+//! ```text
+//! <ToastProvider>
+//!     <Toast>
+//!         <ToastTitle />
+//!         <ToastDescription />
+//!         <ToastAction />
+//!         <ToastClose />
+//!     </Toast>
+//!     <ToastViewport />
+//! </ToastProvider>
+//! ```
+//!
+//! # Features
+//!
+//! - Auto-dismiss with configurable duration
+//! - Pause timer on hover or focus
+//! - Swipe to dismiss (configurable direction)
+//! - Stacking multiple toasts
+//! - Keyboard navigation with F8 hotkey (configurable)
+//! - Action button with alt-text for screen readers
+//!
+//! # Keyboard Interactions
+//!
+//! | Key | Action |
+//! |-----|--------|
+//! | F8 | Focuses the toast viewport |
+//! | Tab | Cycles focus within toasts |
+//! | Escape | Dismisses focused toast |
+//!
+//! # Data Attributes
+//!
+//! **Toast:**
+//!
+//! | Attribute | Values |
+//! |-----------|--------|
+//! | `data-state` | `open`, `closed` |
+//! | `data-swipe` | `start`, `move`, `cancel`, `end` |
+//! | `data-swipe-direction` | `up`, `down`, `left`, `right` |
+
 use std::marker::PhantomData;
 
 use crate::support::collection::{

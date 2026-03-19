@@ -1,3 +1,53 @@
+//! Vertically stacked expandable sections.
+//!
+//! A set of collapsible content panels where one or multiple can be expanded.
+//! Built on top of [`Collapsible`](crate::collapsible) with coordinated state,
+//! keyboard navigation, and ARIA accordion semantics.
+//!
+//! # Anatomy
+//!
+//! ```text
+//! <Accordion>              // or AccordionSingle / AccordionMultiple
+//!     <AccordionItem>
+//!         <AccordionHeader>
+//!             <AccordionTrigger />
+//!         </AccordionHeader>
+//!         <AccordionContent />
+//!     </AccordionItem>
+//! </Accordion>
+//! ```
+//!
+//! # Features
+//!
+//! - Single or multiple expanded items
+//! - Controlled and uncontrolled expanded state
+//! - Keyboard navigation between triggers (arrow keys, Home, End)
+//! - Horizontal and vertical orientation
+//! - RTL support
+//! - CSS animation support via `--radix-collapsible-content-height` / `--radix-collapsible-content-width`
+//!
+//! # Keyboard Interactions
+//!
+//! | Key | Action |
+//! |-----|--------|
+//! | Space / Enter | Toggles the focused item |
+//! | ArrowDown | Focuses next trigger (vertical) |
+//! | ArrowUp | Focuses previous trigger (vertical) |
+//! | ArrowRight | Focuses next trigger (horizontal) |
+//! | ArrowLeft | Focuses previous trigger (horizontal) |
+//! | Home | Focuses first trigger |
+//! | End | Focuses last trigger |
+//!
+//! # Data Attributes
+//!
+//! **AccordionItem, AccordionTrigger, AccordionContent:**
+//!
+//! | Attribute | Values |
+//! |-----------|--------|
+//! | `data-state` | `open`, `closed` |
+//! | `data-disabled` | Present when disabled |
+//! | `data-orientation` | `horizontal`, `vertical` |
+
 use std::fmt::{Display, Formatter};
 use std::marker::PhantomData;
 
@@ -24,10 +74,6 @@ mod accordion_item;
 pub use accordion::*;
 pub use accordion_item::*;
 
-/* -------------------------------------------------------------------------------------------------
- * Constants
- * -----------------------------------------------------------------------------------------------*/
-
 const ACCORDION_KEYS: &[&str] = &[
     "Home",
     "End",
@@ -37,19 +83,21 @@ const ACCORDION_KEYS: &[&str] = &[
     "ArrowRight",
 ];
 
-/* -------------------------------------------------------------------------------------------------
- * Types
- * -----------------------------------------------------------------------------------------------*/
-
+/// The selection mode of an accordion.
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
 pub enum AccordionType {
+    /// Only one item can be expanded at a time.
     Single,
+    /// Multiple items can be expanded simultaneously.
     Multiple,
 }
 
+/// The orientation of an accordion.
 #[derive(Clone, Copy, Debug, Default, Eq, Hash, PartialEq)]
 pub enum Orientation {
+    /// Horizontal accordion with left/right arrow navigation.
     Horizontal,
+    /// Vertical accordion with up/down arrow navigation (default).
     #[default]
     Vertical,
 }

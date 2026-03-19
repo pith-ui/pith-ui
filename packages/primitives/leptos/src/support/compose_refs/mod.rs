@@ -1,3 +1,9 @@
+//! Compose multiple node refs into a single ref.
+//!
+//! Merges several [`AnyNodeRef`] values so that when one resolves to a DOM
+//! node, all others are updated to point to the same node. Used when a
+//! component needs both an internal ref and a forwarded consumer ref.
+
 use leptos::{html::Div, prelude::*, tachys::html::node_ref::NodeRefContainer};
 use leptos_node_ref::AnyNodeRef;
 

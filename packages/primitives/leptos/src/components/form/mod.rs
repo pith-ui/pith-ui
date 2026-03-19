@@ -1,3 +1,33 @@
+//! Form with accessible validation messages.
+//!
+//! Wraps a native `<form>` element with a structured validation system.
+//! Each field can display validation messages from native browser validation,
+//! server-side validation, or custom async validators. Messages are
+//! associated with fields via `aria-describedby`.
+//!
+//! # Anatomy
+//!
+//! ```text
+//! <Form>
+//!     <FormField name="email">
+//!         <FormLabel />
+//!         <FormControl />
+//!         <FormMessage />                    <!-- native/custom -->
+//!         <FormMessage match_fn=... />       <!-- custom matcher -->
+//!         <FormValidityMessage match_val=... /> <!-- ValidityState -->
+//!     </FormField>
+//!     <FormSubmit />
+//! </Form>
+//! ```
+//!
+//! # Features
+//!
+//! - Native `ValidityState` message matching
+//! - Custom validation functions (sync and async)
+//! - Server-side error integration
+//! - Automatic `aria-describedby` and `aria-invalid` association
+//! - Form-level and field-level clear-on-submit
+
 use std::collections::{HashMap, HashSet};
 use std::future::Future;
 use std::pin::Pin;
@@ -24,6 +54,7 @@ pub use form_message::*;
  * Validity types
  * -----------------------------------------------------------------------------------------------*/
 
+/// Mirror of the browser's `ValidityState` interface for use in validation matching.
 #[derive(Clone, Debug, Default, PartialEq)]
 pub struct Validity {
     pub bad_input: bool,

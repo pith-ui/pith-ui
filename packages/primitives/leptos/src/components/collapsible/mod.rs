@@ -1,3 +1,39 @@
+//! Expandable/collapsible content section.
+//!
+//! A disclosure widget that shows or hides a panel of content. Renders a
+//! trigger button and a content region that can be animated on open/close.
+//!
+//! # Anatomy
+//!
+//! ```text
+//! <Collapsible>
+//!     <CollapsibleTrigger />
+//!     <CollapsibleContent />
+//! </Collapsible>
+//! ```
+//!
+//! # Features
+//!
+//! - Controlled and uncontrolled open state
+//! - CSS animation support with dimension measurement
+//! - Exposes `--radix-collapsible-content-height` and `--radix-collapsible-content-width` CSS custom properties
+//!
+//! # Keyboard Interactions
+//!
+//! | Key | Action |
+//! |-----|--------|
+//! | Space | Toggles open state |
+//! | Enter | Toggles open state |
+//!
+//! # Data Attributes
+//!
+//! **Collapsible, CollapsibleTrigger, CollapsibleContent:**
+//!
+//! | Attribute | Values |
+//! |-----------|--------|
+//! | `data-state` | `open`, `closed` |
+//! | `data-disabled` | Present when disabled |
+
 use crate::support::compose_refs::use_composed_refs;
 use crate::support::id::use_id;
 use crate::support::presence::use_presence;
@@ -12,10 +48,6 @@ use leptos_node_ref::AnyNodeRef;
 use send_wrapper::SendWrapper;
 use web_sys::wasm_bindgen::{JsCast, closure::Closure};
 
-/* -------------------------------------------------------------------------------------------------
- * Collapsible
- * -----------------------------------------------------------------------------------------------*/
-
 #[derive(Clone)]
 struct CollapsibleContextValue {
     content_id: ReadSignal<String>,
@@ -24,6 +56,10 @@ struct CollapsibleContextValue {
     on_open_toggle: Callback<()>,
 }
 
+/// Root collapsible component.
+///
+/// Renders as a `<div>`. Manages open state and provides context for
+/// [`CollapsibleTrigger`] and [`CollapsibleContent`].
 #[component]
 pub fn Collapsible(
     #[prop(into, optional)] open: MaybeProp<bool>,
@@ -73,10 +109,10 @@ pub fn Collapsible(
     }
 }
 
-/* -------------------------------------------------------------------------------------------------
- * CollapsibleTrigger
- * -----------------------------------------------------------------------------------------------*/
-
+/// Button that toggles the collapsible open state.
+///
+/// Renders as a `<button>` with `aria-controls` and `aria-expanded`.
+/// Must be a descendant of [`Collapsible`].
 #[component]
 pub fn CollapsibleTrigger(
     #[prop(into, optional)] on_click: Option<Callback<ev::MouseEvent>>,
@@ -117,12 +153,15 @@ pub fn CollapsibleTrigger(
     }
 }
 
-/* -------------------------------------------------------------------------------------------------
- * CollapsibleContent
- * -----------------------------------------------------------------------------------------------*/
-
+/// Content panel that is shown or hidden based on the collapsible state.
+///
+/// Renders as a `<div>`. Measures dimensions for CSS animation and exposes
+/// `--radix-collapsible-content-height` / `--radix-collapsible-content-width`
+/// custom properties. Must be a descendant of [`Collapsible`].
 #[component]
 pub fn CollapsibleContent(
+    /// Used to force mounting when more control is needed. Useful when
+    /// controlling animation with animation libraries.
     #[prop(into, optional)] force_mount: MaybeProp<bool>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,

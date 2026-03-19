@@ -1,3 +1,9 @@
+//! SVG arrow element for floating UI components.
+//!
+//! Renders an SVG arrow (caret/triangle) used by popper-positioned
+//! components like popover, tooltip, and hover card to visually connect
+//! the floating content to its anchor.
+
 use crate::support::primitive::Primitive;
 use leptos::{
     attr::{NextAttribute, custom::custom_attribute},
@@ -6,6 +12,10 @@ use leptos::{
 };
 use leptos_node_ref::AnyNodeRef;
 
+/// SVG arrow component.
+///
+/// Renders a triangular SVG shape. Typically used inside popper-positioned
+/// content as a visual connector to the anchor element.
 #[component]
 pub fn Arrow(
     #[prop(into, optional, default=10.0.into())] width: MaybeProp<f64>,

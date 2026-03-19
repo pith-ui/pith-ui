@@ -1,3 +1,46 @@
+//! Toolbar container for grouping interactive controls.
+//!
+//! A container for grouping buttons, toggle groups, links, and separators.
+//! Provides roving focus keyboard navigation across all focusable items.
+//!
+//! Implements the [WAI-ARIA Toolbar pattern](https://www.w3.org/WAI/ARIA/apd/patterns/toolbar/).
+//!
+//! # Anatomy
+//!
+//! ```text
+//! <Toolbar>
+//!     <ToolbarButton />
+//!     <ToolbarSeparator />
+//!     <ToolbarLink />
+//!     <ToolbarToggleGroup>
+//!         <ToolbarToggleItem />
+//!     </ToolbarToggleGroup>
+//! </Toolbar>
+//! ```
+//!
+//! # Features
+//!
+//! - Roving focus across all toolbar items
+//! - Horizontal and vertical orientation
+//! - Built-in separator, toggle group, button, and link sub-components
+//! - RTL support
+//!
+//! # Keyboard Interactions
+//!
+//! | Key | Action |
+//! |-----|--------|
+//! | Tab | Moves focus into/out of the toolbar |
+//! | ArrowRight | Focuses next item (horizontal) |
+//! | ArrowLeft | Focuses previous item (horizontal) |
+//! | Home | Focuses first item |
+//! | End | Focuses last item |
+//!
+//! # Data Attributes
+//!
+//! | Attribute | Values |
+//! |-----------|--------|
+//! | `data-orientation` | `horizontal`, `vertical` |
+
 use crate::separator::Separator;
 use crate::support::direction::{Direction, use_direction};
 use crate::support::primitive::{
@@ -8,10 +51,6 @@ use crate::toggle_group::{ToggleGroup, ToggleGroupItem, ToggleGroupType};
 use leptos::{context::Provider, ev, html, prelude::*};
 use leptos_node_ref::AnyNodeRef;
 use web_sys::wasm_bindgen::JsCast;
-
-/* -------------------------------------------------------------------------------------------------
- * ToolbarContext
- * -----------------------------------------------------------------------------------------------*/
 
 #[derive(Clone, Copy, Debug)]
 struct ToolbarContextValue {

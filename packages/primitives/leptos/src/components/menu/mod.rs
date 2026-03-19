@@ -1,3 +1,33 @@
+//! Low-level menu primitive powering dropdown, context, and menubar menus.
+//!
+//! Provides the building blocks for menu-like components: items, groups,
+//! labels, separators, checkbox items, radio items, and submenus. Handles
+//! focus management, typeahead, pointer tracking, and dismissal.
+//!
+//! This module is not typically used directly. Use [`dropdown_menu`](crate::dropdown_menu),
+//! [`context_menu`](crate::context_menu), or [`menubar`](crate::menubar) instead.
+//!
+//! # Data Attributes
+//!
+//! **MenuItem, MenuCheckboxItem, MenuRadioItem:**
+//!
+//! | Attribute | Values |
+//! |-----------|--------|
+//! | `data-highlighted` | Present when focused via keyboard |
+//! | `data-disabled` | Present when disabled |
+//!
+//! **MenuCheckboxItem:**
+//!
+//! | Attribute | Values |
+//! |-----------|--------|
+//! | `data-state` | `checked`, `unchecked`, `indeterminate` |
+//!
+//! **MenuRadioItem:**
+//!
+//! | Attribute | Values |
+//! |-----------|--------|
+//! | `data-state` | `checked`, `unchecked` |
+
 // TODO: remove
 #![expect(dead_code)]
 

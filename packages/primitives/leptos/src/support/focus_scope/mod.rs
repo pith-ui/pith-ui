@@ -1,3 +1,10 @@
+//! Focus trapping scope for modal content.
+//!
+//! Constrains keyboard focus within a container element. When focus is
+//! trapped, Tab and Shift+Tab cycle through focusable elements inside the
+//! scope without escaping. Supports auto-focus on mount and restore-focus
+//! on unmount.
+
 use std::cell::RefCell;
 use std::ops::Deref;
 use std::sync::Arc;

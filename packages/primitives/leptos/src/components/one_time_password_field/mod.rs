@@ -1,3 +1,48 @@
+//! One-time password (OTP) input field.
+//!
+//! A segmented input for entering verification codes, PINs, and other
+//! short numeric or alphanumeric codes. Each segment is an individual
+//! `<input>` with roving focus and automatic advance-on-type.
+//!
+//! # Anatomy
+//!
+//! ```text
+//! <OneTimePasswordField>
+//!     <OneTimePasswordFieldInput />
+//!     <OneTimePasswordFieldInput />
+//!     <OneTimePasswordFieldInput />
+//!     <OneTimePasswordFieldInput />
+//!     <OneTimePasswordFieldHiddenInput />
+//! </OneTimePasswordField>
+//! ```
+//!
+//! # Features
+//!
+//! - Automatic focus advance on character entry
+//! - Backspace moves to previous input
+//! - Paste support across all inputs
+//! - Configurable validation (numeric, alpha, alphanumeric)
+//! - Password or text input type
+//! - Native form participation via hidden `<input>`
+//! - Roving focus with arrow key navigation
+//!
+//! # Keyboard Interactions
+//!
+//! | Key | Action |
+//! |-----|--------|
+//! | ArrowRight | Focuses next input |
+//! | ArrowLeft | Focuses previous input |
+//! | Backspace | Clears current input and focuses previous |
+//! | Delete | Clears current input |
+//!
+//! # Data Attributes
+//!
+//! **OneTimePasswordFieldInput:**
+//!
+//! | Attribute | Values |
+//! |-----------|--------|
+//! | `data-otp-field-segment` | Always present |
+
 use std::marker::PhantomData;
 use std::ops::Deref;
 
@@ -29,18 +74,26 @@ pub use one_time_password_field_input::*;
  * Types
  * -----------------------------------------------------------------------------------------------*/
 
+/// Which characters are accepted by the OTP input.
 #[derive(Clone, Copy, Debug, Default, Eq, Hash, PartialEq)]
 pub enum InputValidationType {
+    /// Only letters (a-z, A-Z).
     Alpha,
+    /// Only digits (0-9, default).
     #[default]
     Numeric,
+    /// Letters and digits.
     Alphanumeric,
+    /// No validation; any character accepted.
     None,
 }
 
+/// The HTML input type for OTP segments.
 #[derive(Clone, Copy, Debug, Default, Eq, Hash, PartialEq)]
 pub enum InputType {
+    /// Masks input as password dots.
     Password,
+    /// Shows input as plain text (default).
     #[default]
     Text,
 }

@@ -1,9 +1,9 @@
 use super::*;
 
-/* -------------------------------------------------------------------------------------------------
- * SliderTrack
- * -----------------------------------------------------------------------------------------------*/
-
+/// The track along which the slider thumb(s) move.
+///
+/// Renders as a `<span>`. Typically styled as the full slider rail.
+/// Must be a descendant of [`Slider`].
 #[component]
 pub fn SliderTrack(
     #[prop(into, optional)] as_child: MaybeProp<bool>,
@@ -26,10 +26,10 @@ pub fn SliderTrack(
     }
 }
 
-/* -------------------------------------------------------------------------------------------------
- * SliderRange
- * -----------------------------------------------------------------------------------------------*/
-
+/// The filled range between the minimum and the thumb (or between two thumbs).
+///
+/// Renders as a `<span>` positioned absolutely within the track.
+/// Must be a descendant of [`SliderTrack`].
 #[component]
 pub fn SliderRange(
     #[prop(into, optional)] as_child: MaybeProp<bool>,
@@ -82,10 +82,11 @@ pub fn SliderRange(
     }
 }
 
-/* -------------------------------------------------------------------------------------------------
- * SliderThumb
- * -----------------------------------------------------------------------------------------------*/
-
+/// Draggable thumb control.
+///
+/// Renders as a `<span>` with `role="slider"` and full ARIA value
+/// attributes. Positioned absolutely along the track.
+/// Must be a descendant of [`Slider`].
 #[component]
 pub fn SliderThumb(
     #[prop(into, optional)] name: MaybeProp<String>,

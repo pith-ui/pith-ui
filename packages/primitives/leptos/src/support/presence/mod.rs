@@ -1,3 +1,11 @@
+//! Animation-aware conditional mounting.
+//!
+//! Controls whether a child element is mounted in the DOM based on a
+//! `present` signal. Unlike a simple `<Show>`, [`Presence`] keeps the
+//! element mounted during CSS exit animations (detecting `animationend`
+//! and `transitionend` events) so the animation can complete before
+//! removal.
+
 mod use_state_machine;
 
 use std::collections::HashMap;

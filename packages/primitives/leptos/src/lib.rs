@@ -1,8 +1,33 @@
 //! Leptos port of [Radix Primitives](https://www.radix-ui.com/primitives).
 //!
-//! A set of accessible, unstyled UI components for building high-quality design systems and web apps.
+//! A set of accessible, unstyled UI components for building high-quality
+//! design systems and web apps in [Leptos](https://leptos.dev).
 //!
-//! See [`@radix-ui/react-primitives`](https://www.radix-ui.com/primitives) for the original library.
+//! # Feature Flags
+//!
+//! Each component is behind a Cargo feature flag matching its name.
+//! Enable only the components you need:
+//!
+//! ```toml
+//! [dependencies]
+//! radix-leptos-primitives = { version = "0.0.2", features = ["checkbox", "dialog", "tabs"] }
+//! ```
+//!
+//! # Public Support Modules
+//!
+//! These modules are always available (no feature flag required):
+//!
+//! - [`arrow`] — SVG arrow for floating UI components
+//! - [`direction`] — RTL/LTR direction context
+//! - [`portal`] — Render children into a different DOM node
+//! - [`primitive`] — Base rendering primitive with `as_child` support
+//! - [`visually_hidden`] — Screen-reader-only content
+//!
+//! # Internal Support Modules
+//!
+//! Building blocks used internally by components. Exposed behind the
+//! `internals` feature for stories, testing, and advanced use cases.
+//! Not part of the stable public API.
 
 // Pre-existing style lints across component modules — not worth fixing individually during
 // the mega-crate consolidation. These should be cleaned up incrementally.

@@ -1,3 +1,9 @@
+//! Escape key listener hook.
+//!
+//! Registers a document-level `keydown` listener that fires a callback
+//! when the Escape key is pressed. Used by dismissable layers, dialogs,
+//! and other overlay components.
+
 use std::cell::RefCell;
 use std::rc::Rc;
 

@@ -1,3 +1,46 @@
+//! Hover card for previewing content on pointer hover.
+//!
+//! A floating card that appears when hovering over a trigger, intended for
+//! non-essential previews (e.g., user profile cards on link hover). Unlike
+//! tooltips, hover cards can contain interactive content.
+//!
+//! # Anatomy
+//!
+//! ```text
+//! <HoverCard>
+//!     <HoverCardTrigger />
+//!     <HoverCardPortal>
+//!         <HoverCardContent>
+//!             <HoverCardArrow />
+//!         </HoverCardContent>
+//!     </HoverCardPortal>
+//! </HoverCard>
+//! ```
+//!
+//! # Features
+//!
+//! - Opens on pointer hover with configurable open/close delays
+//! - Floating-ui positioning with collision handling
+//! - Stays open when pointer moves to the content
+//! - Supports text selection within the content
+//! - Closes on Escape, interact outside, or pointer leave
+//!
+//! # Data Attributes
+//!
+//! **HoverCardTrigger:**
+//!
+//! | Attribute | Values |
+//! |-----------|--------|
+//! | `data-state` | `open`, `closed` |
+//!
+//! **HoverCardContent:**
+//!
+//! | Attribute | Values |
+//! |-----------|--------|
+//! | `data-state` | `open`, `closed` |
+//! | `data-side` | `top`, `right`, `bottom`, `left` |
+//! | `data-align` | `start`, `center`, `end` |
+
 use crate::support::compose_refs::use_composed_refs;
 use crate::support::dismissable_layer::DismissableLayer;
 use crate::support::popper::{

@@ -1,3 +1,58 @@
+//! Tooltip popup on hover or focus.
+//!
+//! A floating label that appears when hovering or focusing a trigger element.
+//! Managed by a [`TooltipProvider`] that coordinates open/close delays across
+//! multiple tooltips (instant open after the first, shared close delay).
+//!
+//! Implements the [WAI-ARIA Tooltip pattern](https://www.w3.org/WAI/ARIA/apd/patterns/tooltip/).
+//!
+//! # Anatomy
+//!
+//! ```text
+//! <TooltipProvider>
+//!     <Tooltip>
+//!         <TooltipTrigger />
+//!         <TooltipPortal>
+//!             <TooltipContent>
+//!                 <TooltipArrow />
+//!             </TooltipContent>
+//!         </TooltipPortal>
+//!     </Tooltip>
+//! </TooltipProvider>
+//! ```
+//!
+//! # Features
+//!
+//! - Open on hover with configurable delay
+//! - Open on focus for keyboard users
+//! - Shared delay across tooltip group (instant open after first)
+//! - Floating-ui positioning with collision handling
+//! - Pointer "grace area" to prevent accidental close when moving to content
+//! - Esc key dismissal
+//!
+//! # Keyboard Interactions
+//!
+//! | Key | Action |
+//! |-----|--------|
+//! | Escape | Closes the tooltip |
+//! | Tab | Opens on focus, closes on blur |
+//!
+//! # Data Attributes
+//!
+//! **TooltipTrigger:**
+//!
+//! | Attribute | Values |
+//! |-----------|--------|
+//! | `data-state` | `delayed-open`, `closed`, `instant-open` |
+//!
+//! **TooltipContent:**
+//!
+//! | Attribute | Values |
+//! |-----------|--------|
+//! | `data-state` | `delayed-open`, `closed`, `instant-open` |
+//! | `data-side` | `top`, `right`, `bottom`, `left` |
+//! | `data-align` | `start`, `center`, `end` |
+
 use std::cell::RefCell;
 use std::rc::Rc;
 

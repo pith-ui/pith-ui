@@ -1,3 +1,60 @@
+//! Radio group for selecting one option from a set.
+//!
+//! A set of mutually exclusive radio buttons managed as a group. Renders
+//! each item as a `<button>` with `role="radio"` inside a `<div>` with
+//! `role="radiogroup"`. Supports roving focus and native form participation.
+//!
+//! Implements the [WAI-ARIA Radio Group pattern](https://www.w3.org/WAI/ARIA/apd/patterns/radio/).
+//!
+//! # Anatomy
+//!
+//! ```text
+//! <RadioGroup>
+//!     <RadioGroupItem>
+//!         <RadioGroupIndicator />
+//!     </RadioGroupItem>
+//! </RadioGroup>
+//! ```
+//!
+//! # Features
+//!
+//! - Controlled and uncontrolled value state
+//! - Roving focus with arrow key navigation
+//! - Auto-selects on focus during arrow key navigation
+//! - Native form participation via hidden `<input type="radio">`
+//! - Horizontal and vertical orientation
+//! - RTL support
+//!
+//! # Keyboard Interactions
+//!
+//! | Key | Action |
+//! |-----|--------|
+//! | Tab | Moves focus to the checked item (or first item if none checked) |
+//! | ArrowDown / ArrowRight | Focuses and checks the next item |
+//! | ArrowUp / ArrowLeft | Focuses and checks the previous item |
+//!
+//! # Data Attributes
+//!
+//! **RadioGroup:**
+//!
+//! | Attribute | Values |
+//! |-----------|--------|
+//! | `data-disabled` | Present when disabled |
+//!
+//! **RadioGroupItem:**
+//!
+//! | Attribute | Values |
+//! |-----------|--------|
+//! | `data-state` | `checked`, `unchecked` |
+//! | `data-disabled` | Present when disabled |
+//!
+//! **RadioGroupIndicator:**
+//!
+//! | Attribute | Values |
+//! |-----------|--------|
+//! | `data-state` | `checked`, `unchecked` |
+//! | `data-disabled` | Present when disabled |
+
 mod radio;
 
 pub use radio::*;
@@ -22,10 +79,6 @@ use radio::{RadioBubbleInput, RadioContextValue, RadioIndicator, get_state};
 
 const ARROW_KEYS: [&str; 4] = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"];
 
-/* -------------------------------------------------------------------------------------------------
- * RadioGroup
- * -----------------------------------------------------------------------------------------------*/
-
 #[derive(Clone, Debug)]
 struct RadioGroupContextValue {
     name: Signal<Option<String>>,
@@ -36,6 +89,10 @@ struct RadioGroupContextValue {
     form: Signal<Option<String>>,
 }
 
+/// Root radio group component.
+///
+/// Renders as a `<div>` with `role="radiogroup"`. Manages selected value
+/// and provides context for [`RadioGroupItem`] and [`RadioGroupIndicator`].
 #[component]
 pub fn RadioGroup(
     #[prop(into, optional)] name: MaybeProp<String>,
@@ -109,10 +166,11 @@ pub fn RadioGroup(
     }
 }
 
-/* -------------------------------------------------------------------------------------------------
- * RadioGroupItem
- * -----------------------------------------------------------------------------------------------*/
-
+/// An individual radio button within the group.
+///
+/// Renders as a `<button>` with `role="radio"` and `aria-checked`.
+/// Auto-checks when focused via arrow keys. Must be a descendant of
+/// [`RadioGroup`].
 #[component]
 pub fn RadioGroupItem(
     #[prop(into)] value: String,
@@ -363,10 +421,10 @@ fn RadioButton(
     }
 }
 
-/* -------------------------------------------------------------------------------------------------
- * RadioGroupIndicator
- * -----------------------------------------------------------------------------------------------*/
-
+/// Visual indicator rendered when a radio item is checked.
+///
+/// Renders as a `<span>`. Conditionally mounted via [`Presence`] unless
+/// `force_mount` is set. Must be a descendant of [`RadioGroupItem`].
 #[component]
 pub fn RadioGroupIndicator(
     /// Used to force mounting when more control is needed. Useful when

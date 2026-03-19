@@ -1,3 +1,56 @@
+//! Popover floating panel anchored to a trigger.
+//!
+//! A rich content popup that floats next to a trigger element using
+//! floating-ui for positioning. Supports both modal and non-modal modes,
+//! focus management, and dismissal handling.
+//!
+//! # Anatomy
+//!
+//! ```text
+//! <Popover>
+//!     <PopoverTrigger />
+//!     <PopoverAnchor />          <!-- optional custom anchor -->
+//!     <PopoverPortal>
+//!         <PopoverContent>
+//!             <PopoverArrow />
+//!             <PopoverClose />
+//!         </PopoverContent>
+//!     </PopoverPortal>
+//! </Popover>
+//! ```
+//!
+//! # Features
+//!
+//! - Controlled and uncontrolled open state
+//! - Floating-ui positioning with configurable side, alignment, and collision handling
+//! - Modal mode with focus trapping and scroll locking
+//! - Non-modal mode with lightweight dismissal
+//! - Custom anchor element support
+//! - Arrow element support
+//!
+//! # Keyboard Interactions
+//!
+//! | Key | Action |
+//! |-----|--------|
+//! | Escape | Closes the popover |
+//! | Tab | Cycles focus within the popover (modal mode) |
+//!
+//! # Data Attributes
+//!
+//! **PopoverTrigger:**
+//!
+//! | Attribute | Values |
+//! |-----------|--------|
+//! | `data-state` | `open`, `closed` |
+//!
+//! **PopoverContent:**
+//!
+//! | Attribute | Values |
+//! |-----------|--------|
+//! | `data-state` | `open`, `closed` |
+//! | `data-side` | `top`, `right`, `bottom`, `left` |
+//! | `data-align` | `start`, `center`, `end` |
+
 use crate::support::aria_hidden::{hide_others, unhide_others};
 use crate::support::compose_refs::use_composed_refs;
 use crate::support::dismissable_layer::DismissableLayer;

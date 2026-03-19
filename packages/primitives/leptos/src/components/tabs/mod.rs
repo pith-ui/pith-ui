@@ -1,3 +1,55 @@
+//! Tabbed interface for switching between panels of content.
+//!
+//! A set of layered content sections (tab panels) displayed one at a time,
+//! with tabs for switching between them. Supports automatic and manual
+//! activation, keyboard navigation with roving focus, and RTL direction.
+//!
+//! Implements the [WAI-ARIA Tabs pattern](https://www.w3.org/WAI/ARIA/apd/patterns/tabs/).
+//!
+//! # Anatomy
+//!
+//! ```text
+//! <Tabs>
+//!     <TabsList>
+//!         <TabsTrigger />
+//!         <TabsTrigger />
+//!     </TabsList>
+//!     <TabsContent />
+//!     <TabsContent />
+//! </Tabs>
+//! ```
+//!
+//! # Features
+//!
+//! - Controlled and uncontrolled active tab state
+//! - Automatic activation on focus or manual activation on click/Enter
+//! - Roving focus with arrow key navigation
+//! - Horizontal and vertical orientation
+//! - RTL support
+//!
+//! # Keyboard Interactions
+//!
+//! | Key | Action |
+//! |-----|--------|
+//! | Tab | Moves focus into the tab list, then to the active panel |
+//! | ArrowRight | Focuses next tab (horizontal) |
+//! | ArrowLeft | Focuses previous tab (horizontal) |
+//! | ArrowDown | Focuses next tab (vertical) |
+//! | ArrowUp | Focuses previous tab (vertical) |
+//! | Home | Focuses first tab |
+//! | End | Focuses last tab |
+//! | Space / Enter | Activates the focused tab (manual mode) |
+//!
+//! # Data Attributes
+//!
+//! **TabsTrigger, TabsContent:**
+//!
+//! | Attribute | Values |
+//! |-----------|--------|
+//! | `data-state` | `active`, `inactive` |
+//! | `data-disabled` | Present when disabled (trigger only) |
+//! | `data-orientation` | `horizontal`, `vertical` |
+
 use crate::support::compose_refs::use_composed_refs;
 use crate::support::direction::{Direction, use_direction};
 use crate::support::id::use_id;
@@ -15,14 +67,13 @@ use web_sys::wasm_bindgen::{JsCast, closure::Closure};
 // Re-export Orientation from roving-focus so consumers don't need a separate import.
 pub use crate::support::roving_focus::Orientation;
 
-/* -------------------------------------------------------------------------------------------------
- * Tabs
- * -----------------------------------------------------------------------------------------------*/
-
+/// Controls when tabs activate: on focus or on explicit interaction.
 #[derive(Clone, Copy, Debug, Default, Eq, Hash, PartialEq)]
 pub enum ActivationMode {
+    /// Tab activates when it receives focus (default).
     #[default]
     Automatic,
+    /// Tab activates only on click or Enter/Space.
     Manual,
 }
 
@@ -36,6 +87,10 @@ struct TabsContextValue {
     activation_mode: Signal<ActivationMode>,
 }
 
+/// Root tabs component.
+///
+/// Renders as a `<div>`. Manages active tab state and provides context
+/// for [`TabsList`], [`TabsTrigger`], and [`TabsContent`].
 #[component]
 pub fn Tabs(
     /// The controlled value of the active tab.
@@ -101,10 +156,11 @@ pub fn Tabs(
     }
 }
 
-/* -------------------------------------------------------------------------------------------------
- * TabsList
- * -----------------------------------------------------------------------------------------------*/
-
+/// Container for tab triggers with roving focus.
+///
+/// Renders as a `<div>` with `role="tablist"`. Wraps triggers in a
+/// [`RovingFocusGroup`] for arrow key navigation. Must be a descendant
+/// of [`Tabs`].
 #[component]
 pub fn TabsList(
     /// Whether keyboard navigation loops around. Default true.
@@ -140,10 +196,10 @@ pub fn TabsList(
     }
 }
 
-/* -------------------------------------------------------------------------------------------------
- * TabsTrigger
- * -----------------------------------------------------------------------------------------------*/
-
+/// Button that activates its associated tab panel.
+///
+/// Renders as a `<button>` with `role="tab"` and `aria-selected`.
+/// Must be a descendant of [`TabsList`].
 #[component]
 pub fn TabsTrigger(
     /// A unique value identifying this tab.
@@ -250,10 +306,10 @@ pub fn TabsTrigger(
     }
 }
 
-/* -------------------------------------------------------------------------------------------------
- * TabsContent
- * -----------------------------------------------------------------------------------------------*/
-
+/// Content panel associated with a tab trigger.
+///
+/// Renders as a `<div>` with `role="tabpanel"`. Shown when its matching
+/// trigger is active, hidden otherwise. Must be a descendant of [`Tabs`].
 #[component]
 pub fn TabsContent(
     /// A unique value matching the corresponding TabsTrigger.

@@ -1,10 +1,19 @@
+//! Text direction context for RTL support.
+//!
+//! Provides a [`Direction`] enum and a [`DirectionProvider`] component for
+//! propagating text direction (LTR/RTL) through the component tree. Components
+//! that support RTL read direction from context.
+
 use std::fmt::{Display, Formatter};
 
 use leptos::{attr::AttributeValue, context::Provider, prelude::*, tachys::renderer::Rndr};
 
+/// The reading/layout direction.
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
 pub enum Direction {
+    /// Left-to-right.
     Ltr,
+    /// Right-to-left.
     Rtl,
 }
 

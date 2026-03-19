@@ -1,3 +1,48 @@
+//! Checkbox control with indeterminate state support.
+//!
+//! An accessible form control that toggles between checked, unchecked, and
+//! optionally indeterminate states. Renders as a `<button>` with a hidden
+//! `<input>` for native form participation.
+//!
+//! Implements the [WAI-ARIA Checkbox pattern](https://www.w3.org/WAI/ARIA/apd/patterns/checkbox/).
+//!
+//! # Anatomy
+//!
+//! ```text
+//! <Checkbox>
+//!     <CheckboxIndicator />
+//! </Checkbox>
+//! ```
+//!
+//! # Features
+//!
+//! - Controlled and uncontrolled checked state
+//! - Indeterminate state for partial selection ("select all" patterns)
+//! - Native form participation via hidden `<input>`
+//! - Form reset support
+//!
+//! # Keyboard Interactions
+//!
+//! | Key | Action |
+//! |-----|--------|
+//! | Space | Toggles checked state |
+//!
+//! # Data Attributes
+//!
+//! **Checkbox:**
+//!
+//! | Attribute | Values |
+//! |-----------|--------|
+//! | `data-state` | `checked`, `unchecked`, `indeterminate` |
+//! | `data-disabled` | Present when disabled |
+//!
+//! **CheckboxIndicator:**
+//!
+//! | Attribute | Values |
+//! |-----------|--------|
+//! | `data-state` | `checked`, `unchecked`, `indeterminate` |
+//! | `data-disabled` | Present when disabled |
+
 use std::fmt::{Display, Formatter};
 
 use crate::support::compose_refs::use_composed_refs;
@@ -13,10 +58,14 @@ use leptos_node_ref::AnyNodeRef;
 use send_wrapper::SendWrapper;
 use web_sys::wasm_bindgen::{JsCast, closure::Closure};
 
+/// The checked state of a checkbox.
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
 pub enum CheckedState {
+    /// The checkbox is unchecked.
     False,
+    /// The checkbox is checked.
     True,
+    /// The checkbox is in an indeterminate state (e.g., "select all" with partial selection).
     Indeterminate,
 }
 
@@ -40,6 +89,10 @@ struct CheckboxContextValue {
     disabled: Signal<bool>,
 }
 
+/// Root checkbox component.
+///
+/// Renders as a `<button>` with `role="checkbox"`. Manages checked state
+/// and provides context for [`CheckboxIndicator`].
 #[component]
 pub fn Checkbox(
     #[prop(into, optional)] name: MaybeProp<String>,
@@ -196,9 +249,14 @@ pub fn Checkbox(
     }
 }
 
+/// Visual indicator rendered when the checkbox is checked or indeterminate.
+///
+/// Renders as a `<span>` with `pointer-events: none`. Must be a descendant
+/// of [`Checkbox`]. Conditionally mounted via [`Presence`] unless `force_mount` is set.
 #[component]
 pub fn CheckboxIndicator(
-    /// Used to force mounting when more control is needed. Useful when controlling animation with animation libraries.
+    /// Used to force mounting when more control is needed. Useful when
+    /// controlling animation with animation libraries.
     #[prop(into, optional)]
     force_mount: MaybeProp<bool>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,

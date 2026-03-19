@@ -1,3 +1,10 @@
+//! Layer that dismisses on outside interaction or Escape key.
+//!
+//! Wraps content and fires callbacks when the user clicks outside, focuses
+//! outside, or presses Escape. Supports nested layers (e.g., a dropdown
+//! inside a dialog) with correct event delegation. Implements the "two
+//! escapes" pattern for text inputs.
+
 use std::cell::RefCell;
 use std::rc::Rc;
 use std::sync::Mutex;

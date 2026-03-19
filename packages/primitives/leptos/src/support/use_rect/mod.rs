@@ -1,3 +1,9 @@
+//! Reactive element bounding rect observer.
+//!
+//! Provides [`use_rect`] which returns a signal containing the element's
+//! `getBoundingClientRect()` result, updated reactively as the element
+//! resizes or moves.
+
 use std::sync::{Arc, Mutex};
 
 use crate::internal::rect::{Rect, observe_element_rect};

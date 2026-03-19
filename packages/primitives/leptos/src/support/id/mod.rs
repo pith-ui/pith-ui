@@ -1,3 +1,8 @@
+//! Deterministic or auto-incrementing unique ID generation.
+//!
+//! Provides [`use_id`] which returns a stable, unique ID signal for
+//! associating ARIA attributes (e.g., `aria-controls`, `aria-labelledby`).
+
 use std::sync::atomic::{AtomicUsize, Ordering};
 
 use leptos::prelude::*;

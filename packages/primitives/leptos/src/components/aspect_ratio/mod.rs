@@ -1,7 +1,29 @@
+//! Layout primitive for maintaining a fixed aspect ratio.
+//!
+//! Wraps content in a container that enforces a width-to-height ratio
+//! using the CSS padding-bottom technique. Useful for responsive images,
+//! videos, and maps.
+//!
+//! # Anatomy
+//!
+//! ```text
+//! <AspectRatio />
+//! ```
+//!
+//! # Features
+//!
+//! - Reactive ratio via signal
+//! - Content fills the ratio-constrained area
+
 use crate::support::primitive::Primitive;
 use leptos::{attribute_interceptor::AttributeInterceptor, html, prelude::*};
 use leptos_node_ref::AnyNodeRef;
 
+/// Aspect ratio container.
+///
+/// Renders an outer wrapper `<div>` with a padding-bottom ratio constraint
+/// and an inner `<div>` that fills the space. The inner element is
+/// replaceable via `as_child`.
 #[component]
 pub fn AspectRatio(
     #[prop(into, optional, default = 1.0.into())] ratio: Signal<f64>,

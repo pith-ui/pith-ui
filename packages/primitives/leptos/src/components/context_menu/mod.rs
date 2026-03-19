@@ -1,3 +1,51 @@
+//! Context menu triggered by right-click.
+//!
+//! A menu that appears at the pointer position on right-click (or long-press
+//! on touch devices). Shares the same item types as [`dropdown_menu`](crate::dropdown_menu).
+//! Built on top of the [`menu`](crate::menu) primitive.
+//!
+//! # Anatomy
+//!
+//! ```text
+//! <ContextMenu>
+//!     <ContextMenuTrigger />
+//!     <ContextMenuPortal>
+//!         <ContextMenuContent>
+//!             <ContextMenuItem />
+//!             <ContextMenuCheckboxItem />
+//!             <ContextMenuRadioGroup>
+//!                 <ContextMenuRadioItem />
+//!             </ContextMenuRadioGroup>
+//!             <ContextMenuSub>
+//!                 <ContextMenuSubTrigger />
+//!                 <ContextMenuSubContent />
+//!             </ContextMenuSub>
+//!             <ContextMenuSeparator />
+//!             <ContextMenuLabel />
+//!         </ContextMenuContent>
+//!     </ContextMenuPortal>
+//! </ContextMenu>
+//! ```
+//!
+//! # Features
+//!
+//! - Opens at pointer position on right-click
+//! - Long-press support for touch devices
+//! - Nested submenus
+//! - Checkbox and radio menu items
+//! - Typeahead character search
+//! - Keyboard navigation
+//!
+//! # Keyboard Interactions
+//!
+//! | Key | Action |
+//! |-----|--------|
+//! | ArrowDown | Focuses next item |
+//! | ArrowUp | Focuses previous item |
+//! | ArrowRight | Opens submenu |
+//! | ArrowLeft | Closes submenu |
+//! | Escape | Closes menu |
+
 pub use crate::menu::CheckedState;
 use crate::menu::*;
 use crate::support::primitive::{

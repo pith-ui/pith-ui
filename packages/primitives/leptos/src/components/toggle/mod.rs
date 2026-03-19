@@ -1,3 +1,36 @@
+//! Toggle button with pressed state.
+//!
+//! A two-state button that alternates between pressed and not pressed.
+//! Renders as a `<button>` with `aria-pressed` for screen readers.
+//!
+//! Implements the [WAI-ARIA Toggle Button pattern](https://www.w3.org/WAI/ARIA/apd/patterns/button/).
+//!
+//! # Anatomy
+//!
+//! ```text
+//! <Toggle />
+//! ```
+//!
+//! # Features
+//!
+//! - Controlled and uncontrolled pressed state
+//! - `aria-pressed` always reflects current state
+//! - Disabled state prevents interaction
+//!
+//! # Keyboard Interactions
+//!
+//! | Key | Action |
+//! |-----|--------|
+//! | Space | Toggles pressed state |
+//! | Enter | Toggles pressed state |
+//!
+//! # Data Attributes
+//!
+//! | Attribute | Values |
+//! |-----------|--------|
+//! | `data-state` | `on`, `off` |
+//! | `data-disabled` | Present when disabled |
+
 use crate::support::primitive::{
     Primitive, adapt_callback, compose_callbacks, data_attr, prop_or_default,
 };
@@ -5,10 +38,10 @@ use crate::support::use_controllable_state::{UseControllableStateParams, use_con
 use leptos::{attribute_interceptor::AttributeInterceptor, ev, html, prelude::*};
 use leptos_node_ref::AnyNodeRef;
 
-/* -------------------------------------------------------------------------------------------------
- * Toggle
- * -----------------------------------------------------------------------------------------------*/
-
+/// Toggle button component.
+///
+/// Renders as a `<button>` with `aria-pressed`. Click or keyboard
+/// activation toggles the pressed state.
 #[component]
 pub fn Toggle(
     /// The controlled state of the toggle.

@@ -1,3 +1,54 @@
+//! Horizontal menu bar with dropdown menus.
+//!
+//! A visually persistent menu bar where each top-level item opens a dropdown
+//! menu. Supports roving focus across menu bar items, keyboard navigation
+//! within menus, and all menu item types (regular, checkbox, radio, sub).
+//!
+//! Implements the [WAI-ARIA Menu Bar pattern](https://www.w3.org/WAI/ARIA/apd/patterns/menubar/).
+//!
+//! # Anatomy
+//!
+//! ```text
+//! <Menubar>
+//!     <MenubarMenu>
+//!         <MenubarTrigger />
+//!         <MenubarPortal>
+//!             <MenubarContent>
+//!                 <MenubarItem />
+//!                 <MenubarCheckboxItem />
+//!                 <MenubarRadioGroup>
+//!                     <MenubarRadioItem />
+//!                 </MenubarRadioGroup>
+//!                 <MenubarSub>
+//!                     <MenubarSubTrigger />
+//!                     <MenubarSubContent />
+//!                 </MenubarSub>
+//!                 <MenubarSeparator />
+//!             </MenubarContent>
+//!         </MenubarPortal>
+//!     </MenubarMenu>
+//! </Menubar>
+//! ```
+//!
+//! # Features
+//!
+//! - Roving focus across top-level triggers
+//! - Arrow keys move between menus
+//! - Full submenu support
+//! - Checkbox and radio menu items
+//! - Typeahead character search
+//!
+//! # Keyboard Interactions
+//!
+//! | Key | Action |
+//! |-----|--------|
+//! | ArrowRight | Opens next menu / enters submenu |
+//! | ArrowLeft | Opens previous menu / exits submenu |
+//! | ArrowDown | Opens menu or focuses next item |
+//! | ArrowUp | Focuses previous item |
+//! | Escape | Closes current menu |
+//! | Enter / Space | Activates focused item |
+
 use std::cell::Cell;
 use std::marker::PhantomData;
 use std::rc::Rc;

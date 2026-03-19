@@ -1,7 +1,19 @@
+//! Visually hidden content for screen readers.
+//!
+//! Renders content that is visually hidden but remains accessible to
+//! screen readers and other assistive technology. Uses the CSS clip
+//! technique to hide the element without removing it from the
+//! accessibility tree.
+
 use crate::support::primitive::Primitive;
 use leptos::{html, prelude::*};
 use leptos_node_ref::AnyNodeRef;
 
+/// Visually hidden component.
+///
+/// Renders as a `<span>` with CSS styles that hide it visually while
+/// keeping it in the accessibility tree. Commonly used for accessible
+/// labels and descriptions.
 #[component]
 pub fn VisuallyHidden(
     #[prop(into, optional)] as_child: MaybeProp<bool>,

@@ -1,3 +1,9 @@
+//! DOM-order-aware collection of items within a component.
+//!
+//! Tracks child items registered via [`CollectionItemSlot`] and returns them
+//! in DOM order (not insertion order). Used by roving focus, select, menu,
+//! and other components that need ordered access to their children.
+
 use std::marker::PhantomData;
 use std::{collections::HashMap, fmt::Debug};
 

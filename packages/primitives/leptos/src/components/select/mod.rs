@@ -1,3 +1,78 @@
+//! Custom select dropdown for picking a value from a list.
+//!
+//! A replacement for the native `<select>` element with full styling control.
+//! Supports typeahead, grouped options, custom positioning (popper or
+//! item-aligned), and native form participation via a hidden `<select>`.
+//!
+//! Implements the [WAI-ARIA Listbox pattern](https://www.w3.org/WAI/ARIA/apd/patterns/listbox/).
+//!
+//! # Anatomy
+//!
+//! ```text
+//! <Select>
+//!     <SelectTrigger>
+//!         <SelectValue />
+//!         <SelectIcon />
+//!     </SelectTrigger>
+//!     <SelectPortal>
+//!         <SelectContent>
+//!             <SelectScrollUpButton />
+//!             <SelectViewport>
+//!                 <SelectItem>
+//!                     <SelectItemText />
+//!                     <SelectItemIndicator />
+//!                 </SelectItem>
+//!                 <SelectGroup>
+//!                     <SelectLabel />
+//!                     <SelectItem />
+//!                 </SelectGroup>
+//!                 <SelectSeparator />
+//!             </SelectViewport>
+//!             <SelectScrollDownButton />
+//!         </SelectContent>
+//!     </SelectPortal>
+//! </Select>
+//! ```
+//!
+//! # Features
+//!
+//! - Controlled and uncontrolled value state
+//! - Typeahead character search
+//! - Grouped items with labels
+//! - Popper or item-aligned positioning
+//! - Scroll buttons for overflow
+//! - Native form participation via hidden `<select>`
+//! - Full keyboard navigation
+//!
+//! # Keyboard Interactions
+//!
+//! | Key | Action |
+//! |-----|--------|
+//! | Space / Enter | Opens select or selects focused item |
+//! | ArrowDown | Opens select or focuses next item |
+//! | ArrowUp | Opens select or focuses previous item |
+//! | Home | Focuses first item |
+//! | End | Focuses last item |
+//! | Escape | Closes select |
+//!
+//! # Data Attributes
+//!
+//! **SelectTrigger:**
+//!
+//! | Attribute | Values |
+//! |-----------|--------|
+//! | `data-state` | `open`, `closed` |
+//! | `data-disabled` | Present when disabled |
+//! | `data-placeholder` | Present when no value selected |
+//!
+//! **SelectItem:**
+//!
+//! | Attribute | Values |
+//! |-----------|--------|
+//! | `data-state` | `checked`, `unchecked` |
+//! | `data-highlighted` | Present when focused |
+//! | `data-disabled` | Present when disabled |
+
 use std::cell::Cell;
 use std::marker::PhantomData;
 use std::rc::Rc;

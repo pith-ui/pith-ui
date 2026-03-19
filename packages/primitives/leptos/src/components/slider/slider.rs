@@ -1,9 +1,9 @@
 use super::*;
 
-/* -------------------------------------------------------------------------------------------------
- * Slider
- * -----------------------------------------------------------------------------------------------*/
-
+/// Root slider component.
+///
+/// Renders as a `<span>`. Manages value state, step snapping, and
+/// provides context for [`SliderTrack`], [`SliderRange`], and [`SliderThumb`].
 #[component]
 pub fn Slider(
     #[prop(into, optional)] name: MaybeProp<String>,
@@ -13,11 +13,17 @@ pub fn Slider(
     #[prop(into, optional)] min: MaybeProp<f64>,
     #[prop(into, optional)] max: MaybeProp<f64>,
     #[prop(into, optional)] step: MaybeProp<f64>,
-    #[prop(into, optional)] min_steps_between_thumbs: MaybeProp<f64>,
+    /// Minimum number of steps between multiple thumbs. Prevents thumbs
+    /// from overlapping.
+    #[prop(into, optional)]
+    min_steps_between_thumbs: MaybeProp<f64>,
     #[prop(into, optional)] value: MaybeProp<Vec<f64>>,
     #[prop(into, optional)] default_value: MaybeProp<Vec<f64>>,
     #[prop(into, optional)] on_value_change: Option<Callback<Vec<f64>>>,
-    #[prop(into, optional)] on_value_commit: Option<Callback<Vec<f64>>>,
+    /// Called when the user finishes dragging (pointer up). Receives the
+    /// final committed values.
+    #[prop(into, optional)]
+    on_value_commit: Option<Callback<Vec<f64>>>,
     #[prop(into, optional)] inverted: MaybeProp<bool>,
     #[prop(into, optional)] form: MaybeProp<String>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,

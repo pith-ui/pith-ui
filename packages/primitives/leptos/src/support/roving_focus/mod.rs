@@ -1,3 +1,10 @@
+//! Roving tabindex focus management for composite widgets.
+//!
+//! Implements the [roving tabindex](https://www.w3.org/WAI/ARIA/apd/practices/keyboard-interface/#kbd_roving_tabindex)
+//! pattern where only one item in a group is tabbable at a time, and
+//! arrow keys move focus between items. Used by tabs, radio groups,
+//! toggle groups, toolbars, and menubars.
+
 use std::fmt::Formatter;
 use std::marker::PhantomData;
 use std::{fmt::Display, ops::Deref};

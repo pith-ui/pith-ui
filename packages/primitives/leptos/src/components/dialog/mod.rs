@@ -1,3 +1,51 @@
+//! Modal and non-modal dialog windows.
+//!
+//! An overlay dialog that interrupts the user with important content.
+//! Supports both modal (focus-trapped, scroll-locked) and non-modal modes.
+//! Renders into a portal with focus management and dismissal handling.
+//!
+//! Implements the [WAI-ARIA Dialog pattern](https://www.w3.org/WAI/ARIA/apd/patterns/dialog-modal/).
+//!
+//! # Anatomy
+//!
+//! ```text
+//! <Dialog>
+//!     <DialogTrigger />
+//!     <DialogPortal>
+//!         <DialogOverlay />
+//!         <DialogContent>
+//!             <DialogTitle />
+//!             <DialogDescription />
+//!             <DialogClose />
+//!         </DialogContent>
+//!     </DialogPortal>
+//! </Dialog>
+//! ```
+//!
+//! # Features
+//!
+//! - Controlled and uncontrolled open state
+//! - Modal mode with focus trapping, scroll locking, and `aria-hidden` on siblings
+//! - Non-modal mode without focus trapping
+//! - Focus returns to trigger on close
+//! - Esc key dismissal
+//! - Click outside dismissal
+//!
+//! # Keyboard Interactions
+//!
+//! | Key | Action |
+//! |-----|--------|
+//! | Escape | Closes the dialog |
+//! | Tab | Cycles focus within the dialog (modal mode) |
+//!
+//! # Data Attributes
+//!
+//! **DialogOverlay, DialogContent:**
+//!
+//! | Attribute | Values |
+//! |-----------|--------|
+//! | `data-state` | `open`, `closed` |
+
 use crate::support::aria_hidden::{hide_others, unhide_others};
 use crate::support::compose_refs::use_composed_refs;
 use crate::support::dismissable_layer::DismissableLayer;

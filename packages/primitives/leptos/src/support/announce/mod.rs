@@ -1,3 +1,8 @@
+//! Live region announcements for screen readers.
+//!
+//! Creates a visually hidden ARIA live region and injects text into it so
+//! screen readers announce dynamic content changes (e.g., toast messages).
+
 use std::cell::RefCell;
 use std::sync::Arc;
 
