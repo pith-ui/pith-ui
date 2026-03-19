@@ -65,10 +65,7 @@ impl ForwardedAttrs {
     /// Can be called multiple times — each call produces an independent clone.
     pub fn spread(&self) -> AnyAttribute {
         self.attrs
-            .with_value(|a| {
-                a.as_ref()
-                    .map(|a| AnyAttribute::clone(a))
-            })
+            .with_value(|a| a.as_ref().map(|a| AnyAttribute::clone(a)))
             .unwrap_or_else(|| ().into_any_attr())
     }
 }

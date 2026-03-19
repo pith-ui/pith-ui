@@ -319,10 +319,12 @@ fn SelectContentImpl(
     // Prevent selecting items on `pointerup` in some cases after opening from `pointerdown`
     // and close on `pointerup` outside. (matches React lines 614-651)
     {
-        let pointer_move_closure: StoredValue<Option<SendWrapper<Closure<dyn Fn(web_sys::PointerEvent)>>>> =
-            StoredValue::new(None);
-        let pointer_up_closure: StoredValue<Option<SendWrapper<Closure<dyn Fn(web_sys::PointerEvent)>>>> =
-            StoredValue::new(None);
+        let pointer_move_closure: StoredValue<
+            Option<SendWrapper<Closure<dyn Fn(web_sys::PointerEvent)>>>,
+        > = StoredValue::new(None);
+        let pointer_up_closure: StoredValue<
+            Option<SendWrapper<Closure<dyn Fn(web_sys::PointerEvent)>>>,
+        > = StoredValue::new(None);
 
         let cleanup_listeners = move || {
             if let Some(doc) = web_sys::window().and_then(|w| w.document()) {
@@ -358,7 +360,10 @@ fn SelectContentImpl(
                 return;
             };
             let content_el: web_sys::HtmlElement = (*content_el).clone().unchecked_into();
-            let trigger_pos = context.trigger_pointer_down_pos_ref.try_get_value().flatten();
+            let trigger_pos = context
+                .trigger_pointer_down_pos_ref
+                .try_get_value()
+                .flatten();
 
             if trigger_pos.is_none() {
                 return;

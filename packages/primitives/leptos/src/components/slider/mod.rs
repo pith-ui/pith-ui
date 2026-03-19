@@ -1,5 +1,7 @@
 use std::marker::PhantomData;
 
+use crate::internal::number::clamp;
+use crate::internal::utils::linear_scale;
 use crate::support::collection::{
     CollectionItemSlot, CollectionProvider, CollectionSlot, use_collection,
 };
@@ -13,8 +15,6 @@ use crate::support::use_previous::use_previous;
 use crate::support::use_size::use_size;
 use leptos::{context::Provider, ev, html, prelude::*};
 use leptos_node_ref::AnyNodeRef;
-use radix_number::clamp;
-use radix_utils::linear_scale;
 use send_wrapper::SendWrapper;
 use web_sys::wasm_bindgen::JsCast;
 

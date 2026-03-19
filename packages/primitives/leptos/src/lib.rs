@@ -12,7 +12,14 @@
 #![allow(clippy::unused_unit)]
 
 mod components;
+mod internal;
 mod support;
+
+#[cfg(feature = "colors")]
+pub mod colors;
+
+#[cfg(feature = "icons")]
+pub mod icons;
 
 // ── Re-export support modules at crate level ──
 pub use support::announce;

@@ -2,6 +2,7 @@ use std::fmt::Formatter;
 use std::marker::PhantomData;
 use std::{fmt::Display, ops::Deref};
 
+use crate::internal::utils::wrap_array;
 use crate::support::collection::{
     CollectionItemSlot, CollectionProvider, CollectionSlot, use_collection,
 };
@@ -14,7 +15,6 @@ use leptos::{
     attribute_interceptor::AttributeInterceptor, context::Provider, ev, html, prelude::*,
 };
 use leptos_node_ref::AnyNodeRef;
-use radix_utils::wrap_array;
 use send_wrapper::SendWrapper;
 use web_sys::{
     CustomEvent, CustomEventInit,

@@ -34,9 +34,7 @@ pub fn OneTimePasswordFieldInput(
         idx
     });
 
-    let resolved_index = Signal::derive(move || {
-        index.get().unwrap_or(auto_index)
-    });
+    let resolved_index = Signal::derive(move || index.get().unwrap_or(auto_index));
 
     let char_value = Signal::derive(move || {
         let idx = resolved_index.get();

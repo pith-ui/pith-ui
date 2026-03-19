@@ -277,8 +277,7 @@ fn OneTimePasswordFieldImpl(
                         .collect();
 
                     let current_target = otp_input_at(&inputs, index as isize);
-                    let previous = current_target
-                        .and_then(|ct| otp_input_from(&inputs, ct, -1));
+                    let previous = current_target.and_then(|ct| otp_input_from(&inputs, ct, -1));
 
                     set_value.run(Some(new_value));
 

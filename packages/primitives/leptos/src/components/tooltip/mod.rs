@@ -1,6 +1,7 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 
+use crate::internal::utils::{Point, get_hull, is_point_in_polygon};
 use crate::support::compose_refs::use_composed_refs;
 use crate::support::dismissable_layer::DismissableLayer;
 use crate::support::id::use_id;
@@ -17,7 +18,6 @@ use leptos::{
     attribute_interceptor::AttributeInterceptor, context::Provider, ev, html, prelude::*,
 };
 use leptos_node_ref::AnyNodeRef;
-use radix_utils::{Point, get_hull, is_point_in_polygon};
 use send_wrapper::SendWrapper;
 use wasm_bindgen::JsCast;
 use web_sys::wasm_bindgen::closure::Closure;

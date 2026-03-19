@@ -5,6 +5,7 @@ use std::cell::RefCell;
 use std::marker::PhantomData;
 use std::rc::Rc;
 
+use crate::internal::utils::{Point, is_point_in_polygon, wrap_array};
 use crate::support::aria_hidden::{hide_others, unhide_others};
 use crate::support::collection::{
     CollectionItemSlot, CollectionProvider, CollectionSlot, use_collection,
@@ -15,6 +16,7 @@ use crate::support::direction::use_direction;
 use crate::support::dismissable_layer::DismissableLayer;
 use crate::support::focus_guards::use_focus_guards;
 use crate::support::focus_scope::FocusScope;
+use crate::support::forwarded_attrs::ForwardedAttrs;
 use crate::support::id::use_id;
 pub use crate::support::popper::{
     Align, ClientRectObject, Padding, PopperVirtualElement, Side as PopperSide, Sticky,
@@ -22,7 +24,6 @@ pub use crate::support::popper::{
 };
 use crate::support::popper::{Popper, PopperAnchor, PopperArrow, PopperContent};
 use crate::support::portal::ScopedPortal;
-use crate::support::forwarded_attrs::ForwardedAttrs;
 use crate::support::presence::Presence;
 use crate::support::primitive::{
     Primitive, compose_callbacks, data_attr, open_closed_state, prop_or, prop_or_default,
@@ -33,7 +34,6 @@ use leptos::{
     attribute_interceptor::AttributeInterceptor, context::Provider, ev, html, prelude::*,
 };
 use leptos_node_ref::AnyNodeRef;
-use radix_utils::{Point, is_point_in_polygon, wrap_array};
 use send_wrapper::SendWrapper;
 use wasm_bindgen::{JsCast, closure::Closure};
 use web_sys::{AddEventListenerOptions, CustomEvent, CustomEventInit, EventListenerOptions};

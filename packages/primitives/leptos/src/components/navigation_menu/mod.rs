@@ -11,16 +11,17 @@ use crate::support::collection::{
 use crate::support::compose_refs::use_composed_refs;
 use crate::support::direction::{Direction, use_direction};
 use crate::support::dismissable_layer::DismissableLayer;
-use crate::support::id::use_id;
 use crate::support::forwarded_attrs::ForwardedAttrs;
+use crate::support::id::use_id;
 use crate::support::presence::Presence;
-use crate::support::primitive::{Primitive, adapt_callback, compose_callbacks, open_closed_state, prop_or};
+use crate::support::primitive::{
+    Primitive, adapt_callback, compose_callbacks, open_closed_state, prop_or,
+};
 use crate::support::use_controllable_state::{UseControllableStateParams, use_controllable_state};
 use crate::support::use_previous::use_previous;
 use crate::support::visually_hidden::VisuallyHidden;
 use leptos::{
-    attribute_interceptor::AttributeInterceptor, context::Provider, ev, html,
-    prelude::*,
+    attribute_interceptor::AttributeInterceptor, context::Provider, ev, html, prelude::*,
 };
 use leptos_node_ref::AnyNodeRef;
 use send_wrapper::SendWrapper;

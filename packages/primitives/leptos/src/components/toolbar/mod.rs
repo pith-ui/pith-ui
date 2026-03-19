@@ -34,9 +34,7 @@ pub fn Toolbar(
 ) -> impl IntoView {
     let children = StoredValue::new(children);
 
-    let orientation = Signal::derive(move || {
-        orientation.get().unwrap_or(Orientation::Horizontal)
-    });
+    let orientation = Signal::derive(move || orientation.get().unwrap_or(Orientation::Horizontal));
     let direction = use_direction(dir);
 
     let context = ToolbarContextValue {

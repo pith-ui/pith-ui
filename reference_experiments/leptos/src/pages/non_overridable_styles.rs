@@ -11,8 +11,8 @@
 
 use crate::support::use_forwarded_attrs::ForwardedAttrs;
 use leptos::attribute_interceptor::AttributeInterceptor;
-use leptos::prelude::*;
 use leptos::html;
+use leptos::prelude::*;
 
 // ── Helper: A "Primitive-like" component that renders a div ─────────────────
 
@@ -98,9 +98,7 @@ fn OuterWrapperB() -> impl IntoView {
 }
 
 #[component]
-fn InnerWithStyles(
-    #[prop(into)] testid: String,
-) -> impl IntoView {
+fn InnerWithStyles(#[prop(into)] testid: String) -> impl IntoView {
     // This component sets style: directives on its own DOM element.
     // User attrs arrive via add_any_attr (from the {..spread} on <InnerWithStyles>).
     view! {
@@ -147,9 +145,7 @@ fn InnerComponentStyleDirectiveFixture() -> impl IntoView {
 // directives go on the Primitive.
 
 #[component]
-fn PopperLikeOuter(
-    #[prop(into)] testid: String,
-) -> impl IntoView {
+fn PopperLikeOuter(#[prop(into)] testid: String) -> impl IntoView {
     let forwarded = ForwardedAttrs::new();
     let testid = StoredValue::new(testid);
 
@@ -162,9 +158,7 @@ fn PopperLikeOuter(
 }
 
 #[component]
-fn PopperLikeInner(
-    #[prop(into)] testid: String,
-) -> impl IntoView {
+fn PopperLikeInner(#[prop(into)] testid: String) -> impl IntoView {
     // Simulates PopperContent: wrapper div for positioning, inner div for content.
     // User attrs land on wrapper via add_any_attr, internal styles on inner.
     view! {

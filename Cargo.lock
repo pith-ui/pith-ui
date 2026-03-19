@@ -2304,10 +2304,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "69cdb34c158ceb288df11e18b4bd39de994f6657d83847bdffdbd7f346754b0f"
 
 [[package]]
-name = "radix-colors"
-version = "0.0.2"
-
-[[package]]
 name = "radix-leptos-book-icons"
 version = "0.0.2"
 dependencies = [
@@ -2315,7 +2311,7 @@ dependencies = [
  "console_log",
  "leptos",
  "log",
- "radix-leptos-icons",
+ "radix-leptos-primitives",
 ]
 
 [[package]]
@@ -2345,13 +2341,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "radix-leptos-icons"
-version = "0.0.2"
-dependencies = [
- "leptos",
-]
-
-[[package]]
 name = "radix-leptos-primitives"
 version = "0.0.2"
 dependencies = [
@@ -2365,10 +2354,6 @@ dependencies = [
  "leptos_dom",
  "nanoid",
  "once_cell",
- "radix-number",
- "radix-primitive",
- "radix-rect",
- "radix-utils",
  "send_wrapper",
  "serde",
  "serde_json",
@@ -2387,7 +2372,6 @@ dependencies = [
  "leptos-node-ref",
  "leptos_router",
  "log",
- "radix-leptos-icons",
  "radix-leptos-primitives",
  "web-sys",
 ]
@@ -2410,30 +2394,6 @@ dependencies = [
  "wasm-bindgen",
  "web-sys",
 ]
-
-[[package]]
-name = "radix-number"
-version = "0.0.2"
-
-[[package]]
-name = "radix-primitive"
-version = "0.0.2"
-dependencies = [
- "wasm-bindgen-test",
- "web-sys",
-]
-
-[[package]]
-name = "radix-rect"
-version = "0.0.2"
-dependencies = [
- "wasm-bindgen",
- "web-sys",
-]
-
-[[package]]
-name = "radix-utils"
-version = "0.0.2"
 
 [[package]]
 name = "rand"

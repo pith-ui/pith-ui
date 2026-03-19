@@ -87,7 +87,9 @@ fn PopperLikeB(
     let ctx = use_context::<InnerStyleContext>().unwrap_or_default();
 
     // Build style string from context
-    let style_str = ctx.styles.iter()
+    let style_str = ctx
+        .styles
+        .iter()
         .map(|(k, v)| format!("{k}: {v}"))
         .collect::<Vec<_>>()
         .join("; ");
@@ -109,8 +111,14 @@ fn PopperLikeB(
 fn ApproachBConsumer() -> impl IntoView {
     let ctx = InnerStyleContext {
         styles: vec![
-            ("--radix-dropdown-menu-content-transform-origin".into(), "var(--radix-popper-transform-origin)".into()),
-            ("--radix-dropdown-menu-content-available-width".into(), "var(--radix-popper-available-width)".into()),
+            (
+                "--radix-dropdown-menu-content-transform-origin".into(),
+                "var(--radix-popper-transform-origin)".into(),
+            ),
+            (
+                "--radix-dropdown-menu-content-available-width".into(),
+                "var(--radix-popper-available-width)".into(),
+            ),
         ],
     };
 

@@ -1,5 +1,5 @@
 use leptos::prelude::*;
-use radix_leptos_icons::{EyeClosedIcon, EyeOpenIcon};
+use radix_leptos_primitives::icons::{EyeClosedIcon, EyeOpenIcon};
 use radix_leptos_primitives::password_toggle_field::*;
 
 fn eye_open_icon() -> impl IntoView {

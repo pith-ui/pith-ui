@@ -30,9 +30,7 @@ fn toggle_item(
     children: Children,
 ) -> impl IntoView {
     let item_value = StoredValue::new(value);
-    let pressed = Signal::derive(move || {
-        ctx.value.get().contains(&item_value.get_value())
-    });
+    let pressed = Signal::derive(move || ctx.value.get().contains(&item_value.get_value()));
 
     view! {
         <button
@@ -84,7 +82,11 @@ mod approach1 {
         }
 
         fn to_vec(value: &String) -> Vec<String> {
-            if value.is_empty() { vec![] } else { vec![value.clone()] }
+            if value.is_empty() {
+                vec![]
+            } else {
+                vec![value.clone()]
+            }
         }
 
         fn on_activate(_current: &String, item: &str) -> String {
@@ -114,7 +116,11 @@ mod approach1 {
         }
 
         fn on_deactivate(current: &Vec<String>, item: &str) -> Vec<String> {
-            current.iter().filter(|v| v.as_str() != item).cloned().collect()
+            current
+                .iter()
+                .filter(|v| v.as_str() != item)
+                .cloned()
+                .collect()
         }
     }
 
@@ -182,10 +188,7 @@ mod approach1 {
     }
 
     #[component]
-    pub fn ToggleGroupItem(
-        #[prop(into)] value: String,
-        children: Children,
-    ) -> impl IntoView {
+    pub fn ToggleGroupItem(#[prop(into)] value: String, children: Children) -> impl IntoView {
         let ctx = expect_context::<ToggleGroupValueContext>();
         toggle_item(ctx, value, "approach1", children)
     }
@@ -205,9 +208,7 @@ mod approach2 {
         #[prop(into, optional)] on_value_change: Option<Callback<String>>,
         children: ChildrenFn,
     ) -> impl IntoView {
-        let (internal, set_internal) = signal(
-            default_value.get_untracked().unwrap_or_default(),
-        );
+        let (internal, set_internal) = signal(default_value.get_untracked().unwrap_or_default());
         let current: Signal<String> = internal.into();
 
         let value_as_vec = Signal::derive(move || {
@@ -217,12 +218,16 @@ mod approach2 {
 
         let on_activate = Callback::new(move |item: String| {
             set_internal.set(item.clone());
-            if let Some(cb) = on_value_change { cb.run(item); }
+            if let Some(cb) = on_value_change {
+                cb.run(item);
+            }
         });
 
         let on_deactivate = Callback::new(move |_item: String| {
             set_internal.set(String::new());
-            if let Some(cb) = on_value_change { cb.run(String::new()); }
+            if let Some(cb) = on_value_change {
+                cb.run(String::new());
+            }
         });
 
         let ctx = ToggleGroupValueContext {
@@ -246,9 +251,7 @@ mod approach2 {
         #[prop(into, optional)] on_values_change: Option<Callback<Vec<String>>>,
         children: ChildrenFn,
     ) -> impl IntoView {
-        let (internal, set_internal) = signal(
-            default_values.get_untracked().unwrap_or_default(),
-        );
+        let (internal, set_internal) = signal(default_values.get_untracked().unwrap_or_default());
         let current: Signal<Vec<String>> = internal.into();
 
         let value_as_vec = Signal::derive(move || current.get());
@@ -257,13 +260,21 @@ mod approach2 {
             let mut v = current.get_untracked();
             v.push(item);
             set_internal.set(v.clone());
-            if let Some(cb) = on_values_change { cb.run(v); }
+            if let Some(cb) = on_values_change {
+                cb.run(v);
+            }
         });
 
         let on_deactivate = Callback::new(move |item: String| {
-            let v: Vec<String> = current.get_untracked().into_iter().filter(|v| v != &item).collect();
+            let v: Vec<String> = current
+                .get_untracked()
+                .into_iter()
+                .filter(|v| v != &item)
+                .collect();
             set_internal.set(v.clone());
-            if let Some(cb) = on_values_change { cb.run(v); }
+            if let Some(cb) = on_values_change {
+                cb.run(v);
+            }
         });
 
         let ctx = ToggleGroupValueContext {
@@ -282,10 +293,7 @@ mod approach2 {
     }
 
     #[component]
-    pub fn ToggleGroupItem(
-        #[prop(into)] value: String,
-        children: Children,
-    ) -> impl IntoView {
+    pub fn ToggleGroupItem(#[prop(into)] value: String, children: Children) -> impl IntoView {
         let ctx = expect_context::<ToggleGroupValueContext>();
         toggle_item(ctx, value, "approach2", children)
     }
@@ -307,15 +315,21 @@ mod approach3 {
     }
 
     impl From<&str> for ToggleValue {
-        fn from(s: &str) -> Self { ToggleValue::Single(s.to_string()) }
+        fn from(s: &str) -> Self {
+            ToggleValue::Single(s.to_string())
+        }
     }
 
     impl From<String> for ToggleValue {
-        fn from(s: String) -> Self { ToggleValue::Single(s) }
+        fn from(s: String) -> Self {
+            ToggleValue::Single(s)
+        }
     }
 
     impl From<Vec<String>> for ToggleValue {
-        fn from(v: Vec<String>) -> Self { ToggleValue::Multiple(v) }
+        fn from(v: Vec<String>) -> Self {
+            ToggleValue::Multiple(v)
+        }
     }
 
     impl ToggleValue {
@@ -353,18 +367,27 @@ mod approach3 {
                 ToggleValue::Single(item)
             };
             set_internal.set(new_val.clone());
-            if let Some(cb) = on_value_change { cb.run(new_val); }
+            if let Some(cb) = on_value_change {
+                cb.run(new_val);
+            }
         });
 
         let on_deactivate = Callback::new(move |item: String| {
             let new_val = if is_multiple {
-                let v: Vec<String> = internal.get_untracked().to_vec().into_iter().filter(|v| v != &item).collect();
+                let v: Vec<String> = internal
+                    .get_untracked()
+                    .to_vec()
+                    .into_iter()
+                    .filter(|v| v != &item)
+                    .collect();
                 ToggleValue::Multiple(v)
             } else {
                 ToggleValue::Single(String::new())
             };
             set_internal.set(new_val.clone());
-            if let Some(cb) = on_value_change { cb.run(new_val); }
+            if let Some(cb) = on_value_change {
+                cb.run(new_val);
+            }
         });
 
         let ctx = ToggleGroupValueContext {
@@ -383,10 +406,7 @@ mod approach3 {
     }
 
     #[component]
-    pub fn ToggleGroupItem(
-        #[prop(into)] value: String,
-        children: Children,
-    ) -> impl IntoView {
+    pub fn ToggleGroupItem(#[prop(into)] value: String, children: Children) -> impl IntoView {
         let ctx = expect_context::<ToggleGroupValueContext>();
         toggle_item(ctx, value, "approach3", children)
     }

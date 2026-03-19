@@ -1,8 +1,8 @@
 use std::sync::{Arc, Mutex};
 
+use crate::internal::rect::{Rect, observe_element_rect};
 use leptos::prelude::*;
 use leptos_node_ref::AnyNodeRef;
-use radix_rect::{Rect, observe_element_rect};
 use send_wrapper::SendWrapper;
 use web_sys::wasm_bindgen::JsCast;
 

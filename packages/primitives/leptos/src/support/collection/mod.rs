@@ -2,12 +2,7 @@ use std::marker::PhantomData;
 use std::{collections::HashMap, fmt::Debug};
 
 use crate::support::compose_refs::use_composed_refs;
-use leptos::{
-    context::Provider,
-    html,
-    prelude::*,
-    tachys::html::node_ref::NodeRefContainer,
-};
+use leptos::{context::Provider, html, prelude::*, tachys::html::node_ref::NodeRefContainer};
 use leptos_node_ref::{AnyNodeRef, any_node_ref};
 use nanoid::nanoid;
 use send_wrapper::SendWrapper;
@@ -197,8 +192,8 @@ pub fn use_collection<ItemData: Clone + Send + Sync + 'static>()
 
         // Sort by DOM position. During SSR all refs are None, so the sort is
         // a no-op and items retain their HashMap iteration order.
-        ordered_items.sort_by(|a, b| {
-            match (a.r#ref.get_untracked(), b.r#ref.get_untracked()) {
+        ordered_items.sort_by(
+            |a, b| match (a.r#ref.get_untracked(), b.r#ref.get_untracked()) {
                 (Some(el_a), Some(el_b)) => {
                     let node_a: &web_sys::Node = (*el_a).unchecked_ref();
                     let node_b: &web_sys::Node = (*el_b).unchecked_ref();
@@ -214,8 +209,8 @@ pub fn use_collection<ItemData: Clone + Send + Sync + 'static>()
                 (Some(_), None) => std::cmp::Ordering::Less,
                 (None, Some(_)) => std::cmp::Ordering::Greater,
                 (None, None) => std::cmp::Ordering::Equal,
-            }
-        });
+            },
+        );
 
         ordered_items
     };

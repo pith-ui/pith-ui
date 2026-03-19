@@ -20,7 +20,9 @@ use crate::support::popper::{
     UpdatePositionStrategy, provide_popper_scope, use_popper_scope,
 };
 use crate::support::portal::ScopedPortal;
-use crate::support::primitive::{Primitive, adapt_callback, compose_callbacks, data_attr, prop_or_default};
+use crate::support::primitive::{
+    Primitive, adapt_callback, compose_callbacks, data_attr, prop_or_default,
+};
 use crate::support::use_controllable_state::{UseControllableStateParams, use_controllable_state};
 use leptos::{
     attribute_interceptor::AttributeInterceptor, context::Provider, ev, html, prelude::*,
@@ -253,7 +255,6 @@ fn find_next_item<'a>(
         }
     })
 }
-
 
 /// Margin around the select content for item-aligned positioning.
 const CONTENT_MARGIN: f64 = 10.0;

@@ -71,7 +71,11 @@ pub fn use_internal_styles(
     use_internal_styles_effect(node_ref, move |style| {
         for (name, value) in &properties {
             // Only set if the user hasn't already provided this property.
-            if style.get_property_value(name).unwrap_or_default().is_empty() {
+            if style
+                .get_property_value(name)
+                .unwrap_or_default()
+                .is_empty()
+            {
                 let _ = style.set_property(name, value);
             }
         }

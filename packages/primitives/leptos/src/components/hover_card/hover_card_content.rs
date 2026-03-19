@@ -305,9 +305,7 @@ fn HoverCardContentImpl(
 
     let on_dismiss = context.on_dismiss;
 
-    let contain_selection_style = Signal::derive(move || {
-        contain_selection.get().then_some("text")
-    });
+    let contain_selection_style = Signal::derive(move || contain_selection.get().then_some("text"));
 
     view! {
         <DismissableLayer

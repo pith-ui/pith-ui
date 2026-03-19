@@ -1,4 +1,6 @@
-use crate::support::primitive::{Primitive, adapt_callback, compose_callbacks, data_attr, prop_or_default};
+use crate::support::primitive::{
+    Primitive, adapt_callback, compose_callbacks, data_attr, prop_or_default,
+};
 use crate::support::use_controllable_state::{UseControllableStateParams, use_controllable_state};
 use leptos::{attribute_interceptor::AttributeInterceptor, ev, html, prelude::*};
 use leptos_node_ref::AnyNodeRef;

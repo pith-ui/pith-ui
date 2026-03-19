@@ -82,7 +82,11 @@ impl ToggleGroupMode for Multiple {
     }
 
     fn on_deactivate(current: &Vec<String>, item: &str) -> Vec<String> {
-        current.iter().filter(|v| v.as_str() != item).cloned().collect()
+        current
+            .iter()
+            .filter(|v| v.as_str() != item)
+            .cloned()
+            .collect()
     }
 
     fn toggle_group_type() -> ToggleGroupType {
@@ -307,14 +311,11 @@ pub fn ToggleGroup(
     match r#type {
         ToggleGroupType::Single => {
             // Adapt Vec<String> props to String for the single-mode core.
-            let single_value: MaybeProp<String> = Signal::derive(move || {
-                value.get().and_then(|v| v.into_iter().next())
-            })
-            .into();
-            let single_default: MaybeProp<String> = Signal::derive(move || {
-                default_value.get().and_then(|v| v.into_iter().next())
-            })
-            .into();
+            let single_value: MaybeProp<String> =
+                Signal::derive(move || value.get().and_then(|v| v.into_iter().next())).into();
+            let single_default: MaybeProp<String> =
+                Signal::derive(move || default_value.get().and_then(|v| v.into_iter().next()))
+                    .into();
             let single_cb = on_value_change.map(|cb| {
                 Callback::new(move |v: String| {
                     cb.run(if v.is_empty() { vec![] } else { vec![v] });

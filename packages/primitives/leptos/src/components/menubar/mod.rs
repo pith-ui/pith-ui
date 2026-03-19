@@ -2,6 +2,7 @@ use std::cell::Cell;
 use std::marker::PhantomData;
 use std::rc::Rc;
 
+use crate::internal::utils::wrap_array;
 pub use crate::menu::CheckedState;
 use crate::menu::*;
 use crate::support::collection::{
@@ -18,7 +19,6 @@ use crate::support::roving_focus::{Orientation, RovingFocusGroup, RovingFocusGro
 use crate::support::use_controllable_state::{UseControllableStateParams, use_controllable_state};
 use leptos::{context::Provider, ev, html, prelude::*};
 use leptos_node_ref::AnyNodeRef;
-use radix_utils::wrap_array;
 use send_wrapper::SendWrapper;
 use web_sys::wasm_bindgen::JsCast;
 

@@ -1,6 +1,8 @@
 use std::collections::HashMap;
 use std::fmt::{self, Display, Formatter};
 
+use crate::internal::number::clamp;
+use crate::internal::utils::linear_scale;
 use crate::support::compose_refs::use_composed_refs;
 use crate::support::direction::{Direction, use_direction};
 use crate::support::presence::Presence;
@@ -9,8 +11,6 @@ use leptos::{
     attribute_interceptor::AttributeInterceptor, context::Provider, ev, html, prelude::*,
 };
 use leptos_node_ref::AnyNodeRef;
-use radix_number::clamp;
-use radix_utils::linear_scale;
 use send_wrapper::SendWrapper;
 use web_sys::wasm_bindgen::{JsCast, closure::Closure};
 
@@ -115,10 +115,6 @@ struct ScrollbarContextValue {
     on_thumb_pointer_down: Callback<(f64, f64)>,
     on_thumb_position_change: Callback<()>,
 }
-
-
-
-
 
 /* -------------------------------------------------------------------------------------------------
  * State machine (used by ScrollAreaScrollbarScroll)

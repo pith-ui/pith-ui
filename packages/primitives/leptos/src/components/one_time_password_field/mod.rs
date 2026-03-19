@@ -262,9 +262,7 @@ fn focus_input(element: Option<&web_sys::HtmlInputElement>) {
         // since focus may have moved (e.g., Tab was pressed before the rAF fires).
         let el = element.clone();
         let cb = web_sys::wasm_bindgen::closure::Closure::once_into_js(move || {
-            if let Some(active) = el
-                .owner_document()
-                .and_then(|doc| doc.active_element())
+            if let Some(active) = el.owner_document().and_then(|doc| doc.active_element())
                 && active == *el.unchecked_ref::<web_sys::Element>()
             {
                 el.select();
