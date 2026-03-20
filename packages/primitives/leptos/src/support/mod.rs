@@ -1,4 +1,5 @@
 pub mod announce;
+pub mod class;
 pub mod aria_hidden;
 pub mod arrow;
 pub mod collection;

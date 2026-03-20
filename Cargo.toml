@@ -2,6 +2,7 @@
 members = [
     "book-examples/*/*",
     "packages/primitives/leptos",
+    "packages/themes/leptos",
     "reference_app/leptos",
     "reference_experiments/leptos",
     "scripts",

@@ -10,4 +10,9 @@ repository.workspace = true
 version.workspace = true
 
 [dependencies]
-# leptos.workspace = true
+cardo-ui = { path = "../../primitives/leptos" }
+tailwind_fuse.workspace = true
+
+[dev-dependencies]
+any_spawner = "0.3.0"
+leptos.workspace = true

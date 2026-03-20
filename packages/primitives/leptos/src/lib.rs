@@ -48,6 +48,7 @@ pub mod icons;
 
 // ── Re-export public support modules at crate level ──
 pub use support::arrow;
+pub use support::class;
 pub use support::direction;
 pub use support::portal;
 pub use support::primitive;
