@@ -1,5 +1,5 @@
 use leptos::prelude::*;
-use radix_leptos_primitives::tooltip::{
+use cardo_ui::tooltip::{
     Tooltip, TooltipArrow, TooltipContent, TooltipPortal, TooltipProvider, TooltipTrigger,
 };
 

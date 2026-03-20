@@ -1,108 +1,86 @@
 <p align="center">
     <a href="./logo.svg">
-        <img src="./logo.svg" width="300" height="200" alt="Rust Radix Logo">
+        <img src="./logo.svg" width="300" height="200" alt="Cardo UI Logo">
     </a>
 </p>
 
-<h1 align="center">Rust Radix</h1>
+<h1 align="center">Cardo UI</h1>
 
-A Rust port of [Radix Primitives](https://www.radix-ui.com/primitives) for [Leptos](https://leptos.dev) — unstyled, accessible, headless UI components for the Rust/WASM ecosystem.
+Unstyled, accessible UI components for [Leptos](https://leptos.dev), based on [Radix Primitives](https://www.radix-ui.com/primitives).
 
-## Background
+## Features
 
-This project is a fork of [RustForWeb/radix](https://github.com/RustForWeb/radix), originally created by [Daniëlle Huisman](https://github.com/DanielleHuisman) as part of the [Rust for Web](https://github.com/RustForWeb) initiative. The original project laid the groundwork for porting Radix UI across multiple Rust web frameworks (Leptos, Yew, and Dioxus), but is currently unmaintained.
-
-This fork narrows the focus to **Leptos only**, with the goal of delivering a complete, production-quality headless component library that faithfully follows the [Radix Primitives](https://www.radix-ui.com/primitives) API and accessibility standards.
-
-## Status
-
-All 61 Radix primitive components and utilities have been ported to Leptos, including:
-
-- **Layout & Display** — Aspect Ratio, Scroll Area, Separator, Progress, Visually Hidden
-- **Overlays & Layers** — Dialog, Alert Dialog, Popover, Hover Card, Tooltip, Toast
-- **Menus** — Dropdown Menu, Context Menu, Menubar, Navigation Menu
-- **Forms** — Checkbox, Radio Group, Switch, Slider, Select, Toggle, Toggle Group, Label, Form
-- **Disclosure** — Accordion, Collapsible, Tabs
-- **Utilities** — Portal, Presence, Slot, Arrow, Accessible Icon, Collection, Roving Focus, Dismissable Layer, Focus Scope, Popper, Direction, ID
-- **Experimental** — One-Time Password Field, Password Toggle Field
-
-Every component has a corresponding Leptos story, and 34 Cypress E2E test suites validate behavioral parity between the Leptos implementation and the original React Radix packages.
-
-### Headless Principles
-
-This port follows the headless UI philosophy of the original Radix Primitives:
-
-- **Unstyled** — Components ship with zero CSS. You bring your own styles.
-- **Accessible** — Full WAI-ARIA compliance, keyboard navigation, and focus management out of the box.
-- **Composable** — Small, focused components that compose together via the same patterns as React Radix (Root/Trigger/Content/etc.).
+- **Unstyled** — Ships with zero CSS. Bring your own styles.
+- **Accessible** — WAI-ARIA compliant with full keyboard navigation and focus management.
+- **Composable** — Small, focused components that compose via familiar Root/Trigger/Content patterns.
 - **Controlled & Uncontrolled** — All stateful components support both modes.
-- **API-faithful** — Component names, prop names (in snake_case), and compositional structure match the React Radix API.
+- **API-faithful** — Same component names, prop names (in snake_case), and structure as React Radix.
 
-## Roadmap
+## Quick Start
 
-### Near-term: Feature Complete
+Add the crate with the components you need:
 
-- [ ] Complete E2E test coverage for all components (ongoing — 34 components have Cypress suites). Utilities are tested indirectly through the components that use them.
-- [ ] Refactor internals for better unit testability (extract shared helpers, reduce duplication — see `notes/roadmap.md`)
-- [ ] Bug fixes and behavioral parity gaps identified through testing
-- [ ] Stabilize the public API surface
+```bash
+cargo add cardo-ui --features dialog
+```
 
-### Medium-term: Publish & Document
+Then use components in your Leptos app:
 
-- [ ] Publish crates to [crates.io](https://crates.io)
-- [ ] Update [the Rust Radix book](https://radix.rustforweb.org) with current Leptos API documentation, usage examples, and getting-started guide
+```rust
+use leptos::prelude::*;
+use cardo_ui::dialog::*;
 
-### Long-term
+#[component]
+fn App() -> impl IntoView {
+    view! {
+        <Dialog>
+            <DialogTrigger>"Open"</DialogTrigger>
+            <DialogPortal>
+                <DialogOverlay />
+                <DialogContent>
+                    <DialogTitle>"Booking info"</DialogTitle>
+                    <DialogDescription>
+                        "Please enter the info for your booking below."
+                    </DialogDescription>
+                    <DialogClose>"Close"</DialogClose>
+                </DialogContent>
+            </DialogPortal>
+        </Dialog>
+    }
+}
+```
 
-- [ ] Track the [Base UI](https://base-ui.com/) component library for new additions beyond the original Radix Primitives
-- [ ] SSR / hydration support
+## Available Components
+
+Each component is gated behind a feature flag. Enable only what you need, or use `features = ["all"]`.
+
+| Category | Components |
+|---|---|
+| **Overlays** | Dialog, Alert Dialog, Popover, Hover Card, Tooltip, Toast |
+| **Menus** | Dropdown Menu, Context Menu, Menubar, Navigation Menu |
+| **Forms** | Checkbox, Radio Group, Switch, Slider, Select, Toggle, Toggle Group, Label, Form |
+| **Disclosure** | Accordion, Collapsible, Tabs |
+| **Layout** | Aspect Ratio, Scroll Area, Separator, Progress, Toolbar |
+| **Utilities** | Accessible Icon, Avatar, Visually Hidden, Portal |
 
 ## Development
 
 ```bash
-# Lint
-cargo clippy --all-features --locked
+cargo clippy --all-features --locked   # Lint
+cargo fmt --all                        # Format
+just test_leptos_unit                  # Test
 
-# Format
-cargo fmt --all
-
-# Test
-cargo test --all-features --locked --release
+just serve_leptos_storybook            # Run the Leptos storybook
 ```
 
-### Storybooks
-
-The Leptos storybook uses [Trunk](https://trunkrs.dev/):
-
-```bash
-just serve_leptos_storybook
-```
-
-The React reference storybook (from the upstream Radix Primitives submodule) uses Storybook:
-
-```bash
-just serve_react_storybook
-```
-
-### E2E Testing
-
-A [Justfile](Justfile) drives the strangler-pattern E2E test harness in `reference_app/`. Shared Cypress tests run against both a React reference app (using real `@radix-ui/react-*` packages) and the Leptos app, proving behavioral parity.
-
-```bash
-just test_react_component dialog       # Test one component against React
-just test_leptos_component dialog      # Test the same component against Leptos
-just test_react                        # Run all E2E tests against React
-just test_leptos                       # Run all E2E tests against Leptos
-```
-
-See [CLAUDE.md](.claude/CLAUDE.md) for detailed build commands, architecture documentation, and contribution guidelines.
+See [CLAUDE.md](.claude/CLAUDE.md) for architecture documentation and contribution guidelines.
 
 ## Credits
 
-This project is a fork of [RustForWeb/radix](https://github.com/RustForWeb/radix), created by [Daniëlle Huisman](https://github.com/DanielleHuisman) and contributors as part of the [Rust for Web](https://github.com/RustForWeb) initiative.
+Originally derived from [RustForWeb/radix](https://github.com/RustForWeb/radix) by [Daniëlle Huisman](https://github.com/DanielleHuisman) and contributors.
 
-The logo is a combination of the [Radix logo](https://github.com/radix-ui/website/blob/main/components/RadixLogo.tsx) and [Ferris the Rustacean](https://rustacean.net/).
+The logo combines the [Radix logo](https://github.com/radix-ui/website/blob/main/components/RadixLogo.tsx) and [Ferris the Rustacean](https://rustacean.net/).
 
 ## License
 
-This project is available under the [MIT license](LICENSE.md).
+[MIT](LICENSE.md)

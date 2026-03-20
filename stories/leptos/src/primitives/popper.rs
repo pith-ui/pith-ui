@@ -1,8 +1,8 @@
 use std::time::Duration;
 
 use leptos::prelude::*;
-use radix_leptos_primitives::popper::*;
-use radix_leptos_primitives::portal::Portal;
+use cardo_ui::popper::*;
+use cardo_ui::portal::Portal;
 use send_wrapper::SendWrapper;
 
 stylance::import_crate_style!(classes, "src/primitives/popper.stories.module.css");

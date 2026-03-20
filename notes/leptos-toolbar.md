@@ -109,7 +109,7 @@ pub fn ToolbarToggleItem(
 - **Scope system**: React's `createToolbarScope`/`__scopeToolbar` pattern for context isolation is omitted. Leptos uses standard `Provider`/`expect_context` which provides sufficient isolation for component trees. The scope system is a React-specific pattern for allowing multiple independent instances of the same component type to coexist with separate contexts — Leptos's context system handles this naturally through component tree nesting.
 
 ### Assumptions and key decisions
-- **Orientation type**: The toolbar context stores `radix_leptos_roving_focus::Orientation` and converts to `radix_leptos_separator::Orientation` for `ToolbarSeparator` since these are separate types in the Leptos implementation.
+- **Orientation type**: The toolbar context stores `cardo_ui_roving_focus::Orientation` and converts to `cardo_ui_separator::Orientation` for `ToolbarSeparator` since these are separate types in the Leptos implementation.
 - **Callback forwarding**: `Option<Callback<T>>` props can't be forwarded directly to child components with `#[prop(into, optional)]` due to `IntoReactiveValue` trait bounds. Instead, optional callbacks are wrapped in a non-optional `Callback` that conditionally invokes the inner callback.
 - **Orientation as non-signal**: Toolbar's `orientation` is taken as `Option<Orientation>` (not reactive) since it's set once at creation and used to configure both the context and child components. This matches the React pattern where orientation is a plain prop.
 - **DropdownMenu omission in stories**: The React storybook integrates a DropdownMenu inside the toolbar example. This is omitted from the Leptos story since DropdownMenu is not yet ported.

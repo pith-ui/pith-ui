@@ -10,7 +10,7 @@
 //!
 //! ```toml
 //! [dependencies]
-//! radix-leptos-primitives = { version = "0.0.2", features = ["checkbox", "dialog", "tabs"] }
+//! cardo-ui = { version = "0.0.2", features = ["checkbox", "dialog", "tabs"] }
 //! ```
 //!
 //! # Public Support Modules

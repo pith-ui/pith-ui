@@ -1,5 +1,5 @@
 [package]
-name = "radix-number"
+name = "cardo-ui-number"
 description = "Rust port of Radix Core Number."
 
 authors.workspace = true

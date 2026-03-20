@@ -1,5 +1,5 @@
 [package]
-name = "radix-utils"
+name = "cardo-ui-utils"
 description = "Shared pure-Rust utilities for Radix components."
 
 authors.workspace = true

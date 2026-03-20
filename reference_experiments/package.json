@@ -1,5 +1,5 @@
 {
-    "name": "@rustforweb/radix-experiments",
+    "name": "@cardo-ui/experiments",
     "description": "Leptos-only experiment harness for validating framework assumptions.",
     "private": true,
     "scripts": {

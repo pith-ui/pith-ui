@@ -1,8 +1,8 @@
 use leptos::prelude::*;
-use radix_leptos_primitives::dialog::{
+use cardo_ui::dialog::{
     Dialog, DialogClose, DialogContent, DialogTitle, DialogTrigger,
 };
-use radix_leptos_primitives::hover_card::*;
+use cardo_ui::hover_card::*;
 use web_sys::wasm_bindgen::JsCast;
 
 stylance::import_crate_style!(classes, "src/primitives/hover_card.stories.module.css");

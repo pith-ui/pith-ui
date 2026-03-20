@@ -12,7 +12,7 @@ This component is not yet updated to Leptos 0.7+.
 </div>
 
 <!-- ```toml,trunk
-package = "radix-leptos-book-primitives"
+package = "cardo-ui-book-primitives"
 features = ["avatar"]
 files = ["src/avatar.rs"]
 ``` -->
@@ -44,12 +44,12 @@ Install the component from your command line.
 {{#tab name="Leptos" }}
 
 ```shell
-cargo add radix-leptos-avatar
+cargo add cardo-ui-avatar
 ```
 
--   [View on crates.io](https://crates.io/crates/radix-leptos-avatar)
--   [View on docs.rs](https://docs.rs/radix-leptos-avatar/latest/radix_leptos_avatar/)
--   [View source](https://github.com/RustForWeb/radix/tree/main/packages/primitives/leptos/avatar)
+-   [View on crates.io](https://crates.io/crates/cardo-ui-avatar)
+-   [View on docs.rs](https://docs.rs/cardo-ui-avatar/latest/cardo_ui_avatar/)
+-   [View source](https://github.com/cardo-ui/cardo-ui/tree/main/packages/primitives/leptos/avatar)
 
 {{#endtab }}
 {{#tab name="Yew" }}
@@ -60,7 +60,7 @@ cargo add radix-yew-avatar
 
 -   [View on crates.io](https://crates.io/crates/radix-yew-avatar)
 -   [View on docs.rs](https://docs.rs/radix-yew-avatar/latest/radix_yew_avatar/)
--   [View source](https://github.com/RustForWeb/radix/tree/main/packages/primitives/yew/avatar)
+-   [View source](https://github.com/cardo-ui/cardo-ui/tree/main/packages/primitives/yew/avatar)
 
 {{#endtab }}
 {{#endtabs }}
@@ -74,7 +74,7 @@ Import all parts and piece them together.
 
 ```rust,ignore
 use leptos::*;
-use radix_leptos_avatar::*;
+use cardo_ui_avatar::*;
 
 #[component]
 fn Anatomy() -> impl IntoView {

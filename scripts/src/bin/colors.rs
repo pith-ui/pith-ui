@@ -98,7 +98,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
     Command::new("cargo")
         .arg("fmt")
         .arg("-p")
-        .arg("radix-colors")
+        .arg("cardo-ui-colors")
         .status()?
         .stable_exit_ok()?;
 

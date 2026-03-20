@@ -6,7 +6,7 @@ Displays content within a desired ratio.
 {{#tab name="Leptos" }}
 
 ```toml,trunk
-package = "radix-leptos-book-primitives"
+package = "cardo-ui-book-primitives"
 features = ["aspect-ratio"]
 files = ["src/aspect_ratio.rs"]
 ```
@@ -35,12 +35,12 @@ Install the component from your command line.
 {{#tab name="Leptos" }}
 
 ```shell
-cargo add radix-leptos-aspect-ratio
+cargo add cardo-ui-aspect-ratio
 ```
 
--   [View on crates.io](https://crates.io/crates/radix-leptos-aspect-ratio)
--   [View on docs.rs](https://docs.rs/radix-leptos-aspect-ratio/latest/radix_leptos_aspect_ratio/)
--   [View source](https://github.com/RustForWeb/radix/tree/main/packages/primitives/leptos/aspect-ratio)
+-   [View on crates.io](https://crates.io/crates/cardo-ui-aspect-ratio)
+-   [View on docs.rs](https://docs.rs/cardo-ui-aspect-ratio/latest/cardo_ui_aspect_ratio/)
+-   [View source](https://github.com/cardo-ui/cardo-ui/tree/main/packages/primitives/leptos/aspect-ratio)
 
 {{#endtab }}
 {{#tab name="Yew" }}
@@ -51,7 +51,7 @@ cargo add radix-yew-aspect-ratio
 
 -   [View on crates.io](https://crates.io/crates/radix-yew-aspect-ratio)
 -   [View on docs.rs](https://docs.rs/radix-yew-aspect-ratio/latest/radix_yew_aspect_ratio/)
--   [View source](https://github.com/RustForWeb/radix/tree/main/packages/primitives/yew/aspect-ratio)
+-   [View source](https://github.com/cardo-ui/cardo-ui/tree/main/packages/primitives/yew/aspect-ratio)
 
 {{#endtab }}
 {{#endtabs }}
@@ -65,7 +65,7 @@ Import the component.
 
 ```rust,ignore
 use leptos::*;
-use radix_leptos_aspect_ratio::*;
+use cardo_ui_aspect_ratio::*;
 
 #[component]
 fn Anatomy() -> impl IntoView {

@@ -1,5 +1,5 @@
 [package]
-name = "radix-leptos-primitives"
+name = "cardo-ui"
 description = "Leptos port of Radix Primitives - accessible, unstyled UI components."
 
 authors.workspace = true

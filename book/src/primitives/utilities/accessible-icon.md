@@ -15,12 +15,12 @@ Install the component from your command line.
 {{#tab name="Leptos" }}
 
 ```shell
-cargo add radix-leptos-accessible-icon
+cargo add cardo-ui-accessible-icon
 ```
 
--   [View on crates.io](https://crates.io/crates/radix-leptos-accessible-icon)
--   [View on docs.rs](https://docs.rs/radix-leptos-accessible-icon/latest/radix_leptos_accessible_icon/)
--   [View source](https://github.com/RustForWeb/radix/tree/main/packages/primitives/leptos/accessible-icon)
+-   [View on crates.io](https://crates.io/crates/cardo-ui-accessible-icon)
+-   [View on docs.rs](https://docs.rs/cardo-ui-accessible-icon/latest/cardo_ui_accessible_icon/)
+-   [View source](https://github.com/cardo-ui/cardo-ui/tree/main/packages/primitives/leptos/accessible-icon)
 
 {{#endtab }}
 {{#endtabs }}
@@ -34,7 +34,7 @@ Import the component.
 
 ```rust,ignore
 use leptos::*;
-use radix_leptos_accessible_icon::*;
+use cardo_ui_accessible_icon::*;
 
 #[component]
 fn Anatomy() -> impl IntoView {

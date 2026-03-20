@@ -12,7 +12,7 @@ This component is not yet updated to Leptos 0.7+.
 </div>
 
 <!-- ```toml,trunk
-package = "radix-leptos-book-primitives"
+package = "cardo-ui-book-primitives"
 features = ["progress"]
 files = ["src/progress.rs"]
 ``` -->
@@ -32,12 +32,12 @@ Install the component from your command line.
 {{#tab name="Leptos" }}
 
 ```shell
-cargo add radix-leptos-progress
+cargo add cardo-ui-progress
 ```
 
--   [View on crates.io](https://crates.io/crates/radix-leptos-progress)
--   [View on docs.rs](https://docs.rs/radix-leptos-progress/latest/radix_leptos_progress/)
--   [View source](https://github.com/RustForWeb/radix/tree/main/packages/primitives/leptos/progress)
+-   [View on crates.io](https://crates.io/crates/cardo-ui-progress)
+-   [View on docs.rs](https://docs.rs/cardo-ui-progress/latest/cardo_ui_progress/)
+-   [View source](https://github.com/cardo-ui/cardo-ui/tree/main/packages/primitives/leptos/progress)
 
 {{#endtab }}
 {{#endtabs }}
@@ -51,7 +51,7 @@ Import all parts and piece them together.
 
 ```rust,ignore
 use leptos::*;
-use radix_leptos_progress::*;
+use cardo_ui_progress::*;
 
 #[component]
 fn Anatomy() -> impl IntoView {

@@ -1,6 +1,6 @@
 use leptos::prelude::*;
-use radix_leptos_primitives::direction::{Direction, DirectionProvider};
-use radix_leptos_primitives::menu::*;
+use cardo_ui::direction::{Direction, DirectionProvider};
+use cardo_ui::menu::*;
 
 stylance::import_crate_style!(classes, "src/primitives/menu.stories.module.css");
 

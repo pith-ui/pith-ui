@@ -1,7 +1,7 @@
 use leptos::prelude::*;
-use radix_leptos_primitives::direction::DirectionProvider;
-use radix_leptos_primitives::label::Label;
-use radix_leptos_primitives::radio_group::*;
+use cardo_ui::direction::DirectionProvider;
+use cardo_ui::label::Label;
+use cardo_ui::radio_group::*;
 
 stylance::import_crate_style!(classes, "src/primitives/radio_group.stories.module.css");
 
@@ -331,7 +331,7 @@ pub fn LegacyChromatic() -> impl IntoView {
 
         <h1>"Direction"</h1>
         <h2>"Prop"</h2>
-        <RadioGroup default_value="1" dir=radix_leptos_primitives::direction::Direction::Rtl attr:class=classes::root>
+        <RadioGroup default_value="1" dir=cardo_ui::direction::Direction::Rtl attr:class=classes::root>
             <RadioGroupItem value="1" attr:class=classes::item>
                 <RadioGroupIndicator attr:class=classes::indicator />
             </RadioGroupItem>
@@ -344,7 +344,7 @@ pub fn LegacyChromatic() -> impl IntoView {
         </RadioGroup>
 
         <h2>"Inherited"</h2>
-        <DirectionProvider direction=Signal::derive(|| radix_leptos_primitives::direction::Direction::Rtl)>
+        <DirectionProvider direction=Signal::derive(|| cardo_ui::direction::Direction::Rtl)>
             <RadioGroup default_value="1" attr:class=classes::root>
                 <RadioGroupItem value="1" attr:class=classes::item>
                     <RadioGroupIndicator attr:class=classes::indicator />

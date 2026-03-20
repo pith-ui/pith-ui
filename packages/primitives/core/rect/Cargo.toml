@@ -1,5 +1,5 @@
 [package]
-name = "radix-rect"
+name = "cardo-ui-rect"
 description = "Rust port of Radix Core Rect."
 
 authors.workspace = true

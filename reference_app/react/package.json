@@ -1,5 +1,5 @@
 {
-    "name": "@rustforweb/radix-reference-react",
+    "name": "@cardo-ui/cardo-ui-reference-react",
     "description": "React reference app for Radix E2E testing.",
     "private": true,
     "type": "module",

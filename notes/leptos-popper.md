@@ -62,4 +62,4 @@ Also defines `Align`, `Sticky`, `UpdatePositionStrategy` enums and re-exports `P
 - `PopperContent` uses `AttributeInterceptor` to forward consumer attributes to the inner `Primitive`.
 - z-index is read in an effect and stored in a signal, same as React.
 - All positioning props are reactive signals.
-- Dependencies: `floating-ui-leptos`, `leptos`, `leptos-maybe-callback`, `leptos-node-ref`, `radix-leptos-arrow`, `radix-leptos-compose-refs`, `radix-leptos-primitive`, `radix-leptos-use-size`, `send_wrapper`, `serde`, `serde_json`, `web-sys`.
+- Dependencies: `floating-ui-leptos`, `leptos`, `leptos-maybe-callback`, `leptos-node-ref`, `cardo-ui-arrow`, `cardo-ui-compose-refs`, `cardo-ui-primitive`, `cardo-ui-use-size`, `send_wrapper`, `serde`, `serde_json`, `web-sys`.

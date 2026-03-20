@@ -1,29 +1,29 @@
 use leptos::prelude::*;
-use radix_leptos_primitives::accordion::*;
-use radix_leptos_primitives::alert_dialog::*;
-use radix_leptos_primitives::checkbox::*;
-use radix_leptos_primitives::collapsible::*;
-use radix_leptos_primitives::context_menu::*;
-use radix_leptos_primitives::dialog::*;
-use radix_leptos_primitives::dropdown_menu::*;
-use radix_leptos_primitives::hover_card::*;
-use radix_leptos_primitives::label::*;
-use radix_leptos_primitives::menubar::*;
-use radix_leptos_primitives::navigation_menu::*;
-use radix_leptos_primitives::popover::*;
-use radix_leptos_primitives::progress::*;
-use radix_leptos_primitives::radio_group::*;
-use radix_leptos_primitives::scroll_area::{
+use cardo_ui::accordion::*;
+use cardo_ui::alert_dialog::*;
+use cardo_ui::checkbox::*;
+use cardo_ui::collapsible::*;
+use cardo_ui::context_menu::*;
+use cardo_ui::dialog::*;
+use cardo_ui::dropdown_menu::*;
+use cardo_ui::hover_card::*;
+use cardo_ui::label::*;
+use cardo_ui::menubar::*;
+use cardo_ui::navigation_menu::*;
+use cardo_ui::popover::*;
+use cardo_ui::progress::*;
+use cardo_ui::radio_group::*;
+use cardo_ui::scroll_area::{
     self, ScrollArea, ScrollAreaScrollbar, ScrollAreaThumb, ScrollAreaViewport,
 };
-use radix_leptos_primitives::select::*;
-use radix_leptos_primitives::separator::*;
-use radix_leptos_primitives::slider::*;
-use radix_leptos_primitives::switch::*;
-use radix_leptos_primitives::tabs::*;
-use radix_leptos_primitives::toggle::*;
-use radix_leptos_primitives::toolbar::*;
-use radix_leptos_primitives::tooltip::*;
+use cardo_ui::select::*;
+use cardo_ui::separator::*;
+use cardo_ui::slider::*;
+use cardo_ui::switch::*;
+use cardo_ui::tabs::*;
+use cardo_ui::toggle::*;
+use cardo_ui::toolbar::*;
+use cardo_ui::tooltip::*;
 
 #[component]
 pub fn AttrForwardingPage() -> impl IntoView {

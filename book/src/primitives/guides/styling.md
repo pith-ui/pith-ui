@@ -27,7 +27,7 @@ You can style a component part by targeting the `class` that you provide.
 
 ```rust,ignore
 use leptos::*;
-use radix_leptos_accordion::*;
+use cardo_ui_accordion::*;
 
 #[component]
 fn AccordionDemo() -> impl IntoView {

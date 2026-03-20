@@ -15,12 +15,12 @@ Install the component from your command line.
 {{#tab name="Leptos" }}
 
 ```shell
-cargo add radix-leptos-portal
+cargo add cardo-ui-portal
 ```
 
--   [View on crates.io](https://crates.io/crates/radix-leptos-portal)
--   [View on docs.rs](https://docs.rs/radix-leptos-portal/latest/radix_leptos_portal/)
--   [View source](https://github.com/RustForWeb/radix/tree/main/packages/primitives/leptos/portal)
+-   [View on crates.io](https://crates.io/crates/cardo-ui-portal)
+-   [View on docs.rs](https://docs.rs/cardo-ui-portal/latest/cardo_ui_portal/)
+-   [View source](https://github.com/cardo-ui/cardo-ui/tree/main/packages/primitives/leptos/portal)
 
 {{#endtab }}
 {{#tab name="Yew" }}
@@ -31,7 +31,7 @@ cargo add radix-yew-portal
 
 -   [View on crates.io](https://crates.io/crates/radix-yew-portal)
 -   [View on docs.rs](https://docs.rs/radix-yew-portal/latest/radix_yew_portal/)
--   [View source](https://github.com/RustForWeb/radix/tree/main/packages/primitives/yew/portal)
+-   [View source](https://github.com/cardo-ui/cardo-ui/tree/main/packages/primitives/yew/portal)
 
 {{#endtab }}
 {{#endtabs }}
@@ -45,7 +45,7 @@ Import the component.
 
 ```rust,ignore
 use leptos::*;
-use radix_leptos_portal::Portal;
+use cardo_ui_portal::Portal;
 
 #[component]
 fn Anatomy() -> impl IntoView {
@@ -109,7 +109,7 @@ Use the portal primitive.
 
 ```rust,ignore
 use leptos::*;
-use radix_leptos_portal::Portal;
+use cardo_ui_portal::Portal;
 
 #[component]
 fn Example() -> impl IntoView {

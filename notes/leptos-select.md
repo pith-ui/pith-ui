@@ -91,7 +91,7 @@ All props converted to snake_case. `MaybeProp<T>` / `Signal<T>` for optional/rea
 
 3. **Scroll button increment**: Uses a fixed 32px scroll increment in auto-scroll, whereas React uses `selectedItem.offsetHeight` for adaptive scrolling. Minor behavioral difference.
 
-4. **Collection pattern**: Uses the shared `radix-leptos-collection` crate with `CollectionProvider`, `CollectionSlot`, and `CollectionItemSlot` for item tracking, matching the pattern established by other ported components.
+4. **Collection pattern**: Uses the shared `cardo-ui-collection` crate with `CollectionProvider`, `CollectionSlot`, and `CollectionItemSlot` for item tracking, matching the pattern established by other ported components.
 
 5. **Deferred close on selection**: `handle_select` defers `on_open_change(false)` to the next macrotask via `setTimeout`. This lets reactive effects triggered by the value change (e.g., text copying in `SelectItemText`) settle before the content is unmounted by Presence. Without deferral, synchronous close would dispose child scopes while queued effects still reference their `StoredValue`s.
 

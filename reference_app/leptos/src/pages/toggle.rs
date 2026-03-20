@@ -1,5 +1,5 @@
 use leptos::prelude::*;
-use radix_leptos_primitives::toggle::*;
+use cardo_ui::toggle::*;
 
 #[component]
 pub fn TogglePage() -> impl IntoView {

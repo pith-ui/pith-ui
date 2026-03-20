@@ -32,7 +32,7 @@ Props: `onClearServerErrors`. FormMessage: `match` (native ValidityState key or 
 // 7 public components + re-exports:
 Form           // Root <form> with validation + aria-description contexts
 FormField      // Field wrapper <div> with name, server_invalid, data-valid/data-invalid
-FormLabel      // Wraps radix_leptos_label::Label, auto-links via field id
+FormLabel      // Wraps cardo_ui_label::Label, auto-links via field id
 FormControl    // <input> with validation, aria-describedby, change/invalid handlers
 FormMessage    // Error message <span>, supports built-in, custom sync, custom async matchers
 FormValidityState  // Render callback exposing Option<Validity> for custom UI

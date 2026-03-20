@@ -1,5 +1,5 @@
 use leptos::prelude::*;
-use radix_leptos_primitives::icons::*;
+use cardo_ui::icons::*;
 #[component]
 pub fn Icons() -> impl IntoView {
     view! {

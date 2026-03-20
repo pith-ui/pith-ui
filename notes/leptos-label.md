@@ -46,4 +46,4 @@ fn Label(
 - Faithfully mirrors the React logic. Uses `event_target::<web_sys::Element>(&event)` to get the target, then `.closest(...)` with the same selector string.
 - Consumer's `on_mouse_down` is a `MaybeCallback<MouseEvent>` invoked via `.run()`.
 - Clones the event before passing to the callback so the `default_prevented()` check afterward sees the original state.
-- Dependencies: `leptos`, `leptos-maybe-callback`, `leptos-node-ref`, `radix-leptos-primitive`, `web-sys`.
+- Dependencies: `leptos`, `leptos-maybe-callback`, `leptos-node-ref`, `cardo-ui-primitive`, `web-sys`.

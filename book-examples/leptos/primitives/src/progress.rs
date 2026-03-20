@@ -1,7 +1,7 @@
 use std::time::Duration;
 
 use leptos::*;
-use radix_leptos_primitives::progress::*;
+use cardo_ui::progress::*;
 
 #[component]
 pub fn ProgressDemo() -> impl IntoView {

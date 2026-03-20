@@ -1,6 +1,6 @@
 use leptos::prelude::*;
-use radix_leptos_primitives::direction::DirectionProvider;
-use radix_leptos_primitives::toggle_group::*;
+use cardo_ui::direction::DirectionProvider;
+use cardo_ui::toggle_group::*;
 
 stylance::import_crate_style!(classes, "src/primitives/toggle-group.stories.module.css");
 
@@ -51,7 +51,7 @@ pub fn Single() -> impl IntoView {
 pub fn Vertical() -> impl IntoView {
     view! {
         <ToggleGroupSingle
-            orientation=radix_leptos_primitives::roving_focus::Orientation::Vertical
+            orientation=cardo_ui::roving_focus::Orientation::Vertical
             default_value="1".to_string()
             attr:class=classes::root
             attr:aria-label="Options"
@@ -221,7 +221,7 @@ pub fn Chromatic() -> impl IntoView {
         <h2>"Prop"</h2>
         <ToggleGroupSingle
             default_value="1".to_string()
-            dir=radix_leptos_primitives::direction::Direction::Rtl
+            dir=cardo_ui::direction::Direction::Rtl
             attr:class=classes::root
         >
             <ToggleGroupItem value="1" attr:class=classes::item>
@@ -236,7 +236,7 @@ pub fn Chromatic() -> impl IntoView {
         </ToggleGroupSingle>
 
         <h2>"Inherited"</h2>
-        <DirectionProvider direction=Signal::derive(|| radix_leptos_primitives::direction::Direction::Rtl)>
+        <DirectionProvider direction=Signal::derive(|| cardo_ui::direction::Direction::Rtl)>
             <ToggleGroupSingle
                 default_value="1".to_string()
                 attr:class=classes::root

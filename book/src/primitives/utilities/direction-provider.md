@@ -14,12 +14,12 @@ Install the component from your command line.
 {{#tab name="Leptos" }}
 
 ```shell
-cargo add radix-leptos-direction
+cargo add cardo-ui-direction
 ```
 
--   [View on crates.io](https://crates.io/crates/radix-leptos-direction)
--   [View on docs.rs](https://docs.rs/radix-leptos-direction/latest/radix_leptos_direction/)
--   [View source](https://github.com/RustForWeb/radix/tree/main/packages/primitives/leptos/direction)
+-   [View on crates.io](https://crates.io/crates/cardo-ui-direction)
+-   [View on docs.rs](https://docs.rs/cardo-ui-direction/latest/cardo_ui_direction/)
+-   [View source](https://github.com/cardo-ui/cardo-ui/tree/main/packages/primitives/leptos/direction)
 
 {{#endtab }}
 {{#tab name="Yew" }}
@@ -30,7 +30,7 @@ cargo add radix-yew-direction
 
 -   [View on crates.io](https://crates.io/crates/radix-yew-direction)
 -   [View on docs.rs](https://docs.rs/radix-yew-direction/latest/radix_yew_direction/)
--   [View source](https://github.com/RustForWeb/radix/tree/main/packages/primitives/yew/direction)
+-   [View source](https://github.com/cardo-ui/cardo-ui/tree/main/packages/primitives/yew/direction)
 
 {{#endtab }}
 {{#endtabs }}
@@ -44,7 +44,7 @@ Import the component.
 
 ```rust,ignore
 use leptos::*;
-use radix_leptos_direction::*;
+use cardo_ui_direction::*;
 
 #[component]
 fn Anatomy() -> impl IntoView {
@@ -104,7 +104,7 @@ Use the direction provider.
 
 ```rust,ignore
 use leptos::*;
-use radix_leptos_direction::*;
+use cardo_ui_direction::*;
 
 #[component]
 fn Example() -> impl IntoView {

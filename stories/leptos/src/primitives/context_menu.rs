@@ -1,6 +1,6 @@
 use leptos::prelude::*;
-use radix_leptos_primitives::context_menu::*;
-use radix_leptos_primitives::direction::{Direction, DirectionProvider};
+use cardo_ui::context_menu::*;
+use cardo_ui::direction::{Direction, DirectionProvider};
 
 stylance::import_crate_style!(
     #[allow(dead_code)]

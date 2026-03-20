@@ -1,5 +1,5 @@
 use leptos::prelude::*;
-use radix_leptos_primitives::avatar::*;
+use cardo_ui::avatar::*;
 
 const WORKING_SRC: &str = "https://picsum.photos/id/1005/200/200";
 const BROKEN_SRC: &str = "https://broken.example.com/no-image.png";

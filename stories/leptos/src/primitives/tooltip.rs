@@ -1,9 +1,9 @@
 use leptos::prelude::*;
 use leptos_node_ref::AnyNodeRef;
-use radix_leptos_primitives::dialog::{
+use cardo_ui::dialog::{
     Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle, DialogTrigger,
 };
-use radix_leptos_primitives::tooltip::{
+use cardo_ui::tooltip::{
     Align, Side, Tooltip, TooltipArrow, TooltipContent, TooltipPortal, TooltipProvider,
     TooltipTrigger,
 };

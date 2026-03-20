@@ -1,5 +1,5 @@
 use leptos::*;
-use radix_leptos_primitives::checkbox::*;
+use cardo_ui::checkbox::*;
 
 #[component]
 pub fn CheckboxDemo() -> impl IntoView {

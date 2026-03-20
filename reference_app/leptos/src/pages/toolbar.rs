@@ -1,8 +1,8 @@
 use leptos::prelude::*;
-use radix_leptos_primitives::direction::Direction;
-use radix_leptos_primitives::roving_focus::Orientation;
-use radix_leptos_primitives::toggle_group::ToggleGroupType;
-use radix_leptos_primitives::toolbar::*;
+use cardo_ui::direction::Direction;
+use cardo_ui::roving_focus::Orientation;
+use cardo_ui::toggle_group::ToggleGroupType;
+use cardo_ui::toolbar::*;
 
 #[component]
 pub fn ToolbarPage() -> impl IntoView {

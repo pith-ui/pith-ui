@@ -21,14 +21,52 @@
             "id": "3e772ed181e91dea",
             "type": "leaf",
             "state": {
-              "type": "graph",
-              "state": {},
-              "icon": "lucide-git-fork",
-              "title": "Graph view"
+              "type": "markdown",
+              "state": {
+                "file": "notes/API/accordion/accordion-trigger.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
+              },
+              "icon": "lucide-file",
+              "title": "accordion-trigger"
+            }
+          },
+          {
+            "id": "29851ed5df215216",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Roadmap.md",
+                "mode": "source",
+                "source": false,
+                "backlinks": true,
+                "backlinkOpts": {
+                  "collapseAll": false,
+                  "extraContext": false,
+                  "sortOrder": "alphabetical",
+                  "showSearch": false,
+                  "searchQuery": "",
+                  "backlinkCollapsed": false,
+                  "unlinkedCollapsed": true
+                }
+              },
+              "icon": "lucide-file",
+              "title": "Roadmap"
             }
           }
         ],
-        "currentTab": 1
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -85,8 +123,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 300
   },
   "right": {
     "id": "98c8a5df7815f7e1",
@@ -188,54 +225,54 @@
       "bases:Create new base": false
     }
   },
-  "active": "3e772ed181e91dea",
+  "active": "29851ed5df215216",
   "lastOpenFiles": [
-    "HEADLESS-PRINCIPLES.md",
-    "target/wasm32-unknown-unknown/debug/deps/radix_leptos_primitives-b5b5585d087c6d6a.long-type-14213455427747973958.txt",
-    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_primitives-1sf61gohdf33a/s-hgg2a3jd2x-0d2kno4-working/dep-graph.part.bin",
-    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_primitives-1sf61gohdf33a/s-hgg2a3jd2x-0d2kno4-working/work-products.bin",
-    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_primitives-1sf61gohdf33a/s-hgg2a3jd2x-0d2kno4-working/query-cache.bin",
-    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_primitives-1sf61gohdf33a/s-hgg2a3jd2x-0d2kno4-working/metadata.rmeta",
-    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_primitives-1sf61gohdf33a/s-hgg2a3jd2x-0d2kno4-working/f3vtqybie3rs0oiw2972ldzjh.o",
-    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_primitives-1sf61gohdf33a/s-hgg2a3jd2x-0d2kno4-working/eyp8lb358enai2ort9oidqbvq.o",
-    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_primitives-1sf61gohdf33a/s-hgg2a3jd2x-0d2kno4-working/eylxkf6lthg21xvfirwgi3ozb.o",
-    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_primitives-1sf61gohdf33a/s-hgg2a3jd2x-0d2kno4-working/evb7hzxaeasgo2r2wfm2jdhu2.o",
-    "target/wasm32-unknown-unknown/debug/incremental/radix_leptos_primitives-1sf61gohdf33a/s-hgg2a3jd2x-0d2kno4-working/euhz4cjeqqt0gl3hpoohms6up.o",
+    "target/debug/deps/libcardo_ui_stories-9cf218e65ff8bfd5.rmeta",
+    "target/debug/deps/libcardo_ui_stories-dfae64d9cdcb9ee4.rmeta",
+    "target/debug/deps/libcardo_ui_reference_app-e8b59a414ea72f41.rmeta",
+    "target/debug/deps/libcardo_ui_reference_app-a2b110542f537a6f.rmeta",
+    "target/debug/deps/libcardo_ui_experiments-2b2f8eae593c087d.rmeta",
+    "target/debug/deps/libcardo_ui_experiments-9c95ea7195ecfdef.rmeta",
+    "target/debug/deps/cardo_ui_stories-9cf218e65ff8bfd5.d",
+    "target/debug/deps/cardo_ui_stories-dfae64d9cdcb9ee4.d",
+    "target/debug/deps/cardo_ui_reference_app-e8b59a414ea72f41.d",
+    "target/debug/deps/cardo_ui_reference_app-a2b110542f537a6f.d",
+    "target/debug/deps/cardo_ui_experiments-2b2f8eae593c087d.d",
+    "target/doc/static.files/rust-logo-9a9549ea.svg",
+    "target/doc/static.files/favicon-32x32-eab170b8.png",
+    "target/doc/static.files/favicon-044be391.svg",
+    "target/doc/static.files/SourceSerif4-LICENSE-a2cfd9d5.md",
+    "reference_app/cypress/screenshots/password-toggle-field.cy.js/PasswordToggleField -- accessibility -- toggle has aria-pressed reflecting visibility state (failed).png",
+    "reference_app/cypress/screenshots/one-time-password-field.cy.js/OneTimePasswordField -- focus management -- clicking redirects to last filled + 1 position (failed).png",
+    "reference_app/cypress/screenshots/one-time-password-field.cy.js/OneTimePasswordField -- focus management -- clicking an input focuses the last selectable position (failed).png",
+    "notes/API/accordion/accordion-trigger.md",
+    "Roadmap.md",
+    "reference_app/cypress/screenshots/menubar.cy.js/ArrowRight from content opens next menu (File → Edit) -- after each hook (failed).png",
+    "notes/API/menu/menu-sub-content.md",
+    "notes/API/menu/menu-sub-trigger.md",
+    "notes/API/menu/menu-sub.md",
+    "notes/API/menu/menu-arrow.md",
+    "notes/API/menu/menu-separator.md",
+    "notes/API/menu/menu-item-indicator.md",
+    "notes/API/menu/menu-radio-item.md",
+    "notes/API/menu/menu-radio-group.md",
+    "notes/API/menu/menu-checkbox-item.md",
+    "notes/API/menu/menu-item.md",
+    "notes/API/menu/menu-label.md",
+    "notes/API/menu/menu-group.md",
+    "notes/API/menu/menu-content.md",
+    "notes/API/menu/menu-portal.md",
+    "notes/API/menu/menu-anchor.md",
+    "notes/API/menu/menu.md",
+    "notes/API/password-toggle-field/password-toggle-field-icon.md",
+    "notes/API/password-toggle-field/password-toggle-field-slot.md",
+    "notes/API/password-toggle-field/password-toggle-field-toggle.md",
+    "notes/API/password-toggle-field/password-toggle-field-input.md",
+    "notes/API/password-toggle-field/password-toggle-field.md",
+    "notes/API/toast/toast-close.md",
     "reference_app/cypress/screenshots/checkbox.cy.js/Checkbox -- internal styles -- style attribute on CheckboxIndicator is forwarded to the inner span (failed).png",
-    "NOTES.md",
     "reference_app/cypress/screenshots/select-forced-open.cy.js/Select (forced open) -- internal styles -- SelectViewport (popper) has position relative and flex 1 (failed).png",
     "reference_app/cypress/screenshots/tabs.cy.js/Tabs -- internal styles -- tab content does not have inline animation-duration after mount (failed).png",
-    "reference_app/cypress/screenshots/tabs.cy.js/Tabs -- internal styles -- tab content does not have animation-duration 0s after mount (failed).png",
-    "reference_app/cypress/screenshots/context-menu.cy.js/Context Menu -- internal styles -- trigger has -webkit-touch-callout none in style attribute (failed).png",
-    "reference_app/cypress/screenshots/context-menu.cy.js/Context Menu -- internal styles -- trigger has WebkitTouchCallout style set (failed).png",
-    "reference_app/cypress/screenshots/context-menu.cy.js/Context Menu -- internal styles -- trigger has -webkit-touch-callout none via inline style (failed).png",
-    "reference_app/cypress/screenshots/context-menu.cy.js/Context Menu -- internal styles -- conflicting -webkit-touch-callout default does not override internal style (failed).png",
-    "reference_app/cypress/screenshots/dialog.cy.js/Dialog -- internal styles -- conflicting pointer-events none does not override internal style on overlay (failed).png",
-    "reference_app/cypress/screenshots/checkbox.cy.js/Checkbox -- internal styles -- conflicting pointer-events auto does not override internal style (failed).png",
-    "notes/leptos-slot.md",
-    "notes/leptos-one-time-password-field.md",
-    "target/doc/static.files/SourceSerif4-LICENSE-a2cfd9d5.md",
-    "notes/leptos-menubar.md",
-    "notes/api-comparison.md",
-    "packages/primitives/leptos-old/visually-hidden/README.md",
-    "packages/primitives/leptos-old/use-size/README.md",
-    "packages/primitives/leptos-old/use-previous/README.md",
-    "packages/primitives/leptos-old/use-escape-keydown/README.md",
-    "packages/primitives/leptos-old/use-controllable-state/README.md",
-    "packages/primitives/leptos-old/toggle/README.md",
-    "packages/primitives/leptos-old/switch/README.md",
-    "packages/primitives/leptos-old/separator/README.md",
-    "packages/primitives/leptos-old/roving-focus/README.md",
-    "packages/primitives/leptos-old/menu/README.md",
-    "packages/primitives/leptos-old/progress/README.md",
-    "packages/primitives/leptos-old/primitive/README.md",
-    "packages/primitives/leptos-old/presence/README.md",
-    "packages/primitives/leptos-old/portal/README.md",
-    "packages/primitives/leptos-old/popper/README.md",
-    "packages/primitives/leptos-old/label/README.md",
-    "packages/primitives/leptos-old/id/README.md",
-    "packages/primitives/leptos-old/direction/README.md",
-    "packages/primitives/leptos-old/focus-scope/README.md",
     "Untitled.canvas"
   ]
 }

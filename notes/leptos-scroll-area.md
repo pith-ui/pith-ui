@@ -118,7 +118,7 @@ pub use ScrollAreaCorner as Corner;
 - **State machine**: `use_scrollbar_state_machine()` with states `Hidden`/`Scrolling`/`Interacting`/`Idle` and events `Scroll`/`ScrollEnd`/`PointerEnter`/`PointerLeave`/`Hide`. Reuses the pattern from `presence/src/use_state_machine.rs`.
 - **ResizeObserver**: Helper `use_resize_observer` using `web_sys::ResizeObserver` with closure wrapped in `SendWrapper` and stored in `StoredValue` for cleanup.
 - **Debouncing**: Helper `use_debounce_callback` using `window.set_timeout` / `clear_timeout` with `StoredValue<i32>` for the timeout ID.
-- **Thumb positioning**: Pure functions `get_thumb_ratio`, `get_thumb_size` (min 18px), `get_scroll_position_from_pointer`, `get_thumb_offset_from_scroll`, `linear_scale`. Uses `radix_number::clamp`.
+- **Thumb positioning**: Pure functions `get_thumb_ratio`, `get_thumb_size` (min 18px), `get_scroll_position_from_pointer`, `get_thumb_offset_from_scroll`, `linear_scale`. Uses `cardo_ui_number::clamp`.
 - **Pointer capture**: `set_pointer_capture` / `release_pointer_capture` on scrollbar for drag-to-scroll. Saves/restores `document.body.style.webkitUserSelect` during drag.
 - **Wheel events**: Document-level `wheel` listener with `AddEventListenerOptions { passive: false }` to allow `preventDefault()` when wheeling over scrollbar.
 - **Thumb scroll tracking**: Uses `StoredValue<bool>` flag + `StoredValue<i32>` cancel ID with inline rAF loop for polling scroll position changes, rather than storing a cleanup function (avoids lifetime issues in `Fn` closures).

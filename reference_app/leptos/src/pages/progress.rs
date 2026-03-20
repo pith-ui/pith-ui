@@ -1,5 +1,5 @@
 use leptos::prelude::*;
-use radix_leptos_primitives::progress::*;
+use cardo_ui::progress::*;
 
 #[component]
 pub fn ProgressPage() -> impl IntoView {

@@ -1,7 +1,7 @@
 use std::rc::Rc;
 
 use leptos::prelude::*;
-use radix_leptos_primitives::form::*;
+use cardo_ui::form::*;
 
 stylance::import_crate_style!(form_classes, "src/primitives/form.stories.module.css");
 

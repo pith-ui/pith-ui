@@ -20,7 +20,7 @@ impl Framework for Leptos {
             //!\n\
             //! Radix Icons is a crisp set of 15x15 icons.\n\
             //!\n\
-            //! See [the Rust Radix book](https://radix.rustforweb.org/icons/index.html) for more documenation.\n\
+            //! See [the Cardo UI book](https://cardo-ui.dev/icons/index.html) for more documenation.\n\
             "
             .to_owned()
         )
@@ -107,7 +107,7 @@ impl Framework for Leptos {
 
         Ok(quote! {
             use leptos::prelude::*;
-            use radix_leptos_icons::*;
+            use cardo_ui_icons::*;
 
             #[component]
             pub fn Icons() -> impl IntoView {

@@ -119,7 +119,7 @@ Unlike React's two-file split (`radio-group.tsx` + `radio.tsx`), the Leptos port
 
 1. **Scoped context** (`__scopeRadioGroup`, `__scopeRadio`): Leptos uses `provide_context`/`expect_context` instead of React's `createContextScope`. No scope parameter is needed.
 
-2. **`composeRefs`/`useComposedRefs`**: Used via `radix-leptos-compose-refs::use_composed_refs` where multiple refs are needed (RadioGroupItem has local ref + forwarded ref, RadioIndicator has forwarded ref + presence ref).
+2. **`composeRefs`/`useComposedRefs`**: Used via `cardo-ui-compose-refs::use_composed_refs` where multiple refs are needed (RadioGroupItem has local ref + forwarded ref, RadioIndicator has forwarded ref + presence ref).
 
 3. **BubbleInput property descriptor trick**: The React impl uses `Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'checked')` to programmatically set `checked` via the native setter. In Leptos, we use `input.set_checked()` directly, which is equivalent (same as checkbox pattern).
 

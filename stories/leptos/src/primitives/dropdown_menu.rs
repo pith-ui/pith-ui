@@ -3,10 +3,10 @@ use std::rc::Rc;
 
 use leptos::prelude::*;
 use leptos_node_ref::AnyNodeRef;
-use radix_leptos_primitives::dialog::*;
-use radix_leptos_primitives::direction::{Direction, DirectionProvider};
-use radix_leptos_primitives::dropdown_menu::*;
-use radix_leptos_primitives::tooltip::*;
+use cardo_ui::dialog::*;
+use cardo_ui::direction::{Direction, DirectionProvider};
+use cardo_ui::dropdown_menu::*;
+use cardo_ui::tooltip::*;
 use send_wrapper::SendWrapper;
 use web_sys::wasm_bindgen::JsCast;
 

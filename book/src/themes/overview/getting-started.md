@@ -1,14 +1,14 @@
 # Getting Started
 
-Install Rust Radix Themes and start building in minutes.
+Install Cardo UI Themes and start building in minutes.
 
-Rust Radix Themes is a pre-styled component library that is designed to work out of the box with minimal configuration. If you are looking for the unstyled components, go to [Rust Radix Primitives](../../primitives/README.md).
+Cardo UI Themes is a pre-styled component library that is designed to work out of the box with minimal configuration. If you are looking for the unstyled components, go to [Cardo UI Primitives](../../primitives/README.md).
 
 ## Installation
 
 Getting up and running is quick and easy.
 
-### 1. Install Rust Radix Themes
+### 1. Install Cardo UI Themes
 
 Install the package from your command line.
 
@@ -21,7 +21,7 @@ cargo add radix-yew-themes
 
 -   [View on crates.io](https://crates.io/crates/radix-yew-themes)
 -   [View on docs.rs](https://docs.rs/radix-yew-themes/latest/radix_yew_themes/)
--   [View source](https://github.com/RustForWeb/radix/tree/main/packages/themes/yew)
+-   [View source](https://github.com/cardo-ui/cardo-ui/tree/main/packages/themes/yew)
 
 {{#endtab }}
 {{#endtabs }}
@@ -58,7 +58,7 @@ pub fn Root() -> Html {
 
 ### 4. Start building
 
-You are now ready to use Rust Radix Themes components.
+You are now ready to use Cardo UI Themes components.
 
 {{#tabs global="framework" }}
 {{#tab name="Yew" }}
@@ -71,7 +71,7 @@ use yew::prelude::*;
 pub fn MyApp() -> Html {
     html! {
         <Flex direction={FlexDirection::Column} gap=2>
-            <Text>{"Hello from Rust Radix Themes :)"}</Text>
+            <Text>{"Hello from Cardo UI Themes :)"}</Text>
             <Button>{"Let's go"}</Button>
         </Flex>
     }

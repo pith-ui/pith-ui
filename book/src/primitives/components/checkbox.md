@@ -12,7 +12,7 @@ This component is not yet updated to Leptos 0.7+.
 </div>
 
 <!-- ```toml,trunk
-package = "radix-leptos-book-primitives"
+package = "cardo-ui-book-primitives"
 features = ["checkbox"]
 files = ["src/checkbox.rs"]
 ``` -->
@@ -43,12 +43,12 @@ Install the component from your command line.
 {{#tab name="Leptos" }}
 
 ```shell
-cargo add radix-leptos-checkbox
+cargo add cardo-ui-checkbox
 ```
 
--   [View on crates.io](https://crates.io/crates/radix-leptos-checkbox)
--   [View on docs.rs](https://docs.rs/radix-leptos-checkbox/latest/radix_leptos_checkbox/)
--   [View source](https://github.com/RustForWeb/radix/tree/main/packages/primitives/leptos/checkbox)
+-   [View on crates.io](https://crates.io/crates/cardo-ui-checkbox)
+-   [View on docs.rs](https://docs.rs/cardo-ui-checkbox/latest/cardo_ui_checkbox/)
+-   [View source](https://github.com/cardo-ui/cardo-ui/tree/main/packages/primitives/leptos/checkbox)
 
 {{#endtab }}
 {{#tab name="Yew" }}
@@ -59,7 +59,7 @@ cargo add radix-yew-checkbox
 
 -   [View on crates.io](https://crates.io/crates/radix-yew-checkbox)
 -   [View on docs.rs](https://docs.rs/radix-yew-checkbox/latest/radix_yew_checkbox/)
--   [View source](https://github.com/RustForWeb/radix/tree/main/packages/primitives/yew/checkbox)
+-   [View source](https://github.com/cardo-ui/cardo-ui/tree/main/packages/primitives/yew/checkbox)
 
 {{#endtab }}
 {{#endtabs }}
@@ -73,7 +73,7 @@ Import all parts and piece them together.
 
 ```rust,ignore
 use leptos::*;
-use radix_leptos_checkbox::*;
+use cardo_ui_checkbox::*;
 
 #[component]
 fn Anatomy() -> impl IntoView {

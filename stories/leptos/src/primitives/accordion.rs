@@ -1,5 +1,5 @@
 use leptos::prelude::*;
-use radix_leptos_primitives::accordion::*;
+use cardo_ui::accordion::*;
 use web_sys::wasm_bindgen::{JsCast, closure::Closure};
 
 stylance::import_crate_style!(

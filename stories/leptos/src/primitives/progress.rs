@@ -1,5 +1,5 @@
 use leptos::prelude::*;
-use radix_leptos_primitives::progress::*;
+use cardo_ui::progress::*;
 
 stylance::import_crate_style!(classes, "src/primitives/progress.stories.module.css");
 

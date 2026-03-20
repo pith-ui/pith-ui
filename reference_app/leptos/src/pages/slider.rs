@@ -1,5 +1,5 @@
 use leptos::prelude::*;
-use radix_leptos_primitives::slider::*;
+use cardo_ui::slider::*;
 
 #[component]
 pub fn SliderPage() -> impl IntoView {

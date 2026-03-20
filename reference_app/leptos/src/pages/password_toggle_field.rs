@@ -1,6 +1,6 @@
 use leptos::prelude::*;
-use radix_leptos_primitives::icons::{EyeClosedIcon, EyeOpenIcon};
-use radix_leptos_primitives::password_toggle_field::*;
+use cardo_ui::icons::{EyeClosedIcon, EyeOpenIcon};
+use cardo_ui::password_toggle_field::*;
 
 fn eye_open_icon() -> impl IntoView {
     view! { <EyeOpenIcon attr:data-testid="eye-open" /> }

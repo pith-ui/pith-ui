@@ -56,4 +56,4 @@ pub enum CheckedState { False, True, Indeterminate }
 - `BubbleInput` dispatches a `click` event with `web_sys::EventInit` — simpler than React's property descriptor approach.
 - `CheckboxIndicator` uses `Presence` for animation support with `force_mount` option.
 - Uses old Leptos API — needs migration.
-- Dependencies: `leptos`, `radix-leptos-compose-refs`, `radix-leptos-presence`, `radix-leptos-use-controllable-state`, `radix-leptos-use-previous`, `radix-leptos-use-size`, `web-sys`.
+- Dependencies: `leptos`, `cardo-ui-compose-refs`, `cardo-ui-presence`, `cardo-ui-use-controllable-state`, `cardo-ui-use-previous`, `cardo-ui-use-size`, `web-sys`.

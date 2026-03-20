@@ -68,4 +68,4 @@ Props mirror React: `value: Vec<f64>`, `default_value: Vec<f64>`, `on_value_chan
 - **`update_values` closure**: Stored as `StoredValue<SendWrapper<dyn Fn(f64, usize, bool)>>` to share across pointer event handlers without lifetime issues.
 - **`values_before_slide_start`**: Stored as `StoredValue<Vec<f64>>` for snapshotting values at pointer-down.
 - **Thumb positioning**: Uses `style=wrapper_style` closure on the `<span>` wrapper (rather than `attr:style`) because Leptos view macro doesn't support `attr:style` on plain HTML elements cleanly.
-- **`compose_callbacks`**: Used from `radix-leptos-primitive` for composing user-provided event handlers with internal handlers on `SliderImpl`.
+- **`compose_callbacks`**: Used from `cardo-ui-primitive` for composing user-provided event handlers with internal handlers on `SliderImpl`.

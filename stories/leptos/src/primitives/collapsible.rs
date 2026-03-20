@@ -1,5 +1,5 @@
 use leptos::prelude::*;
-use radix_leptos_primitives::collapsible::*;
+use cardo_ui::collapsible::*;
 
 stylance::import_crate_style!(classes, "src/primitives/collapsible.stories.module.css");
 

@@ -9,7 +9,7 @@
 // 2. Without viewport (if possible) — attrs spread directly via {..attrs}
 
 use leptos::prelude::*;
-use radix_leptos_primitives::navigation_menu::*;
+use cardo_ui::navigation_menu::*;
 
 #[component]
 pub fn NavMenuReactiveAttrsPage() -> impl IntoView {

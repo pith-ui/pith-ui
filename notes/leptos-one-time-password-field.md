@@ -108,7 +108,7 @@ pub enum AutoComplete { Off, OneTimeCode (default) }
 
 ### Roving Focus Context Exposure
 
-The React component uses a render callback from `RovingFocusGroup.Item` to receive `hasTabStop` and `isCurrentTabStop` — used to determine which input gets `autocomplete="one-time-code"` vs password manager ignore attributes. To support this in Leptos, two public context types were added to `radix-leptos-roving-focus`:
+The React component uses a render callback from `RovingFocusGroup.Item` to receive `hasTabStop` and `isCurrentTabStop` — used to determine which input gets `autocomplete="one-time-code"` vs password manager ignore attributes. To support this in Leptos, two public context types were added to `cardo-ui-roving-focus`:
 - `RovingFocusGroupContext { has_tab_stop: Signal<bool> }` — provided by `RovingFocusGroupImpl`
 - `RovingFocusGroupItemContext { is_current_tab_stop: Signal<bool> }` — provided by `RovingFocusGroupItem`
 

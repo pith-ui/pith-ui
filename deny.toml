@@ -33,4 +33,4 @@ unknown-git = "deny"
 unknown-registry = "deny"
 
 [sources.allow-org]
-github = ["RustForWeb"]
+github = ["cardo-ui"]

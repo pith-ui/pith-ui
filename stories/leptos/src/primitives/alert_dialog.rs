@@ -1,5 +1,5 @@
 use leptos::prelude::*;
-use radix_leptos_primitives::alert_dialog::*;
+use cardo_ui::alert_dialog::*;
 
 stylance::import_crate_style!(classes, "src/primitives/alert_dialog.stories.module.css");
 

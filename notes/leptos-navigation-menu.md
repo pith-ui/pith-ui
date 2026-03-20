@@ -170,7 +170,7 @@ pub fn NavigationMenuViewport(
 
 4. **`useCallback` / `useMemo` wrapping** — React uses these to memoize event handlers and derived values. In Leptos, closures captured in signals and `Memo::new` provide equivalent reactivity without explicit memoization wrappers.
 
-5. **`core-primitive` dependency** — The React source imports from `@radix-ui/primitive` for `composeEventHandlers`. In Leptos, `compose_callbacks` from `radix-leptos-primitive` serves the same purpose, so no separate `core-primitive` dependency is needed.
+5. **`core-primitive` dependency** — The React source imports from `@radix-ui/primitive` for `composeEventHandlers`. In Leptos, `compose_callbacks` from `cardo-ui-primitive` serves the same purpose, so no separate `core-primitive` dependency is needed.
 
 6. **`use-callback-ref` dependency** — Not needed per omission #1.
 
@@ -182,7 +182,7 @@ pub fn NavigationMenuViewport(
 
 3. **Viewport content registration**: `ContentData` struct holds all props needed to render `NavigationMenuContentImpl` inside the viewport. Children are stored as `StoredValue<Option<ChildrenFn>>`. A `ViewportContentMounter` component (renders no DOM) registers/unregisters content data in the viewport content map via effects.
 
-4. **Indicator positioning**: Uses `Portal` component from `radix-leptos-portal` with `mount` prop targeting the indicator track `RwSignal<Option<SendWrapper<HtmlElement>>>`. The indicator impl uses `use_resize_observer` on both the active trigger and track to compute position.
+4. **Indicator positioning**: Uses `Portal` component from `cardo-ui-portal` with `mount` prop targeting the indicator track `RwSignal<Option<SendWrapper<HtmlElement>>>`. The indicator impl uses `use_resize_observer` on both the active trigger and track to compute position.
 
 5. **`SendWrapper` usage**: Web API types (`HtmlElement`, `ResizeObserver`, event handler `Closure`s) are not `Send`/`Sync` but need to be stored in Leptos signals. Wrapped in `SendWrapper` where needed (e.g., `RwSignal<Option<SendWrapper<HtmlElement>>>` for DOM element refs, `StoredValue<Option<SendWrapper<ResizeObserver>>>` for observer cleanup).
 

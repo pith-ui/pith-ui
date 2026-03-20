@@ -1,5 +1,5 @@
 [package]
-name = "radix-leptos-stories"
+name = "cardo-ui-stories"
 description = "Stories for Radix Leptos."
 publish = false
 
@@ -17,7 +17,7 @@ leptos = { workspace = true, features = ["csr"] }
 leptos-node-ref.workspace = true
 leptos_router.workspace = true
 log.workspace = true
-radix-leptos-primitives = { workspace = true, features = ["all", "internals"] }
+cardo-ui = { workspace = true, features = ["all", "internals"] }
 send_wrapper.workspace = true
 tailwind_fuse.workspace = true
 wasm-bindgen = "0.2"

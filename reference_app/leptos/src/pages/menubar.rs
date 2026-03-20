@@ -1,6 +1,6 @@
 use leptos::prelude::*;
-use radix_leptos_primitives::direction::{Direction, DirectionProvider};
-use radix_leptos_primitives::menubar::*;
+use cardo_ui::direction::{Direction, DirectionProvider};
+use cardo_ui::menubar::*;
 
 #[component]
 pub fn MenubarPage() -> impl IntoView {

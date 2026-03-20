@@ -1,6 +1,6 @@
 use leptos::prelude::*;
-use radix_leptos_primitives::one_time_password_field::*;
-use radix_leptos_primitives::roving_focus::Orientation;
+use cardo_ui::one_time_password_field::*;
+use cardo_ui::roving_focus::Orientation;
 
 #[component]
 pub fn OneTimePasswordFieldPage() -> impl IntoView {

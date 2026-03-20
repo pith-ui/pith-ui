@@ -47,4 +47,4 @@ Very similar to Checkbox but boolean-only (no indeterminate state).
 - Nearly identical structure to Checkbox, minus indeterminate state handling.
 - `BubbleInput` is the same pattern: hidden `<input>`, dispatches `click` event on change.
 - Uses old Leptos API — needs migration.
-- Dependencies: `leptos`, `radix-leptos-compose-refs`, `radix-leptos-use-controllable-state`, `radix-leptos-use-previous`, `radix-leptos-use-size`, `web-sys`.
+- Dependencies: `leptos`, `cardo-ui-compose-refs`, `cardo-ui-use-controllable-state`, `cardo-ui-use-previous`, `cardo-ui-use-size`, `web-sys`.

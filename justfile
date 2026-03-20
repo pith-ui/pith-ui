@@ -2,7 +2,7 @@
 
 # Run all unit tests for leptos primitives
 test_leptos_unit:
-    cargo test -p radix-leptos-primitives --all-features --locked --release
+    cargo test -p cardo-ui --all-features --locked --release
 
 # Run all wasm-bindgen tests for leptos primitives (headless Chrome)
 test_leptos_wasm:

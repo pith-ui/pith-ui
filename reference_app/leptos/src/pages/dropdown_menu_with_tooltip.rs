@@ -1,6 +1,6 @@
 use leptos::prelude::*;
-use radix_leptos_primitives::dropdown_menu::*;
-use radix_leptos_primitives::tooltip::*;
+use cardo_ui::dropdown_menu::*;
+use cardo_ui::tooltip::*;
 
 #[component]
 pub fn DropdownMenuWithTooltipPage() -> impl IntoView {

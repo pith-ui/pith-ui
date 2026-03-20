@@ -1,7 +1,7 @@
 # Pre-launch (code)
-- [ ] Public API audit (what's pub that shouldn't be?)
-- [ ] Add doc comments to public API
-- [ ] Decide which crates to publish (and dependency structure for users)
+- [x] Public API audit (what's pub that shouldn't be?)
+- [x] Add doc comments to public API
+- [x] Decide which crates to publish (and dependency structure for users)
 
 # Pre-launch (infra)
 - [ ] Decide: GitHub (recommended)

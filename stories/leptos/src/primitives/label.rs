@@ -1,5 +1,5 @@
 use leptos::prelude::*;
-use radix_leptos_primitives::label::*;
+use cardo_ui::label::*;
 
 stylance::import_crate_style!(label_classes, "src/primitives/label.stories.module.css");
 

@@ -55,4 +55,4 @@ fn Toggle(
 - Uses `AttributeInterceptor` + `{..attrs}` pattern for attribute forwarding (Leptos 0.8).
 - Uses `TypedChildrenFn` + `StoredValue` for children (Leptos 0.8).
 - Uses `AnyNodeRef` from `leptos-node-ref` instead of `NodeRef<AnyElement>`.
-- Dependencies: `leptos`, `leptos-node-ref`, `radix-leptos-primitive`, `radix-leptos-use-controllable-state`.
+- Dependencies: `leptos`, `leptos-node-ref`, `cardo-ui-primitive`, `cardo-ui-use-controllable-state`.

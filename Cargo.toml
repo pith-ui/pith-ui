@@ -10,10 +10,10 @@ members = [
 resolver = "2"
 
 [workspace.package]
-authors = ["Rust for Web <info@rustforweb.org>"]
+authors = ["Cardo UI Contributors"]
 edition = "2024"
 license = "MIT"
-repository = "https://github.com/RustForWeb/radix"
+repository = "https://github.com/cardo-ui/cardo-ui"
 version = "0.0.2"
 
 [workspace.dependencies]
@@ -27,7 +27,7 @@ leptos-typed-fallback-show = "0.2.0"
 leptos_dom = "0.8.0"
 leptos_router = "0.8.0"
 log = "0.4.22"
-radix-leptos-primitives = { path = "./packages/primitives/leptos", version = "0.0.2" }
+cardo-ui = { path = "./packages/primitives/leptos", version = "0.0.2" }
 send_wrapper = "0.6.0"
 serde = "1.0.198"
 serde_json = "1.0.116"

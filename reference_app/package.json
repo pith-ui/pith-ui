@@ -1,5 +1,5 @@
 {
-    "name": "@rustforweb/radix-reference-app",
+    "name": "@cardo-ui/reference-app",
     "description": "Cross-framework E2E testing harness for Radix Leptos.",
     "private": true,
     "scripts": {

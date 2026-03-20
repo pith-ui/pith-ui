@@ -55,7 +55,7 @@ Generic over `ItemData: Clone + Debug + PartialEq + Send + Sync + 'static`. Uses
 - **Omissions:**
   - `createCollectionScope` — React scoped context pattern not applicable in Leptos.
   - `Slot` component removed — Leptos 0.8 uses `add_any_attr` for ref/attribute merging.
-- Dependencies: `leptos`, `leptos-node-ref`, `nanoid`, `radix-leptos-compose-refs`, `send_wrapper`, `web-sys`.
+- Dependencies: `leptos`, `leptos-node-ref`, `nanoid`, `cardo-ui-compose-refs`, `send_wrapper`, `web-sys`.
 
 ### Review Notes
 

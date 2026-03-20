@@ -1,21 +1,21 @@
 <p align="center">
     <a href="../../../logo.svg">
-        <img src="../../../logo.svg" width="300" height="200" alt="Rust Radix Logo">
+        <img src="../../../logo.svg" width="300" height="200" alt="Cardo UI Logo">
     </a>
 </p>
 
-<h1 align="center">radix-leptos-icons</h1>
+<h1 align="center">cardo-ui-icons</h1>
 
 Radix Icons is a crisp set of 15x15 icons.
 
-[Rust Radix](https://github.com/RustForWeb/radix) is a Rust port of [Radix](https://www.radix-ui.com/primitives).
+[Cardo UI](https://github.com/cardo-ui/cardo-ui) is a Rust port of [Radix](https://www.radix-ui.com/primitives).
 
 ## Documentation
 
-See [the Rust Radix book](https://radix.rustforweb.org/) for documentation.
+See [the Cardo UI book](https://cardo-ui.dev/) for documentation.
 
 ## Rust for Web
 
-The Rust Radix project is part of [Rust for Web](https://github.com/RustForWeb).
 
-[Rust for Web](https://github.com/RustForWeb) creates and ports web libraries for Rust. All projects are free and open source.
+
+

@@ -98,7 +98,7 @@ pub fn TabsContent(
     children: Option<TypedChildrenFn<impl IntoView + 'static>>,
 ) -> impl IntoView
 
-pub use radix_leptos_roving_focus::Orientation;
+pub use cardo_ui_roving_focus::Orientation;
 
 pub enum ActivationMode { Automatic, Manual }
 ```
@@ -116,9 +116,9 @@ pub enum ActivationMode { Automatic, Manual }
 
 ## Leptos Implementation Notes
 
-- **Orientation re-export:** `Orientation` is re-exported from `radix_leptos_roving_focus` rather than defining a separate type. This avoids type conversion issues when passing orientation to `RovingFocusGroup`. Default horizontal is set in the component via `unwrap_or(Orientation::Horizontal)`.
+- **Orientation re-export:** `Orientation` is re-exported from `cardo_ui_roving_focus` rather than defining a separate type. This avoids type conversion issues when passing orientation to `RovingFocusGroup`. Default horizontal is set in the component via `unwrap_or(Orientation::Horizontal)`.
 - **Context scope:** React uses `createContextScope` for nesting isolation. The Leptos port uses `Provider` from `leptos::context`, following the same pattern as Accordion.
 - **Presence pattern:** `TabsContent` uses `Presence` with `present = force_mount || is_selected`. Since the Leptos `Presence` component uses `<Show>` (not a render prop like React), the `hidden` attribute from React's implementation is omitted — Presence handles mount/unmount directly. This matches the Collapsible pattern.
 - **Mount animation prevention:** Uses `RwSignal<bool>` + `requestAnimationFrame` to suppress animation on first mount. The initially-selected content gets `animation-duration: 0s` for one frame, then the style is removed.
-- **Event composition:** Uses `compose_callbacks` from `radix-leptos-primitive` to merge user-provided event handlers with internal handlers.
+- **Event composition:** Uses `compose_callbacks` from `cardo-ui-primitive` to merge user-provided event handlers with internal handlers.
 - **TabsContentImpl:** Separated from `TabsContent` so Presence can control its mount lifecycle, following the CollapsibleContentImpl pattern.
