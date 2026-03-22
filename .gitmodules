@@ -4,3 +4,6 @@
 [submodule "reference/base-ui"]
 	path = reference/base-ui
 	url = https://github.com/mui/base-ui.git
+[submodule "reference/shadcn-ui"]
+	path = reference/shadcn-ui
+	url = https://github.com/shadcn-ui/ui.git
