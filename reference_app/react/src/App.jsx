@@ -6,6 +6,7 @@ import AlertDialog from './pages/AlertDialog';
 import AspectRatio from './pages/AspectRatio';
 import Avatar from './pages/Avatar';
 import Checkbox from './pages/Checkbox';
+import Combobox from './pages/Combobox';
 import Collapsible from './pages/Collapsible';
 import ContextMenu from './pages/ContextMenu';
 import Dialog from './pages/Dialog';
@@ -56,6 +57,9 @@ function Index() {
                     </li>
                     <li>
                         <Link to="/checkbox">Checkbox</Link>
+                    </li>
+                    <li>
+                        <Link to="/combobox">Combobox</Link>
                     </li>
                     <li>
                         <Link to="/collapsible">Collapsible</Link>
@@ -155,6 +159,7 @@ export default function App() {
             <Route path="/aspect-ratio" element={<AspectRatio />} />
             <Route path="/avatar" element={<Avatar />} />
             <Route path="/checkbox" element={<Checkbox />} />
+            <Route path="/combobox" element={<Combobox />} />
             <Route path="/collapsible" element={<Collapsible />} />
             <Route path="/context-menu" element={<ContextMenu />} />
             <Route path="/dialog" element={<Dialog />} />

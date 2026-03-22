@@ -7,7 +7,7 @@ use leptos_router::{
 
 use crate::primitives::{
     accessible_icon, accordion, alert_dialog, arrow, aspect_ratio, avatar, checkbox, collapsible,
-    collection, context_menu, dialog, dismissable_layer, dropdown_menu, focus_scope, form,
+    collection, combobox, context_menu, dialog, dismissable_layer, dropdown_menu, focus_scope, form,
     hover_card, label, menu, menubar, navigation_menu, one_time_password_field,
     password_toggle_field, popover, popper, portal, presence, progress, radio_group, roving_focus,
     scroll_area, select, separator, slider, switch, tabs, toast, toggle, toggle_group, toolbar,
@@ -196,6 +196,14 @@ fn EmbedApp() -> impl IntoView {
                     <Route path=path!("/collapsible/animated") view=collapsible::Animated />
                     <Route path=path!("/collapsible/animated-horizontal") view=collapsible::AnimatedHorizontal />
                     <Route path=path!("/collapsible/chromatic") view=collapsible::Chromatic />
+
+                    <Route path=path!("/combobox/styled") view=combobox::Styled />
+                    <Route path=path!("/combobox/with-groups") view=combobox::WithGroups />
+                    <Route path=path!("/combobox/multi-select") view=combobox::MultiSelect />
+                    <Route path=path!("/combobox/controlled") view=combobox::Controlled />
+                    <Route path=path!("/combobox/disabled") view=combobox::Disabled />
+                    <Route path=path!("/combobox/with-empty") view=combobox::WithEmpty />
+                    <Route path=path!("/combobox/with-clear") view=combobox::WithClear />
 
                     <Route path=path!("/context-menu/styled") view=context_menu::Styled />
                     <Route path=path!("/context-menu/modality") view=context_menu::Modality />
@@ -521,6 +529,15 @@ fn ShellApp() -> impl IntoView {
                             ("/collapsible/animated", "Animated"),
                             ("/collapsible/animated-horizontal", "Animated Horizontal"),
                             ("/collapsible/chromatic", "Chromatic"),
+                        ] />
+                        <NavSection title="Combobox" tested=false stories=vec![
+                            ("/combobox/styled", "Styled"),
+                            ("/combobox/with-groups", "With Groups"),
+                            ("/combobox/multi-select", "Multi-Select"),
+                            ("/combobox/controlled", "Controlled"),
+                            ("/combobox/disabled", "Disabled"),
+                            ("/combobox/with-empty", "With Empty"),
+                            ("/combobox/with-clear", "With Clear"),
                         ] />
                         <NavSection title="Context Menu" stories=vec![
                             ("/context-menu/styled", "Styled"),

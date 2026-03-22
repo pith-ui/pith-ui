@@ -107,6 +107,8 @@ pub use components::avatar;
 pub use components::checkbox;
 #[cfg(feature = "collapsible")]
 pub use components::collapsible;
+#[cfg(feature = "combobox")]
+pub use components::combobox;
 #[cfg(feature = "context-menu")]
 pub use components::context_menu;
 #[cfg(feature = "dialog")]

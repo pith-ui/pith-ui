@@ -19,6 +19,7 @@ all = [
     "checkbox",
     "collapsible",
     "colors",
+    "combobox",
     "context-menu",
     "dialog",
     "dropdown-menu",
@@ -67,6 +68,7 @@ aspect-ratio = []
 avatar = []
 checkbox = []
 collapsible = []
+combobox = []
 dialog = []
 hover-card = []
 label = []

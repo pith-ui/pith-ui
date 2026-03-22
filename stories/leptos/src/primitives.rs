@@ -6,6 +6,7 @@ pub mod aspect_ratio;
 pub mod avatar;
 pub mod checkbox;
 pub mod collapsible;
+pub mod combobox;
 pub mod collection;
 pub mod context_menu;
 pub mod dialog;

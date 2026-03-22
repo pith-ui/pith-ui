@@ -6,6 +6,7 @@ pub mod attr_forwarding;
 pub mod avatar;
 pub mod checkbox;
 pub mod collapsible;
+pub mod combobox;
 pub mod context_menu;
 pub mod dialog;
 pub mod dropdown_menu;
