@@ -82,7 +82,7 @@ pub fn ComboboxPage() -> impl IntoView {
                 <ComboboxInput
                     class:combobox-input=true
                     attr:data-testid="combobox-input"
-                    attr:placeholder="Search..."
+                    placeholder="Search..."
                 />
                 <ComboboxClear
                     class:combobox-clear=true
@@ -202,39 +202,31 @@ fn MultiSelectCombobox() -> impl IntoView {
             })
         >
             <ComboboxAnchor class:combobox-anchor=true attr:data-testid="multi-anchor">
-                <div class="combobox-chips" data-testid="multi-chips">
-                    <For
-                        each=move || values.get()
-                        key=|v| v.clone()
-                        let:val
-                    >
-                        {
-                            let val_clone = val.clone();
-                            let val_display = val.clone();
-                            let val_label = val.clone();
-                            view! {
-                                <span class="combobox-chip" data-testid="multi-chip">
-                                    {val_display}
-                                    <button
-                                        class="combobox-chip-remove"
-                                        data-testid="multi-chip-remove"
-                                        aria-label=format!("Remove {}", val_label)
-                                        on:click=move |_| {
-                                            let v = val_clone.clone();
-                                            set_values.update(|vals| vals.retain(|x| x != &v));
-                                        }
-                                    >
-                                        "✕"
-                                    </button>
-                                </span>
-                            }
+                <ComboboxChips attr:class="combobox-chips" attr:data-testid="multi-chips">
+                    {move || values.get().into_iter().enumerate().map(|(i, val)| {
+                        let val_display = StoredValue::new(val.clone());
+                        let val_remove = StoredValue::new(val.clone());
+                        view! {
+                            <ComboboxChip
+                                attr:class="combobox-chip"
+                                attr:data-testid="multi-chip"
+                                value=val
+                                index=i
+                            >
+                                {move || val_display.get_value()}
+                                <ComboboxChipRemove
+                                    attr:class="combobox-chip-remove"
+                                    attr:data-testid="multi-chip-remove"
+                                    value=val_remove.get_value()
+                                />
+                            </ComboboxChip>
                         }
-                    </For>
-                </div>
+                    }).collect_view()}
+                </ComboboxChips>
                 <ComboboxInput
                     class:combobox-input=true
                     attr:data-testid="multi-input"
-                    attr:placeholder="Search..."
+                    placeholder="Search..."
                 />
                 <ComboboxTrigger
                     class:combobox-trigger=true
@@ -310,7 +302,7 @@ fn DefaultValueCombobox() -> impl IntoView {
                 <ComboboxInput
                     class:combobox-input=true
                     attr:data-testid="default-input"
-                    attr:placeholder="Search..."
+                    placeholder="Search..."
                 />
                 <ComboboxTrigger
                     class:combobox-trigger=true

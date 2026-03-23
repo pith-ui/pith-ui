@@ -141,6 +141,7 @@ struct ComboboxContextValue {
     value: Signal<Option<String>>,
     values: Signal<Vec<String>>,
     on_value_change: Callback<String>,
+    on_values_change: Callback<Vec<String>>,
     input_value: Signal<String>,
     on_input_value_change: Callback<String>,
     open: Signal<bool>,
@@ -150,6 +151,9 @@ struct ComboboxContextValue {
     required: Signal<bool>,
     dir: Signal<Direction>,
     active_descendant_id: RwSignal<Option<String>>,
+    /// Index of the currently highlighted chip in multi-select mode.
+    /// `None` means no chip is highlighted (focus is on the input).
+    highlighted_chip_index: RwSignal<Option<usize>>,
     multiple: bool,
 }
 

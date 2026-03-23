@@ -32,6 +32,8 @@ pub fn ComboboxChips(
 #[component]
 pub fn ComboboxChip(
     #[prop(into)] value: String,
+    /// The index of this chip in the selected values list (for highlight tracking).
+    #[prop(into, optional)] index: MaybeProp<usize>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
     #[prop(optional)] children: Option<ChildrenFn>,
@@ -40,6 +42,11 @@ pub fn ComboboxChip(
 
     let context = expect_context::<ComboboxContextValue>();
     let _value = StoredValue::new(value);
+    let is_highlighted = Signal::derive(move || {
+        index.get().is_some_and(|i| {
+            context.highlighted_chip_index.get().is_some_and(|hi| hi == i)
+        })
+    });
 
     view! {
         <AttributeInterceptor let:attrs>
@@ -48,6 +55,7 @@ pub fn ComboboxChip(
                 as_child=as_child
                 node_ref=node_ref
                 attr:data-disabled=data_attr(context.disabled)
+                attr:data-highlighted=move || is_highlighted.get().then_some("")
                 {..attrs}
             >
                 {children.try_with_value(|children| children.as_ref().map(|c| c()))}
@@ -92,13 +100,6 @@ pub fn ComboboxChipRemove(
                     }
                     if !event.default_prevented() && !context.disabled.get_untracked() {
                         if let Some(val) = value.try_get_value() {
-                            // Remove this value from the multi-select list
-                            let mut current = context.values.get_untracked();
-                            current.retain(|v| v != &val);
-                            // We can't call set_values directly, so use on_value_change to toggle
-                            // Actually, for removal we need to call the toggle logic.
-                            // The on_value_change callback handles toggle, so calling it
-                            // with a value that's already in the list will remove it.
                             context.on_value_change.run(val);
                         }
                         // Focus the input
@@ -110,7 +111,9 @@ pub fn ComboboxChipRemove(
                 }
                 {..attrs}
             >
-                {children.try_with_value(|children| children.as_ref().map(|c| c()))}
+                {children.try_with_value(|children| {
+                    children.as_ref().map(|c| c()).unwrap_or_else(|| "\u{2715}".into_any())
+                })}
             </Primitive>
         </AttributeInterceptor>
     }

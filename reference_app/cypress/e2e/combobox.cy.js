@@ -351,8 +351,8 @@ describe('Combobox', () => {
             cy.findByRole('option', {name: 'Banana'}).click();
             cy.realPress('Escape');
             cy.get('[data-testid="multi-chip"]').should('have.length', 2);
-            // Remove Apple
-            cy.findByLabelText('Remove Apple').click();
+            // Remove first chip (Apple)
+            cy.get('[data-testid="multi-chip-remove"]').first().click();
             cy.get('[data-testid="multi-chip"]').should('have.length', 1);
             getMultiValue().should('not.contain.text', 'Apple');
             getMultiValue().should('contain.text', 'Banana');
@@ -370,6 +370,207 @@ describe('Combobox', () => {
             getMultiInput().click();
             multiShouldBeOpen();
             cy.findByRole('listbox').should('have.attr', 'aria-multiselectable', 'true');
+        });
+
+        it('Input text clears after selecting item in multi-select', () => {
+            // Open multi-select, select an item, verify input clears
+            getMultiInput().click();
+            multiShouldBeOpen();
+            cy.findByRole('option', {name: 'Apple'}).click();
+            getMultiValue().should('contain.text', 'Apple');
+            // Input should be cleared after selection in multi-select
+            getMultiInput().should('have.value', '');
+        });
+
+        it.skipForFramework('react', 'Base UI uses built-in chip backspace with different semantics')('Backspace removes last chip when input is empty', () => {
+            getMultiInput().click();
+            cy.findByRole('option', {name: 'Apple'}).click();
+            cy.findByRole('option', {name: 'Banana'}).click();
+            cy.realPress('Escape');
+            getMultiValue().should('contain.text', 'Apple');
+            getMultiValue().should('contain.text', 'Banana');
+            getMultiInput().focus();
+            // Single backspace removes last chip directly
+            cy.realPress('Backspace');
+            getMultiValue().should('contain.text', 'Apple');
+            getMultiValue().should('not.contain.text', 'Banana');
+        });
+
+        it('Tab away closes popup and clears input text', () => {
+            getMultiInput().focus();
+            cy.realType('kiwi');
+            multiShouldBeOpen();
+            cy.realPress('Tab');
+            multiShouldBeClosed();
+            getMultiInput().should('have.value', '');
+        });
+
+        it('Chip remove buttons are not in tab order', () => {
+            getMultiInput().click();
+            cy.findByRole('option', {name: 'Apple'}).click();
+            cy.findByRole('option', {name: 'Banana'}).click();
+            cy.realPress('Escape');
+            getMultiInput().should('be.focused');
+            // Tab should skip past chip remove buttons to the next external element
+            cy.realPress('Tab');
+            getMultiInput().should('not.be.focused');
+            // Should NOT be on a chip remove button
+            cy.focused().should('not.have.attr', 'data-testid', 'multi-chip-remove');
+        });
+
+        it.skipForFramework('react', 'React uses Base UI chip primitives with different highlight mechanism')('ArrowLeft loops through chips and back to input', () => {
+            getMultiInput().click();
+            cy.findByRole('option', {name: 'Apple'}).click();
+            cy.findByRole('option', {name: 'Banana'}).click();
+            cy.realPress('Escape');
+            getMultiInput().should('be.focused');
+            // ArrowLeft from input highlights last chip (Banana)
+            cy.realPress('ArrowLeft');
+            cy.get('[data-testid="multi-chip"]').last().should('have.attr', 'data-highlighted');
+            // ArrowLeft again highlights first chip (Apple)
+            cy.realPress('ArrowLeft');
+            cy.get('[data-testid="multi-chip"]').first().should('have.attr', 'data-highlighted');
+            // ArrowLeft from first chip loops back to input (no chip highlighted)
+            cy.realPress('ArrowLeft');
+            cy.get('[data-testid="multi-chip"]').filter('[data-highlighted]').should('have.length', 0);
+            // ArrowLeft again loops to last chip
+            cy.realPress('ArrowLeft');
+            cy.get('[data-testid="multi-chip"]').last().should('have.attr', 'data-highlighted');
+        });
+
+        it.skipForFramework('react', 'React uses Base UI chip primitives with different highlight mechanism')('ArrowRight is terminal at input', () => {
+            getMultiInput().click();
+            cy.findByRole('option', {name: 'Apple'}).click();
+            cy.findByRole('option', {name: 'Banana'}).click();
+            cy.realPress('Escape');
+            getMultiInput().should('be.focused');
+            // Navigate to last chip
+            cy.realPress('ArrowLeft');
+            cy.get('[data-testid="multi-chip"]').last().should('have.attr', 'data-highlighted');
+            // ArrowRight returns to input
+            cy.realPress('ArrowRight');
+            cy.get('[data-testid="multi-chip"]').filter('[data-highlighted]').should('have.length', 0);
+            // ArrowRight at input has no further effect (stays at input, no chips highlighted)
+            cy.realPress('ArrowRight');
+            cy.get('[data-testid="multi-chip"]').filter('[data-highlighted]').should('have.length', 0);
+        });
+
+        it('Enter selects item and keeps popup open in multi-select', () => {
+            getMultiInput().click();
+            multiShouldBeOpen();
+            cy.realPress('ArrowDown');
+            cy.realPress('Enter');
+            // Popup stays open for more selections
+            multiShouldBeOpen();
+            // Item should be selected
+            getMultiValue().should('not.have.text', '(none)');
+        });
+
+        it('Click on item adds it and keeps popup open in multi-select', () => {
+            getMultiInput().click();
+            multiShouldBeOpen();
+            cy.findByRole('option', {name: 'Apple'}).click();
+            // Popup stays open after click selection in multi-select
+            multiShouldBeOpen();
+            getMultiValue().should('contain.text', 'Apple');
+            // Can select another item
+            cy.findByRole('option', {name: 'Banana'}).click();
+            multiShouldBeOpen();
+            getMultiValue().should('contain.text', 'Apple');
+            getMultiValue().should('contain.text', 'Banana');
+        });
+
+        it.skipForFramework('react', 'React uses Base UI chip primitives with different highlight mechanism')('Placeholder hidden when items are selected', () => {
+            // Initially placeholder is present
+            getMultiInput().invoke('attr', 'placeholder').should('exist');
+            getMultiInput().click();
+            cy.findByRole('option', {name: 'Apple'}).click();
+            cy.realPress('Escape');
+            // Placeholder should be empty or absent when chips exist
+            getMultiInput().then(($input) => {
+                const placeholder = $input.attr('placeholder');
+                expect(!placeholder || placeholder === '').to.be.true;
+            });
+        });
+
+        it.skipForFramework('react', 'React uses Base UI chip primitives with different highlight mechanism')('ArrowLeft to chip clears input text and hides cursor', () => {
+            getMultiInput().click();
+            cy.findByRole('option', {name: 'Apple'}).click();
+            cy.realPress('Escape');
+            getMultiInput().should('be.focused');
+            // ArrowLeft from empty input to chip should set data-chip-highlighted
+            cy.realPress('ArrowLeft');
+            getMultiInput().should('have.attr', 'data-chip-highlighted');
+            // Return to input clears chip highlight
+            cy.realPress('ArrowRight');
+            getMultiInput().should('not.have.attr', 'data-chip-highlighted');
+        });
+
+        it.skipForFramework('react', 'React uses Base UI chip primitives with different highlight mechanism')('ArrowLeft to chip closes popup if open', () => {
+            getMultiInput().click();
+            cy.findByRole('option', {name: 'Apple'}).click();
+            // Popup is still open after click selection
+            multiShouldBeOpen();
+            // ArrowLeft moves to chip — popup should close
+            cy.realPress('ArrowLeft');
+            multiShouldBeClosed();
+            cy.get('[data-testid="multi-chip"]').last().should('have.attr', 'data-highlighted');
+        });
+
+        it.skipForFramework('react', 'React uses Base UI chip primitives with different highlight mechanism')('ArrowDown/Up from chip opens popup and returns focus to input', () => {
+            getMultiInput().click();
+            cy.findByRole('option', {name: 'Apple'}).click();
+            cy.realPress('Escape');
+            multiShouldBeClosed();
+            // Navigate to chip
+            cy.realPress('ArrowLeft');
+            cy.get('[data-testid="multi-chip"]').last().should('have.attr', 'data-highlighted');
+            // ArrowDown should open popup and clear chip highlight
+            cy.realPress('ArrowDown');
+            multiShouldBeOpen();
+            cy.get('[data-testid="multi-chip"]').filter('[data-highlighted]').should('have.length', 0);
+            // Close and navigate to chip again
+            cy.realPress('Escape');
+            cy.realPress('ArrowLeft');
+            cy.get('[data-testid="multi-chip"]').last().should('have.attr', 'data-highlighted');
+            // ArrowUp should also open popup and clear chip highlight
+            cy.realPress('ArrowUp');
+            multiShouldBeOpen();
+            cy.get('[data-testid="multi-chip"]').filter('[data-highlighted]').should('have.length', 0);
+        });
+
+        it('Enter in multi-select preserves highlight on selected item', () => {
+            getMultiInput().click();
+            multiShouldBeOpen();
+            cy.realPress('ArrowDown'); // highlight first item
+            cy.realPress('ArrowDown'); // highlight second item
+            // Get the highlighted item's aria id
+            getMultiInput().invoke('attr', 'aria-activedescendant').then((activeId) => {
+                expect(activeId).to.not.be.empty;
+                cy.realPress('Enter');
+                // Same item should still be highlighted after selection
+                getMultiInput().should('have.attr', 'aria-activedescendant', activeId);
+            });
+        });
+
+        it.skipForFramework('react', 'React uses Base UI chip primitives with different semantics')('Successive backspaces remove chips one at a time', () => {
+            getMultiInput().click();
+            cy.findByRole('option', {name: 'Apple'}).click();
+            cy.findByRole('option', {name: 'Banana'}).click();
+            cy.findByRole('option', {name: 'Grape'}).click();
+            cy.realPress('Escape');
+            getMultiInput().should('be.focused');
+            getMultiInput().should('have.value', '');
+            cy.get('[data-testid="multi-chip"]').should('have.length', 3);
+            // First backspace removes Grape (last)
+            cy.realPress('Backspace');
+            cy.get('[data-testid="multi-chip"]').should('have.length', 2);
+            getMultiValue().should('not.contain.text', 'Grape');
+            // Second backspace removes Banana
+            cy.realPress('Backspace');
+            cy.get('[data-testid="multi-chip"]').should('have.length', 1);
+            getMultiValue().should('not.contain.text', 'Banana');
+            getMultiValue().should('contain.text', 'Apple');
         });
     });
 });

@@ -163,26 +163,27 @@ function MultiSelectCombobox() {
                 items={filteredItems}
             >
                 <div className="combobox-anchor" data-testid="multi-anchor">
-                    <div className="combobox-chips" data-testid="multi-chips">
-                        {values.map((val) => (
-                            <span key={val} className="combobox-chip" data-testid="multi-chip">
-                                {val}
-                                <button
-                                    className="combobox-chip-remove"
-                                    data-testid="multi-chip-remove"
-                                    aria-label={`Remove ${val}`}
-                                    onClick={() => setValues(values.filter((v) => v !== val))}
-                                >
-                                    ✕
-                                </button>
-                            </span>
-                        ))}
-                    </div>
-                    <Combobox.Input
-                        className="combobox-input"
-                        data-testid="multi-input"
-                        placeholder="Search..."
-                    />
+                    <Combobox.Chips className="combobox-chips" data-testid="multi-chips">
+                        <Combobox.Value>
+                            {(selected) => (
+                                <>
+                                    {selected.map((val) => (
+                                        <Combobox.Chip key={val} className="combobox-chip" data-testid="multi-chip" aria-label={val}>
+                                            {val}
+                                            <Combobox.ChipRemove className="combobox-chip-remove" data-testid="multi-chip-remove" aria-label="Remove">
+                                                ✕
+                                            </Combobox.ChipRemove>
+                                        </Combobox.Chip>
+                                    ))}
+                                    <Combobox.Input
+                                        className="combobox-input"
+                                        data-testid="multi-input"
+                                        placeholder={selected.length > 0 ? '' : 'Search...'}
+                                    />
+                                </>
+                            )}
+                        </Combobox.Value>
+                    </Combobox.Chips>
                     <Combobox.Trigger className="combobox-trigger" data-testid="multi-trigger" aria-label="Toggle">
                         ▼
                     </Combobox.Trigger>

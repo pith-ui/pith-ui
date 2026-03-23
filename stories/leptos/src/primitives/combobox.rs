@@ -1,15 +1,34 @@
-use leptos::prelude::*;
 use cardo_ui::combobox::*;
+use leptos::prelude::*;
 
 stylance::import_crate_style!(classes, "src/primitives/combobox.stories.module.css");
 
 const FRUITS: &[&str] = &[
-    "Apple", "Avocado", "Banana", "Blueberry", "Cherry", "Grape",
-    "Kiwi", "Lemon", "Mango", "Orange", "Peach", "Pear", "Strawberry",
+    "Apple",
+    "Avocado",
+    "Banana",
+    "Blueberry",
+    "Cherry",
+    "Grape",
+    "Kiwi",
+    "Lemon",
+    "Mango",
+    "Orange",
+    "Peach",
+    "Pear",
+    "Strawberry",
 ];
 const VEGETABLES: &[&str] = &[
-    "Artichoke", "Broccoli", "Carrot", "Celery", "Eggplant",
-    "Lettuce", "Potato", "Spinach", "Tomato", "Zucchini",
+    "Artichoke",
+    "Broccoli",
+    "Carrot",
+    "Celery",
+    "Eggplant",
+    "Lettuce",
+    "Potato",
+    "Spinach",
+    "Tomato",
+    "Zucchini",
 ];
 
 fn filter(items: &[&str], query: &str) -> Vec<String> {
@@ -17,7 +36,11 @@ fn filter(items: &[&str], query: &str) -> Vec<String> {
         items.iter().map(|s| s.to_string()).collect()
     } else {
         let q = query.to_lowercase();
-        items.iter().filter(|i| i.to_lowercase().contains(&q)).map(|s| s.to_string()).collect()
+        items
+            .iter()
+            .filter(|i| i.to_lowercase().contains(&q))
+            .map(|s| s.to_string())
+            .collect()
     }
 }
 
@@ -69,7 +92,7 @@ pub fn Styled() -> impl IntoView {
                 on_input_value_change=Callback::new(move |v: String| set_input_value.set(v))
             >
                 <ComboboxAnchor attr:class=classes::anchor>
-                    <ComboboxInput attr:class=classes::input attr:placeholder="Select a fruit..." />
+                    <ComboboxInput attr:class=classes::input placeholder="Select a fruit..." />
                     <ComboboxClear attr:class=classes::clear attr:aria-label="Clear">"✕"</ComboboxClear>
                     <ComboboxTrigger attr:class=classes::trigger attr:aria-label="Toggle">
                         <ComboboxIcon />
@@ -121,7 +144,7 @@ pub fn WithGroups() -> impl IntoView {
                 on_input_value_change=Callback::new(move |v: String| set_input_value.set(v))
             >
                 <ComboboxAnchor attr:class=classes::anchor>
-                    <ComboboxInput attr:class=classes::input attr:placeholder="Search produce..." />
+                    <ComboboxInput attr:class=classes::input placeholder="Search produce..." />
                     <ComboboxTrigger attr:class=classes::trigger attr:aria-label="Toggle">
                         <ComboboxIcon />
                     </ComboboxTrigger>
@@ -176,7 +199,9 @@ pub fn MultiSelect() -> impl IntoView {
     let all_items: Vec<&str> = FRUITS.iter().chain(VEGETABLES.iter()).copied().collect();
     let all_items = StoredValue::new(all_items);
     let filtered = Memo::new(move |_| {
-        all_items.try_with_value(|items| filter(items, &input_value.get())).unwrap_or_default()
+        all_items
+            .try_with_value(|items| filter(items, &input_value.get()))
+            .unwrap_or_default()
     });
 
     view! {
@@ -190,29 +215,22 @@ pub fn MultiSelect() -> impl IntoView {
                 on_input_value_change=Callback::new(move |v: String| set_input_value.set(v))
             >
                 <ComboboxAnchor attr:class=classes::anchor>
-                    <div class=classes::chips>
-                        {move || values.get().into_iter().map(|val| {
+                    <ComboboxChips attr:class=classes::chips>
+                        {move || values.get().into_iter().enumerate().map(|(i, val)| {
                             let val_display = StoredValue::new(val.clone());
-                            let val_remove = val.clone();
+                            let val_remove = StoredValue::new(val.clone());
                             view! {
-                                <span class=classes::chip>
+                                <ComboboxChip attr:class=classes::chip value=val index=i>
                                     {move || val_display.get_value()}
-                                    <button
-                                        class=classes::chipRemove
-                                        aria-label=format!("Remove {}", val_remove)
-                                        on:click={
-                                            let v = val_remove.clone();
-                                            move |_| {
-                                                let v = v.clone();
-                                                set_values.update(|vals| vals.retain(|x| x != &v));
-                                            }
-                                        }
-                                    >"✕"</button>
-                                </span>
+                                    <ComboboxChipRemove
+                                        attr:class=classes::chipRemove
+                                        value=val_remove.get_value()
+                                    />
+                                </ComboboxChip>
                             }
                         }).collect_view()}
-                    </div>
-                    <ComboboxInput attr:class=classes::input attr:placeholder="Search..." />
+                    </ComboboxChips>
+                    <ComboboxInput attr:class=classes::input placeholder="Search..." />
                     <ComboboxTrigger attr:class=classes::trigger attr:aria-label="Toggle">
                         <ComboboxIcon />
                     </ComboboxTrigger>
@@ -237,6 +255,11 @@ pub fn MultiSelect() -> impl IntoView {
                 let v = values.get();
                 if v.is_empty() { "(none)".to_string() } else { v.join(", ") }
             }}</p>
+            <div style="display: flex; gap: 8px; margin-top: 8px;">
+                <button>"Before"</button>
+                <input placeholder="Tab target" style="padding: 4px 8px;" />
+                <button>"After"</button>
+            </div>
         </div>
     }
 }
@@ -279,7 +302,7 @@ pub fn Controlled() -> impl IntoView {
                 on_input_value_change=Callback::new(move |v: String| set_input_value.set(v))
             >
                 <ComboboxAnchor attr:class=classes::anchor>
-                    <ComboboxInput attr:class=classes::input attr:placeholder="Select a fruit..." />
+                    <ComboboxInput attr:class=classes::input placeholder="Select a fruit..." />
                     <ComboboxTrigger attr:class=classes::trigger attr:aria-label="Toggle">
                         <ComboboxIcon />
                     </ComboboxTrigger>
@@ -308,7 +331,7 @@ pub fn Disabled() -> impl IntoView {
             <h2>"Disabled"</h2>
             <Combobox disabled=true>
                 <ComboboxAnchor attr:class=classes::anchor>
-                    <ComboboxInput attr:class=classes::input attr:placeholder="Cannot interact..." />
+                    <ComboboxInput attr:class=classes::input placeholder="Cannot interact..." />
                     <ComboboxTrigger attr:class=classes::trigger attr:aria-label="Toggle">
                         <ComboboxIcon />
                     </ComboboxTrigger>
@@ -344,7 +367,7 @@ pub fn WithEmpty() -> impl IntoView {
                 on_input_value_change=Callback::new(move |v: String| set_input_value.set(v))
             >
                 <ComboboxAnchor attr:class=classes::anchor>
-                    <ComboboxInput attr:class=classes::input attr:placeholder="Type to search..." />
+                    <ComboboxInput attr:class=classes::input placeholder="Type to search..." />
                     <ComboboxClear attr:class=classes::clear attr:aria-label="Clear">"✕"</ComboboxClear>
                     <ComboboxTrigger attr:class=classes::trigger attr:aria-label="Toggle">
                         <ComboboxIcon />
@@ -394,7 +417,7 @@ pub fn WithClear() -> impl IntoView {
                 on_input_value_change=Callback::new(move |v: String| set_input_value.set(v))
             >
                 <ComboboxAnchor attr:class=classes::anchor>
-                    <ComboboxInput attr:class=classes::input attr:placeholder="Select a fruit..." />
+                    <ComboboxInput attr:class=classes::input placeholder="Select a fruit..." />
                     <ComboboxClear attr:class=classes::clear attr:aria-label="Clear">"✕"</ComboboxClear>
                     <ComboboxTrigger attr:class=classes::trigger attr:aria-label="Toggle">
                         <ComboboxIcon />

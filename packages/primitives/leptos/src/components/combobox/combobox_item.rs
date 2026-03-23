@@ -50,7 +50,10 @@ pub fn ComboboxItem(
             && let Some(val) = value.try_get_value()
         {
             context.on_value_change.run(val.clone());
-            if !context.multiple {
+            if context.multiple {
+                // Clear input text after multi-select
+                context.on_input_value_change.run(String::new());
+            } else {
                 // Defer the close to next task so reactive effects can settle
                 let cb = wasm_bindgen::closure::Closure::once_into_js(move || {
                     context.on_open_change.run(false);
@@ -122,6 +125,12 @@ pub fn ComboboxItem(
                             attr:data-highlighted=move || is_highlighted.get().then_some("")
                             attr:aria-disabled=move || disabled.get().then_some("true".to_string())
                             attr:data-disabled=data_attr(disabled)
+                            on:pointerdown=move |event: ev::PointerEvent| {
+                                // Prevent default to stop the input from losing focus when
+                                // clicking items. This is critical for multi-select where
+                                // the popup must stay open and the blur handler must not fire.
+                                event.prevent_default();
+                            }
                             on:click=move |event: ev::MouseEvent| {
                                 if let Some(Some(cb)) = on_click_stored.try_get_value() {
                                     cb.run(event.clone());
