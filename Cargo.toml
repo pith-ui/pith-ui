@@ -6,7 +6,7 @@ members = [
     "reference_app/leptos",
     "reference_experiments/leptos",
     "scripts",
-    "stories/*",
+    "stories/leptos",
 ]
 resolver = "2"
 
