@@ -51,13 +51,11 @@ pub fn ComboboxItem(
         {
             context.on_value_change.run(val.clone());
             if context.multiple {
-                // Clear input text after multi-select
                 context.on_input_value_change.run(String::new());
             } else {
                 // Defer the close to next task so reactive effects can settle
                 let cb = wasm_bindgen::closure::Closure::once_into_js(move || {
-                    context.on_open_change.run(false);
-                    context.active_descendant_id.set(None);
+                    context.dismiss();
                 });
                 web_sys::window()
                     .expect("Window should exist.")
@@ -66,11 +64,7 @@ pub fn ComboboxItem(
                 // Set input text to selected item's text
                 context.on_input_value_change.run(text_value_state.get_untracked());
             }
-            // Return focus to the input after selection
-            if let Some(input_el) = context.input_ref.get_untracked() {
-                let el: &web_sys::HtmlElement = (*input_el).unchecked_ref();
-                let _ = el.focus();
-            }
+            context.focus_input();
         }
     };
 
@@ -89,83 +83,79 @@ pub fn ComboboxItem(
         disabled: disabled.get_untracked(),
         text_id,
         is_selected,
+        on_item_text_change,
     };
 
     let on_click_stored = StoredValue::new(on_click);
     let on_pointer_move_stored = StoredValue::new(on_pointer_move);
     let on_pointer_leave_stored = StoredValue::new(on_pointer_leave);
 
-    // Provide the text change callback separately so ComboboxItemText can use it
-    let text_change_provider = StoredValue::new(on_item_text_change);
-
     view! {
         <Provider value=item_context>
-            <Provider value=text_change_provider>
-                <CollectionItemSlot
-                    item_data_type=ITEM_DATA_PHANTOM
-                    item_data=MaybeProp::derive(move || {
-                        value.try_get_value().map(|val| ComboboxItemData {
-                            value: val,
-                            disabled: disabled.get(),
-                            text_value: text_value_state.get(),
-                        })
+            <CollectionItemSlot
+                item_data_type=ITEM_DATA_PHANTOM
+                item_data=MaybeProp::derive(move || {
+                    value.try_get_value().map(|val| ComboboxItemData {
+                        value: val,
+                        disabled: disabled.get(),
+                        text_value: text_value_state.get(),
                     })
-                    node_ref=composed_item_ref
-                >
-                    <AttributeInterceptor let:attrs>
-                        <Primitive
-                            element=html::div
-                            as_child=as_child
-                            node_ref=composed_item_ref
-                            attr:role="option"
-                            attr:id=move || item_id.get()
-                            attr:aria-labelledby=move || text_id.get()
-                            attr:aria-selected=move || if is_selected.get() { Some("true".to_string()) } else { None }
-                            attr:data-state=move || if is_selected.get() { "checked" } else { "unchecked" }
-                            attr:data-highlighted=move || is_highlighted.get().then_some("")
-                            attr:aria-disabled=move || disabled.get().then_some("true".to_string())
-                            attr:data-disabled=data_attr(disabled)
-                            on:pointerdown=move |event: ev::PointerEvent| {
-                                // Prevent default to stop the input from losing focus when
-                                // clicking items. This is critical for multi-select where
-                                // the popup must stay open and the blur handler must not fire.
-                                event.prevent_default();
+                })
+                node_ref=composed_item_ref
+            >
+                <AttributeInterceptor let:attrs>
+                    <Primitive
+                        element=html::div
+                        as_child=as_child
+                        node_ref=composed_item_ref
+                        attr:role="option"
+                        attr:id=move || item_id.get()
+                        attr:aria-labelledby=move || text_id.get()
+                        attr:aria-selected=move || if is_selected.get() { Some("true".to_string()) } else { None }
+                        attr:data-state=move || if is_selected.get() { "checked" } else { "unchecked" }
+                        attr:data-highlighted=move || is_highlighted.get().then_some("")
+                        attr:aria-disabled=move || disabled.get().then_some("true".to_string())
+                        attr:data-disabled=data_attr(disabled)
+                        on:pointerdown=move |event: ev::PointerEvent| {
+                            // Prevent default to stop the input from losing focus when
+                            // clicking items. This is critical for multi-select where
+                            // the popup must stay open and the blur handler must not fire.
+                            event.prevent_default();
+                        }
+                        on:click=move |event: ev::MouseEvent| {
+                            if let Some(Some(cb)) = on_click_stored.try_get_value() {
+                                cb.run(event.clone());
                             }
-                            on:click=move |event: ev::MouseEvent| {
-                                if let Some(Some(cb)) = on_click_stored.try_get_value() {
-                                    cb.run(event.clone());
-                                }
-                                if !event.default_prevented() {
-                                    handle_select();
+                            if !event.default_prevented() {
+                                handle_select();
+                            }
+                        }
+                        on:pointermove=move |event: ev::PointerEvent| {
+                            if let Some(Some(cb)) = on_pointer_move_stored.try_get_value() {
+                                cb.run(event.clone());
+                            }
+                            if !event.default_prevented() && !disabled.get_untracked() {
+                                context.active_descendant_id.set(Some(item_id.get_untracked()));
+                            }
+                        }
+                        on:pointerleave=move |event: ev::PointerEvent| {
+                            if let Some(Some(cb)) = on_pointer_leave_stored.try_get_value() {
+                                cb.run(event.clone());
+                            }
+                            if !event.default_prevented() {
+                                // Clear highlight when leaving this item
+                                let current = context.active_descendant_id.get_untracked();
+                                if current.as_ref().is_some_and(|id| *id == item_id.get_untracked()) {
+                                    context.active_descendant_id.set(None);
                                 }
                             }
-                            on:pointermove=move |event: ev::PointerEvent| {
-                                if let Some(Some(cb)) = on_pointer_move_stored.try_get_value() {
-                                    cb.run(event.clone());
-                                }
-                                if !event.default_prevented() && !disabled.get_untracked() {
-                                    context.active_descendant_id.set(Some(item_id.get_untracked()));
-                                }
-                            }
-                            on:pointerleave=move |event: ev::PointerEvent| {
-                                if let Some(Some(cb)) = on_pointer_leave_stored.try_get_value() {
-                                    cb.run(event.clone());
-                                }
-                                if !event.default_prevented() {
-                                    // Clear highlight when leaving this item
-                                    let current = context.active_descendant_id.get_untracked();
-                                    if current.as_ref().is_some_and(|id| *id == item_id.get_untracked()) {
-                                        context.active_descendant_id.set(None);
-                                    }
-                                }
-                            }
-                            {..attrs}
-                        >
-                            {children.try_with_value(|children| children.as_ref().map(|c| c()))}
-                        </Primitive>
-                    </AttributeInterceptor>
-                </CollectionItemSlot>
-            </Provider>
+                        }
+                        {..attrs}
+                    >
+                        {children.try_with_value(|children| children.as_ref().map(|c| c()))}
+                    </Primitive>
+                </AttributeInterceptor>
+            </CollectionItemSlot>
         </Provider>
     }
 }
@@ -183,8 +173,6 @@ pub fn ComboboxItemText(
     let children = StoredValue::new(children);
 
     let item_context = expect_context::<ComboboxItemContextValue>();
-    let on_item_text_change =
-        expect_context::<StoredValue<Callback<Option<SendWrapper<web_sys::HtmlElement>>>>>();
     let item_text_ref = AnyNodeRef::new();
     let composed_ref = use_composed_refs(vec![node_ref, item_text_ref]);
 
@@ -192,9 +180,7 @@ pub fn ComboboxItemText(
     Effect::new(move |_| {
         if let Some(el) = item_text_ref.get() {
             let el: web_sys::HtmlElement = (*el).clone().unchecked_into();
-            if let Some(cb) = on_item_text_change.try_get_value() {
-                cb.run(Some(SendWrapper::new(el)));
-            }
+            item_context.on_item_text_change.run(Some(SendWrapper::new(el)));
         }
     });
 

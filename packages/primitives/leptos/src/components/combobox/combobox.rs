@@ -268,210 +268,8 @@ pub fn ComboboxInput(
                     if let Some(Some(cb)) = on_key_down_stored.try_get_value() {
                         cb.run(event.clone());
                     }
-                    if event.default_prevented() {
-                        return;
-                    }
-                    let key = event.key();
-                    match key.as_str() {
-                        "ArrowDown" => {
-                            event.prevent_default();
-                            // If a chip is highlighted, move focus back to input and open
-                            if context.highlighted_chip_index.get_untracked().is_some() {
-                                context.highlighted_chip_index.set(None);
-                                context.on_open_change.run(true);
-                            } else if !context.open.get_untracked() {
-                                context.on_open_change.run(true);
-                            } else {
-                                // Navigate to next item (including disabled items)
-                                let _ = get_items.try_with_value(|get_items| {
-                                    let items = get_items();
-                                    let all_items: Vec<_> = items.iter().collect();
-                                    navigate_items(&all_items, &context.active_descendant_id, true);
-                                });
-                            }
-                        }
-                        "ArrowUp" => {
-                            event.prevent_default();
-                            // If a chip is highlighted, move focus back to input and open
-                            if context.highlighted_chip_index.get_untracked().is_some() {
-                                context.highlighted_chip_index.set(None);
-                                context.on_open_change.run(true);
-                            } else if context.open.get_untracked() {
-                                // Navigate to previous item (including disabled items)
-                                let _ = get_items.try_with_value(|get_items| {
-                                    let items = get_items();
-                                    let all_items: Vec<_> = items.iter().collect();
-                                    navigate_items(&all_items, &context.active_descendant_id, false);
-                                });
-                            }
-                        }
-                        "Enter" => {
-                            event.prevent_default();
-                            if context.open.get_untracked() {
-                                // Select the highlighted item
-                                if let Some(active_id) = context.active_descendant_id.get_untracked() {
-                                    let _ = get_items.try_with_value(|get_items| {
-                                        let items = get_items();
-                                        let item = items.iter().find(|item| {
-                                            item.r#ref.get_untracked().is_some_and(|el| {
-                                                let el: &web_sys::Element = (*el).unchecked_ref();
-                                                el.id() == active_id
-                                            })
-                                        });
-                                        if let Some(item) = item {
-                                            if !item.data.disabled {
-                                                context.on_value_change.run(item.data.value.clone());
-                                                if context.multiple {
-                                                    // Clear input text, keep popup open and focus on same item
-                                                    context.on_input_value_change.run(String::new());
-                                                    // Keep active_descendant_id — don't clear it
-                                                } else {
-                                                    context.on_open_change.run(false);
-                                                    context.active_descendant_id.set(None);
-                                                    context.on_input_value_change.run(item.data.text_value.clone());
-                                                }
-                                            }
-                                        }
-                                    });
-                                }
-                            }
-                        }
-                        "Escape" => {
-                            if context.open.get_untracked() {
-                                event.prevent_default();
-                                context.on_open_change.run(false);
-                                context.active_descendant_id.set(None);
-                            }
-                        }
-                        "Backspace" => {
-                            if context.multiple {
-                                let target: web_sys::HtmlInputElement = event.target().unwrap().unchecked_into();
-                                if target.value().is_empty() {
-                                    let current_values = context.values.get_untracked();
-                                    if let Some(idx) = context.highlighted_chip_index.get_untracked() {
-                                        // A chip is highlighted — remove it
-                                        if idx < current_values.len() {
-                                            event.prevent_default();
-                                            let mut new_values = current_values;
-                                            new_values.remove(idx);
-                                            let next = if new_values.is_empty() {
-                                                None
-                                            } else if idx >= new_values.len() {
-                                                Some(new_values.len() - 1)
-                                            } else {
-                                                Some(idx)
-                                            };
-                                            context.highlighted_chip_index.set(next);
-                                            context.on_values_change.run(new_values);
-                                        }
-                                    } else if !current_values.is_empty() {
-                                        // No chip highlighted, input empty — remove last value directly
-                                        event.prevent_default();
-                                        let mut new_values = current_values;
-                                        new_values.pop();
-                                        context.on_values_change.run(new_values);
-                                    }
-                                }
-                            }
-                        }
-                        "Delete" => {
-                            if context.multiple {
-                                if let Some(idx) = context.highlighted_chip_index.get_untracked() {
-                                    let current_values = context.values.get_untracked();
-                                    if idx < current_values.len() {
-                                        event.prevent_default();
-                                        let mut new_values = current_values;
-                                        new_values.remove(idx);
-                                        let next = if new_values.is_empty() {
-                                            None
-                                        } else if idx >= new_values.len() {
-                                            Some(new_values.len() - 1)
-                                        } else {
-                                            Some(idx)
-                                        };
-                                        context.highlighted_chip_index.set(next);
-                                        context.on_values_change.run(new_values);
-                                    }
-                                }
-                            }
-                        }
-                        "ArrowLeft" => {
-                            if context.multiple {
-                                let target: web_sys::HtmlInputElement = event.target().unwrap().unchecked_into();
-                                let at_start = target.selection_start().ok().flatten().unwrap_or(0) == 0
-                                    && target.selection_end().ok().flatten().unwrap_or(0) == 0;
-                                if at_start {
-                                    let values = context.values.get_untracked();
-                                    if !values.is_empty() {
-                                        event.prevent_default();
-                                        let current = context.highlighted_chip_index.get_untracked();
-                                        let next = match current {
-                                            Some(0) => None,
-                                            Some(i) => Some(i - 1),
-                                            None => {
-                                                // Moving from input to chips — clear input text and close popup
-                                                context.on_input_value_change.run(String::new());
-                                                if context.open.get_untracked() {
-                                                    context.on_open_change.run(false);
-                                                    context.active_descendant_id.set(None);
-                                                }
-                                                Some(values.len() - 1)
-                                            }
-                                        };
-                                        context.highlighted_chip_index.set(next);
-                                    }
-                                }
-                            }
-                        }
-                        "ArrowRight" => {
-                            // Only navigates when a chip is highlighted; once at input, stops
-                            if context.multiple {
-                                if let Some(idx) = context.highlighted_chip_index.get_untracked() {
-                                    event.prevent_default();
-                                    let values = context.values.get_untracked();
-                                    if idx + 1 < values.len() {
-                                        context.highlighted_chip_index.set(Some(idx + 1));
-                                    } else {
-                                        // Past last chip — return to input (terminal)
-                                        context.highlighted_chip_index.set(None);
-                                    }
-                                }
-                                // When no chip highlighted (at input), ArrowRight does nothing
-                            }
-                        }
-                        "Home" => {
-                            if context.open.get_untracked() {
-                                event.prevent_default();
-                                let _ = get_items.try_with_value(|get_items| {
-                                    let items = get_items();
-                                    let enabled_items: Vec<_> = items.iter().filter(|item| !item.data.disabled).collect();
-                                    if let Some(first) = enabled_items.first() {
-                                        if let Some(el) = first.r#ref.get_untracked() {
-                                            let el: &web_sys::Element = (*el).unchecked_ref();
-                                            context.active_descendant_id.set(Some(el.id()));
-                                            scroll_item_into_view(el);
-                                        }
-                                    }
-                                });
-                            }
-                        }
-                        "End" => {
-                            if context.open.get_untracked() {
-                                event.prevent_default();
-                                let _ = get_items.try_with_value(|get_items| {
-                                    let items = get_items();
-                                    let enabled_items: Vec<_> = items.iter().filter(|item| !item.data.disabled).collect();
-                                    if let Some(last) = enabled_items.last() {
-                                        if let Some(el) = last.r#ref.get_untracked() {
-                                            let el: &web_sys::Element = (*el).unchecked_ref();
-                                            context.active_descendant_id.set(Some(el.id()));
-                                            scroll_item_into_view(el);
-                                        }
-                                    }
-                                });
-                            }
-                        }
-                        _ => {}
+                    if !event.default_prevented() {
+                        handle_input_keydown(&event, &context, &get_items);
                     }
                 }
                 on:click=move |event: ev::MouseEvent| {
@@ -495,30 +293,8 @@ pub fn ComboboxInput(
                     // Defer via setTimeout(0) so click handlers on items/trigger
                     // fire before we check whether focus is still inside the combobox.
                     let cb = wasm_bindgen::closure::Closure::once_into_js(move || {
-                        // Check if focus returned to the input (e.g. after item click)
-                        let is_input_focused = context.input_ref.get_untracked().is_some_and(|el| {
-                            let el: &web_sys::HtmlElement = (*el).unchecked_ref();
-                            web_sys::window()
-                                .and_then(|w| w.document())
-                                .and_then(|d| d.active_element())
-                                .is_some_and(|active| {
-                                    let input_el: &web_sys::Element = el.unchecked_ref();
-                                    &active == input_el
-                                })
-                        });
-                        let is_trigger_focused = context.trigger_ref.get_untracked().is_some_and(|el| {
-                            let el: &web_sys::HtmlElement = (*el).unchecked_ref();
-                            web_sys::window()
-                                .and_then(|w| w.document())
-                                .and_then(|d| d.active_element())
-                                .is_some_and(|active| {
-                                    let trigger_el: &web_sys::Element = el.unchecked_ref();
-                                    &active == trigger_el
-                                })
-                        });
-                        if !is_input_focused && !is_trigger_focused {
-                            context.on_open_change.run(false);
-                            context.active_descendant_id.set(None);
+                        if !is_ref_focused(context.input_ref) && !is_ref_focused(context.trigger_ref) {
+                            context.dismiss();
                             if context.multiple {
                                 context.on_input_value_change.run(String::new());
                             }
@@ -573,11 +349,7 @@ pub fn ComboboxTrigger(
                     }
                     if !event.default_prevented() && !context.disabled.get_untracked() {
                         context.on_open_change.run(!context.open.get_untracked());
-                        // Focus the input
-                        if let Some(input_el) = context.input_ref.get_untracked() {
-                            let el: &web_sys::HtmlElement = (*input_el).unchecked_ref();
-                            let _ = el.focus();
-                        }
+                        context.focus_input();
                     }
                 }
                 {..attrs}
@@ -651,11 +423,7 @@ pub fn ComboboxClear(
                     if !event.default_prevented() && !context.disabled.get_untracked() {
                         context.on_value_change.run(String::new());
                         context.on_input_value_change.run(String::new());
-                        // Focus the input
-                        if let Some(input_el) = context.input_ref.get_untracked() {
-                            let el: &web_sys::HtmlElement = (*input_el).unchecked_ref();
-                            let _ = el.focus();
-                        }
+                        context.focus_input();
                     }
                 }
                 {..attrs}
@@ -736,23 +504,215 @@ fn ComboboxBubbleInput(
 }
 
 /* -------------------------------------------------------------------------------------------------
- * Utilities
+ * Keyboard handling
  * -----------------------------------------------------------------------------------------------*/
 
-/// Navigate to the next or previous enabled item in the collection
+/// Handles keydown events on the combobox input element.
+fn handle_input_keydown(
+    event: &ev::KeyboardEvent,
+    context: &ComboboxContextValue,
+    get_items: &GetItems,
+) {
+    match event.key().as_str() {
+        "ArrowDown" => {
+            event.prevent_default();
+            if context.highlighted_chip_index.get_untracked().is_some() {
+                context.highlighted_chip_index.set(None);
+                context.on_open_change.run(true);
+            } else if !context.open.get_untracked() {
+                context.on_open_change.run(true);
+            } else {
+                let _ = get_items.try_with_value(|get_items| {
+                    let items = get_items();
+                    let all_items: Vec<_> = items.iter().collect();
+                    navigate_items(&all_items, &context.active_descendant_id, true);
+                });
+            }
+        }
+        "ArrowUp" => {
+            event.prevent_default();
+            if context.highlighted_chip_index.get_untracked().is_some() {
+                context.highlighted_chip_index.set(None);
+                context.on_open_change.run(true);
+            } else if context.open.get_untracked() {
+                let _ = get_items.try_with_value(|get_items| {
+                    let items = get_items();
+                    let all_items: Vec<_> = items.iter().collect();
+                    navigate_items(&all_items, &context.active_descendant_id, false);
+                });
+            }
+        }
+        "Enter" => {
+            event.prevent_default();
+            if context.open.get_untracked() {
+                handle_enter_select(context, get_items);
+            }
+        }
+        "Escape" => {
+            if context.open.get_untracked() {
+                event.prevent_default();
+                context.dismiss();
+            }
+        }
+        "Backspace" => handle_backspace(event, context),
+        "Delete" => {
+            if context.multiple {
+                if let Some(idx) = context.highlighted_chip_index.get_untracked() {
+                    event.prevent_default();
+                    remove_chip_at(context, idx, context.values.get_untracked());
+                }
+            }
+        }
+        "ArrowLeft" => handle_arrow_left(event, context),
+        "ArrowRight" => {
+            if context.multiple {
+                if let Some(idx) = context.highlighted_chip_index.get_untracked() {
+                    event.prevent_default();
+                    let values = context.values.get_untracked();
+                    if idx + 1 < values.len() {
+                        context.highlighted_chip_index.set(Some(idx + 1));
+                    } else {
+                        context.highlighted_chip_index.set(None);
+                    }
+                }
+            }
+        }
+        "Home" => {
+            if context.open.get_untracked() {
+                event.prevent_default();
+                navigate_to_edge(context, get_items, true);
+            }
+        }
+        "End" => {
+            if context.open.get_untracked() {
+                event.prevent_default();
+                navigate_to_edge(context, get_items, false);
+            }
+        }
+        _ => {}
+    }
+}
+
+/// Select the currently highlighted item via Enter key.
+fn handle_enter_select(
+    context: &ComboboxContextValue,
+    get_items: &GetItems,
+) {
+    let Some(active_id) = context.active_descendant_id.get_untracked() else {
+        return;
+    };
+    let _ = get_items.try_with_value(|get_items| {
+        let items = get_items();
+        let item = items.iter().find(|item| {
+            item.r#ref.get_untracked().is_some_and(|el| {
+                let el: &web_sys::Element = (*el).unchecked_ref();
+                el.id() == active_id
+            })
+        });
+        if let Some(item) = item {
+            if !item.data.disabled {
+                context.on_value_change.run(item.data.value.clone());
+                if context.multiple {
+                    context.on_input_value_change.run(String::new());
+                } else {
+                    context.dismiss();
+                    context.on_input_value_change.run(item.data.text_value.clone());
+                }
+            }
+        }
+    });
+}
+
+/// Handle Backspace: remove highlighted chip or pop last value when input is empty.
+fn handle_backspace(event: &ev::KeyboardEvent, context: &ComboboxContextValue) {
+    if !context.multiple {
+        return;
+    }
+    let target: web_sys::HtmlInputElement = event.target().unwrap().unchecked_into();
+    if !target.value().is_empty() {
+        return;
+    }
+    let current_values = context.values.get_untracked();
+    if let Some(idx) = context.highlighted_chip_index.get_untracked() {
+        event.prevent_default();
+        remove_chip_at(context, idx, current_values);
+    } else if !current_values.is_empty() {
+        event.prevent_default();
+        let mut new_values = current_values;
+        new_values.pop();
+        context.on_values_change.run(new_values);
+    }
+}
+
+/// Handle ArrowLeft: navigate into chip list from input, or between chips.
+fn handle_arrow_left(event: &ev::KeyboardEvent, context: &ComboboxContextValue) {
+    if !context.multiple {
+        return;
+    }
+    let target: web_sys::HtmlInputElement = event.target().unwrap().unchecked_into();
+    let at_start = target.selection_start().ok().flatten().unwrap_or(0) == 0
+        && target.selection_end().ok().flatten().unwrap_or(0) == 0;
+    if !at_start {
+        return;
+    }
+    let values = context.values.get_untracked();
+    if values.is_empty() {
+        return;
+    }
+    event.prevent_default();
+    let next = match context.highlighted_chip_index.get_untracked() {
+        Some(0) => None,
+        Some(i) => Some(i - 1),
+        None => {
+            // Moving from input to chips — clear input text and close popup
+            context.on_input_value_change.run(String::new());
+            if context.open.get_untracked() {
+                context.dismiss();
+            }
+            Some(values.len() - 1)
+        }
+    };
+    context.highlighted_chip_index.set(next);
+}
+
+/// Navigate to the first or last enabled item (Home / End).
+fn navigate_to_edge(
+    context: &ComboboxContextValue,
+    get_items: &GetItems,
+    first: bool,
+) {
+    let _ = get_items.try_with_value(|get_items| {
+        let items = get_items();
+        let enabled: Vec<_> = items.iter().filter(|item| !item.data.disabled).collect();
+        let target = if first { enabled.first() } else { enabled.last() };
+        if let Some(item) = target {
+            if let Some(el) = item.r#ref.get_untracked() {
+                let el: &web_sys::Element = (*el).unchecked_ref();
+                context.active_descendant_id.set(Some(el.id()));
+                scroll_item_into_view(el);
+            }
+        }
+    });
+}
+
+/* -------------------------------------------------------------------------------------------------
+ * Item navigation utilities
+ * -----------------------------------------------------------------------------------------------*/
+
+/// Navigate to the next or previous item in the collection.
 fn navigate_items(
-    enabled_items: &[&CollectionItemValue<ComboboxItemData>],
+    items: &[&CollectionItemValue<ComboboxItemData>],
     active_descendant_id: &RwSignal<Option<String>>,
     forward: bool,
 ) {
-    if enabled_items.is_empty() {
+    if items.is_empty() {
         return;
     }
 
     let current_id = active_descendant_id.get_untracked();
 
     let current_index = current_id.as_ref().and_then(|id| {
-        enabled_items.iter().position(|item| {
+        items.iter().position(|item| {
             item.r#ref.get_untracked().is_some_and(|el| {
                 let el: &web_sys::Element = (*el).unchecked_ref();
                 el.id() == *id
@@ -763,27 +723,17 @@ fn navigate_items(
     let next_index = match current_index {
         Some(idx) => {
             if forward {
-                if idx + 1 < enabled_items.len() {
-                    idx + 1
-                } else {
-                    idx
-                }
-            } else if idx > 0 {
-                idx - 1
+                (idx + 1).min(items.len() - 1)
             } else {
-                0
+                idx.saturating_sub(1)
             }
         }
         None => {
-            if forward {
-                0
-            } else {
-                enabled_items.len() - 1
-            }
+            if forward { 0 } else { items.len() - 1 }
         }
     };
 
-    if let Some(item) = enabled_items.get(next_index) {
+    if let Some(item) = items.get(next_index) {
         if let Some(el) = item.r#ref.get_untracked() {
             let el: &web_sys::Element = (*el).unchecked_ref();
             active_descendant_id.set(Some(el.id()));
@@ -792,7 +742,7 @@ fn navigate_items(
     }
 }
 
-/// Scroll an item into view within its scrollable parent
+/// Scroll an item into view within its scrollable parent.
 fn scroll_item_into_view(el: &web_sys::Element) {
     let options = web_sys::ScrollIntoViewOptions::new();
     options.set_block(web_sys::ScrollLogicalPosition::Nearest);

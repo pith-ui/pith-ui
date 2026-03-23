@@ -105,11 +105,6 @@ fn ComboboxContentImpl(
 
     let (is_positioned, set_is_positioned) = signal(false);
 
-    let on_dismiss = Callback::new(move |_: ()| {
-        context.on_open_change.run(false);
-        context.active_descendant_id.set(None);
-    });
-
     let content_context = ComboboxContentContextValue {
         content_ref,
         viewport_ref,
@@ -174,7 +169,7 @@ fn ComboboxContentImpl(
                     event.prevent_default();
                 })
                 on_dismiss=Callback::new(move |_: ()| {
-                    on_dismiss.run(());
+                    context.dismiss();
                 })
             >
                 <PopperContent

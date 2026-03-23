@@ -29,10 +29,15 @@ pub fn ComboboxChips(
  * -----------------------------------------------------------------------------------------------*/
 
 /// Individual chip representing a selected value in multi-select mode.
+///
+/// The chip's position in the highlight list is derived automatically from its
+/// `value` prop's position in `context.values`. An explicit `index` prop can be
+/// provided to override this when the consumer renders chips in non-standard order.
 #[component]
 pub fn ComboboxChip(
     #[prop(into)] value: String,
-    /// The index of this chip in the selected values list (for highlight tracking).
+    /// Optional explicit index override. When omitted, the index is derived from
+    /// the chip's value position in the selected values list.
     #[prop(into, optional)] index: MaybeProp<usize>,
     #[prop(into, optional)] as_child: MaybeProp<bool>,
     #[prop(into, optional)] node_ref: AnyNodeRef,
@@ -41,9 +46,19 @@ pub fn ComboboxChip(
     let children = StoredValue::new(children);
 
     let context = expect_context::<ComboboxContextValue>();
-    let _value = StoredValue::new(value);
+    let value = StoredValue::new(value);
+
+    // Self-derive index from context.values, unless explicitly overridden.
+    let resolved_index = Signal::derive(move || {
+        index.get().or_else(|| {
+            value.try_get_value().and_then(|val| {
+                context.values.get().iter().position(|v| v == &val)
+            })
+        })
+    });
+
     let is_highlighted = Signal::derive(move || {
-        index.get().is_some_and(|i| {
+        resolved_index.get().is_some_and(|i| {
             context.highlighted_chip_index.get().is_some_and(|hi| hi == i)
         })
     });
@@ -102,11 +117,7 @@ pub fn ComboboxChipRemove(
                         if let Some(val) = value.try_get_value() {
                             context.on_value_change.run(val);
                         }
-                        // Focus the input
-                        if let Some(input_el) = context.input_ref.get_untracked() {
-                            let el: &web_sys::HtmlElement = (*input_el).unchecked_ref();
-                            let _ = el.focus();
-                        }
+                        context.focus_input();
                     }
                 }
                 {..attrs}

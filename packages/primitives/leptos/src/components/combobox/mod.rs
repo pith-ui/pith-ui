@@ -129,6 +129,9 @@ pub struct ComboboxItemData {
 
 const ITEM_DATA_PHANTOM: PhantomData<ComboboxItemData> = PhantomData;
 
+/// Alias for the collection getter stored by `ComboboxInput`.
+type GetItems = StoredValue<SendWrapper<Box<dyn Fn() -> Vec<CollectionItemValue<ComboboxItemData>>>>>;
+
 /* -------------------------------------------------------------------------------------------------
  * Contexts
  * -----------------------------------------------------------------------------------------------*/
@@ -157,6 +160,22 @@ struct ComboboxContextValue {
     multiple: bool,
 }
 
+impl ComboboxContextValue {
+    /// Move focus to the combobox input element.
+    fn focus_input(&self) {
+        if let Some(input_el) = self.input_ref.get_untracked() {
+            let el: &web_sys::HtmlElement = (*input_el).unchecked_ref();
+            let _ = el.focus();
+        }
+    }
+
+    /// Close the popup and clear active descendant highlight.
+    fn dismiss(&self) {
+        self.on_open_change.run(false);
+        self.active_descendant_id.set(None);
+    }
+}
+
 #[derive(Clone, Copy)]
 struct ComboboxContentContextValue {
     #[allow(dead_code)]
@@ -174,6 +193,7 @@ struct ComboboxItemContextValue {
     disabled: bool,
     text_id: ReadSignal<String>,
     is_selected: Signal<bool>,
+    on_item_text_change: Callback<Option<SendWrapper<web_sys::HtmlElement>>>,
 }
 
 #[derive(Clone, Copy)]
@@ -187,3 +207,36 @@ struct ComboboxGroupContextValue {
 
 /// Visually hidden styles for the bubble input element
 const VISUALLY_HIDDEN_STYLES_STR: &str = "position: absolute; border: 0; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; word-wrap: normal;";
+
+/// Check whether the given node ref currently holds DOM focus.
+fn is_ref_focused(node_ref: AnyNodeRef) -> bool {
+    node_ref.get_untracked().is_some_and(|el| {
+        let el: &web_sys::Element = (*el).unchecked_ref();
+        web_sys::window()
+            .and_then(|w| w.document())
+            .and_then(|d| d.active_element())
+            .is_some_and(|active| &active == el)
+    })
+}
+
+/// Remove a chip at `idx` from `values`, update the highlight index, and
+/// push the new values through context. Returns the new highlight index.
+fn remove_chip_at(
+    context: &ComboboxContextValue,
+    idx: usize,
+    mut values: Vec<String>,
+) {
+    if idx >= values.len() {
+        return;
+    }
+    values.remove(idx);
+    let next = if values.is_empty() {
+        None
+    } else if idx >= values.len() {
+        Some(values.len() - 1)
+    } else {
+        Some(idx)
+    };
+    context.highlighted_chip_index.set(next);
+    context.on_values_change.run(values);
+}
