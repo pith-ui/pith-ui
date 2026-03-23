@@ -338,8 +338,8 @@ fn SelectContentImpl(
                 });
                 let _ = pointer_up_closure.try_with_value(|c| {
                     if let Some(c) = c {
-                        let mut opts = web_sys::EventListenerOptions::new();
-                        opts.capture(true);
+                        let opts = web_sys::EventListenerOptions::new();
+                        opts.set_capture(true);
                         let _ = doc.remove_event_listener_with_callback_and_event_listener_options(
                             "pointerup",
                             c.as_ref().unchecked_ref(),
@@ -415,9 +415,9 @@ fn SelectContentImpl(
                 move_closure.as_ref().unchecked_ref(),
             );
 
-            let mut options = web_sys::AddEventListenerOptions::new();
-            options.capture(true);
-            options.once(true);
+            let options = web_sys::AddEventListenerOptions::new();
+            options.set_capture(true);
+            options.set_once(true);
             let _ = document.add_event_listener_with_callback_and_add_event_listener_options(
                 "pointerup",
                 up_closure.as_ref().unchecked_ref(),

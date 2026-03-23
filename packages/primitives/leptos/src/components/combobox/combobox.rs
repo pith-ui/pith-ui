@@ -233,9 +233,9 @@ pub fn ComboboxInput(
                 attr:dir=move || context.dir.get().to_string()
                 attr:placeholder=move || {
                     // Hide placeholder when a chip is highlighted or when values are selected in multi-select
-                    if context.highlighted_chip_index.get().is_some() {
-                        None
-                    } else if context.multiple && !context.values.get().is_empty() {
+                    if context.highlighted_chip_index.get().is_some()
+                        || (context.multiple && !context.values.get().is_empty())
+                    {
                         None
                     } else {
                         placeholder.get()
