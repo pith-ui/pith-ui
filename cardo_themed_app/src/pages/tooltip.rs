@@ -1,5 +1,6 @@
 use leptos::prelude::*;
 
+use crate::theme::button::*;
 use crate::theme::tooltip::*;
 
 #[component]
@@ -17,9 +18,7 @@ pub fn TooltipPage() -> impl IntoView {
                 <h2 class="text-lg font-semibold text-foreground">"Basic"</h2>
                 <div class="flex items-center gap-4">
                     <ThemedTooltip content="Add to library">
-                        <button class="inline-flex items-center justify-center rounded-md text-sm font-medium h-9 px-4 py-2 border border-input bg-background shadow-xs hover:bg-accent hover:text-accent-foreground">
-                            "Hover me"
-                        </button>
+                        <Button variant=ButtonVariant::Outline>"Hover me"</Button>
                     </ThemedTooltip>
                 </div>
             </section>
@@ -29,28 +28,28 @@ pub fn TooltipPage() -> impl IntoView {
                 <p class="text-sm text-muted-foreground">"Hover between buttons to see the shared delay."</p>
                 <div class="flex items-center gap-4">
                     <ThemedTooltip content="Bold">
-                        <button class="inline-flex items-center justify-center size-9 rounded-md border border-input bg-background shadow-xs hover:bg-accent hover:text-accent-foreground">
+                        <Button variant=ButtonVariant::Outline size=ButtonSize::Icon>
                             <svg class="size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M6 12h9a4 4 0 0 1 0 8H7a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h7a4 4 0 0 1 0 8" />
                             </svg>
-                        </button>
+                        </Button>
                     </ThemedTooltip>
                     <ThemedTooltip content="Italic">
-                        <button class="inline-flex items-center justify-center size-9 rounded-md border border-input bg-background shadow-xs hover:bg-accent hover:text-accent-foreground">
+                        <Button variant=ButtonVariant::Outline size=ButtonSize::Icon>
                             <svg class="size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <line x1="19" x2="10" y1="4" y2="4" />
                                 <line x1="14" x2="5" y1="20" y2="20" />
                                 <line x1="15" x2="9" y1="4" y2="20" />
                             </svg>
-                        </button>
+                        </Button>
                     </ThemedTooltip>
                     <ThemedTooltip content="Underline">
-                        <button class="inline-flex items-center justify-center size-9 rounded-md border border-input bg-background shadow-xs hover:bg-accent hover:text-accent-foreground">
+                        <Button variant=ButtonVariant::Outline size=ButtonSize::Icon>
                             <svg class="size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M6 4v6a6 6 0 0 0 12 0V4" />
                                 <line x1="4" x2="20" y1="20" y2="20" />
                             </svg>
-                        </button>
+                        </Button>
                     </ThemedTooltip>
                 </div>
             </section>

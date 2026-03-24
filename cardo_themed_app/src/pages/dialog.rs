@@ -1,5 +1,6 @@
 use leptos::prelude::*;
 
+use crate::theme::button::*;
 use crate::theme::dialog::*;
 
 #[component]
@@ -17,9 +18,7 @@ pub fn DialogPage() -> impl IntoView {
                 <h2 class="text-lg font-semibold text-foreground">"Basic Dialog"</h2>
                 <ThemedDialog>
                     <ThemedDialogTrigger>
-                        <button class="inline-flex items-center justify-center rounded-md text-sm font-medium h-9 px-4 py-2 bg-primary text-primary-foreground shadow-xs hover:bg-primary/90">
-                            "Open Dialog"
-                        </button>
+                        <Button>"Open Dialog"</Button>
                     </ThemedDialogTrigger>
                     <ThemedDialogContent>
                         <ThemedDialogTitle>"Are you absolutely sure?"</ThemedDialogTitle>
@@ -28,14 +27,10 @@ pub fn DialogPage() -> impl IntoView {
                         </ThemedDialogDescription>
                         <div class="flex justify-end gap-2 mt-2">
                             <ThemedDialogClose>
-                                <button class="inline-flex items-center justify-center rounded-md text-sm font-medium h-9 px-4 py-2 border border-input bg-background shadow-xs hover:bg-accent hover:text-accent-foreground">
-                                    "Cancel"
-                                </button>
+                                <Button variant=ButtonVariant::Outline>"Cancel"</Button>
                             </ThemedDialogClose>
                             <ThemedDialogClose>
-                                <button class="inline-flex items-center justify-center rounded-md text-sm font-medium h-9 px-4 py-2 bg-primary text-primary-foreground shadow-xs hover:bg-primary/90">
-                                    "Continue"
-                                </button>
+                                <Button>"Continue"</Button>
                             </ThemedDialogClose>
                         </div>
                     </ThemedDialogContent>
@@ -46,9 +41,7 @@ pub fn DialogPage() -> impl IntoView {
                 <h2 class="text-lg font-semibold text-foreground">"Form Dialog"</h2>
                 <ThemedDialog>
                     <ThemedDialogTrigger>
-                        <button class="inline-flex items-center justify-center rounded-md text-sm font-medium h-9 px-4 py-2 border border-input bg-background shadow-xs hover:bg-accent hover:text-accent-foreground">
-                            "Edit Profile"
-                        </button>
+                        <Button variant=ButtonVariant::Outline>"Edit Profile"</Button>
                     </ThemedDialogTrigger>
                     <ThemedDialogContent>
                         <ThemedDialogTitle>"Edit profile"</ThemedDialogTitle>
@@ -59,23 +52,21 @@ pub fn DialogPage() -> impl IntoView {
                             <div class="grid grid-cols-4 items-center gap-4">
                                 <label class="text-right text-sm font-medium text-foreground">"Name"</label>
                                 <input
-                                    class="col-span-3 flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                                    class="col-span-3 flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs placeholder:text-muted-foreground focus-visible:outline-none focus-visible:focus-ring"
                                     value="Pedro Duarte"
                                 />
                             </div>
                             <div class="grid grid-cols-4 items-center gap-4">
                                 <label class="text-right text-sm font-medium text-foreground">"Username"</label>
                                 <input
-                                    class="col-span-3 flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                                    class="col-span-3 flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs placeholder:text-muted-foreground focus-visible:outline-none focus-visible:focus-ring"
                                     value="@peduarte"
                                 />
                             </div>
                         </div>
                         <div class="flex justify-end">
                             <ThemedDialogClose>
-                                <button class="inline-flex items-center justify-center rounded-md text-sm font-medium h-9 px-4 py-2 bg-primary text-primary-foreground shadow-xs hover:bg-primary/90">
-                                    "Save changes"
-                                </button>
+                                <Button>"Save changes"</Button>
                             </ThemedDialogClose>
                         </div>
                     </ThemedDialogContent>

@@ -1,5 +1,6 @@
 use leptos::prelude::*;
 
+use crate::theme::button::*;
 use crate::theme::collapsible::*;
 
 #[component]
@@ -27,7 +28,7 @@ pub fn CollapsiblePage() -> impl IntoView {
                                 "@peduarte starred 3 repositories"
                             </span>
                             <ThemedCollapsibleTrigger>
-                                <button class="inline-flex items-center justify-center size-8 rounded-md text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors">
+                                <Button variant=ButtonVariant::Ghost size=ButtonSize::Icon>
                                     <svg
                                         class="size-4 transition-transform duration-200"
                                         class:rotate-180=open
@@ -41,7 +42,7 @@ pub fn CollapsiblePage() -> impl IntoView {
                                     >
                                         <path d="m6 9 6 6 6-6" />
                                     </svg>
-                                </button>
+                                </Button>
                             </ThemedCollapsibleTrigger>
                         </div>
 
@@ -72,7 +73,7 @@ pub fn CollapsiblePage() -> impl IntoView {
                                 "Settings"
                             </span>
                             <ThemedCollapsibleTrigger>
-                                <button class="inline-flex items-center justify-center size-8 rounded-md text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors">
+                                <Button variant=ButtonVariant::Ghost size=ButtonSize::Icon>
                                     <svg
                                         class="size-4"
                                         xmlns="http://www.w3.org/2000/svg"
@@ -85,7 +86,7 @@ pub fn CollapsiblePage() -> impl IntoView {
                                     >
                                         <path d="m6 9 6 6 6-6" />
                                     </svg>
-                                </button>
+                                </Button>
                             </ThemedCollapsibleTrigger>
                         </div>
 
@@ -115,7 +116,7 @@ pub fn CollapsiblePage() -> impl IntoView {
                                 "Cannot expand (disabled)"
                             </span>
                             <ThemedCollapsibleTrigger>
-                                <button class="inline-flex items-center justify-center size-8 rounded-md text-muted-foreground">
+                                <Button variant=ButtonVariant::Ghost size=ButtonSize::Icon disabled=true>
                                     <svg
                                         class="size-4"
                                         xmlns="http://www.w3.org/2000/svg"
@@ -128,7 +129,7 @@ pub fn CollapsiblePage() -> impl IntoView {
                                     >
                                         <path d="m6 9 6 6 6-6" />
                                     </svg>
-                                </button>
+                                </Button>
                             </ThemedCollapsibleTrigger>
                         </div>
 
