@@ -20,7 +20,7 @@ cardo_ui_themes::impl_cardo_tw_variant!(BadgeVariant);
 
 #[derive(TwClass)]
 #[tw(
-    class = "inline-flex w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-full border border-transparent px-2 py-0.5 text-xs font-medium whitespace-nowrap transition-[color,box-shadow] focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
+    class = "inline-flex w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-full border border-transparent px-2 py-0.5 text-xs font-medium whitespace-nowrap transition-[color,box-shadow] focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
 )]
 pub struct BadgeClass {
     pub variant: BadgeVariant,
