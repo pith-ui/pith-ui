@@ -4,7 +4,7 @@ use leptos::prelude::*;
 // Style definitions — shadcn/ui new-york textarea
 // ---------------------------------------------------------------------------
 
-const TEXTAREA_CLASS: &str = "flex min-h-16 w-full rounded-md border border-input bg-transparent px-3 py-2 text-base shadow-xs transition-[color,box-shadow] outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 md:text-sm dark:bg-input/30 focus-visible:focus-ring";
+const TEXTAREA_CLASS: &str = "flex min-h-16 w-full rounded-md border border-input bg-transparent px-3 py-2 text-base shadow-xs transition-[color,box-shadow] outline-none placeholder:text-muted-foreground disabled:disabled-cursor md:text-sm dark:bg-input/30 focus-visible:focus-ring";
 
 // ---------------------------------------------------------------------------
 // Component

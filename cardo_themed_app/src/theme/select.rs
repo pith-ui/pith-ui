@@ -5,14 +5,14 @@ use leptos::prelude::*;
 // Style definitions — shadcn/ui new-york select
 // ---------------------------------------------------------------------------
 
-const TRIGGER_CLASS: &str = "flex h-9 w-full items-center justify-between gap-2 rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs outline-none focus-visible:focus-ring disabled:cursor-not-allowed disabled:opacity-50 data-[placeholder]:text-muted-foreground dark:bg-input/30";
+const TRIGGER_CLASS: &str = "flex h-9 w-full items-center justify-between gap-2 rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs outline-none focus-visible:focus-ring disabled:disabled-cursor data-[placeholder]:text-muted-foreground dark:bg-input/30";
 
 const CONTENT_CLASS: &str =
     "relative z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover text-popover-foreground shadow-md";
 
 const VIEWPORT_CLASS: &str = "p-1";
 
-const ITEM_CLASS: &str = "relative flex w-full cursor-default items-center gap-2 rounded-sm py-1.5 pr-8 pl-2 text-sm outline-hidden select-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50";
+const ITEM_CLASS: &str = "relative flex w-full cursor-default items-center gap-2 rounded-sm py-1.5 pr-8 pl-2 text-sm outline-hidden select-none menu-item-focus data-[disabled]:disabled-base";
 
 const ITEM_INDICATOR_CLASS: &str =
     "absolute right-2 flex size-3.5 items-center justify-center";

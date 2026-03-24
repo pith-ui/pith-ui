@@ -80,6 +80,25 @@
     @apply border-destructive ring-3 ring-destructive/20 dark:ring-destructive/40;
 }
 
+/* Disabled states — three variants for different element types */
+@utility disabled-base {
+    @apply pointer-events-none opacity-50;
+}
+
+@utility disabled-cursor {
+    @apply cursor-not-allowed opacity-50;
+}
+
+/* Menu item focus highlight — used across dropdown, context, menubar, select */
+@utility menu-item-focus {
+    @apply focus:bg-accent focus:text-accent-foreground;
+}
+
+/* Floating menu/popover content base — shared by dropdown, context, menubar, select */
+@utility popover-content-base {
+    @apply z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground;
+}
+
 /*
  * Base layer — default border/outline colors matching shadcn.
  */

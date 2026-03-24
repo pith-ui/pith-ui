@@ -9,11 +9,11 @@ const ROOT_CLASS: &str = "relative flex max-w-max flex-1 items-center justify-ce
 
 const LIST_CLASS: &str = "group flex flex-1 list-none items-center justify-center gap-1";
 
-const TRIGGER_CLASS: &str = "group inline-flex h-9 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground data-[state=open]:bg-accent/50 disabled:pointer-events-none disabled:opacity-50";
+const TRIGGER_CLASS: &str = "group inline-flex h-9 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium outline-none transition-colors hover:bg-accent hover:text-accent-foreground menu-item-focus data-[state=open]:bg-accent/50 disabled:disabled-base";
 
 const CONTENT_CLASS: &str = "absolute top-0 left-0 w-full sm:w-auto";
 
-const LINK_CLASS: &str = "block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground";
+const LINK_CLASS: &str = "block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground menu-item-focus";
 
 const VIEWPORT_CLASS: &str = "relative mt-1.5 h-[var(--radix-navigation-menu-viewport-height)] w-full overflow-hidden rounded-md border bg-popover text-popover-foreground shadow-md md:w-[var(--radix-navigation-menu-viewport-width)]";
 

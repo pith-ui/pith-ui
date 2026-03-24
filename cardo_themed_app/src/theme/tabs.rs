@@ -7,7 +7,7 @@ use leptos::prelude::*;
 
 const TABS_LIST_CLASS: &str = "inline-flex h-9 w-fit items-center justify-center rounded-lg bg-muted p-[3px] text-muted-foreground";
 
-const TABS_TRIGGER_CLASS: &str = "inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 rounded-md border border-transparent px-2 py-1 text-sm font-medium whitespace-nowrap transition-all hover:text-foreground focus-visible:focus-ring focus-visible:outline-1 focus-visible:outline-ring disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm";
+const TABS_TRIGGER_CLASS: &str = "inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 rounded-md border border-transparent px-2 py-1 text-sm font-medium whitespace-nowrap transition-all hover:text-foreground focus-visible:focus-ring focus-visible:outline-1 focus-visible:outline-ring disabled:disabled-base data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm";
 
 const TABS_CONTENT_CLASS: &str = "flex-1 outline-none";
 

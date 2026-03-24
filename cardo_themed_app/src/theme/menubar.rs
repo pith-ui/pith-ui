@@ -8,14 +8,14 @@ use leptos::prelude::*;
 const ROOT_CLASS: &str =
     "flex h-9 items-center gap-1 rounded-md border bg-background p-1 shadow-xs";
 
-const TRIGGER_CLASS: &str = "flex items-center rounded-sm px-2 py-1 text-sm font-medium outline-hidden select-none focus:bg-accent focus:text-accent-foreground data-[state=open]:bg-accent data-[state=open]:text-accent-foreground";
+const TRIGGER_CLASS: &str = "flex items-center rounded-sm px-2 py-1 text-sm font-medium outline-hidden select-none menu-item-focus data-[state=open]:bg-accent data-[state=open]:text-accent-foreground";
 
 const CONTENT_CLASS: &str =
     "z-50 min-w-[12rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md";
 
-const ITEM_CLASS: &str = "relative flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden select-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50";
+const ITEM_CLASS: &str = "relative flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden select-none menu-item-focus data-[disabled]:disabled-base";
 
-const CHECKBOX_ITEM_CLASS: &str = "relative flex cursor-default items-center gap-2 rounded-sm py-1.5 pr-2 pl-8 text-sm outline-hidden select-none focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50";
+const CHECKBOX_ITEM_CLASS: &str = "relative flex cursor-default items-center gap-2 rounded-sm py-1.5 pr-2 pl-8 text-sm outline-hidden select-none menu-item-focus data-[disabled]:disabled-base";
 
 const INDICATOR_SPAN_CLASS: &str =
     "pointer-events-none absolute left-2 flex size-3.5 items-center justify-center";
@@ -24,10 +24,10 @@ const LABEL_CLASS: &str = "px-2 py-1.5 text-sm font-medium";
 
 const SEPARATOR_CLASS: &str = "-mx-1 my-1 h-px bg-border";
 
-const SUB_TRIGGER_CLASS: &str = "flex cursor-default items-center rounded-sm px-2 py-1.5 text-sm outline-hidden select-none focus:bg-accent focus:text-accent-foreground data-[state=open]:bg-accent data-[state=open]:text-accent-foreground";
+const SUB_TRIGGER_CLASS: &str = "flex cursor-default items-center rounded-sm px-2 py-1.5 text-sm outline-hidden select-none menu-item-focus data-[state=open]:bg-accent data-[state=open]:text-accent-foreground";
 
 const SUB_CONTENT_CLASS: &str =
-    "z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-lg";
+    "popover-content-base shadow-lg";
 
 // ---------------------------------------------------------------------------
 // Components

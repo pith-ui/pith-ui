@@ -37,7 +37,7 @@ cardo_ui_themes::impl_cardo_tw_variant!(ButtonSize);
 
 #[derive(TwClass)]
 #[tw(
-    class = "inline-flex shrink-0 items-center justify-center gap-2 rounded-md text-sm font-medium whitespace-nowrap transition-all outline-none focus-visible:focus-ring disabled:pointer-events-none disabled:opacity-50"
+    class = "inline-flex shrink-0 items-center justify-center gap-2 rounded-md text-sm font-medium whitespace-nowrap transition-all outline-none focus-visible:focus-ring disabled:disabled-base"
 )]
 pub struct ButtonClass {
     pub variant: ButtonVariant,

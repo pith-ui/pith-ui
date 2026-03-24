@@ -15,7 +15,7 @@ const DESCRIPTION_CLASS: &str = "text-sm text-muted-foreground";
 
 const CLOSE_CLASS: &str = "absolute top-2 right-2 rounded-md p-1 text-foreground/50 hover:text-foreground opacity-0 transition-opacity group-hover:opacity-100 focus-visible:focus-ring";
 
-const ACTION_CLASS: &str = "inline-flex h-8 shrink-0 items-center justify-center rounded-md border border-border bg-transparent px-3 text-sm font-medium outline-none transition-colors hover:bg-secondary focus-visible:focus-ring disabled:pointer-events-none disabled:opacity-50";
+const ACTION_CLASS: &str = "inline-flex h-8 shrink-0 items-center justify-center rounded-md border border-border bg-transparent px-3 text-sm font-medium outline-none transition-colors hover:bg-secondary focus-visible:focus-ring disabled:disabled-base";
 
 // ---------------------------------------------------------------------------
 // Components

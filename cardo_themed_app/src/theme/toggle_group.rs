@@ -7,7 +7,7 @@ use leptos::prelude::*;
 
 const GROUP_CLASS: &str = "group/toggle-group flex w-fit items-center rounded-md";
 
-const ITEM_CLASS: &str = "inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium whitespace-nowrap transition-[color,box-shadow] outline-none hover:bg-muted hover:text-muted-foreground focus-visible:focus-ring disabled:pointer-events-none disabled:opacity-50 data-[state=on]:bg-accent data-[state=on]:text-accent-foreground bg-transparent h-9 min-w-9 px-2 focus:z-10 focus-visible:z-10";
+const ITEM_CLASS: &str = "inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium whitespace-nowrap transition-[color,box-shadow] outline-none hover:bg-muted hover:text-muted-foreground focus-visible:focus-ring disabled:disabled-base data-[state=on]:bg-accent data-[state=on]:text-accent-foreground bg-transparent h-9 min-w-9 px-2 focus:z-10 focus-visible:z-10";
 
 // ---------------------------------------------------------------------------
 // Components

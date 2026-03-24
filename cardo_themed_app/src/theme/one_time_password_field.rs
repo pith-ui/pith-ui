@@ -7,7 +7,7 @@ use leptos::prelude::*;
 
 const ROOT_CLASS: &str = "flex items-center gap-2";
 
-const INPUT_CLASS: &str = "size-10 text-center rounded-md border border-input bg-transparent text-sm shadow-xs outline-none focus-visible:focus-ring disabled:cursor-not-allowed disabled:opacity-50 dark:bg-input/30";
+const INPUT_CLASS: &str = "size-10 text-center rounded-md border border-input bg-transparent text-sm shadow-xs outline-none focus-visible:focus-ring disabled:disabled-cursor dark:bg-input/30";
 
 // ---------------------------------------------------------------------------
 // Components
