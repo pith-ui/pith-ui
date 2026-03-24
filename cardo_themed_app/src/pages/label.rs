@@ -31,7 +31,7 @@ pub fn LabelPage() -> impl IntoView {
                     <input
                         type="email"
                         placeholder="you@example.com"
-                        class="h-9 w-64 rounded-md border border-input bg-transparent px-3 text-sm text-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 outline-none"
+                        class="h-9 w-64 rounded-md border border-input bg-transparent px-3 text-sm text-foreground placeholder:text-muted-foreground focus-visible:focus-ring outline-none"
                     />
                 </div>
             </section>

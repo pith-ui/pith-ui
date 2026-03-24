@@ -7,7 +7,7 @@ use leptos::prelude::*;
 // No TwVariant needed — shadcn checkbox is a single fixed style.
 // ---------------------------------------------------------------------------
 
-const ROOT_CLASS: &str = "peer size-4 shrink-0 rounded-[4px] border border-input shadow-xs transition-shadow outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:border-primary data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:bg-input/30 dark:data-[state=checked]:bg-primary";
+const ROOT_CLASS: &str = "peer size-4 shrink-0 rounded-[4px] border border-input shadow-xs transition-shadow outline-none focus-visible:focus-ring disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:border-primary data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:bg-input/30 dark:data-[state=checked]:bg-primary";
 
 const INDICATOR_CLASS: &str = "grid place-content-center text-current";
 

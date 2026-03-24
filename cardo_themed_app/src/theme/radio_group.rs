@@ -7,7 +7,7 @@ use leptos::prelude::*;
 
 const GROUP_CLASS: &str = "grid gap-3";
 
-const ITEM_CLASS: &str = "aspect-square size-4 shrink-0 rounded-full border border-input text-primary shadow-xs transition-[color,box-shadow] outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:border-primary dark:bg-input/30";
+const ITEM_CLASS: &str = "aspect-square size-4 shrink-0 rounded-full border border-input text-primary shadow-xs transition-[color,box-shadow] outline-none focus-visible:focus-ring disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:border-primary dark:bg-input/30";
 
 const INDICATOR_CLASS: &str = "flex items-center justify-center";
 

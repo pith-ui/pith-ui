@@ -69,6 +69,18 @@
 @custom-variant dark (&:is(.dark *));
 
 /*
+ * Shared utilities — single definitions for cross-component behaviors.
+ * Components use these via Tailwind variants: focus-visible:focus-ring
+ */
+@utility focus-ring {
+    @apply border-ring ring-3 ring-ring/50;
+}
+
+@utility focus-ring-destructive {
+    @apply border-destructive ring-3 ring-destructive/20 dark:ring-destructive/40;
+}
+
+/*
  * Base layer — default border/outline colors matching shadcn.
  */
 @layer base {
