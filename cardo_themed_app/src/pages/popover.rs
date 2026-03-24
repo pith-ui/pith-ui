@@ -1,6 +1,7 @@
 use leptos::prelude::*;
 
 use crate::theme::button::*;
+use crate::theme::input::*;
 use crate::theme::popover::*;
 
 #[component]
@@ -31,31 +32,19 @@ pub fn PopoverPage() -> impl IntoView {
                             <div class="grid gap-2">
                                 <div class="grid grid-cols-3 items-center gap-4">
                                     <label class="text-sm font-medium text-foreground">"Width"</label>
-                                    <input
-                                        class="col-span-2 flex h-8 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs placeholder:text-muted-foreground focus-visible:outline-none focus-visible:focus-ring"
-                                        value="100%"
-                                    />
+                                    <ThemedInput class="col-span-2" value="100%" />
                                 </div>
                                 <div class="grid grid-cols-3 items-center gap-4">
                                     <label class="text-sm font-medium text-foreground">"Height"</label>
-                                    <input
-                                        class="col-span-2 flex h-8 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs placeholder:text-muted-foreground focus-visible:outline-none focus-visible:focus-ring"
-                                        value="25px"
-                                    />
+                                    <ThemedInput class="col-span-2" value="25px" />
                                 </div>
                                 <div class="grid grid-cols-3 items-center gap-4">
                                     <label class="text-sm font-medium text-foreground">"Max. height"</label>
-                                    <input
-                                        class="col-span-2 flex h-8 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs placeholder:text-muted-foreground focus-visible:outline-none focus-visible:focus-ring"
-                                        value="none"
-                                    />
+                                    <ThemedInput class="col-span-2" value="none" />
                                 </div>
                                 <div class="grid grid-cols-3 items-center gap-4">
                                     <label class="text-sm font-medium text-foreground">"Max. width"</label>
-                                    <input
-                                        class="col-span-2 flex h-8 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs placeholder:text-muted-foreground focus-visible:outline-none focus-visible:focus-ring"
-                                        value="300px"
-                                    />
+                                    <ThemedInput class="col-span-2" value="300px" />
                                 </div>
                             </div>
                         </div>

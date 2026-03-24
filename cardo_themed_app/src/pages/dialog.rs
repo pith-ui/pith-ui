@@ -2,6 +2,7 @@ use leptos::prelude::*;
 
 use crate::theme::button::*;
 use crate::theme::dialog::*;
+use crate::theme::input::*;
 
 #[component]
 pub fn DialogPage() -> impl IntoView {
@@ -51,17 +52,11 @@ pub fn DialogPage() -> impl IntoView {
                         <div class="grid gap-4 py-4">
                             <div class="grid grid-cols-4 items-center gap-4">
                                 <label class="text-right text-sm font-medium text-foreground">"Name"</label>
-                                <input
-                                    class="col-span-3 flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs placeholder:text-muted-foreground focus-visible:outline-none focus-visible:focus-ring"
-                                    value="Pedro Duarte"
-                                />
+                                <ThemedInput class="col-span-3" value="Pedro Duarte" />
                             </div>
                             <div class="grid grid-cols-4 items-center gap-4">
                                 <label class="text-right text-sm font-medium text-foreground">"Username"</label>
-                                <input
-                                    class="col-span-3 flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs placeholder:text-muted-foreground focus-visible:outline-none focus-visible:focus-ring"
-                                    value="@peduarte"
-                                />
+                                <ThemedInput class="col-span-3" value="@peduarte" />
                             </div>
                         </div>
                         <div class="flex justify-end">

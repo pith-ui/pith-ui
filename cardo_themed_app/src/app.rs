@@ -5,9 +5,10 @@ use leptos_router::{
 };
 
 use crate::pages::{
-    accordion, alert_dialog, avatar, badges, buttons, checkboxes, collapsible, context_menu, dialog,
-    dropdown_menu, home, hover_card, label, popover, progress, radio_group, scroll_area, select,
-    separator, slider, switches, tabs, toggle_group, toggles, tooltip,
+    accordion, alert_dialog, aspect_ratio, avatar, badges, buttons, card, checkboxes, collapsible,
+    context_menu, dialog, dropdown_menu, home, hover_card, input, label, menubar, navigation_menu,
+    one_time_password_field, password_toggle_field, popover, progress, radio_group, scroll_area,
+    select, separator, slider, switches, tabs, textarea, toast, toggle_group, toggles, tooltip,
 };
 
 #[component]
@@ -72,16 +73,23 @@ pub fn App() -> impl IntoView {
                     </div>
                     <NavLink href="/accordion" label="Accordion" />
                     <NavLink href="/alert-dialog" label="Alert Dialog" />
+                    <NavLink href="/aspect-ratio" label="Aspect Ratio" />
                     <NavLink href="/avatar" label="Avatar" />
                     <NavLink href="/badge" label="Badge" />
                     <NavLink href="/button" label="Button" />
+                    <NavLink href="/card" label="Card" />
                     <NavLink href="/checkbox" label="Checkbox" />
                     <NavLink href="/collapsible" label="Collapsible" />
                     <NavLink href="/context-menu" label="Context Menu" />
                     <NavLink href="/dialog" label="Dialog" />
                     <NavLink href="/dropdown-menu" label="Dropdown Menu" />
                     <NavLink href="/hover-card" label="Hover Card" />
+                    <NavLink href="/input" label="Input" />
                     <NavLink href="/label" label="Label" />
+                    <NavLink href="/menubar" label="Menubar" />
+                    <NavLink href="/navigation-menu" label="Navigation Menu" />
+                    <NavLink href="/one-time-password-field" label="OTP Field" />
+                    <NavLink href="/password-toggle-field" label="Password Toggle" />
                     <NavLink href="/popover" label="Popover" />
                     <NavLink href="/progress" label="Progress" />
                     <NavLink href="/radio-group" label="Radio Group" />
@@ -91,6 +99,8 @@ pub fn App() -> impl IntoView {
                     <NavLink href="/slider" label="Slider" />
                     <NavLink href="/switch" label="Switch" />
                     <NavLink href="/tabs" label="Tabs" />
+                    <NavLink href="/textarea" label="Textarea" />
+                    <NavLink href="/toast" label="Toast" />
                     <NavLink href="/toggle" label="Toggle" />
                     <NavLink href="/toggle-group" label="Toggle Group" />
                     <NavLink href="/tooltip" label="Tooltip" />
@@ -102,16 +112,23 @@ pub fn App() -> impl IntoView {
                         <Route path=path!("/") view=home::HomePage />
                         <Route path=path!("/accordion") view=accordion::AccordionPage />
                         <Route path=path!("/alert-dialog") view=alert_dialog::AlertDialogPage />
+                        <Route path=path!("/aspect-ratio") view=aspect_ratio::AspectRatioPage />
                         <Route path=path!("/avatar") view=avatar::AvatarPage />
                         <Route path=path!("/badge") view=badges::BadgesPage />
                         <Route path=path!("/button") view=buttons::ButtonsPage />
+                        <Route path=path!("/card") view=card::CardPage />
                         <Route path=path!("/checkbox") view=checkboxes::CheckboxesPage />
                         <Route path=path!("/collapsible") view=collapsible::CollapsiblePage />
                         <Route path=path!("/context-menu") view=context_menu::ContextMenuPage />
                         <Route path=path!("/dialog") view=dialog::DialogPage />
                         <Route path=path!("/dropdown-menu") view=dropdown_menu::DropdownMenuPage />
                         <Route path=path!("/hover-card") view=hover_card::HoverCardPage />
+                        <Route path=path!("/input") view=input::InputPage />
                         <Route path=path!("/label") view=label::LabelPage />
+                        <Route path=path!("/menubar") view=menubar::MenubarPage />
+                        <Route path=path!("/navigation-menu") view=navigation_menu::NavigationMenuPage />
+                        <Route path=path!("/one-time-password-field") view=one_time_password_field::OneTimePasswordFieldPage />
+                        <Route path=path!("/password-toggle-field") view=password_toggle_field::PasswordToggleFieldPage />
                         <Route path=path!("/popover") view=popover::PopoverPage />
                         <Route path=path!("/progress") view=progress::ProgressPage />
                         <Route path=path!("/radio-group") view=radio_group::RadioGroupPage />
@@ -121,6 +138,8 @@ pub fn App() -> impl IntoView {
                         <Route path=path!("/slider") view=slider::SliderPage />
                         <Route path=path!("/switch") view=switches::SwitchesPage />
                         <Route path=path!("/tabs") view=tabs::TabsPage />
+                        <Route path=path!("/textarea") view=textarea::TextareaPage />
+                        <Route path=path!("/toast") view=toast::ToastPage />
                         <Route path=path!("/toggle") view=toggles::TogglesPage />
                         <Route path=path!("/toggle-group") view=toggle_group::ToggleGroupPage />
                         <Route path=path!("/tooltip") view=tooltip::TooltipPage />

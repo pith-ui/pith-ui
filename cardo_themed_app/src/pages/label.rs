@@ -1,6 +1,7 @@
 use leptos::prelude::*;
 
 use crate::theme::checkbox::ThemedCheckbox;
+use crate::theme::input::*;
 use crate::theme::label::ThemedLabel;
 
 #[component]
@@ -28,11 +29,7 @@ pub fn LabelPage() -> impl IntoView {
                 <h2 class="text-lg font-semibold text-foreground">"Standalone"</h2>
                 <div class="flex flex-col gap-2">
                     <ThemedLabel>"Email address"</ThemedLabel>
-                    <input
-                        type="email"
-                        placeholder="you@example.com"
-                        class="h-9 w-64 rounded-md border border-input bg-transparent px-3 text-sm text-foreground placeholder:text-muted-foreground focus-visible:focus-ring outline-none"
-                    />
+                    <ThemedInput r#type="email" placeholder="you@example.com" />
                 </div>
             </section>
         </div>
