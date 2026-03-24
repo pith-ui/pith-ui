@@ -1,0 +1,12 @@
+{
+    "name": "cardo-themed-app",
+    "version": "0.1.0",
+    "private": true,
+    "packageManager": "pnpm@10.28.2",
+    "dependencies": {
+        "@radix-ui/colors": "^3.0.0"
+    },
+    "devDependencies": {
+        "tailwindcss": "^3.4.0"
+    }
+}

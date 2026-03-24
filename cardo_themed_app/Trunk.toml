@@ -1,0 +1,10 @@
+[watch]
+ignore = ["style/tailwind.output.css"]
+
+[[hooks]]
+stage = "pre_build"
+command = "sh"
+command_arguments = [
+    "-c",
+    "npx tailwindcss -i style/tailwind.css -o style/tailwind.output.css",
+]

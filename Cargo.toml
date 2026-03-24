@@ -1,6 +1,7 @@
 [workspace]
 members = [
     "book-examples/*/*",
+    "cardo_themed_app",
     "packages/primitives/leptos",
     "packages/themes/leptos",
     "reference_app/leptos",

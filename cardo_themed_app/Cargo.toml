@@ -1,0 +1,22 @@
+[package]
+name = "cardo-themed-app"
+description = "Themed component showcase app demonstrating token-driven design with Cardo UI."
+publish = false
+
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+version.workspace = true
+
+[dependencies]
+console_error_panic_hook.workspace = true
+console_log.workspace = true
+leptos = { workspace = true, features = ["csr"] }
+leptos_router.workspace = true
+log.workspace = true
+cardo-ui = { workspace = true, features = ["checkbox", "switch", "toggle", "label", "separator"] }
+cardo-ui-themes = { path = "../packages/themes/leptos" }
+tailwind_fuse.workspace = true
+wasm-bindgen = "0.2"
+web-sys = { workspace = true, features = ["Document", "HtmlElement"] }
