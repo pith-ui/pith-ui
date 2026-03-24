@@ -1,6 +1,14 @@
+pub mod accordion;
+pub mod avatar;
 pub mod badges;
 pub mod buttons;
 pub mod checkboxes;
 pub mod home;
+pub mod label;
+pub mod progress;
+pub mod radio_group;
+pub mod separator;
+pub mod slider;
 pub mod switches;
+pub mod tabs;
 pub mod toggles;
