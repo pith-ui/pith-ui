@@ -3,62 +3,60 @@ use leptos::prelude::*;
 use tailwind_fuse::*;
 
 // ---------------------------------------------------------------------------
-// Style definitions
+// Style definitions — shadcn/ui new-york switch
 // ---------------------------------------------------------------------------
 
-/// Public size prop for the themed switch.
 #[derive(Clone, Copy, Default)]
 pub enum SwitchSize {
     #[default]
+    Default,
     Sm,
-    Md,
 }
 
-// Root styles per size
 #[derive(TwVariant)]
-pub enum SwitchRootSize {
-    #[tw(default, class = "w-9 h-5")]
+enum SwitchRootSize {
+    #[tw(default, class = "h-[1.15rem] w-8")]
+    Default,
+    #[tw(class = "h-3.5 w-6")]
     Sm,
-    #[tw(class = "w-11 h-6")]
-    Md,
 }
 
 #[derive(TwClass)]
 #[tw(
-    class = "inline-flex items-center shrink-0 rounded-full p-0.5 transition-colors duration-normal bg-neutral-5 data-[state=checked]:bg-accent-9 data-[disabled]:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-2 focus-visible:ring-offset-page"
+    class = "peer inline-flex shrink-0 items-center rounded-full border border-transparent shadow-xs transition-all outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=unchecked]:bg-input dark:data-[state=unchecked]:bg-input/80"
 )]
-pub struct SwitchRootClass {
-    pub size: SwitchRootSize,
+struct SwitchRootClass {
+    size: SwitchRootSize,
 }
 
-// Thumb styles per size
 #[derive(TwVariant)]
-pub enum SwitchThumbSize {
-    #[tw(default, class = "size-4 data-[state=checked]:translate-x-4")]
+enum SwitchThumbSize {
+    #[tw(default, class = "size-4")]
+    Default,
+    #[tw(class = "size-3")]
     Sm,
-    #[tw(class = "size-5 data-[state=checked]:translate-x-5")]
-    Md,
 }
 
 #[derive(TwClass)]
-#[tw(class = "pointer-events-none block rounded-full bg-white shadow-1 transition-transform duration-normal")]
-pub struct SwitchThumbClass {
-    pub size: SwitchThumbSize,
+#[tw(
+    class = "pointer-events-none block rounded-full bg-background ring-0 transition-transform data-[state=checked]:translate-x-[calc(100%-2px)] data-[state=unchecked]:translate-x-0 dark:data-[state=checked]:bg-primary-foreground dark:data-[state=unchecked]:bg-foreground"
+)]
+struct SwitchThumbClass {
+    size: SwitchThumbSize,
 }
 
-// Map public SwitchSize to internal root/thumb sizes
 impl SwitchSize {
-    fn root_size(self) -> SwitchRootSize {
+    fn root(self) -> SwitchRootSize {
         match self {
+            SwitchSize::Default => SwitchRootSize::Default,
             SwitchSize::Sm => SwitchRootSize::Sm,
-            SwitchSize::Md => SwitchRootSize::Md,
         }
     }
 
-    fn thumb_size(self) -> SwitchThumbSize {
+    fn thumb(self) -> SwitchThumbSize {
         match self {
+            SwitchSize::Default => SwitchThumbSize::Default,
             SwitchSize::Sm => SwitchThumbSize::Sm,
-            SwitchSize::Md => SwitchThumbSize::Md,
         }
     }
 }
@@ -76,18 +74,8 @@ pub fn ThemedSwitch(
     #[prop(into, optional)] disabled: MaybeProp<bool>,
     #[prop(into, optional)] name: MaybeProp<String>,
 ) -> impl IntoView {
-    let root_class = StoredValue::new(
-        SwitchRootClass {
-            size: size.root_size(),
-        }
-        .to_class(),
-    );
-    let thumb_class = StoredValue::new(
-        SwitchThumbClass {
-            size: size.thumb_size(),
-        }
-        .to_class(),
-    );
+    let root_class = StoredValue::new(SwitchRootClass { size: size.root() }.to_class());
+    let thumb_class = StoredValue::new(SwitchThumbClass { size: size.thumb() }.to_class());
 
     view! {
         <Switch

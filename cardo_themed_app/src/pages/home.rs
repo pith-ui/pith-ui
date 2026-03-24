@@ -1,35 +1,12 @@
 use leptos::prelude::*;
 
-/// Renders a single color swatch with the token name and resolved color.
+/// Renders a single color swatch.
 #[component]
 fn Swatch(label: &'static str, class: &'static str) -> impl IntoView {
     view! {
-        <div class="flex flex-col items-center gap-1">
-            <div class={format!("w-12 h-12 rounded-2 shadow-1 {class}")} />
-            <span class="text-xs text-neutral-11">{label}</span>
-        </div>
-    }
-}
-
-/// Renders a labeled row of 12 swatches for a color scale.
-#[component]
-fn ScaleRow(name: &'static str, prefix: &'static str) -> impl IntoView {
-    let swatches: Vec<_> = (1..=12)
-        .map(|i| {
-            let label = format!("{i}");
-            let class = format!("bg-{prefix}-{i}");
-            let label_static: &'static str = Box::leak(label.into_boxed_str());
-            let class_static: &'static str = Box::leak(class.into_boxed_str());
-            view! { <Swatch label=label_static class=class_static /> }
-        })
-        .collect();
-
-    view! {
-        <div class="space-y-2">
-            <h3 class="text-sm font-medium text-neutral-11">{name}</h3>
-            <div class="flex gap-2 flex-wrap">
-                {swatches}
-            </div>
+        <div class="flex flex-col items-center gap-1.5">
+            <div class={format!("h-16 w-full rounded-md border border-border {class}")} />
+            <span class="text-xs text-muted-foreground">{label}</span>
         </div>
     }
 }
@@ -39,78 +16,96 @@ pub fn HomePage() -> impl IntoView {
     view! {
         <div class="space-y-10">
             <div>
-                <h1 class="text-2xl font-bold text-neutral-12 mb-1">"Design System"</h1>
-                <p class="text-neutral-11 mb-6">
-                    "Token-driven design language. All colors below are resolved through CSS custom properties. "
-                    "Swap " <code class="text-accent-11 bg-accent-3 px-1 rounded-1 text-sm">"--indigo-*"</code>
-                    " to " <code class="text-accent-11 bg-accent-3 px-1 rounded-1 text-sm">"--violet-*"</code>
-                    " in " <code class="text-accent-11 bg-accent-3 px-1 rounded-1 text-sm">"tokens.css"</code>
-                    " to change the accent color everywhere."
+                <h1 class="text-2xl font-bold text-foreground mb-1">"Design System"</h1>
+                <p class="text-muted-foreground mb-6">
+                    "shadcn/ui new-york baseline. All colors use OKLCH via CSS custom properties. "
+                    "Toggle dark mode with the button in the sidebar."
                 </p>
             </div>
 
-            // Color palette
-            <section class="space-y-6">
-                <h2 class="text-lg font-semibold text-neutral-12">"Color Palette"</h2>
-                <ScaleRow name="Accent" prefix="accent" />
-                <ScaleRow name="Neutral" prefix="neutral" />
-                <ScaleRow name="Danger" prefix="danger" />
-                <ScaleRow name="Success" prefix="success" />
-            </section>
-
-            // Radix scale usage guide
+            // Semantic color palette
             <section class="space-y-4">
-                <h2 class="text-lg font-semibold text-neutral-12">"Scale Usage Guide"</h2>
-                <div class="bg-neutral-2 rounded-3 p-4 text-sm text-neutral-11 space-y-1 border border-neutral-6">
-                    <div><span class="font-medium text-neutral-12">"Steps 1\u{2013}2:"</span>" Backgrounds"</div>
-                    <div><span class="font-medium text-neutral-12">"Steps 3\u{2013}5:"</span>" Component surfaces & hover/active states"</div>
-                    <div><span class="font-medium text-neutral-12">"Steps 6\u{2013}8:"</span>" Borders"</div>
-                    <div><span class="font-medium text-neutral-12">"Steps 9\u{2013}10:"</span>" Solid fills"</div>
-                    <div><span class="font-medium text-neutral-12">"Steps 11\u{2013}12:"</span>" Text"</div>
+                <h2 class="text-lg font-semibold text-foreground">"Semantic Colors"</h2>
+                <div class="grid grid-cols-4 gap-3">
+                    <Swatch label="background" class="bg-background" />
+                    <Swatch label="foreground" class="bg-foreground" />
+                    <Swatch label="card" class="bg-card" />
+                    <Swatch label="popover" class="bg-popover" />
+                </div>
+                <div class="grid grid-cols-4 gap-3">
+                    <Swatch label="primary" class="bg-primary" />
+                    <Swatch label="primary-fg" class="bg-primary-foreground" />
+                    <Swatch label="secondary" class="bg-secondary" />
+                    <Swatch label="secondary-fg" class="bg-secondary-foreground" />
+                </div>
+                <div class="grid grid-cols-4 gap-3">
+                    <Swatch label="muted" class="bg-muted" />
+                    <Swatch label="muted-fg" class="bg-muted-foreground" />
+                    <Swatch label="accent" class="bg-accent" />
+                    <Swatch label="accent-fg" class="bg-accent-foreground" />
+                </div>
+                <div class="grid grid-cols-4 gap-3">
+                    <Swatch label="destructive" class="bg-destructive" />
+                    <Swatch label="destructive-fg" class="bg-destructive-foreground" />
+                    <Swatch label="border" class="bg-border" />
+                    <Swatch label="ring" class="bg-ring" />
                 </div>
             </section>
 
-            // Layout tokens
+            // Token mapping explanation
             <section class="space-y-4">
-                <h2 class="text-lg font-semibold text-neutral-12">"Border Radius"</h2>
+                <h2 class="text-lg font-semibold text-foreground">"Token Architecture"</h2>
+                <div class="bg-card rounded-lg border border-border p-4 text-sm text-muted-foreground space-y-2">
+                    <p>
+                        <span class="font-medium text-foreground">"tokens.css"</span>
+                        " \u{2192} OKLCH channels for each semantic role (primary, secondary, etc.)"
+                    </p>
+                    <p>
+                        <span class="font-medium text-foreground">"tailwind.config.js"</span>
+                        " \u{2192} wraps channels as "
+                        <code class="text-foreground bg-muted px-1 rounded-sm text-xs">"oklch(var(--primary) / <alpha-value>)"</code>
+                    </p>
+                    <p>
+                        <span class="font-medium text-foreground">"Components"</span>
+                        " \u{2192} use Tailwind utilities like "
+                        <code class="text-foreground bg-muted px-1 rounded-sm text-xs">"bg-primary"</code>
+                        ", "
+                        <code class="text-foreground bg-muted px-1 rounded-sm text-xs">"text-muted-foreground"</code>
+                        ", "
+                        <code class="text-foreground bg-muted px-1 rounded-sm text-xs">"hover:bg-primary/90"</code>
+                    </p>
+                    <p>
+                        <span class="font-medium text-foreground">"Opacity modifiers"</span>
+                        " \u{2192} "
+                        <code class="text-foreground bg-muted px-1 rounded-sm text-xs">"/90"</code>
+                        " works because channels are stored without the oklch() wrapper"
+                    </p>
+                </div>
+            </section>
+
+            // Border radius
+            <section class="space-y-4">
+                <h2 class="text-lg font-semibold text-foreground">"Border Radius"</h2>
+                <p class="text-sm text-muted-foreground">
+                    "Based on " <code class="bg-muted px-1 rounded-sm text-xs">"--radius: 0.625rem"</code>
+                    " with sm/md/lg computed from it."
+                </p>
                 <div class="flex items-end gap-4">
-                    <div class="flex flex-col items-center gap-1">
-                        <div class="w-16 h-16 bg-accent-3 border border-accent-7 rounded-1" />
-                        <span class="text-xs text-neutral-11">"radius-1"</span>
+                    <div class="flex flex-col items-center gap-1.5">
+                        <div class="w-16 h-16 bg-primary/10 border border-border rounded-sm" />
+                        <span class="text-xs text-muted-foreground">"sm"</span>
                     </div>
-                    <div class="flex flex-col items-center gap-1">
-                        <div class="w-16 h-16 bg-accent-3 border border-accent-7 rounded-2" />
-                        <span class="text-xs text-neutral-11">"radius-2"</span>
+                    <div class="flex flex-col items-center gap-1.5">
+                        <div class="w-16 h-16 bg-primary/10 border border-border rounded-md" />
+                        <span class="text-xs text-muted-foreground">"md"</span>
                     </div>
-                    <div class="flex flex-col items-center gap-1">
-                        <div class="w-16 h-16 bg-accent-3 border border-accent-7 rounded-3" />
-                        <span class="text-xs text-neutral-11">"radius-3"</span>
+                    <div class="flex flex-col items-center gap-1.5">
+                        <div class="w-16 h-16 bg-primary/10 border border-border rounded-lg" />
+                        <span class="text-xs text-muted-foreground">"lg"</span>
                     </div>
-                    <div class="flex flex-col items-center gap-1">
-                        <div class="w-16 h-16 bg-accent-3 border border-accent-7 rounded-4" />
-                        <span class="text-xs text-neutral-11">"radius-4"</span>
-                    </div>
-                    <div class="flex flex-col items-center gap-1">
-                        <div class="w-16 h-16 bg-accent-3 border border-accent-7 rounded-full" />
-                        <span class="text-xs text-neutral-11">"full"</span>
-                    </div>
-                </div>
-            </section>
-
-            <section class="space-y-4">
-                <h2 class="text-lg font-semibold text-neutral-12">"Shadows"</h2>
-                <div class="flex items-end gap-6">
-                    <div class="flex flex-col items-center gap-1">
-                        <div class="w-20 h-20 bg-neutral-1 rounded-2 shadow-1" />
-                        <span class="text-xs text-neutral-11">"shadow-1"</span>
-                    </div>
-                    <div class="flex flex-col items-center gap-1">
-                        <div class="w-20 h-20 bg-neutral-1 rounded-2 shadow-2" />
-                        <span class="text-xs text-neutral-11">"shadow-2"</span>
-                    </div>
-                    <div class="flex flex-col items-center gap-1">
-                        <div class="w-20 h-20 bg-neutral-1 rounded-2 shadow-3" />
-                        <span class="text-xs text-neutral-11">"shadow-3"</span>
+                    <div class="flex flex-col items-center gap-1.5">
+                        <div class="w-16 h-16 bg-primary/10 border border-border rounded-full" />
+                        <span class="text-xs text-muted-foreground">"full"</span>
                     </div>
                 </div>
             </section>

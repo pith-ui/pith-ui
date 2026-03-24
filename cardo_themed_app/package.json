@@ -4,9 +4,10 @@
     "private": true,
     "packageManager": "pnpm@10.28.2",
     "dependencies": {
-        "@radix-ui/colors": "^3.0.0"
+        "@radix-ui/colors": "^3.0.0",
+        "@tailwindcss/cli": "^4.2.2"
     },
     "devDependencies": {
-        "tailwindcss": "^3.4.0"
+        "tailwindcss": "^4.2.2"
     }
 }

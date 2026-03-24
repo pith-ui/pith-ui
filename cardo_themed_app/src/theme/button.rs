@@ -2,36 +2,42 @@ use leptos::prelude::*;
 use tailwind_fuse::*;
 
 // ---------------------------------------------------------------------------
-// Style definitions (token-referencing utility classes only)
+// Style definitions — shadcn/ui new-york button
 // ---------------------------------------------------------------------------
 
 #[derive(TwVariant)]
 pub enum ButtonVariant {
-    #[tw(default, class = "bg-accent-9 text-white hover:bg-accent-10 active:bg-accent-10")]
-    Solid,
-    #[tw(class = "bg-accent-3 text-accent-11 hover:bg-accent-4 active:bg-accent-5")]
-    Soft,
-    #[tw(class = "border border-accent-7 text-accent-11 bg-transparent hover:bg-accent-2 active:bg-accent-3")]
+    #[tw(default, class = "bg-primary text-primary-foreground hover:bg-primary/90")]
+    Default,
+    #[tw(class = "bg-destructive text-white hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:bg-destructive/60 dark:focus-visible:ring-destructive/40")]
+    Destructive,
+    #[tw(class = "border border-input bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:hover:bg-input/50")]
     Outline,
-    #[tw(class = "text-accent-11 bg-transparent hover:bg-accent-3 active:bg-accent-4")]
+    #[tw(class = "bg-secondary text-secondary-foreground hover:bg-secondary/80")]
+    Secondary,
+    #[tw(class = "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50")]
     Ghost,
+    #[tw(class = "text-primary underline-offset-4 hover:underline")]
+    Link,
 }
 cardo_ui_themes::impl_cardo_tw_variant!(ButtonVariant);
 
 #[derive(TwVariant)]
 pub enum ButtonSize {
-    #[tw(class = "h-7 px-2 text-xs gap-1 rounded-1")]
+    #[tw(default, class = "h-9 px-4 py-2")]
+    Default,
+    #[tw(class = "h-8 gap-1.5 rounded-md px-3")]
     Sm,
-    #[tw(default, class = "h-9 px-3 text-sm gap-1.5 rounded-2")]
-    Md,
-    #[tw(class = "h-11 px-4 text-base gap-2 rounded-3")]
+    #[tw(class = "h-10 rounded-md px-6")]
     Lg,
+    #[tw(class = "size-9")]
+    Icon,
 }
 cardo_ui_themes::impl_cardo_tw_variant!(ButtonSize);
 
 #[derive(TwClass)]
 #[tw(
-    class = "inline-flex items-center justify-center font-medium transition-colors duration-normal select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-2 focus-visible:ring-offset-page disabled:opacity-50 disabled:pointer-events-none"
+    class = "inline-flex shrink-0 items-center justify-center gap-2 rounded-md text-sm font-medium whitespace-nowrap transition-all outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50"
 )]
 pub struct ButtonClass {
     pub variant: ButtonVariant,

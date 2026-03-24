@@ -8,11 +8,10 @@ use crate::pages::{badges, buttons, checkboxes, home, switches, toggles};
 
 #[component]
 fn NavLink(href: &'static str, label: &'static str) -> impl IntoView {
-    // Simple nav link — active detection would require use_location, omitted for brevity.
     view! {
         <A
             href=href
-            attr:class="block px-3 py-1.5 text-sm rounded-2 text-neutral-11 hover:bg-neutral-3 hover:text-neutral-12 transition-colors duration-fast no-underline"
+            attr:class="block px-3 py-1.5 text-sm rounded-md text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors no-underline"
         >
             {label}
         </A>
@@ -27,7 +26,6 @@ fn DarkModeToggle() -> impl IntoView {
         let next = !dark.get();
         set_dark.set(next);
 
-        // Toggle .dark class on <html> for both Tailwind and Radix Colors.
         if let Some(el) = web_sys::window()
             .and_then(|w| w.document())
             .and_then(|d| d.document_element())
@@ -42,7 +40,7 @@ fn DarkModeToggle() -> impl IntoView {
 
     view! {
         <button
-            class="inline-flex items-center justify-center h-8 w-8 rounded-2 text-neutral-11 hover:bg-neutral-3 transition-colors duration-fast"
+            class="inline-flex items-center justify-center size-8 rounded-md text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
             on:click=toggle
             title="Toggle dark mode"
         >
@@ -57,15 +55,15 @@ pub fn App() -> impl IntoView {
         <Router>
             <div class="flex min-h-screen">
                 // Sidebar
-                <nav class="w-56 shrink-0 border-r border-neutral-6 bg-neutral-2 p-4 flex flex-col gap-1">
+                <nav class="w-56 shrink-0 border-r border-border bg-card p-4 flex flex-col gap-1">
                     <div class="flex items-center justify-between mb-4">
-                        <span class="text-sm font-semibold text-neutral-12">"Cardo Themed"</span>
+                        <span class="text-sm font-semibold text-foreground">"Cardo Themed"</span>
                         <DarkModeToggle />
                     </div>
 
                     <NavLink href="/" label="Design System" />
 
-                    <div class="mt-4 mb-1 px-3 text-xs font-semibold text-neutral-9 uppercase tracking-wider">
+                    <div class="mt-4 mb-1 px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                         "Components"
                     </div>
                     <NavLink href="/button" label="Button" />

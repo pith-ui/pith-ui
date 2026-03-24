@@ -3,32 +3,32 @@ use leptos::prelude::*;
 use tailwind_fuse::*;
 
 // ---------------------------------------------------------------------------
-// Style definitions
+// Style definitions — shadcn/ui new-york toggle
 // ---------------------------------------------------------------------------
 
 #[derive(TwVariant)]
 pub enum ToggleVariant {
-    #[tw(default, class = "hover:bg-neutral-3 data-[state=on]:bg-neutral-4 data-[state=on]:text-neutral-12")]
-    Ghost,
-    #[tw(class = "border border-neutral-6 hover:bg-neutral-3 hover:border-neutral-7 data-[state=on]:bg-accent-3 data-[state=on]:border-accent-7 data-[state=on]:text-accent-11")]
+    #[tw(default, class = "bg-transparent")]
+    Default,
+    #[tw(class = "border border-input bg-transparent shadow-xs hover:bg-accent hover:text-accent-foreground")]
     Outline,
 }
 cardo_ui_themes::impl_cardo_tw_variant!(ToggleVariant);
 
 #[derive(TwVariant)]
 pub enum ToggleSize {
-    #[tw(class = "h-7 px-2 text-xs")]
+    #[tw(class = "h-8 min-w-8 px-1.5")]
     Sm,
-    #[tw(default, class = "h-9 px-3 text-sm")]
-    Md,
-    #[tw(class = "h-11 px-4 text-base")]
+    #[tw(default, class = "h-9 min-w-9 px-2")]
+    Default,
+    #[tw(class = "h-10 min-w-10 px-2.5")]
     Lg,
 }
 cardo_ui_themes::impl_cardo_tw_variant!(ToggleSize);
 
 #[derive(TwClass)]
 #[tw(
-    class = "inline-flex items-center justify-center font-medium rounded-2 text-neutral-11 bg-transparent transition-colors duration-normal data-[disabled]:opacity-50 data-[disabled]:pointer-events-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus-ring focus-visible:ring-offset-2 focus-visible:ring-offset-page"
+    class = "inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium whitespace-nowrap transition-[color,box-shadow] outline-none hover:bg-muted hover:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 data-[state=on]:bg-accent data-[state=on]:text-accent-foreground"
 )]
 pub struct ToggleClass {
     pub variant: ToggleVariant,

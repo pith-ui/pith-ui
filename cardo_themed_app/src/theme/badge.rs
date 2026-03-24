@@ -2,65 +2,30 @@ use leptos::prelude::*;
 use tailwind_fuse::*;
 
 // ---------------------------------------------------------------------------
-// Style definitions
+// Style definitions — shadcn/ui new-york badge
 // ---------------------------------------------------------------------------
 
 #[derive(TwVariant)]
 pub enum BadgeVariant {
-    #[tw(default, class = "bg-accent-9 text-white")]
-    Solid,
-    #[tw(class = "bg-accent-3 text-accent-11")]
-    Soft,
-    #[tw(class = "border border-accent-7 text-accent-11 bg-transparent")]
+    #[tw(default, class = "bg-primary text-primary-foreground hover:bg-primary/90")]
+    Default,
+    #[tw(class = "bg-secondary text-secondary-foreground hover:bg-secondary/90")]
+    Secondary,
+    #[tw(class = "bg-destructive text-white hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:bg-destructive/60 dark:focus-visible:ring-destructive/40")]
+    Destructive,
+    #[tw(class = "border border-border text-foreground hover:bg-accent hover:text-accent-foreground")]
     Outline,
 }
 cardo_ui_themes::impl_cardo_tw_variant!(BadgeVariant);
 
-#[derive(Clone, Copy, Default)]
-pub enum BadgeColor {
-    #[default]
-    Accent,
-    Danger,
-    Success,
-    Neutral,
-}
-
-#[derive(TwVariant)]
-pub enum BadgeSize {
-    #[tw(class = "h-5 px-1.5 text-xs")]
-    Sm,
-    #[tw(default, class = "h-6 px-2 text-xs")]
-    Md,
-    #[tw(class = "h-7 px-2.5 text-sm")]
-    Lg,
-}
-cardo_ui_themes::impl_cardo_tw_variant!(BadgeSize);
-
 #[derive(TwClass)]
-#[tw(class = "inline-flex items-center justify-center font-medium rounded-full whitespace-nowrap")]
+#[tw(
+    class = "inline-flex w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-full border border-transparent px-2 py-0.5 text-xs font-medium whitespace-nowrap transition-[color,box-shadow] focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50"
+)]
 pub struct BadgeClass {
     pub variant: BadgeVariant,
-    pub size: BadgeSize,
 }
 cardo_ui_themes::impl_cardo_tw_class!(BadgeClass);
-
-// ---------------------------------------------------------------------------
-// Color override helpers
-//
-// BadgeVariant defines the *structural* variant (solid/soft/outline).
-// The color scale override replaces accent-* with danger-*, success-*, etc.
-// This is one approach — the rough edge is visible: we string-replace.
-// A production system might use a more type-safe approach.
-// ---------------------------------------------------------------------------
-
-fn apply_color(class: &str, color: BadgeColor) -> String {
-    match color {
-        BadgeColor::Accent => class.to_string(),
-        BadgeColor::Danger => class.replace("accent-", "danger-"),
-        BadgeColor::Success => class.replace("accent-", "success-"),
-        BadgeColor::Neutral => class.replace("accent-", "neutral-"),
-    }
-}
 
 // ---------------------------------------------------------------------------
 // Component
@@ -69,12 +34,9 @@ fn apply_color(class: &str, color: BadgeColor) -> String {
 #[component]
 pub fn Badge(
     #[prop(into, optional)] variant: BadgeVariant,
-    #[prop(into, optional)] size: BadgeSize,
-    #[prop(into, optional)] color: BadgeColor,
     children: Children,
 ) -> impl IntoView {
-    let base = BadgeClass { variant, size }.to_class();
-    let class = apply_color(&base, color);
+    let class = BadgeClass { variant }.to_class();
     view! {
         <span class=class>{children()}</span>
     }

@@ -1,129 +1,68 @@
 /*
- * Design Tokens
+ * Design Tokens — shadcn/ui new-york baseline
  *
- * This file is the single source of truth for the design language.
- * All utility classes ultimately resolve to these tokens.
- *
- * Token layers:
- *   1. Scale mapping  — maps semantic scale names to Radix Colors variables
- *   2. Semantic tokens — composed from scales for specific UI roles
- *   3. Layout tokens   — spacing, radii, shadows, motion
- *
- * To change the accent color from indigo to violet, swap var(--indigo-N)
- * references below to var(--violet-N). Everything downstream updates.
- *
- * Dark mode: Radix Colors CSS files scope dark values under `.dark`.
- * Because our scale tokens reference Radix vars, they cascade automatically.
+ * Full oklch() values. Tailwind v4 handles alpha composition natively,
+ * so /90, /50 etc. modifiers work without the channel-only hack.
  */
 
 :root {
-    /* ================================================================
-     * 1. SCALE MAPPING
-     * Change these to swap the entire palette.
-     * ================================================================ */
+    --radius: 0.625rem;
 
-    /* Accent (indigo) */
-    --accent-1: var(--indigo-1);
-    --accent-2: var(--indigo-2);
-    --accent-3: var(--indigo-3);
-    --accent-4: var(--indigo-4);
-    --accent-5: var(--indigo-5);
-    --accent-6: var(--indigo-6);
-    --accent-7: var(--indigo-7);
-    --accent-8: var(--indigo-8);
-    --accent-9: var(--indigo-9);
-    --accent-10: var(--indigo-10);
-    --accent-11: var(--indigo-11);
-    --accent-12: var(--indigo-12);
+    --background: oklch(1 0 0);
+    --foreground: oklch(0.145 0 0);
 
-    --accent-a1: var(--indigo-a1);
-    --accent-a2: var(--indigo-a2);
-    --accent-a3: var(--indigo-a3);
-    --accent-a4: var(--indigo-a4);
-    --accent-a5: var(--indigo-a5);
-    --accent-a6: var(--indigo-a6);
-    --accent-a7: var(--indigo-a7);
-    --accent-a8: var(--indigo-a8);
-    --accent-a9: var(--indigo-a9);
-    --accent-a10: var(--indigo-a10);
-    --accent-a11: var(--indigo-a11);
-    --accent-a12: var(--indigo-a12);
+    --card: oklch(1 0 0);
+    --card-foreground: oklch(0.145 0 0);
 
-    /* Neutral (gray) */
-    --neutral-1: var(--gray-1);
-    --neutral-2: var(--gray-2);
-    --neutral-3: var(--gray-3);
-    --neutral-4: var(--gray-4);
-    --neutral-5: var(--gray-5);
-    --neutral-6: var(--gray-6);
-    --neutral-7: var(--gray-7);
-    --neutral-8: var(--gray-8);
-    --neutral-9: var(--gray-9);
-    --neutral-10: var(--gray-10);
-    --neutral-11: var(--gray-11);
-    --neutral-12: var(--gray-12);
+    --popover: oklch(1 0 0);
+    --popover-foreground: oklch(0.145 0 0);
 
-    /* Danger (red) */
-    --danger-1: var(--red-1);
-    --danger-2: var(--red-2);
-    --danger-3: var(--red-3);
-    --danger-4: var(--red-4);
-    --danger-5: var(--red-5);
-    --danger-6: var(--red-6);
-    --danger-7: var(--red-7);
-    --danger-8: var(--red-8);
-    --danger-9: var(--red-9);
-    --danger-10: var(--red-10);
-    --danger-11: var(--red-11);
-    --danger-12: var(--red-12);
+    --primary: oklch(0.205 0 0);
+    --primary-foreground: oklch(0.985 0 0);
 
-    /* Success (green) */
-    --success-1: var(--green-1);
-    --success-2: var(--green-2);
-    --success-3: var(--green-3);
-    --success-4: var(--green-4);
-    --success-5: var(--green-5);
-    --success-6: var(--green-6);
-    --success-7: var(--green-7);
-    --success-8: var(--green-8);
-    --success-9: var(--green-9);
-    --success-10: var(--green-10);
-    --success-11: var(--green-11);
-    --success-12: var(--green-12);
+    --secondary: oklch(0.97 0 0);
+    --secondary-foreground: oklch(0.205 0 0);
 
-    /* ================================================================
-     * 2. SEMANTIC TOKENS
-     * Composed from the scales above.
-     * ================================================================ */
+    --muted: oklch(0.97 0 0);
+    --muted-foreground: oklch(0.556 0 0);
 
-    --color-page: var(--neutral-1);
-    --color-focus-ring: var(--accent-8);
+    --accent: oklch(0.97 0 0);
+    --accent-foreground: oklch(0.205 0 0);
 
-    /* ================================================================
-     * 3. LAYOUT TOKENS
-     * ================================================================ */
+    --destructive: oklch(0.577 0.245 27.325);
+    --destructive-foreground: oklch(0.97 0.01 17);
 
-    /* Border radius */
-    --radius-1: 4px;
-    --radius-2: 8px;
-    --radius-3: 12px;
-    --radius-4: 16px;
-    --radius-full: 9999px;
-
-    /* Shadows (light mode) */
-    --shadow-1: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-    --shadow-2: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
-    --shadow-3: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-
-    /* Motion */
-    --duration-fast: 100ms;
-    --duration-normal: 150ms;
-    --duration-slow: 300ms;
+    --border: oklch(0.922 0 0);
+    --input: oklch(0.922 0 0);
+    --ring: oklch(0.708 0 0);
 }
 
-/* Dark mode overrides for non-color tokens (colors cascade via Radix) */
 .dark {
-    --shadow-1: 0 1px 2px 0 rgb(0 0 0 / 0.3);
-    --shadow-2: 0 1px 3px 0 rgb(0 0 0 / 0.4), 0 1px 2px -1px rgb(0 0 0 / 0.3);
-    --shadow-3: 0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+    --background: oklch(0.145 0 0);
+    --foreground: oklch(0.985 0 0);
+
+    --card: oklch(0.205 0 0);
+    --card-foreground: oklch(0.985 0 0);
+
+    --popover: oklch(0.205 0 0);
+    --popover-foreground: oklch(0.985 0 0);
+
+    --primary: oklch(0.922 0 0);
+    --primary-foreground: oklch(0.205 0 0);
+
+    --secondary: oklch(0.269 0 0);
+    --secondary-foreground: oklch(0.985 0 0);
+
+    --muted: oklch(0.269 0 0);
+    --muted-foreground: oklch(0.708 0 0);
+
+    --accent: oklch(0.371 0 0);
+    --accent-foreground: oklch(0.985 0 0);
+
+    --destructive: oklch(0.704 0.191 22.216);
+    --destructive-foreground: oklch(0.58 0.22 27);
+
+    --border: oklch(1 0 0 / 10%);
+    --input: oklch(1 0 0 / 15%);
+    --ring: oklch(0.556 0 0);
 }

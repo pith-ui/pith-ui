@@ -9,40 +9,31 @@ pub fn TogglesPage() -> impl IntoView {
     view! {
         <div class="space-y-8">
             <div>
-                <h1 class="text-2xl font-bold text-neutral-12 mb-1">"Toggle"</h1>
-                <p class="text-neutral-11 mb-6">
-                    "Wraps the Cardo UI " <code class="text-accent-11 bg-accent-3 px-1 rounded-1 text-sm">"Toggle"</code>
-                    " primitive with variant and size props."
+                <h1 class="text-2xl font-bold text-foreground mb-1">"Toggle"</h1>
+                <p class="text-muted-foreground mb-6">
+                    "shadcn/ui new-york toggle wrapping the Cardo UI primitive. "
+                    "Two variants (default, outline) and three sizes."
                 </p>
             </div>
 
-            // Variants at each size
             <section class="space-y-4">
-                <h2 class="text-lg font-semibold text-neutral-12">"Ghost (default)"</h2>
+                <h2 class="text-lg font-semibold text-foreground">"Default Variant"</h2>
                 <div class="flex items-center gap-3 flex-wrap">
-                    <ThemedToggle variant=ToggleVariant::Ghost size=ToggleSize::Sm default_pressed=true>
-                        "Sm"
-                    </ThemedToggle>
-                    <ThemedToggle variant=ToggleVariant::Ghost size=ToggleSize::Md default_pressed=true>
-                        "Md"
-                    </ThemedToggle>
-                    <ThemedToggle variant=ToggleVariant::Ghost size=ToggleSize::Lg default_pressed=true>
-                        "Lg"
-                    </ThemedToggle>
-                    <ThemedToggle variant=ToggleVariant::Ghost disabled=true>
-                        "Disabled"
-                    </ThemedToggle>
+                    <ThemedToggle size=ToggleSize::Sm default_pressed=true>"Sm"</ThemedToggle>
+                    <ThemedToggle size=ToggleSize::Default default_pressed=true>"Default"</ThemedToggle>
+                    <ThemedToggle size=ToggleSize::Lg default_pressed=true>"Lg"</ThemedToggle>
+                    <ThemedToggle disabled=true>"Disabled"</ThemedToggle>
                 </div>
             </section>
 
             <section class="space-y-4">
-                <h2 class="text-lg font-semibold text-neutral-12">"Outline"</h2>
+                <h2 class="text-lg font-semibold text-foreground">"Outline Variant"</h2>
                 <div class="flex items-center gap-3 flex-wrap">
                     <ThemedToggle variant=ToggleVariant::Outline size=ToggleSize::Sm default_pressed=true>
                         "Sm"
                     </ThemedToggle>
-                    <ThemedToggle variant=ToggleVariant::Outline size=ToggleSize::Md default_pressed=true>
-                        "Md"
+                    <ThemedToggle variant=ToggleVariant::Outline size=ToggleSize::Default default_pressed=true>
+                        "Default"
                     </ThemedToggle>
                     <ThemedToggle variant=ToggleVariant::Outline size=ToggleSize::Lg default_pressed=true>
                         "Lg"
@@ -53,9 +44,8 @@ pub fn TogglesPage() -> impl IntoView {
                 </div>
             </section>
 
-            // Controlled
             <section class="space-y-4">
-                <h2 class="text-lg font-semibold text-neutral-12">"Controlled"</h2>
+                <h2 class="text-lg font-semibold text-foreground">"Controlled"</h2>
                 <div class="flex items-center gap-4">
                     <ThemedToggle
                         variant=ToggleVariant::Outline
