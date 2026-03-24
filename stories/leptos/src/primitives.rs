@@ -4,6 +4,7 @@ pub mod alert_dialog;
 pub mod arrow;
 pub mod aspect_ratio;
 pub mod avatar;
+pub mod calendar;
 pub mod checkbox;
 pub mod collapsible;
 pub mod combobox;

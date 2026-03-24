@@ -8,6 +8,8 @@ pub mod alert_dialog;
 pub mod aspect_ratio;
 #[cfg(feature = "avatar")]
 pub mod avatar;
+#[cfg(feature = "calendar")]
+pub mod calendar;
 #[cfg(feature = "checkbox")]
 pub mod checkbox;
 #[cfg(feature = "collapsible")]

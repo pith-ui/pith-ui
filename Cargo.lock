@@ -224,10 +224,27 @@ dependencies = [
 ]
 
 [[package]]
+name = "cardo-themed-app"
+version = "0.0.2"
+dependencies = [
+ "cardo-ui",
+ "cardo-ui-themes",
+ "console_error_panic_hook",
+ "console_log",
+ "leptos",
+ "leptos_router",
+ "log",
+ "tailwind_fuse",
+ "wasm-bindgen",
+ "web-sys",
+]
+
+[[package]]
 name = "cardo-ui"
 version = "0.0.2"
 dependencies = [
  "any_spawner",
+ "chrono",
  "floating-ui-leptos",
  "getrandom 0.2.16",
  "js-sys",
@@ -287,6 +304,7 @@ name = "cardo-ui-reference-app"
 version = "0.0.2"
 dependencies = [
  "cardo-ui",
+ "chrono",
  "console_error_panic_hook",
  "console_log",
  "leptos",
@@ -301,6 +319,7 @@ name = "cardo-ui-stories"
 version = "0.0.2"
 dependencies = [
  "cardo-ui",
+ "chrono",
  "console_error_panic_hook",
  "console_log",
  "js-sys",

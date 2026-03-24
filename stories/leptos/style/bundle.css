@@ -300,6 +300,119 @@
 }
 
 
+.calendar-9d9 {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    width: 280px;
+    user-select: none;
+}
+
+.header-9d9 {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px 8px;
+}
+
+.heading-9d9 {
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.navButton-9d9 {
+    all: unset;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.navButton-9d9:hover {
+    background-color: #f0f0f0;
+}
+
+.navButton-9d9:focus-visible {
+    outline: 2px solid #3b82f6;
+    outline-offset: -2px;
+}
+
+.navButton-9d9[data-disabled] {
+    color: #a0a0a0;
+    cursor: not-allowed;
+}
+
+.grid-9d9 {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.gridHead-9d9 th {
+    font-size: 12px;
+    font-weight: 500;
+    color: #888;
+    padding: 4px 0;
+    text-align: center;
+}
+
+.gridBody-9d9 td {
+    text-align: center;
+    padding: 1px;
+}
+
+.gridBody-9d9 button {
+    all: unset;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    font-size: 13px;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+.gridBody-9d9 button:hover:not([aria-disabled='true']) {
+    background-color: #f0f0f0;
+}
+
+.gridBody-9d9 button:focus-visible {
+    outline: 2px solid #3b82f6;
+    outline-offset: -2px;
+}
+
+.gridBody-9d9 button[data-today] {
+    font-weight: 700;
+}
+
+.gridBody-9d9 button[data-selected] {
+    background-color: #3b82f6;
+    color: white;
+}
+
+.gridBody-9d9 button[data-selected]:hover {
+    background-color: #2563eb;
+}
+
+.gridBody-9d9 button[data-outside-month] {
+    color: #c0c0c0;
+}
+
+.gridBody-9d9 button[data-disabled] {
+    color: #d0d0d0;
+    cursor: not-allowed;
+}
+
+.gridBody-9d9 button[data-unavailable] {
+    color: #f87171;
+    text-decoration: line-through;
+    cursor: not-allowed;
+}
+
+
 .root-d65 {
   /* better default alignment */
   vertical-align: middle;

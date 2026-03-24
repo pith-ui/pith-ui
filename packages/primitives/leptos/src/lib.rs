@@ -103,6 +103,8 @@ pub use components::alert_dialog;
 pub use components::aspect_ratio;
 #[cfg(feature = "avatar")]
 pub use components::avatar;
+#[cfg(feature = "calendar")]
+pub use components::calendar;
 #[cfg(feature = "checkbox")]
 pub use components::checkbox;
 #[cfg(feature = "collapsible")]

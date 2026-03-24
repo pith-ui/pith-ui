@@ -16,6 +16,7 @@ all = [
     "alert-dialog",
     "aspect-ratio",
     "avatar",
+    "calendar",
     "checkbox",
     "collapsible",
     "colors",
@@ -64,6 +65,7 @@ internals = []
 
 # Leaf features (no component deps)
 accessible-icon = []
+calendar = ["chrono"]
 aspect-ratio = []
 avatar = []
 checkbox = []
@@ -91,6 +93,7 @@ toggle-group = []
 tooltip = []
 
 [dependencies]
+chrono = { version = "0.4", features = ["wasmbind"], optional = true }
 floating-ui-leptos = "0.6.0"
 getrandom = { version = "0.2", features = ["js"] }
 js-sys = "0.3"

@@ -6,7 +6,8 @@ use leptos_router::{
 };
 
 use crate::primitives::{
-    accessible_icon, accordion, alert_dialog, arrow, aspect_ratio, avatar, checkbox, collapsible,
+    accessible_icon, accordion, alert_dialog, arrow, aspect_ratio, avatar, calendar, checkbox,
+    collapsible,
     collection, combobox, context_menu, dialog, dismissable_layer, dropdown_menu, focus_scope, form,
     hover_card, label, menu, menubar, navigation_menu, one_time_password_field,
     password_toggle_field, popover, popper, portal, presence, progress, radio_group, roving_focus,
@@ -243,6 +244,10 @@ fn EmbedApp() -> impl IntoView {
 
                     <Route path=path!("/avatar/styled") view=avatar::Styled />
                     <Route path=path!("/avatar/chromatic") view=avatar::Chromatic />
+
+                    <Route path=path!("/calendar/styled") view=calendar::Styled />
+                    <Route path=path!("/calendar/controlled") view=calendar::Controlled />
+                    <Route path=path!("/calendar/chromatic") view=calendar::Chromatic />
 
                     <Route path=path!("/checkbox/styled") view=checkbox::Styled />
                     <Route path=path!("/checkbox/controlled") view=checkbox::Controlled />
@@ -514,6 +519,11 @@ fn ShellApp() -> impl IntoView {
                         <NavSection title="Avatar" stories=vec![
                             ("/avatar/styled", "Styled"),
                             ("/avatar/chromatic", "Chromatic"),
+                        ] />
+                        <NavSection title="Calendar" tested=false stories=vec![
+                            ("/calendar/styled", "Styled"),
+                            ("/calendar/controlled", "Controlled"),
+                            ("/calendar/chromatic", "Chromatic"),
                         ] />
                         <NavSection title="Checkbox" stories=vec![
                             ("/checkbox/styled", "Styled"),

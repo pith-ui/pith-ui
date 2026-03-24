@@ -25,6 +25,7 @@ pub fn App() -> impl IntoView {
                     <Route path=path!("/alert-dialog") view=pages::alert_dialog::AlertDialogPage />
                     <Route path=path!("/aspect-ratio") view=pages::aspect_ratio::AspectRatioPage />
                     <Route path=path!("/avatar") view=pages::avatar::AvatarPage />
+                    <Route path=path!("/calendar") view=pages::calendar::CalendarPage />
                     <Route path=path!("/checkbox") view=pages::checkbox::CheckboxPage />
                     <Route path=path!("/combobox") view=pages::combobox::ComboboxPage />
                     <Route path=path!("/collapsible") view=pages::collapsible::CollapsiblePage />

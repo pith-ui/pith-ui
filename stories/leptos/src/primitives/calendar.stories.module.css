@@ -1,0 +1,111 @@
+.calendar {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    width: 280px;
+    user-select: none;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px 8px;
+}
+
+.heading {
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.navButton {
+    all: unset;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.navButton:hover {
+    background-color: #f0f0f0;
+}
+
+.navButton:focus-visible {
+    outline: 2px solid #3b82f6;
+    outline-offset: -2px;
+}
+
+.navButton[data-disabled] {
+    color: #a0a0a0;
+    cursor: not-allowed;
+}
+
+.grid {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.gridHead th {
+    font-size: 12px;
+    font-weight: 500;
+    color: #888;
+    padding: 4px 0;
+    text-align: center;
+}
+
+.gridBody td {
+    text-align: center;
+    padding: 1px;
+}
+
+.gridBody button {
+    all: unset;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    font-size: 13px;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+.gridBody button:hover:not([aria-disabled='true']) {
+    background-color: #f0f0f0;
+}
+
+.gridBody button:focus-visible {
+    outline: 2px solid #3b82f6;
+    outline-offset: -2px;
+}
+
+.gridBody button[data-today] {
+    font-weight: 700;
+}
+
+.gridBody button[data-selected] {
+    background-color: #3b82f6;
+    color: white;
+}
+
+.gridBody button[data-selected]:hover {
+    background-color: #2563eb;
+}
+
+.gridBody button[data-outside-month] {
+    color: #c0c0c0;
+}
+
+.gridBody button[data-disabled] {
+    color: #d0d0d0;
+    cursor: not-allowed;
+}
+
+.gridBody button[data-unavailable] {
+    color: #f87171;
+    text-decoration: line-through;
+    cursor: not-allowed;
+}
