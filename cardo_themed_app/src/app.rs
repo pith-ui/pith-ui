@@ -5,10 +5,11 @@ use leptos_router::{
 };
 
 use crate::pages::{
-    accordion, alert_dialog, aspect_ratio, avatar, badges, buttons, card, checkboxes, collapsible,
-    context_menu, dialog, dropdown_menu, home, hover_card, input, label, menubar, navigation_menu,
-    one_time_password_field, password_toggle_field, popover, progress, radio_group, scroll_area,
-    select, separator, slider, switches, tabs, textarea, toast, toggle_group, toggles, tooltip,
+    accessible_icon, accordion, alert_dialog, aspect_ratio, avatar, badges, buttons, calendar,
+    card, checkboxes, collapsible, combobox, context_menu, dialog, dropdown_menu, form, home,
+    hover_card, input, label, menubar, navigation_menu, one_time_password_field,
+    password_toggle_field, popover, progress, radio_group, scroll_area, select, separator, slider,
+    switches, tabs, textarea, toast, toggle_group, toggles, toolbar, tooltip,
 };
 
 #[component]
@@ -71,18 +72,22 @@ pub fn App() -> impl IntoView {
                     <div class="mt-4 mb-1 px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                         "Components"
                     </div>
+                    <NavLink href="/accessible-icon" label="Accessible Icon" />
                     <NavLink href="/accordion" label="Accordion" />
                     <NavLink href="/alert-dialog" label="Alert Dialog" />
                     <NavLink href="/aspect-ratio" label="Aspect Ratio" />
                     <NavLink href="/avatar" label="Avatar" />
                     <NavLink href="/badge" label="Badge" />
                     <NavLink href="/button" label="Button" />
+                    <NavLink href="/calendar" label="Calendar" />
                     <NavLink href="/card" label="Card" />
                     <NavLink href="/checkbox" label="Checkbox" />
                     <NavLink href="/collapsible" label="Collapsible" />
+                    <NavLink href="/combobox" label="Combobox" />
                     <NavLink href="/context-menu" label="Context Menu" />
                     <NavLink href="/dialog" label="Dialog" />
                     <NavLink href="/dropdown-menu" label="Dropdown Menu" />
+                    <NavLink href="/form" label="Form" />
                     <NavLink href="/hover-card" label="Hover Card" />
                     <NavLink href="/input" label="Input" />
                     <NavLink href="/label" label="Label" />
@@ -103,6 +108,7 @@ pub fn App() -> impl IntoView {
                     <NavLink href="/toast" label="Toast" />
                     <NavLink href="/toggle" label="Toggle" />
                     <NavLink href="/toggle-group" label="Toggle Group" />
+                    <NavLink href="/toolbar" label="Toolbar" />
                     <NavLink href="/tooltip" label="Tooltip" />
                 </nav>
 
@@ -110,18 +116,22 @@ pub fn App() -> impl IntoView {
                 <main class="flex-1 p-8 overflow-y-auto">
                     <Routes fallback=|| "Not found">
                         <Route path=path!("/") view=home::HomePage />
+                        <Route path=path!("/accessible-icon") view=accessible_icon::AccessibleIconPage />
                         <Route path=path!("/accordion") view=accordion::AccordionPage />
                         <Route path=path!("/alert-dialog") view=alert_dialog::AlertDialogPage />
                         <Route path=path!("/aspect-ratio") view=aspect_ratio::AspectRatioPage />
                         <Route path=path!("/avatar") view=avatar::AvatarPage />
                         <Route path=path!("/badge") view=badges::BadgesPage />
                         <Route path=path!("/button") view=buttons::ButtonsPage />
+                        <Route path=path!("/calendar") view=calendar::CalendarPage />
                         <Route path=path!("/card") view=card::CardPage />
                         <Route path=path!("/checkbox") view=checkboxes::CheckboxesPage />
                         <Route path=path!("/collapsible") view=collapsible::CollapsiblePage />
+                        <Route path=path!("/combobox") view=combobox::ComboboxPage />
                         <Route path=path!("/context-menu") view=context_menu::ContextMenuPage />
                         <Route path=path!("/dialog") view=dialog::DialogPage />
                         <Route path=path!("/dropdown-menu") view=dropdown_menu::DropdownMenuPage />
+                        <Route path=path!("/form") view=form::FormPage />
                         <Route path=path!("/hover-card") view=hover_card::HoverCardPage />
                         <Route path=path!("/input") view=input::InputPage />
                         <Route path=path!("/label") view=label::LabelPage />
@@ -142,6 +152,7 @@ pub fn App() -> impl IntoView {
                         <Route path=path!("/toast") view=toast::ToastPage />
                         <Route path=path!("/toggle") view=toggles::TogglesPage />
                         <Route path=path!("/toggle-group") view=toggle_group::ToggleGroupPage />
+                        <Route path=path!("/toolbar") view=toolbar::ToolbarPage />
                         <Route path=path!("/tooltip") view=tooltip::TooltipPage />
                     </Routes>
                 </main>

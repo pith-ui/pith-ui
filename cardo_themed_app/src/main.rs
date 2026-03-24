@@ -1,4 +1,9 @@
-#![allow(clippy::too_many_arguments, clippy::type_complexity)]
+#![allow(
+    clippy::too_many_arguments,
+    clippy::type_complexity,
+    clippy::redundant_locals,
+    dead_code
+)]
 
 mod app;
 mod pages;

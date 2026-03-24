@@ -15,7 +15,8 @@ console_log.workspace = true
 leptos = { workspace = true, features = ["csr"] }
 leptos_router.workspace = true
 log.workspace = true
-cardo-ui = { workspace = true, features = ["accordion", "alert-dialog", "aspect-ratio", "avatar", "checkbox", "collapsible", "context-menu", "dialog", "dropdown-menu", "hover-card", "label", "menubar", "navigation-menu", "one-time-password-field", "password-toggle-field", "popover", "progress", "radio-group", "scroll-area", "select", "separator", "slider", "switch", "tabs", "toast", "toggle", "toggle-group", "tooltip"] }
+cardo-ui = { workspace = true, features = ["accessible-icon", "accordion", "alert-dialog", "aspect-ratio", "avatar", "calendar", "checkbox", "collapsible", "combobox", "context-menu", "dialog", "dropdown-menu", "form", "hover-card", "label", "menubar", "navigation-menu", "one-time-password-field", "password-toggle-field", "popover", "progress", "radio-group", "scroll-area", "select", "separator", "slider", "switch", "tabs", "toast", "toggle", "toggle-group", "toolbar", "tooltip"] }
+chrono = { version = "0.4", features = ["wasmbind"] }
 cardo-ui-themes = { path = "../packages/themes/leptos" }
 tailwind_fuse.workspace = true
 wasm-bindgen = "0.2"
