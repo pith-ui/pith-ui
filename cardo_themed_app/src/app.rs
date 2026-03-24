@@ -5,8 +5,9 @@ use leptos_router::{
 };
 
 use crate::pages::{
-    accordion, avatar, badges, buttons, checkboxes, home, label, progress, radio_group, separator,
-    slider, switches, tabs, toggles,
+    accordion, avatar, badges, buttons, checkboxes, collapsible, dialog, home, label, popover,
+    progress, radio_group, scroll_area, separator, slider, switches, tabs, toggle_group, toggles,
+    tooltip,
 };
 
 #[component]
@@ -74,14 +75,20 @@ pub fn App() -> impl IntoView {
                     <NavLink href="/badge" label="Badge" />
                     <NavLink href="/button" label="Button" />
                     <NavLink href="/checkbox" label="Checkbox" />
+                    <NavLink href="/collapsible" label="Collapsible" />
+                    <NavLink href="/dialog" label="Dialog" />
                     <NavLink href="/label" label="Label" />
+                    <NavLink href="/popover" label="Popover" />
                     <NavLink href="/progress" label="Progress" />
                     <NavLink href="/radio-group" label="Radio Group" />
+                    <NavLink href="/scroll-area" label="Scroll Area" />
                     <NavLink href="/separator" label="Separator" />
                     <NavLink href="/slider" label="Slider" />
                     <NavLink href="/switch" label="Switch" />
                     <NavLink href="/tabs" label="Tabs" />
                     <NavLink href="/toggle" label="Toggle" />
+                    <NavLink href="/toggle-group" label="Toggle Group" />
+                    <NavLink href="/tooltip" label="Tooltip" />
                 </nav>
 
                 // Content
@@ -93,14 +100,20 @@ pub fn App() -> impl IntoView {
                         <Route path=path!("/badge") view=badges::BadgesPage />
                         <Route path=path!("/button") view=buttons::ButtonsPage />
                         <Route path=path!("/checkbox") view=checkboxes::CheckboxesPage />
+                        <Route path=path!("/collapsible") view=collapsible::CollapsiblePage />
+                        <Route path=path!("/dialog") view=dialog::DialogPage />
                         <Route path=path!("/label") view=label::LabelPage />
+                        <Route path=path!("/popover") view=popover::PopoverPage />
                         <Route path=path!("/progress") view=progress::ProgressPage />
                         <Route path=path!("/radio-group") view=radio_group::RadioGroupPage />
+                        <Route path=path!("/scroll-area") view=scroll_area::ScrollAreaPage />
                         <Route path=path!("/separator") view=separator::SeparatorPage />
                         <Route path=path!("/slider") view=slider::SliderPage />
                         <Route path=path!("/switch") view=switches::SwitchesPage />
                         <Route path=path!("/tabs") view=tabs::TabsPage />
                         <Route path=path!("/toggle") view=toggles::TogglesPage />
+                        <Route path=path!("/toggle-group") view=toggle_group::ToggleGroupPage />
+                        <Route path=path!("/tooltip") view=tooltip::TooltipPage />
                     </Routes>
                 </main>
             </div>
