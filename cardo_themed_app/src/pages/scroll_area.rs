@@ -1,3 +1,4 @@
+use cardo_ui::scroll_area::ScrollAreaType;
 use leptos::prelude::*;
 
 use crate::theme::scroll_area::*;
@@ -38,7 +39,7 @@ pub fn ScrollAreaPage() -> impl IntoView {
 
             <section class="space-y-4">
                 <h2 class="text-lg font-semibold text-foreground">"Tags"</h2>
-                <ThemedScrollArea class="h-72 w-48 rounded-md border">
+                <ThemedScrollArea class="h-72 w-48 rounded-md border" r#type=ScrollAreaType::Always>
                     <div class="p-4">
                         <h4 class="mb-4 text-sm font-medium leading-none text-foreground">"Tags"</h4>
                         {tags.iter().map(|tag| {
