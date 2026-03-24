@@ -7,15 +7,15 @@ use tailwind_fuse::*;
 
 #[derive(TwVariant)]
 pub enum ButtonVariant {
-    #[tw(default, class = "bg-primary text-primary-foreground hover:bg-primary/90")]
+    #[tw(default, class = "bg-primary text-primary-foreground hover:bg-primary/80")]
     Default,
-    #[tw(class = "bg-destructive text-white hover:bg-destructive/90 focus-visible:focus-ring-destructive dark:bg-destructive/60")]
+    #[tw(class = "bg-destructive/10 text-destructive hover:bg-destructive/20 focus-visible:focus-ring-destructive dark:bg-destructive/20 dark:hover:bg-destructive/30")]
     Destructive,
-    #[tw(class = "border border-input bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:hover:bg-input/50")]
+    #[tw(class = "border border-border bg-background hover:bg-muted hover:text-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50")]
     Outline,
     #[tw(class = "bg-secondary text-secondary-foreground hover:bg-secondary/80")]
     Secondary,
-    #[tw(class = "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50")]
+    #[tw(class = "hover:bg-muted hover:text-foreground dark:hover:bg-muted/50")]
     Ghost,
     #[tw(class = "text-primary underline-offset-4 hover:underline")]
     Link,

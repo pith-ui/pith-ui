@@ -7,13 +7,13 @@ use tailwind_fuse::*;
 
 #[derive(TwVariant)]
 pub enum BadgeVariant {
-    #[tw(default, class = "bg-primary text-primary-foreground hover:bg-primary/90")]
+    #[tw(default, class = "bg-primary text-primary-foreground hover:bg-primary/80")]
     Default,
-    #[tw(class = "bg-secondary text-secondary-foreground hover:bg-secondary/90")]
+    #[tw(class = "bg-secondary text-secondary-foreground hover:bg-secondary/80")]
     Secondary,
-    #[tw(class = "bg-destructive text-white hover:bg-destructive/90 focus-visible:focus-ring-destructive dark:bg-destructive/60")]
+    #[tw(class = "bg-destructive/10 text-destructive hover:bg-destructive/20 focus-visible:focus-ring-destructive dark:bg-destructive/20")]
     Destructive,
-    #[tw(class = "border border-border text-foreground hover:bg-accent hover:text-accent-foreground")]
+    #[tw(class = "border border-border text-foreground hover:bg-muted hover:text-muted-foreground")]
     Outline,
 }
 cardo_ui_themes::impl_cardo_tw_variant!(BadgeVariant);

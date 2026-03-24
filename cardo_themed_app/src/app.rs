@@ -5,9 +5,9 @@ use leptos_router::{
 };
 
 use crate::pages::{
-    accordion, avatar, badges, buttons, checkboxes, collapsible, dialog, home, label, popover,
-    progress, radio_group, scroll_area, separator, slider, switches, tabs, toggle_group, toggles,
-    tooltip,
+    accordion, alert_dialog, avatar, badges, buttons, checkboxes, collapsible, context_menu, dialog,
+    dropdown_menu, home, hover_card, label, popover, progress, radio_group, scroll_area, select,
+    separator, slider, switches, tabs, toggle_group, toggles, tooltip,
 };
 
 #[component]
@@ -71,17 +71,22 @@ pub fn App() -> impl IntoView {
                         "Components"
                     </div>
                     <NavLink href="/accordion" label="Accordion" />
+                    <NavLink href="/alert-dialog" label="Alert Dialog" />
                     <NavLink href="/avatar" label="Avatar" />
                     <NavLink href="/badge" label="Badge" />
                     <NavLink href="/button" label="Button" />
                     <NavLink href="/checkbox" label="Checkbox" />
                     <NavLink href="/collapsible" label="Collapsible" />
+                    <NavLink href="/context-menu" label="Context Menu" />
                     <NavLink href="/dialog" label="Dialog" />
+                    <NavLink href="/dropdown-menu" label="Dropdown Menu" />
+                    <NavLink href="/hover-card" label="Hover Card" />
                     <NavLink href="/label" label="Label" />
                     <NavLink href="/popover" label="Popover" />
                     <NavLink href="/progress" label="Progress" />
                     <NavLink href="/radio-group" label="Radio Group" />
                     <NavLink href="/scroll-area" label="Scroll Area" />
+                    <NavLink href="/select" label="Select" />
                     <NavLink href="/separator" label="Separator" />
                     <NavLink href="/slider" label="Slider" />
                     <NavLink href="/switch" label="Switch" />
@@ -96,17 +101,22 @@ pub fn App() -> impl IntoView {
                     <Routes fallback=|| "Not found">
                         <Route path=path!("/") view=home::HomePage />
                         <Route path=path!("/accordion") view=accordion::AccordionPage />
+                        <Route path=path!("/alert-dialog") view=alert_dialog::AlertDialogPage />
                         <Route path=path!("/avatar") view=avatar::AvatarPage />
                         <Route path=path!("/badge") view=badges::BadgesPage />
                         <Route path=path!("/button") view=buttons::ButtonsPage />
                         <Route path=path!("/checkbox") view=checkboxes::CheckboxesPage />
                         <Route path=path!("/collapsible") view=collapsible::CollapsiblePage />
+                        <Route path=path!("/context-menu") view=context_menu::ContextMenuPage />
                         <Route path=path!("/dialog") view=dialog::DialogPage />
+                        <Route path=path!("/dropdown-menu") view=dropdown_menu::DropdownMenuPage />
+                        <Route path=path!("/hover-card") view=hover_card::HoverCardPage />
                         <Route path=path!("/label") view=label::LabelPage />
                         <Route path=path!("/popover") view=popover::PopoverPage />
                         <Route path=path!("/progress") view=progress::ProgressPage />
                         <Route path=path!("/radio-group") view=radio_group::RadioGroupPage />
                         <Route path=path!("/scroll-area") view=scroll_area::ScrollAreaPage />
+                        <Route path=path!("/select") view=select::SelectPage />
                         <Route path=path!("/separator") view=separator::SeparatorPage />
                         <Route path=path!("/slider") view=slider::SliderPage />
                         <Route path=path!("/switch") view=switches::SwitchesPage />
