@@ -1,6 +1,6 @@
 use leptos::prelude::*;
-use cardo_ui::direction::{Direction, DirectionProvider};
-use cardo_ui::menubar::*;
+use pith_ui::direction::{Direction, DirectionProvider};
+use pith_ui::menubar::*;
 
 stylance::import_crate_style!(
     #[allow(dead_code)]

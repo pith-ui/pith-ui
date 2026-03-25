@@ -1,5 +1,5 @@
 use leptos::prelude::*;
-use cardo_ui::accessible_icon::*;
+use pith_ui::accessible_icon::*;
 
 #[component]
 pub fn AccessibleIconPage() -> impl IntoView {

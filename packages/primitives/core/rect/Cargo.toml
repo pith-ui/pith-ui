@@ -1,5 +1,5 @@
 [package]
-name = "cardo-ui-rect"
+name = "pith-ui-rect"
 description = "Rust port of Radix Core Rect."
 
 authors.workspace = true

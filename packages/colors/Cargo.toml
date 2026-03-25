@@ -1,5 +1,5 @@
 [package]
-name = "cardo-ui-colors"
+name = "pith-ui-colors"
 description = "Rust port of Radix Colors."
 
 authors.workspace = true

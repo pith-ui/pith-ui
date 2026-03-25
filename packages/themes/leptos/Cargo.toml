@@ -1,7 +1,7 @@
 [package]
-name = "cardo-ui-themes"
+name = "pith-ui-themes"
 description = "Leptos port of Radix Themes."
-homepage = "https://cardo-ui.dev/themes/index.html"
+homepage = "https://pith-ui.dev/themes/index.html"
 
 authors.workspace = true
 edition.workspace = true
@@ -10,7 +10,7 @@ repository.workspace = true
 version.workspace = true
 
 [dependencies]
-cardo-ui = { path = "../../primitives/leptos" }
+pith-ui = { path = "../../primitives/leptos" }
 tailwind_fuse.workspace = true
 
 [dev-dependencies]

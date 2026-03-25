@@ -1,5 +1,5 @@
 use leptos::prelude::*;
-use cardo_ui::navigation_menu::*;
+use pith_ui::navigation_menu::*;
 
 #[component]
 pub fn NavigationMenuPage() -> impl IntoView {

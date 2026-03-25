@@ -1,6 +1,6 @@
 use leptos::prelude::*;
 use leptos_node_ref::AnyNodeRef;
-use cardo_ui::popover::*;
+use pith_ui::popover::*;
 use send_wrapper::SendWrapper;
 use wasm_bindgen::JsCast;
 

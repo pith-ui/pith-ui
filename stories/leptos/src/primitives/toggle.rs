@@ -1,5 +1,5 @@
 use leptos::prelude::*;
-use cardo_ui::toggle::*;
+use pith_ui::toggle::*;
 
 stylance::import_crate_style!(classes, "src/primitives/toggle.stories.module.css");
 

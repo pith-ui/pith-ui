@@ -12,7 +12,7 @@ This component is not yet updated to Leptos 0.7+.
 </div>
 
 <!-- ```toml,trunk
-package = "cardo-ui-book-primitives"
+package = "pith-ui-book-primitives"
 features = ["tooltip"]
 files = ["src/tooltip.rs"]
 ``` -->
@@ -44,10 +44,10 @@ Install the component from your command line.
 {{#tab name="Leptos" }}
 
 ```shell
-cargo add cardo-ui-tooltip
+cargo add pith-ui-tooltip
 ```
 
--   [View source](https://github.com/cardo-ui/cardo-ui/tree/main/packages/primitives/leptos/src/components/tooltip)
+-   [View source](https://github.com/pith-ui/pith-ui/tree/main/packages/primitives/leptos/src/components/tooltip)
 
 {{#endtab }}
 {{#tab name="Yew" }}
@@ -58,7 +58,7 @@ cargo add radix-yew-tooltip
 
 -   [View on crates.io](https://crates.io/crates/radix-yew-tooltip)
 -   [View on docs.rs](https://docs.rs/radix-yew-tooltip/latest/radix_yew_tooltip/)
--   [View source](https://github.com/cardo-ui/cardo-ui/tree/main/packages/primitives/yew/tooltip)
+-   [View source](https://github.com/pith-ui/pith-ui/tree/main/packages/primitives/yew/tooltip)
 
 {{#endtab }}
 {{#endtabs }}
@@ -72,7 +72,7 @@ Import all parts and piece them together.
 
 ```rust,ignore
 use leptos::prelude::*;
-use cardo_ui::tooltip::*;
+use pith_ui::tooltip::*;
 
 #[component]
 fn Anatomy() -> impl IntoView {
@@ -328,7 +328,7 @@ An optional arrow element to render alongside the tooltip. This can be used to h
 
 ```rust,ignore
 use leptos::prelude::*;
-use cardo_ui::tooltip::*;
+use pith_ui::tooltip::*;
 
 #[component]
 fn BasicTooltip() -> impl IntoView {
@@ -356,7 +356,7 @@ Use the `open` and `on_open_change` props to control the tooltip state programma
 
 ```rust,ignore
 use leptos::prelude::*;
-use cardo_ui::tooltip::*;
+use pith_ui::tooltip::*;
 
 #[component]
 fn ControlledTooltip() -> impl IntoView {
@@ -389,7 +389,7 @@ Override the global delay for a specific tooltip using the `delay_duration` prop
 
 ```rust,ignore
 use leptos::prelude::*;
-use cardo_ui::tooltip::*;
+use pith_ui::tooltip::*;
 
 #[component]
 fn InstantTooltip() -> impl IntoView {

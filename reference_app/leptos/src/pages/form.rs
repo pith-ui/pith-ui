@@ -1,5 +1,5 @@
 use leptos::prelude::*;
-use cardo_ui::form::*;
+use pith_ui::form::*;
 
 #[component]
 pub fn FormPage() -> impl IntoView {

@@ -1,9 +1,9 @@
 use leptos::prelude::*;
 use leptos_node_ref::AnyNodeRef;
-use cardo_ui::dialog::{
+use pith_ui::dialog::{
     Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle, DialogTrigger,
 };
-use cardo_ui::tooltip::{
+use pith_ui::tooltip::{
     Align, Side, Tooltip, TooltipArrow, TooltipContent, TooltipPortal, TooltipProvider,
     TooltipTrigger,
 };

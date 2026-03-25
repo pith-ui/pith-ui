@@ -1,9 +1,9 @@
 use leptos::prelude::*;
-use cardo_ui::dismissable_layer::DismissableLayer;
-use cardo_ui::focus_guards::FocusGuards;
-use cardo_ui::focus_scope::FocusScope;
-use cardo_ui::popper::{Popper, PopperAnchor, PopperArrow, PopperContent};
-use cardo_ui::portal::Portal;
+use pith_ui::dismissable_layer::DismissableLayer;
+use pith_ui::focus_guards::FocusGuards;
+use pith_ui::focus_scope::FocusScope;
+use pith_ui::popper::{Popper, PopperAnchor, PopperArrow, PopperContent};
+use pith_ui::portal::Portal;
 use web_sys::wasm_bindgen::JsCast;
 
 const SYSTEM_FONT: &str = "-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\"";

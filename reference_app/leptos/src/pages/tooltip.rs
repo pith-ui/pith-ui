@@ -1,5 +1,5 @@
 use leptos::prelude::*;
-use cardo_ui::tooltip::{
+use pith_ui::tooltip::{
     Tooltip, TooltipArrow, TooltipContent, TooltipPortal, TooltipProvider, TooltipTrigger,
 };
 

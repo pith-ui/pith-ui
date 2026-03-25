@@ -1,8 +1,8 @@
 use leptos::prelude::*;
-use cardo_ui::direction::Direction;
-use cardo_ui::roving_focus::Orientation;
-use cardo_ui::toggle_group::ToggleGroupType;
-use cardo_ui::toolbar::*;
+use pith_ui::direction::Direction;
+use pith_ui::roving_focus::Orientation;
+use pith_ui::toggle_group::ToggleGroupType;
+use pith_ui::toolbar::*;
 
 #[component]
 pub fn ToolbarPage() -> impl IntoView {

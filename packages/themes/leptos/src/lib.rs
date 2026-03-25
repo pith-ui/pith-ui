@@ -3,7 +3,7 @@
 //! Radix Themes is a pre-styled component library that is designed to work out
 //! of the box with minimal configuration.
 //!
-//! See [the Cardo UI book](https://cardo-ui.dev/themes/index.html) for more
+//! See [the Pith UI book](https://pith-ui.dev/themes/index.html) for more
 //! documentation.
 //!
 //! See [`@radix-ui/themes`](https://www.npmjs.com/package/@radix-ui/themes)
@@ -11,14 +11,14 @@
 //!
 //! # tailwind_fuse bridge
 //!
-//! This crate provides [`impl_cardo_tw_class!`] and [`impl_cardo_tw_variant!`]
+//! This crate provides [`impl_pith_tw_class!`] and [`impl_pith_tw_variant!`]
 //! macros that bridge `tailwind_fuse` derive types (`TwClass`, `TwVariant`) to
-//! [`cardo_ui::class::IntoCardoClass`], so they can be used directly as
-//! `class` prop values on any Cardo UI component.
+//! [`pith_ui::class::IntoPithClass`], so they can be used directly as
+//! `class` prop values on any Pith UI component.
 //!
 //! ```ignore
 //! use tailwind_fuse::*;
-//! use cardo_ui_themes::*;
+//! use pith_ui_themes::*;
 //!
 //! #[derive(TwVariant)]
 //! enum BtnSize {
@@ -27,29 +27,29 @@
 //!     #[tw(class = "h-8 px-3")]
 //!     Sm,
 //! }
-//! impl_cardo_tw_variant!(BtnSize);
+//! impl_pith_tw_variant!(BtnSize);
 //!
 //! // Now usable: <Button class=BtnSize::Sm />
 //! ```
 
 /// Bridge one or more `TwClass` structs (which implement
 /// [`tailwind_fuse::IntoTailwindClass`]) to
-/// [`cardo_ui::class::IntoCardoClass`], making them usable as `class` prop
-/// values on Cardo UI components.
+/// [`pith_ui::class::IntoPithClass`], making them usable as `class` prop
+/// values on Pith UI components.
 ///
 /// ```ignore
 /// #[derive(TwClass)]
 /// #[tw(class = "flex")]
 /// struct Btn { size: BtnSize }
 ///
-/// impl_cardo_tw_class!(Btn);
+/// impl_pith_tw_class!(Btn);
 /// ```
 #[macro_export]
-macro_rules! impl_cardo_tw_class {
+macro_rules! impl_pith_tw_class {
     ($($ty:ty),* $(,)?) => {
-        $(impl ::cardo_ui::class::IntoCardoClass for $ty {
-            fn to_cardo_class(&self) -> ::cardo_ui::class::CardoClass {
-                ::cardo_ui::class::CardoClass::new(
+        $(impl ::pith_ui::class::IntoPithClass for $ty {
+            fn to_pith_class(&self) -> ::pith_ui::class::PithClass {
+                ::pith_ui::class::PithClass::new(
                     ::tailwind_fuse::IntoTailwindClass::to_class(self)
                 )
             }
@@ -59,8 +59,8 @@ macro_rules! impl_cardo_tw_class {
 
 /// Bridge one or more `TwVariant` enums (which implement
 /// [`tailwind_fuse::AsTailwindClass`]) to
-/// [`cardo_ui::class::IntoCardoClass`], making them usable as `class` prop
-/// values on Cardo UI components.
+/// [`pith_ui::class::IntoPithClass`], making them usable as `class` prop
+/// values on Pith UI components.
 ///
 /// ```ignore
 /// #[derive(TwVariant)]
@@ -71,14 +71,14 @@ macro_rules! impl_cardo_tw_class {
 ///     Sm,
 /// }
 ///
-/// impl_cardo_tw_variant!(BtnSize);
+/// impl_pith_tw_variant!(BtnSize);
 /// ```
 #[macro_export]
-macro_rules! impl_cardo_tw_variant {
+macro_rules! impl_pith_tw_variant {
     ($($ty:ty),* $(,)?) => {
-        $(impl ::cardo_ui::class::IntoCardoClass for $ty {
-            fn to_cardo_class(&self) -> ::cardo_ui::class::CardoClass {
-                ::cardo_ui::class::CardoClass::new(
+        $(impl ::pith_ui::class::IntoPithClass for $ty {
+            fn to_pith_class(&self) -> ::pith_ui::class::PithClass {
+                ::pith_ui::class::PithClass::new(
                     ::tailwind_fuse::AsTailwindClass::as_class(self)
                 )
             }
@@ -88,7 +88,7 @@ macro_rules! impl_cardo_tw_variant {
 
 #[cfg(test)]
 mod tests {
-    use cardo_ui::class::*;
+    use pith_ui::class::*;
     use leptos::prelude::*;
     use leptos::reactive::owner::Owner;
     use tailwind_fuse::*;
@@ -100,14 +100,14 @@ mod tests {
         #[tw(class = "h-8 px-3")]
         Sm,
     }
-    impl_cardo_tw_variant!(BtnSize);
+    impl_pith_tw_variant!(BtnSize);
 
     #[derive(TwClass)]
     #[tw(class = "flex")]
     struct Btn {
         size: BtnSize,
     }
-    impl_cardo_tw_class!(Btn);
+    impl_pith_tw_class!(Btn);
 
     struct NoopExecutor;
 

@@ -1,5 +1,5 @@
 use leptos::prelude::*;
-use cardo_ui::hover_card::*;
+use pith_ui::hover_card::*;
 
 #[component]
 pub fn HoverCardPage() -> impl IntoView {

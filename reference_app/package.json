@@ -1,5 +1,5 @@
 {
-    "name": "@cardo-ui/reference-app",
+    "name": "@pith-ui/reference-app",
     "description": "Cross-framework E2E testing harness for Radix Leptos.",
     "private": true,
     "scripts": {

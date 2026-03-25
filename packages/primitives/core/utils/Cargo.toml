@@ -1,5 +1,5 @@
 [package]
-name = "cardo-ui-utils"
+name = "pith-ui-utils"
 description = "Shared pure-Rust utilities for Radix components."
 
 authors.workspace = true

@@ -1,10 +1,10 @@
 <p align="center">
     <a href="./logo.svg">
-        <img src="./logo.svg" width="300" height="200" alt="Cardo UI Logo">
+        <img src="./logo.svg" width="300" height="200" alt="Pith UI Logo">
     </a>
 </p>
 
-<h1 align="center">Cardo UI</h1>
+<h1 align="center">Pith-UI</h1>
 
 Unstyled, accessible UI components for [Leptos](https://leptos.dev), based on [Radix Primitives](https://www.radix-ui.com/primitives).
 
@@ -21,14 +21,14 @@ Unstyled, accessible UI components for [Leptos](https://leptos.dev), based on [R
 Add the crate with the components you need:
 
 ```bash
-cargo add cardo-ui --features dialog
+cargo add pith-ui --features dialog
 ```
 
 Then use components in your Leptos app:
 
 ```rust
 use leptos::prelude::*;
-use cardo_ui::dialog::*;
+use pith_ui::dialog::*;
 
 #[component]
 fn App() -> impl IntoView {
@@ -54,14 +54,14 @@ fn App() -> impl IntoView {
 
 Each component is gated behind a feature flag. Enable only what you need, or use `features = ["all"]`.
 
-| Category | Components |
-|---|---|
-| **Overlays** | Dialog, Alert Dialog, Popover, Hover Card, Tooltip, Toast |
-| **Menus** | Dropdown Menu, Context Menu, Menubar, Navigation Menu |
-| **Forms** | Checkbox, Radio Group, Switch, Slider, Select, Toggle, Toggle Group, Label, Form |
-| **Disclosure** | Accordion, Collapsible, Tabs |
-| **Layout** | Aspect Ratio, Scroll Area, Separator, Progress, Toolbar |
-| **Utilities** | Accessible Icon, Avatar, Visually Hidden, Portal |
+| Category       | Components                                                                       |
+| -------------- | -------------------------------------------------------------------------------- |
+| **Overlays**   | Dialog, Alert Dialog, Popover, Hover Card, Tooltip, Toast                        |
+| **Menus**      | Dropdown Menu, Context Menu, Menubar, Navigation Menu                            |
+| **Forms**      | Checkbox, Radio Group, Switch, Slider, Select, Toggle, Toggle Group, Label, Form |
+| **Disclosure** | Accordion, Collapsible, Tabs                                                     |
+| **Layout**     | Aspect Ratio, Scroll Area, Separator, Progress, Toolbar                          |
+| **Utilities**  | Accessible Icon, Avatar, Visually Hidden, Portal                                 |
 
 ## Development
 

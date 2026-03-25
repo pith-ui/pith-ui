@@ -49,4 +49,4 @@ fn Separator(
 - The Rust `Orientation` enum eliminates the need for runtime validation.
 - ARIA logic matches React: `aria-orientation` is `None` when decorative or horizontal.
 - `data-orientation` is always set.
-- Dependencies: `leptos`, `leptos-node-ref`, `cardo-ui-primitive`.
+- Dependencies: `leptos`, `leptos-node-ref`, `pith-ui-primitive`.

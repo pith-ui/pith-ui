@@ -48,4 +48,4 @@ fn Arrow(
 - Uses `svg::svg` as the `Primitive` element type.
 - SVG attributes (`viewBox`, `preserveAspectRatio`) applied via `custom_attribute` since Leptos doesn't have typed SVG attribute support for these.
 - Uses `TypedFallbackShow` to switch between polygon and children when `as_child` is set.
-- Dependencies: `leptos`, `leptos-node-ref`, `leptos-typed-fallback-show`, `cardo-ui-primitive`.
+- Dependencies: `leptos`, `leptos-node-ref`, `leptos-typed-fallback-show`, `pith-ui-primitive`.

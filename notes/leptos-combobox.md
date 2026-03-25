@@ -13,7 +13,7 @@ unstable: false
 
 Combobox primitive combining a text input for filtering with a dropdown listbox for selection. Supports single-select and multi-select modes. Implements the [WAI-ARIA Combobox pattern](https://www.w3.org/WAI/ARIA/apd/patterns/combobox/).
 
-This component does not exist in React Radix Primitives. It is inspired by [Base UI's Combobox](https://base-ui.com/react/components/combobox) but follows Cardo UI's compositional patterns (as_child, Primitive, Popper, DismissableLayer, Collection).
+This component does not exist in React Radix Primitives. It is inspired by [Base UI's Combobox](https://base-ui.com/react/components/combobox) but follows Pith UI's compositional patterns (as_child, Primitive, Popper, DismissableLayer, Collection).
 
 ## React API
 
@@ -57,7 +57,7 @@ N/A — no React Radix equivalent. Reference implementation uses `@base-ui/react
 
 ### Data attribute conventions
 
-Uses Radix-style data attributes (`data-state="checked"/"unchecked"`, `data-state="open"/"closed"`) rather than Base UI style (`data-selected`, `data-open`). Cypress E2E tests use `Cypress.env('FRAMEWORK')` conditionals where attributes differ between Base UI (React oracle) and Cardo UI (Leptos).
+Uses Radix-style data attributes (`data-state="checked"/"unchecked"`, `data-state="open"/"closed"`) rather than Base UI style (`data-selected`, `data-open`). Cypress E2E tests use `Cypress.env('FRAMEWORK')` conditionals where attributes differ between Base UI (React oracle) and Pith UI (Leptos).
 
 ### Omissions
 

@@ -15,7 +15,7 @@ files = ["src/icons.rs"]
 {{#tab name="Leptos" }}
 
 ```toml,trunk
-package = "cardo-ui-book-icons"
+package = "pith-ui-book-icons"
 features = ["icons"]
 files = ["src/icons.rs"]
 ```
@@ -45,18 +45,18 @@ cargo add radix-dioxus-icons
 
 -   [View on crates.io](https://crates.io/crates/radix-dioxus-icons)
 -   [View on docs.rs](https://docs.rs/radix-dioxus-icons/latest/radix_dioxus_icons/)
--   [View source](https://github.com/cardo-ui/cardo-ui/tree/main/packages/icons/dioxus)
+-   [View source](https://github.com/pith-ui/pith-ui/tree/main/packages/icons/dioxus)
 
 {{#endtab }}
 {{#tab name="Leptos" }}
 
 ```shell
-cargo add cardo-ui-icons
+cargo add pith-ui-icons
 ```
 
--   [View on crates.io](https://crates.io/crates/cardo-ui-icons)
--   [View on docs.rs](https://docs.rs/cardo-ui-icons/latest/cardo_ui_icons/)
--   [View source](https://github.com/cardo-ui/cardo-ui/tree/main/packages/icons/leptos)
+-   [View on crates.io](https://crates.io/crates/pith-ui-icons)
+-   [View on docs.rs](https://docs.rs/pith-ui-icons/latest/pith_ui_icons/)
+-   [View source](https://github.com/pith-ui/pith-ui/tree/main/packages/icons/leptos)
 
 {{#endtab }}
 {{#tab name="Yew" }}
@@ -67,7 +67,7 @@ cargo add radix-yew-icons
 
 -   [View on crates.io](https://crates.io/crates/radix-yew-icons)
 -   [View on docs.rs](https://docs.rs/radix-yew-icons/latest/radix_yew_icons/)
--   [View source](https://github.com/cardo-ui/cardo-ui/tree/main/packages/icons/yew)
+-   [View source](https://github.com/pith-ui/pith-ui/tree/main/packages/icons/yew)
 
 {{#endtab }}
 {{#endtabs }}
@@ -98,7 +98,7 @@ fn App() -> Element {
 
 ```rust,ignore
 use leptos::*;
-use cardo_ui_icons::{FaceIcon, ImageIcon, SunIcon};
+use pith_ui_icons::{FaceIcon, ImageIcon, SunIcon};
 
 #[component]
 fn Anatomy() -> impl IntoView {

@@ -1,5 +1,5 @@
 use leptos::prelude::*;
-use cardo_ui::accordion::*;
+use pith_ui::accordion::*;
 
 #[component]
 fn AccordionItems() -> impl IntoView {

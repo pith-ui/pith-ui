@@ -51,7 +51,7 @@ Accepts either a direct element (`container`) or a ref (`container_ref`). Wraps 
 - Tracks `current_mount` in an `RwSignal` — if the mount target changes, the portal re-mounts.
 - `SendWrapper` is needed because `web_sys::Element` is not `Send`, but Leptos signals require `Send`.
 - Has a TODO comment about passing attributes to the Primitive (`AttributeInterceptor` code is commented out).
-- Dependencies: `leptos`, `leptos-node-ref`, `leptos_dom`, `cardo-ui-primitive`, `send_wrapper`, `web-sys`.
+- Dependencies: `leptos`, `leptos-node-ref`, `leptos_dom`, `pith-ui-primitive`, `send_wrapper`, `web-sys`.
 
 ### Review Notes
 

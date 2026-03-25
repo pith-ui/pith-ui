@@ -1,6 +1,6 @@
 use leptos::prelude::*;
 use leptos_node_ref::AnyNodeRef;
-use cardo_ui::presence::Presence;
+use pith_ui::presence::Presence;
 use send_wrapper::SendWrapper;
 use web_sys::wasm_bindgen::{JsCast, closure::Closure};
 

@@ -1,6 +1,6 @@
 # Getting Started
 
-A quick tutorial to get you up and running with Cardo UI Primitives.
+A quick tutorial to get you up and running with Pith UI Primitives.
 
 ## Implementing a Popover
 
@@ -14,7 +14,7 @@ Install the component from your command line.
 {{#tab name="Leptos" }}
 
 ```shell
-cargo add cardo-ui-popover
+cargo add pith-ui-popover
 ```
 
 {{#endtab }}
@@ -36,7 +36,7 @@ Import and structure the parts.
 
 ```rust,ignore
 use leptos::*;
-use cardo_ui_popover::*;
+use pith_ui_popover::*;
 
 #[component]
 fn PopoverDemo() -> impl IntoView {
@@ -143,7 +143,7 @@ TODO
 
 ## Summary
 
-The steps above outline briefly what's involved in using a Cardo UI Primitive in your application.
+The steps above outline briefly what's involved in using a Pith UI Primitive in your application.
 
 These components are low-level enough to give you control over how you want to wrap them. You're free to introduce your own high-level API to better suit the needs of your team and product.
 

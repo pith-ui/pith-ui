@@ -1,14 +1,14 @@
 # Getting Started
 
-Install Cardo UI Themes and start building in minutes.
+Install Pith UI Themes and start building in minutes.
 
-Cardo UI Themes is a pre-styled component library that is designed to work out of the box with minimal configuration. If you are looking for the unstyled components, go to [Cardo UI Primitives](../../primitives/README.md).
+Pith UI Themes is a pre-styled component library that is designed to work out of the box with minimal configuration. If you are looking for the unstyled components, go to [Pith UI Primitives](../../primitives/README.md).
 
 ## Installation
 
 Getting up and running is quick and easy.
 
-### 1. Install Cardo UI Themes
+### 1. Install Pith UI Themes
 
 Install the package from your command line.
 
@@ -21,7 +21,7 @@ cargo add radix-yew-themes
 
 -   [View on crates.io](https://crates.io/crates/radix-yew-themes)
 -   [View on docs.rs](https://docs.rs/radix-yew-themes/latest/radix_yew_themes/)
--   [View source](https://github.com/cardo-ui/cardo-ui/tree/main/packages/themes/yew)
+-   [View source](https://github.com/pith-ui/pith-ui/tree/main/packages/themes/yew)
 
 {{#endtab }}
 {{#endtabs }}
@@ -58,7 +58,7 @@ pub fn Root() -> Html {
 
 ### 4. Start building
 
-You are now ready to use Cardo UI Themes components.
+You are now ready to use Pith UI Themes components.
 
 {{#tabs global="framework" }}
 {{#tab name="Yew" }}
@@ -71,7 +71,7 @@ use yew::prelude::*;
 pub fn MyApp() -> Html {
     html! {
         <Flex direction={FlexDirection::Column} gap=2>
-            <Text>{"Hello from Cardo UI Themes :)"}</Text>
+            <Text>{"Hello from Pith UI Themes :)"}</Text>
             <Button>{"Let's go"}</Button>
         </Flex>
     }

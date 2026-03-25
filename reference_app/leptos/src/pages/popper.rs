@@ -1,5 +1,5 @@
 use leptos::prelude::*;
-use cardo_ui::popper::*;
+use pith_ui::popper::*;
 
 #[component]
 pub fn PopperPage() -> impl IntoView {

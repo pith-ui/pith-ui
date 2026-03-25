@@ -1,6 +1,6 @@
 use leptos::prelude::*;
 use leptos_node_ref::AnyNodeRef;
-use cardo_ui::portal::Portal;
+use pith_ui::portal::Portal;
 
 #[component]
 pub fn Base() -> impl IntoView {

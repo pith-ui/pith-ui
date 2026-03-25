@@ -2,9 +2,9 @@
 #![allow(dead_code)]
 
 use leptos::prelude::*;
-use cardo_ui::dialog::*;
-use cardo_ui::one_time_password_field::*;
-use cardo_ui::separator::*;
+use pith_ui::dialog::*;
+use pith_ui::one_time_password_field::*;
+use pith_ui::separator::*;
 use web_sys::wasm_bindgen::JsCast;
 
 stylance::import_crate_style!(

@@ -1,6 +1,6 @@
 use leptos::prelude::*;
-use cardo_ui::direction::DirectionProvider;
-use cardo_ui::slider::{
+use pith_ui::direction::DirectionProvider;
+use pith_ui::slider::{
     Orientation, Slider as SliderRoot, SliderRange, SliderThumb, SliderTrack,
 };
 use web_sys::wasm_bindgen::JsCast;
@@ -43,7 +43,7 @@ pub fn WithOnValueCommit() -> impl IntoView {
 #[component]
 pub fn RightToLeft() -> impl IntoView {
     view! {
-        <SliderRoot attr:class=classes::root dir=cardo_ui::direction::Direction::Rtl>
+        <SliderRoot attr:class=classes::root dir=pith_ui::direction::Direction::Rtl>
             <SliderTrack attr:class=classes::track>
                 <SliderRange attr:class=classes::range />
             </SliderTrack>
@@ -140,7 +140,7 @@ pub fn Inversions() -> impl IntoView {
                 <div style:flex="1">
                     <h3>"RTL"</h3>
                     <h4>"Default"</h4>
-                    <SliderRoot attr:class=classes::root default_value=vec![20.0] dir=cardo_ui::direction::Direction::Rtl>
+                    <SliderRoot attr:class=classes::root default_value=vec![20.0] dir=pith_ui::direction::Direction::Rtl>
                         <SliderTrack attr:class=classes::track>
                             <SliderRange attr:class=classes::range />
                         </SliderTrack>
@@ -148,7 +148,7 @@ pub fn Inversions() -> impl IntoView {
                     </SliderRoot>
 
                     <h4>"Inverted"</h4>
-                    <SliderRoot attr:class=classes::root default_value=vec![20.0] dir=cardo_ui::direction::Direction::Rtl inverted=true>
+                    <SliderRoot attr:class=classes::root default_value=vec![20.0] dir=pith_ui::direction::Direction::Rtl inverted=true>
                         <SliderTrack attr:class=classes::track>
                             <SliderRange attr:class=classes::range />
                         </SliderTrack>
@@ -188,7 +188,7 @@ pub fn Inversions() -> impl IntoView {
                     <div style:display="flex" style:gap="50px">
                         <div>
                             <h4>"Default"</h4>
-                            <SliderRoot attr:class=classes::root default_value=vec![20.0] dir=cardo_ui::direction::Direction::Rtl orientation=Orientation::Vertical>
+                            <SliderRoot attr:class=classes::root default_value=vec![20.0] dir=pith_ui::direction::Direction::Rtl orientation=Orientation::Vertical>
                                 <SliderTrack attr:class=classes::track>
                                     <SliderRange attr:class=classes::range />
                                 </SliderTrack>
@@ -197,7 +197,7 @@ pub fn Inversions() -> impl IntoView {
                         </div>
                         <div>
                             <h4>"Inverted"</h4>
-                            <SliderRoot attr:class=classes::root default_value=vec![20.0] dir=cardo_ui::direction::Direction::Rtl orientation=Orientation::Vertical inverted=true>
+                            <SliderRoot attr:class=classes::root default_value=vec![20.0] dir=pith_ui::direction::Direction::Rtl orientation=Orientation::Vertical inverted=true>
                                 <SliderTrack attr:class=classes::track>
                                     <SliderRange attr:class=classes::range />
                                 </SliderTrack>
@@ -416,13 +416,13 @@ pub fn Chromatic() -> impl IntoView {
             </SliderRoot>
 
             <h2>"RTL"</h2>
-            <SliderRoot attr:class=classes::root default_value=vec![20.0] dir=cardo_ui::direction::Direction::Rtl>
+            <SliderRoot attr:class=classes::root default_value=vec![20.0] dir=pith_ui::direction::Direction::Rtl>
                 <SliderTrack attr:class=classes::track>
                     <SliderRange attr:class=classes::range />
                 </SliderTrack>
                 <SliderThumb attr:class=classes::thumb />
             </SliderRoot>
-            <SliderRoot attr:class=classes::root default_value=vec![10.0, 30.0] dir=cardo_ui::direction::Direction::Rtl>
+            <SliderRoot attr:class=classes::root default_value=vec![10.0, 30.0] dir=pith_ui::direction::Direction::Rtl>
                 <SliderTrack attr:class=classes::track>
                     <SliderRange attr:class=classes::range />
                 </SliderTrack>
@@ -459,13 +459,13 @@ pub fn Chromatic() -> impl IntoView {
 
             <h1>"Direction"</h1>
             <h2>"Prop"</h2>
-            <SliderRoot attr:class=classes::root value=vec![20.0] dir=cardo_ui::direction::Direction::Rtl>
+            <SliderRoot attr:class=classes::root value=vec![20.0] dir=pith_ui::direction::Direction::Rtl>
                 <SliderTrack attr:class=classes::track>
                     <SliderRange attr:class=classes::range />
                 </SliderTrack>
                 <SliderThumb attr:class=classes::thumb />
             </SliderRoot>
-            <SliderRoot attr:class=classes::root value=vec![10.0, 30.0] dir=cardo_ui::direction::Direction::Rtl>
+            <SliderRoot attr:class=classes::root value=vec![10.0, 30.0] dir=pith_ui::direction::Direction::Rtl>
                 <SliderTrack attr:class=classes::track>
                     <SliderRange attr:class=classes::range />
                 </SliderTrack>
@@ -474,7 +474,7 @@ pub fn Chromatic() -> impl IntoView {
             </SliderRoot>
 
             <h2>"Inherited"</h2>
-            <DirectionProvider direction=cardo_ui::direction::Direction::Rtl>
+            <DirectionProvider direction=pith_ui::direction::Direction::Rtl>
                 <SliderRoot attr:class=classes::root value=vec![20.0]>
                     <SliderTrack attr:class=classes::track>
                         <SliderRange attr:class=classes::range />

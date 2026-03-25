@@ -1,5 +1,5 @@
 use leptos::prelude::*;
-use cardo_ui::separator::*;
+use pith_ui::separator::*;
 
 #[component]
 pub fn SeparatorDemo() -> impl IntoView {

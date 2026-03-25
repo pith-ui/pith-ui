@@ -1,8 +1,8 @@
 use leptos::prelude::*;
-use cardo_ui::dialog::{
+use pith_ui::dialog::{
     Dialog, DialogClose, DialogContent, DialogTitle, DialogTrigger,
 };
-use cardo_ui::hover_card::*;
+use pith_ui::hover_card::*;
 use web_sys::wasm_bindgen::JsCast;
 
 stylance::import_crate_style!(classes, "src/primitives/hover_card.stories.module.css");

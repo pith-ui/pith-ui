@@ -1,7 +1,7 @@
-//! Typed `class` prop for Cardo UI components.
+//! Typed `class` prop for Pith UI components.
 //!
 //! Provides [`ClassProp`], a component prop type that accepts class strings,
-//! custom style types (via [`IntoCardoClass`]), and reactive wrappers
+//! custom style types (via [`IntoPithClass`]), and reactive wrappers
 //! (`Signal`, `Memo`, `ReadSignal`, `RwSignal`) around any of those types.
 //!
 //! # Usage in components
@@ -20,24 +20,24 @@
 //! <MyComponent class="flex p-4" />
 //! <MyComponent class=my_string />
 //!
-//! // Custom types implementing IntoCardoClass
+//! // Custom types implementing IntoPithClass
 //! <MyComponent class=BtnSize::Sm />
 //!
 //! // Reactive
-//! <MyComponent class=my_signal />       // Signal<String>, Signal<T: IntoCardoClass>, etc.
-//! <MyComponent class=my_memo />         // Memo<String>, Memo<T: IntoCardoClass>, etc.
+//! <MyComponent class=my_signal />       // Signal<String>, Signal<T: IntoPithClass>, etc.
+//! <MyComponent class=my_memo />         // Memo<String>, Memo<T: IntoPithClass>, etc.
 //! ```
 
 use leptos::prelude::*;
 
 /// Resolved class value wrapping a class string.
 #[derive(Clone, Debug, Default, PartialEq)]
-pub struct CardoClass(pub String);
+pub struct PithClass(pub String);
 
-impl CardoClass {
+impl PithClass {
     /// Create a new class value from anything that converts to `String`.
     pub fn new(s: impl Into<String>) -> Self {
-        CardoClass(s.into())
+        PithClass(s.into())
     }
 
     /// View the class as a string slice.
@@ -47,7 +47,7 @@ impl CardoClass {
 }
 
 /// Implement this trait on a custom type to make it usable as a `class` prop
-/// value. Any type implementing `IntoCardoClass` can be passed directly to
+/// value. Any type implementing `IntoPithClass` can be passed directly to
 /// a component's `class` prop (both statically and inside reactive wrappers).
 ///
 /// The method takes `&self` so that reactive signal wrappers (which call
@@ -59,33 +59,33 @@ impl CardoClass {
 /// ```ignore
 /// struct MyTheme { dark: bool }
 ///
-/// impl IntoCardoClass for MyTheme {
-///     fn to_cardo_class(&self) -> CardoClass {
-///         CardoClass::new(if self.dark { "theme-dark" } else { "theme-light" })
+/// impl IntoPithClass for MyTheme {
+///     fn to_pith_class(&self) -> PithClass {
+///         PithClass::new(if self.dark { "theme-dark" } else { "theme-light" })
 ///     }
 /// }
 /// ```
-pub trait IntoCardoClass {
-    /// Convert this value into a [`CardoClass`].
-    fn to_cardo_class(&self) -> CardoClass;
+pub trait IntoPithClass {
+    /// Convert this value into a [`PithClass`].
+    fn to_pith_class(&self) -> PithClass;
 }
 
 /// Component prop type for the `class` attribute.
 ///
-/// Wraps a [`MaybeProp<CardoClass>`] so that it works with both static values
+/// Wraps a [`MaybeProp<PithClass>`] so that it works with both static values
 /// and reactive signals. Use with `#[prop(into, optional)]`.
 #[derive(Clone)]
-pub struct ClassProp(MaybeProp<CardoClass>);
+pub struct ClassProp(MaybeProp<PithClass>);
 
 impl Default for ClassProp {
     fn default() -> Self {
-        ClassProp(None::<CardoClass>.into())
+        ClassProp(None::<PithClass>.into())
     }
 }
 
 impl ClassProp {
     /// Read the current class value, if any.
-    pub fn get(&self) -> Option<CardoClass> {
+    pub fn get(&self) -> Option<PithClass> {
         self.0.get()
     }
 
@@ -99,31 +99,31 @@ impl ClassProp {
 
 impl From<&str> for ClassProp {
     fn from(s: &str) -> Self {
-        ClassProp(MaybeProp::from(CardoClass(s.to_string())))
+        ClassProp(MaybeProp::from(PithClass(s.to_string())))
     }
 }
 
 impl From<String> for ClassProp {
     fn from(s: String) -> Self {
-        ClassProp(MaybeProp::from(CardoClass(s)))
+        ClassProp(MaybeProp::from(PithClass(s)))
     }
 }
 
-impl From<CardoClass> for ClassProp {
-    fn from(c: CardoClass) -> Self {
+impl From<PithClass> for ClassProp {
+    fn from(c: PithClass) -> Self {
         ClassProp(MaybeProp::from(c))
     }
 }
 
-/// Blanket impl: any `T: IntoCardoClass` converts to `ClassProp` in one hop.
-impl<T: IntoCardoClass> From<T> for ClassProp {
+/// Blanket impl: any `T: IntoPithClass` converts to `ClassProp` in one hop.
+impl<T: IntoPithClass> From<T> for ClassProp {
     fn from(value: T) -> Self {
-        ClassProp(MaybeProp::from(value.to_cardo_class()))
+        ClassProp(MaybeProp::from(value.to_pith_class()))
     }
 }
 
-impl From<MaybeProp<CardoClass>> for ClassProp {
-    fn from(mp: MaybeProp<CardoClass>) -> Self {
+impl From<MaybeProp<PithClass>> for ClassProp {
+    fn from(mp: MaybeProp<PithClass>) -> Self {
         ClassProp(mp)
     }
 }
@@ -136,13 +136,13 @@ macro_rules! impl_from_reactive {
             fn from(sig: $sig<String>) -> Self {
                 let sig = Signal::from(sig);
                 ClassProp(MaybeProp::from(Signal::derive(move || {
-                    Some(CardoClass(sig.get()))
+                    Some(PithClass(sig.get()))
                 })))
             }
         }
 
-        impl From<$sig<CardoClass>> for ClassProp {
-            fn from(sig: $sig<CardoClass>) -> Self {
+        impl From<$sig<PithClass>> for ClassProp {
+            fn from(sig: $sig<PithClass>) -> Self {
                 let sig = Signal::from(sig);
                 ClassProp(MaybeProp::from(Signal::derive(move || {
                     Some(sig.get())
@@ -152,12 +152,12 @@ macro_rules! impl_from_reactive {
 
         impl<T> From<$sig<T>> for ClassProp
         where
-            T: IntoCardoClass + Clone + Send + Sync + 'static,
+            T: IntoPithClass + Clone + Send + Sync + 'static,
         {
             fn from(sig: $sig<T>) -> Self {
                 let sig: Signal<T> = Signal::from(sig);
                 ClassProp(MaybeProp::from(Signal::derive(move || {
-                    Some(sig.get().to_cardo_class())
+                    Some(sig.get().to_pith_class())
                 })))
             }
         }
@@ -180,9 +180,9 @@ mod tests {
         dark: bool,
     }
 
-    impl IntoCardoClass for MyTheme {
-        fn to_cardo_class(&self) -> CardoClass {
-            CardoClass::new(if self.dark { "theme-dark" } else { "theme-light" })
+    impl IntoPithClass for MyTheme {
+        fn to_pith_class(&self) -> PithClass {
+            PithClass::new(if self.dark { "theme-dark" } else { "theme-light" })
         }
     }
 
@@ -238,9 +238,9 @@ mod tests {
     }
 
     #[test]
-    fn signal_cardo_class() {
+    fn signal_pith_class() {
         with_owner(|| {
-            assert_eq!(component(Signal::stored(CardoClass::new("flex"))), "flex");
+            assert_eq!(component(Signal::stored(PithClass::new("flex"))), "flex");
         });
     }
 

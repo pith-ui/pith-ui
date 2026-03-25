@@ -1,5 +1,5 @@
 {
-    "name": "@cardo-ui/experiments",
+    "name": "@pith-ui/experiments",
     "description": "Leptos-only experiment harness for validating framework assumptions.",
     "private": true,
     "scripts": {

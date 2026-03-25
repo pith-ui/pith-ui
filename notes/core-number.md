@@ -34,6 +34,6 @@ Uses `Math.min(max, Math.max(min, value))` — standard min/max nesting pattern.
 
 ## Rust Implementation Notes
 
-Uses method chaining: `value.max(min).min(max)`. Functionally equivalent to the React version. No dependencies. Crate name: `cardo-ui-number`.
+Uses method chaining: `value.max(min).min(max)`. Functionally equivalent to the React version. No dependencies. Crate name: `pith-ui-number`.
 
 Note: No tests exist yet. The function is straightforward but should have edge-case coverage (e.g., `min > max`, `NaN` inputs, `value == min`, `value == max`).

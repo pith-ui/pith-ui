@@ -44,7 +44,7 @@ cargo add radix-yew-select
 
 -   [View on crates.io](https://crates.io/crates/radix-yew-select)
 -   [View on docs.rs](https://docs.rs/radix-yew-select/latest/radix_yew_select/)
--   [View source](https://github.com/cardo-ui/cardo-ui/tree/main/packages/primitives/yew/select)
+-   [View source](https://github.com/pith-ui/pith-ui/tree/main/packages/primitives/yew/select)
 
 {{#endtab }}
 {{#endtabs }}

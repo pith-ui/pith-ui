@@ -1,5 +1,5 @@
 use leptos::prelude::*;
-use cardo_ui::tabs::*;
+use pith_ui::tabs::*;
 
 #[component]
 pub fn TabsPage() -> impl IntoView {

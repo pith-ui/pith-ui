@@ -1,7 +1,7 @@
 use std::marker::PhantomData;
 
 use leptos::prelude::*;
-use cardo_ui::collection::*;
+use pith_ui::collection::*;
 
 #[derive(Clone, Debug, PartialEq)]
 struct ItemData {

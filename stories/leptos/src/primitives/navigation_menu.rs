@@ -1,6 +1,6 @@
 use leptos::prelude::*;
-use cardo_ui::direction::{Direction, DirectionProvider};
-use cardo_ui::navigation_menu::*;
+use pith_ui::direction::{Direction, DirectionProvider};
+use pith_ui::navigation_menu::*;
 
 stylance::import_crate_style!(classes, "src/primitives/navigation_menu.stories.module.css");
 

@@ -1,6 +1,6 @@
 [package]
 name = "scripts"
-description = "Scripts for Cardo UI."
+description = "Scripts for Pith UI."
 publish = false
 
 authors.workspace = true

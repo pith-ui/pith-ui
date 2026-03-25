@@ -1,8 +1,8 @@
 {
-    "name": "@cardo-ui/cardo-ui",
+    "name": "@pith-ui/primitives",
     "description": "Rust port of Radix.",
-    "author": "Cardo UI Contributors",
-    "repository": "github:cardo-ui/cardo-ui",
+    "author": "Pith UI Contributors",
+    "repository": "github:pith-ui/primitives",
     "license": "MIT",
     "private": true,
     "scripts": {

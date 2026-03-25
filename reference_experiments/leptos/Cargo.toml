@@ -1,5 +1,5 @@
 [package]
-name = "cardo-ui-experiments"
+name = "pith-ui-experiments"
 description = "Leptos experiment app for validating framework assumptions."
 publish = false
 
@@ -16,6 +16,6 @@ leptos = { workspace = true, features = ["csr"] }
 leptos-node-ref.workspace = true
 leptos_router.workspace = true
 log.workspace = true
-cardo-ui = { workspace = true, features = ["all"] }
+pith-ui = { workspace = true, features = ["all"] }
 send_wrapper.workspace = true
 web-sys = { workspace = true, features = ["Element", "NamedNodeMap", "Attr"] }

@@ -1,6 +1,6 @@
 use leptos::prelude::*;
-use cardo_ui::direction::{Direction, DirectionProvider};
-use cardo_ui::menubar::*;
+use pith_ui::direction::{Direction, DirectionProvider};
+use pith_ui::menubar::*;
 
 #[component]
 pub fn MenubarPage() -> impl IntoView {

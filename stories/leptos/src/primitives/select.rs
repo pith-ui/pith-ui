@@ -1,6 +1,6 @@
 use leptos::prelude::*;
-use cardo_ui::label::Label;
-use cardo_ui::select::*;
+use pith_ui::label::Label;
+use pith_ui::select::*;
 use wasm_bindgen::JsCast;
 
 stylance::import_crate_style!(classes, "src/primitives/select.stories.module.css");
@@ -706,7 +706,7 @@ fn RtlSelectExample(position: &'static str) -> impl IntoView {
     view! {
         <Label>
             {"\u{0627}\u{062E}\u{062A}\u{0631} \u{0641}\u{0627}\u{0643}\u{0647}\u{0629}:"}
-            <Select default_value="two" dir=cardo_ui::direction::Direction::Rtl>
+            <Select default_value="two" dir=pith_ui::direction::Direction::Rtl>
                 <SelectTrigger attr:class=classes::trigger>
                     <SelectValue />
                     <SelectIcon />
@@ -850,7 +850,7 @@ pub fn WithinForm() -> impl IntoView {
 
 #[component]
 pub fn WithinDialog() -> impl IntoView {
-    use cardo_ui::dialog::*;
+    use pith_ui::dialog::*;
 
     view! {
         <div style="height: 120vh;">

@@ -1,6 +1,6 @@
 use leptos::{ev::Event, prelude::*};
-use cardo_ui::label::*;
-use cardo_ui::switch::*;
+use pith_ui::label::*;
+use pith_ui::switch::*;
 
 stylance::import_crate_style!(classes, "src/primitives/switch.stories.module.css");
 

@@ -2,7 +2,7 @@ use chrono::{Datelike, NaiveDate, Weekday};
 use leptos::prelude::*;
 use web_sys::wasm_bindgen::JsCast;
 
-use cardo_ui::calendar::*;
+use pith_ui::calendar::*;
 
 #[component]
 pub fn CalendarPage() -> impl IntoView {

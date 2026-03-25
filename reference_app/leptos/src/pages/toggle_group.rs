@@ -1,5 +1,5 @@
 use leptos::prelude::*;
-use cardo_ui::toggle_group::*;
+use pith_ui::toggle_group::*;
 
 #[component]
 pub fn ToggleGroupPage() -> impl IntoView {
@@ -10,8 +10,8 @@ pub fn ToggleGroupPage() -> impl IntoView {
     let (multiple_value, set_multiple_value) = signal(Vec::<String>::new());
 
     let orient = Signal::derive(move || match orientation.get().as_str() {
-        "vertical" => cardo_ui::roving_focus::Orientation::Vertical,
-        _ => cardo_ui::roving_focus::Orientation::Horizontal,
+        "vertical" => pith_ui::roving_focus::Orientation::Vertical,
+        _ => pith_ui::roving_focus::Orientation::Horizontal,
     });
 
     let single_value_signal = Signal::derive(move || single_value.get());

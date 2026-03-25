@@ -47,4 +47,4 @@ fn AspectRatio(
 - `ratio` is a reactive `Signal<f64>` (React uses a static number).
 - Uses `AttributeInterceptor` to capture and forward attributes to the inner `Primitive` — the outer wrapper div doesn't receive consumer attributes.
 - `padding-bottom` is computed reactively via `format!("{}%", 100.0 / ratio.get())`.
-- Dependencies: `leptos`, `leptos-node-ref`, `cardo-ui-primitive`.
+- Dependencies: `leptos`, `leptos-node-ref`, `pith-ui-primitive`.

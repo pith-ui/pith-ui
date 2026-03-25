@@ -66,4 +66,4 @@ fn FocusScope(
 - `MutationObserver` and auto-focus cleanup stored in `StoredValue<SendWrapper<RefCell<...>>>` for `Send+Sync` compatibility.
 - `window()` calls in helper functions replaced with `web_sys::window().expect(...)`.
 - Removed `leptos-use-callback-ref` dependency (was listed in old notes but not actually used).
-- Dependencies: `leptos`, `leptos-node-ref`, `once_cell`, `cardo-ui-compose-refs`, `cardo-ui-primitive`, `send_wrapper`, `web-sys`.
+- Dependencies: `leptos`, `leptos-node-ref`, `once_cell`, `pith-ui-compose-refs`, `pith-ui-primitive`, `send_wrapper`, `web-sys`.

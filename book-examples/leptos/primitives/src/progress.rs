@@ -1,7 +1,7 @@
 use std::time::Duration;
 
 use leptos::*;
-use cardo_ui::progress::*;
+use pith_ui::progress::*;
 
 #[component]
 pub fn ProgressDemo() -> impl IntoView {

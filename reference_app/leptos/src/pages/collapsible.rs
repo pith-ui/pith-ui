@@ -1,5 +1,5 @@
 use leptos::prelude::*;
-use cardo_ui::collapsible::*;
+use pith_ui::collapsible::*;
 
 #[component]
 pub fn CollapsiblePage() -> impl IntoView {

@@ -1,6 +1,6 @@
 use leptos::{context::Provider, ev, prelude::*};
-use cardo_ui::direction::Direction;
-use cardo_ui::roving_focus::*;
+use pith_ui::direction::Direction;
+use pith_ui::roving_focus::*;
 use web_sys::wasm_bindgen::JsCast;
 
 #[derive(Clone)]

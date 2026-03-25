@@ -48,4 +48,4 @@ fn AccessibleIcon(
 - Does not enforce a single child — `TypedChildren` accepts any `IntoView`. Attributes are applied to the children view as a whole via `.add_any_attr()` rather than cloning a single element.
 - `label` is a reactive signal, allowing dynamic label updates (React version uses a static string).
 - Wraps `label` in an extra `Signal::derive` — this appears redundant since `label` is already a `Signal<String>`.
-- Dependencies: `leptos`, `cardo-ui-visually-hidden`.
+- Dependencies: `leptos`, `pith-ui-visually-hidden`.

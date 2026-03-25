@@ -1,7 +1,7 @@
 use leptos::prelude::*;
-use cardo_ui::direction::DirectionProvider;
-use cardo_ui::toggle::Toggle;
-use cardo_ui::toolbar::*;
+use pith_ui::direction::DirectionProvider;
+use pith_ui::toggle::Toggle;
+use pith_ui::toolbar::*;
 
 stylance::import_crate_style!(
     #[allow(dead_code)]
@@ -13,7 +13,7 @@ stylance::import_crate_style!(
 pub fn Styled() -> impl IntoView {
     view! {
         <ToolbarExample title="Horizontal" />
-        <ToolbarExample title="Vertical" orientation=cardo_ui::roving_focus::Orientation::Vertical />
+        <ToolbarExample title="Vertical" orientation=pith_ui::roving_focus::Orientation::Vertical />
     }
 }
 
@@ -23,14 +23,14 @@ pub fn Chromatic() -> impl IntoView {
         <div style:padding="50px">
             <h1>"Example"</h1>
             <ToolbarExample title="" />
-            <ToolbarExample title="" orientation=cardo_ui::roving_focus::Orientation::Vertical />
+            <ToolbarExample title="" orientation=pith_ui::roving_focus::Orientation::Vertical />
 
             <h1>"Direction"</h1>
             <h2>"Prop"</h2>
-            <ToolbarExample title="" dir=cardo_ui::direction::Direction::Rtl />
+            <ToolbarExample title="" dir=pith_ui::direction::Direction::Rtl />
 
             <h2>"Inherited"</h2>
-            <DirectionProvider direction=Signal::derive(|| cardo_ui::direction::Direction::Rtl)>
+            <DirectionProvider direction=Signal::derive(|| pith_ui::direction::Direction::Rtl)>
                 <ToolbarExample title="" />
             </DirectionProvider>
         </div>
@@ -40,11 +40,11 @@ pub fn Chromatic() -> impl IntoView {
 #[component]
 fn ToolbarExample(
     #[prop(into)] title: String,
-    #[prop(optional)] orientation: Option<cardo_ui::roving_focus::Orientation>,
-    #[prop(into, optional)] dir: MaybeProp<cardo_ui::direction::Direction>,
+    #[prop(optional)] orientation: Option<pith_ui::roving_focus::Orientation>,
+    #[prop(into, optional)] dir: MaybeProp<pith_ui::direction::Direction>,
 ) -> impl IntoView {
     let orientation =
-        orientation.unwrap_or(cardo_ui::roving_focus::Orientation::Horizontal);
+        orientation.unwrap_or(pith_ui::roving_focus::Orientation::Horizontal);
 
     let title = StoredValue::new(title);
     let aria_label = StoredValue::new(format!("{} toolbar", title.get_value()));
@@ -91,7 +91,7 @@ fn ToolbarExample(
                 </ToolbarButton>
                 <ToolbarSeparator attr:class=classes::toolbarSeparator />
                 <ToolbarToggleGroup
-                    r#type=cardo_ui::toggle_group::ToggleGroupType::Single
+                    r#type=pith_ui::toggle_group::ToggleGroupType::Single
                     attr:class=classes::toolbarToggleGroup
                 >
                     <ToolbarToggleItem value="left" attr:class=toggle_item_class.get_value()>

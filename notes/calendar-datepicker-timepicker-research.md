@@ -376,9 +376,9 @@ The Icu4xAdapter would support 13+ calendar systems (Gregorian, Buddhist, Hijri,
 2. `time_field` component module + story
 3. `date_time_picker` component module + story
 4. Calendar view switching
-5. `cardo-date-adapter` trait crate
-6. `cardo-date-adapter-chrono` default implementation
-7. `cardo-date-adapter-icu4x` optional implementation (feature-gated)
+5. `pith-date-adapter` trait crate
+6. `pith-date-adapter-chrono` default implementation
+7. `pith-date-adapter-icu4x` optional implementation (feature-gated)
 8. Research notes for each
 
 ---

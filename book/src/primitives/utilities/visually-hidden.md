@@ -14,12 +14,12 @@ Install the component from your command line.
 {{#tab name="Leptos" }}
 
 ```shell
-cargo add cardo-ui-visually-hidden
+cargo add pith-ui-visually-hidden
 ```
 
--   [View on crates.io](https://crates.io/crates/cardo-ui-visually-hidden)
--   [View on docs.rs](https://docs.rs/cardo-ui-visually-hidden/latest/cardo_ui_visually_hidden/)
--   [View source](https://github.com/cardo-ui/cardo-ui/tree/main/packages/primitives/leptos/visually-hidden)
+-   [View on crates.io](https://crates.io/crates/pith-ui-visually-hidden)
+-   [View on docs.rs](https://docs.rs/pith-ui-visually-hidden/latest/pith_ui_visually_hidden/)
+-   [View source](https://github.com/pith-ui/pith-ui/tree/main/packages/primitives/leptos/visually-hidden)
 
 {{#endtab }}
 {{#tab name="Yew" }}
@@ -30,7 +30,7 @@ cargo add radix-yew-visually-hidden
 
 -   [View on crates.io](https://crates.io/crates/radix-yew-visually-hidden)
 -   [View on docs.rs](https://docs.rs/radix-yew-visually-hidden/latest/radix_yew_visually_hidden/)
--   [View source](https://github.com/cardo-ui/cardo-ui/tree/main/packages/primitives/yew/visually-hidden)
+-   [View source](https://github.com/pith-ui/pith-ui/tree/main/packages/primitives/yew/visually-hidden)
 
 {{#endtab }}
 {{#endtabs }}
@@ -44,7 +44,7 @@ Import the component.
 
 ```rust,ignore
 use leptos::*;
-use cardo_ui_visually_hidden::*;
+use pith_ui_visually_hidden::*;
 
 #[component]
 fn Anatomy() -> impl IntoView {
@@ -104,8 +104,8 @@ Use the visually hidden primitive.
 
 ```rust,ignore
 use leptos::*;
-use cardo_ui_icons::GearIcon;
-use cardo_ui_visually_hidden::*;
+use pith_ui_icons::GearIcon;
+use pith_ui_visually_hidden::*;
 
 #[component]
 fn Example() -> impl IntoView {

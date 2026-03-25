@@ -1,5 +1,5 @@
 use leptos::prelude::*;
-use cardo_ui::accessible_icon::AccessibleIcon;
+use pith_ui::accessible_icon::AccessibleIcon;
 
 #[component]
 pub fn Styled() -> impl IntoView {

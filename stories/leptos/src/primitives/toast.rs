@@ -1,10 +1,10 @@
 use leptos::prelude::*;
 use leptos_node_ref::AnyNodeRef;
-use cardo_ui::dialog::{
+use pith_ui::dialog::{
     Dialog, DialogClose, DialogContent, DialogDescription, DialogOverlay, DialogTitle,
     DialogTrigger,
 };
-use cardo_ui::toast::*;
+use pith_ui::toast::*;
 use web_sys::wasm_bindgen::{JsCast, closure::Closure};
 
 stylance::import_crate_style!(classes, "src/primitives/toast.stories.module.css");

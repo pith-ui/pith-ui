@@ -1,5 +1,5 @@
 use leptos::prelude::*;
-use cardo_ui::menu::*;
+use pith_ui::menu::*;
 
 #[component]
 pub fn MenuPage() -> impl IntoView {

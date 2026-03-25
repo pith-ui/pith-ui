@@ -1,5 +1,5 @@
 [package]
-name = "cardo-ui-primitive"
+name = "pith-ui-primitive"
 description = "Rust port of Radix Core Primitive."
 
 authors.workspace = true

@@ -1,5 +1,5 @@
 use leptos::prelude::*;
-use cardo_ui::select::*;
+use pith_ui::select::*;
 use web_sys::wasm_bindgen::JsCast;
 
 #[component]

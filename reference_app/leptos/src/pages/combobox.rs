@@ -1,6 +1,6 @@
 use leptos::prelude::*;
 use leptos::either::Either;
-use cardo_ui::combobox::*;
+use pith_ui::combobox::*;
 use web_sys::wasm_bindgen::JsCast;
 
 const FRUITS: &[&str] = &["Apple", "Avocado", "Banana", "Cherry", "Grape", "Mango", "Orange", "Pear"];

@@ -12,7 +12,7 @@ This component is not yet updated to Leptos 0.7+.
 </div>
 
 <!-- ```toml,trunk
-package = "cardo-ui-book-primitives"
+package = "pith-ui-book-primitives"
 features = ["switch"]
 files = ["src/switch.rs"]
 ``` -->
@@ -42,12 +42,12 @@ Install the component from your command line.
 {{#tab name="Leptos" }}
 
 ```shell
-cargo add cardo-ui-switch
+cargo add pith-ui-switch
 ```
 
--   [View on crates.io](https://crates.io/crates/cardo-ui-switch)
--   [View on docs.rs](https://docs.rs/cardo-ui-switch/latest/cardo_ui_switch/)
--   [View source](https://github.com/cardo-ui/cardo-ui/tree/main/packages/primitives/leptos/switch)
+-   [View on crates.io](https://crates.io/crates/pith-ui-switch)
+-   [View on docs.rs](https://docs.rs/pith-ui-switch/latest/pith_ui_switch/)
+-   [View source](https://github.com/pith-ui/pith-ui/tree/main/packages/primitives/leptos/switch)
 
 {{#endtab }}
 {{#tab name="Yew" }}
@@ -58,7 +58,7 @@ cargo add radix-yew-switch
 
 -   [View on crates.io](https://crates.io/crates/radix-yew-switch)
 -   [View on docs.rs](https://docs.rs/radix-yew-switch/latest/radix_yew_switch/)
--   [View source](https://github.com/cardo-ui/cardo-ui/tree/main/packages/primitives/yew/switch)
+-   [View source](https://github.com/pith-ui/pith-ui/tree/main/packages/primitives/yew/switch)
 
 {{#endtab }}
 {{#endtabs }}
@@ -72,7 +72,7 @@ Import all parts and piece them together.
 
 ```rust,ignore
 use leptos::*;
-use cardo_ui_switch::*;
+use pith_ui_switch::*;
 
 #[component]
 fn Anatomy() -> impl IntoView {

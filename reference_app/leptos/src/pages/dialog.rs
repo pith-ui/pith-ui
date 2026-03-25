@@ -1,5 +1,5 @@
 use leptos::prelude::*;
-use cardo_ui::dialog::*;
+use pith_ui::dialog::*;
 
 #[component]
 pub fn DialogPage() -> impl IntoView {

@@ -1,5 +1,5 @@
 use leptos::prelude::*;
-use cardo_ui::separator::*;
+use pith_ui::separator::*;
 
 stylance::import_crate_style!(classes, "src/primitives/separator.stories.module.css");
 

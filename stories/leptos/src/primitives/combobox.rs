@@ -1,4 +1,4 @@
-use cardo_ui::combobox::*;
+use pith_ui::combobox::*;
 use leptos::prelude::*;
 
 stylance::import_crate_style!(classes, "src/primitives/combobox.stories.module.css");

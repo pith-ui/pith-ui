@@ -1,5 +1,5 @@
 use leptos::prelude::*;
-use cardo_ui::aspect_ratio::*;
+use pith_ui::aspect_ratio::*;
 
 stylance::import_crate_style!(
     aspect_ratio_classes,

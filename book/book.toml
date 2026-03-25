@@ -2,7 +2,7 @@
 authors = ["Daniëlle Huisman"]
 language = "en"
 src = "src"
-title = "Cardo UI"
+title = "Pith UI"
 
 [preprocessor.tabs]
 
@@ -11,8 +11,8 @@ title = "Cardo UI"
 [output.html]
 additional-css = ["theme/tabs.css", "theme/theme.css", "theme/trunk.css"]
 additional-js = ["theme/tabs.js", "theme/theme.js", "theme/trunk.js"]
-edit-url-template = "https://github.com/cardo-ui/cardo-ui/edit/main/book/{path}"
-git-repository-url = "https://github.com/cardo-ui/cardo-ui"
+edit-url-template = "https://github.com/pith-ui/pith-ui/edit/main/book/{path}"
+git-repository-url = "https://github.com/pith-ui/pith-ui"
 
 [output.trunk]
 serve = true

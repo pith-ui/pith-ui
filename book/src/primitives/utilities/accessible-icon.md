@@ -15,12 +15,12 @@ Install the component from your command line.
 {{#tab name="Leptos" }}
 
 ```shell
-cargo add cardo-ui-accessible-icon
+cargo add pith-ui-accessible-icon
 ```
 
--   [View on crates.io](https://crates.io/crates/cardo-ui-accessible-icon)
--   [View on docs.rs](https://docs.rs/cardo-ui-accessible-icon/latest/cardo_ui_accessible_icon/)
--   [View source](https://github.com/cardo-ui/cardo-ui/tree/main/packages/primitives/leptos/accessible-icon)
+-   [View on crates.io](https://crates.io/crates/pith-ui-accessible-icon)
+-   [View on docs.rs](https://docs.rs/pith-ui-accessible-icon/latest/pith_ui_accessible_icon/)
+-   [View source](https://github.com/pith-ui/pith-ui/tree/main/packages/primitives/leptos/accessible-icon)
 
 {{#endtab }}
 {{#endtabs }}
@@ -34,7 +34,7 @@ Import the component.
 
 ```rust,ignore
 use leptos::*;
-use cardo_ui_accessible_icon::*;
+use pith_ui_accessible_icon::*;
 
 #[component]
 fn Anatomy() -> impl IntoView {

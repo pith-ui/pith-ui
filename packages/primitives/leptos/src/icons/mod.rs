@@ -2,7 +2,7 @@
 //!
 //! Radix Icons is a crisp set of 15x15 icons.
 //!
-//! See [the Cardo UI book](https://cardo-ui.dev/icons/index.html) for more documenation.
+//! See [the Pith UI book](https://pith-ui.dev/icons/index.html) for more documenation.
 
 mod accessibility_icon;
 mod activity_log_icon;

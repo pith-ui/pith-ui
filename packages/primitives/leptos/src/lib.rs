@@ -10,7 +10,7 @@
 //!
 //! ```toml
 //! [dependencies]
-//! cardo-ui = { version = "0.0.2", features = ["checkbox", "dialog", "tabs"] }
+//! pith-ui = { version = "0.0.2", features = ["checkbox", "dialog", "tabs"] }
 //! ```
 //!
 //! # Public Support Modules

@@ -1,7 +1,7 @@
 use chrono::{Datelike, NaiveDate, Weekday};
 use leptos::prelude::*;
 
-use cardo_ui::calendar::*;
+use pith_ui::calendar::*;
 
 stylance::import_crate_style!(classes, "src/primitives/calendar.stories.module.css");
 

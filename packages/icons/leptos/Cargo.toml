@@ -1,7 +1,7 @@
 [package]
-name = "cardo-ui-icons"
+name = "pith-ui-icons"
 description = "Leptos port of Radix Icons."
-homepage = "https://cardo-ui.dev/icons/index.html"
+homepage = "https://pith-ui.dev/icons/index.html"
 
 authors.workspace = true
 edition.workspace = true

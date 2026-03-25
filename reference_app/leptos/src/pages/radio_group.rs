@@ -1,5 +1,5 @@
 use leptos::prelude::*;
-use cardo_ui::radio_group::*;
+use pith_ui::radio_group::*;
 
 #[component]
 pub fn RadioGroupPage() -> impl IntoView {

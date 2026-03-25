@@ -1,5 +1,5 @@
 [package]
-name = "cardo-ui-book-primitives"
+name = "pith-ui-book-primitives"
 description = "Book examples for Radix Primitives Leptos."
 publish = false
 
@@ -20,18 +20,18 @@ default = [
     "switch",
     "toggle",
 ]
-aspect-ratio = ["dep:cardo-ui"]
-avatar = ["dep:cardo-ui"]
-checkbox = ["dep:cardo-ui"]
-label = ["dep:cardo-ui"]
-progress = ["dep:cardo-ui"]
-separator = ["dep:cardo-ui"]
-switch = ["dep:cardo-ui"]
-toggle = ["dep:cardo-ui"]
+aspect-ratio = ["dep:pith-ui"]
+avatar = ["dep:pith-ui"]
+checkbox = ["dep:pith-ui"]
+label = ["dep:pith-ui"]
+progress = ["dep:pith-ui"]
+separator = ["dep:pith-ui"]
+switch = ["dep:pith-ui"]
+toggle = ["dep:pith-ui"]
 
 [dependencies]
 console_error_panic_hook.workspace = true
 console_log.workspace = true
 leptos = { workspace = true, features = ["csr"] }
 log.workspace = true
-cardo-ui = { workspace = true, optional = true, features = ["all"] }
+pith-ui = { workspace = true, optional = true, features = ["all"] }

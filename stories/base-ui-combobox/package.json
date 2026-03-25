@@ -1,5 +1,5 @@
 {
-    "name": "@cardo-ui/base-ui-combobox-stories",
+    "name": "@pith-ui/base-ui-combobox-stories",
     "description": "Base UI Combobox reference stories for visual comparison with Leptos implementation.",
     "private": true,
     "type": "module",

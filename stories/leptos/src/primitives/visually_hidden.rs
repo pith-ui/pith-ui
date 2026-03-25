@@ -1,5 +1,5 @@
 use leptos::prelude::*;
-use cardo_ui::visually_hidden::*;
+use pith_ui::visually_hidden::*;
 
 #[component]
 pub fn Basic() -> impl IntoView {

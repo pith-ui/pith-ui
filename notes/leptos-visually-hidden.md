@@ -48,4 +48,4 @@ Renders a `Primitive` with `html::span` and inline `style:` attributes.
 - Applies the same CSS properties as individual `style:` directives on the `Primitive` component.
 - Does not export a standalone styles constant — the values are inline only.
 - Does not expose a mechanism for consumers to merge/override individual style properties (React allows this via `...props.style` spread).
-- Dependencies: `leptos`, `leptos-node-ref`, `cardo-ui-primitive`.
+- Dependencies: `leptos`, `leptos-node-ref`, `pith-ui-primitive`.

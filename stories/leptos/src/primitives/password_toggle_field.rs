@@ -2,7 +2,7 @@
 #![allow(dead_code)]
 
 use leptos::prelude::*;
-use cardo_ui::password_toggle_field::*;
+use pith_ui::password_toggle_field::*;
 
 stylance::import_crate_style!(
     classes,

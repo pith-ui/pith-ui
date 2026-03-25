@@ -1,5 +1,5 @@
 use leptos::prelude::*;
-use cardo_ui::dropdown_menu::*;
+use pith_ui::dropdown_menu::*;
 
 #[component]
 pub fn DropdownMenuPage() -> impl IntoView {

@@ -1,5 +1,5 @@
 use leptos::prelude::*;
-use cardo_ui::scroll_area::*;
+use pith_ui::scroll_area::*;
 
 const ITEM_COUNT: usize = 50;
 

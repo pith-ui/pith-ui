@@ -1,5 +1,5 @@
 use leptos::prelude::*;
-use cardo_ui::arrow::*;
+use pith_ui::arrow::*;
 
 #[component]
 pub fn Styled() -> impl IntoView {

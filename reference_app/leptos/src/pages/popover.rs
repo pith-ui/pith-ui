@@ -1,5 +1,5 @@
 use leptos::prelude::*;
-use cardo_ui::popover::*;
+use pith_ui::popover::*;
 
 #[component]
 pub fn PopoverPage() -> impl IntoView {

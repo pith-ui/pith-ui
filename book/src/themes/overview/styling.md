@@ -43,7 +43,7 @@ If you need to create a custom component, use the same building blocks that Radi
 -   [Radix Primitives](../../primitives), a library of accessible, unstyled components
 -   [Radix Colors](../../colors), a color system for building beautiful websites and apps
 
-Feel free to explore the [source code](https://github.com/cardo-ui/cardo-ui/tree/main/packages/themes) of Radix Themes to see how it is built.
+Feel free to explore the [source code](https://github.com/pith-ui/pith-ui/tree/main/packages/themes) of Radix Themes to see how it is built.
 
 ## Common Issues
 
@@ -81,10 +81,10 @@ Components like Dialog and Popover in Radix Themes already handle this for you, 
 
 ```rust,ignore
 // Implementation example of a custom dialog using the low-level Dialog primitive
-// Refer to https://cardo-ui.dev/primitives/components/dialog.html
+// Refer to https://pith-ui.dev/primitives/components/dialog.html
 use leptos::*;
-use cardo_ui_dialog::*;
-use cardo_ui_themes::Theme;
+use pith_ui_dialog::*;
+use pith_ui_themes::Theme;
 
 #[component]
 fn MyCustomDialog() -> impl IntoView {
@@ -111,7 +111,7 @@ fn MyCustomDialog() -> impl IntoView {
 
 ```rust,ignore
 // Implementation example of a custom dialog using the low-level Dialog primitive
-// Refer to https://cardo-ui.dev/primitives/components/dialog.html
+// Refer to https://pith-ui.dev/primitives/components/dialog.html
 use radix_yew_dialog::*;
 use radix_yew_themes::Theme;
 use yew::prelude::*;
@@ -165,7 +165,7 @@ You might apply the margin prop from a `Box` onto your custom paragraph via `as_
 
 ```rust,ignore
 use leptos::*;
-use cardo_ui_dialog::*;
+use pith_ui_dialog::*;
 
 #[component]
 fn MyApp() -> impl IntoView {

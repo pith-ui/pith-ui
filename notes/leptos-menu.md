@@ -57,4 +57,4 @@ Similar set of components (~1060 lines). Uses `Collection` for item tracking, `R
 - Ports the full React component set. ~1060 lines.
 - Limited by `dismissable-layer` being unported — outside-click dismissal is incomplete.
 - Uses old Leptos API — needs migration.
-- Dependencies: `leptos`, `cardo-ui-collection`, `cardo-ui-compose-refs`, `cardo-ui-direction`, `cardo-ui-dismissable-layer`, `cardo-ui-focus-guards`, `cardo-ui-focus-scope`, `cardo-ui-popper`, `cardo-ui-roving-focus`, `web-sys`.
+- Dependencies: `leptos`, `pith-ui-collection`, `pith-ui-compose-refs`, `pith-ui-direction`, `pith-ui-dismissable-layer`, `pith-ui-focus-guards`, `pith-ui-focus-scope`, `pith-ui-popper`, `pith-ui-roving-focus`, `web-sys`.

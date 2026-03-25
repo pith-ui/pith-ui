@@ -1,6 +1,6 @@
 use leptos::prelude::*;
-use cardo_ui::direction::DirectionProvider;
-use cardo_ui::scroll_area::*;
+use pith_ui::direction::DirectionProvider;
+use pith_ui::scroll_area::*;
 use web_sys::wasm_bindgen::{JsCast, closure::Closure};
 
 stylance::import_crate_style!(classes, "src/primitives/scroll_area.stories.module.css");
@@ -43,8 +43,8 @@ fn ScrollAreaStory(
     });
 
     let dir_value = dir.get_untracked().map(|d| match d {
-        "rtl" => cardo_ui::direction::Direction::Rtl,
-        _ => cardo_ui::direction::Direction::Ltr,
+        "rtl" => pith_ui::direction::Direction::Rtl,
+        _ => pith_ui::direction::Direction::Ltr,
     });
 
     let thumb_class = StoredValue::new(if animated {
@@ -376,7 +376,7 @@ pub fn Chromatic() -> impl IntoView {
             </ScrollAreaStory>
 
             <h2>"Inherited"</h2>
-            <DirectionProvider direction=Signal::derive(|| cardo_ui::direction::Direction::Rtl)>
+            <DirectionProvider direction=Signal::derive(|| pith_ui::direction::Direction::Rtl)>
                 <ScrollAreaStory r#type=ScrollAreaType::Always>
                     {(0..10).map(|_| view! { <Copy /> }).collect_view()}
                 </ScrollAreaStory>

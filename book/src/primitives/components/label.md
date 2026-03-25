@@ -6,7 +6,7 @@ Renders an accessible label associated with controls.
 {{#tab name="Leptos" }}
 
 ```toml,trunk
-package = "cardo-ui-book-primitives"
+package = "pith-ui-book-primitives"
 features = ["label"]
 files = ["src/label.rs"]
 ```
@@ -36,12 +36,12 @@ Install the component from your command line.
 {{#tab name="Leptos" }}
 
 ```shell
-cargo add cardo-ui-label
+cargo add pith-ui-label
 ```
 
--   [View on crates.io](https://crates.io/crates/cardo-ui-label)
--   [View on docs.rs](https://docs.rs/cardo-ui-label/latest/cardo_ui_label/)
--   [View source](https://github.com/cardo-ui/cardo-ui/tree/main/packages/primitives/leptos/label)
+-   [View on crates.io](https://crates.io/crates/pith-ui-label)
+-   [View on docs.rs](https://docs.rs/pith-ui-label/latest/pith_ui_label/)
+-   [View source](https://github.com/pith-ui/pith-ui/tree/main/packages/primitives/leptos/label)
 
 {{#endtab }}
 {{#tab name="Yew" }}
@@ -52,7 +52,7 @@ cargo add radix-yew-label
 
 -   [View on crates.io](https://crates.io/crates/radix-yew-label)
 -   [View on docs.rs](https://docs.rs/radix-yew-label/latest/radix_yew_label/)
--   [View source](https://github.com/cardo-ui/cardo-ui/tree/main/packages/primitives/yew/label)
+-   [View source](https://github.com/pith-ui/pith-ui/tree/main/packages/primitives/yew/label)
 
 {{#endtab }}
 {{#endtabs }}
@@ -66,7 +66,7 @@ Import the component.
 
 ```rust,ignore
 use leptos::*;
-use cardo_ui_label::*;
+use pith_ui_label::*;
 
 #[component]
 fn Anatomy() -> impl IntoView {

@@ -49,7 +49,7 @@ Props: `orientation`, `dir`, `loop`, `currentTabStopId`, `defaultCurrentTabStopI
 - Uses `CollectionProvider`/`CollectionSlot`/`CollectionItemSlot` for item tracking.
 - Arrow key handling mirrors React: filters focusable items, wraps if `loop` is set.
 - Custom events via `web_sys::CustomEvent` for entry focus.
-- Dependencies: `leptos`, `leptos-node-ref`, `cardo-ui-collection`, `cardo-ui-compose-refs`, `cardo-ui-direction`, `cardo-ui-id`, `cardo-ui-primitive`, `cardo-ui-use-controllable-state`, `send_wrapper`, `web-sys`.
+- Dependencies: `leptos`, `leptos-node-ref`, `pith-ui-collection`, `pith-ui-compose-refs`, `pith-ui-direction`, `pith-ui-id`, `pith-ui-primitive`, `pith-ui-use-controllable-state`, `send_wrapper`, `web-sys`.
 
 ### Migration decisions (Leptos 0.8)
 

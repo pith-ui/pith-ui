@@ -6,7 +6,7 @@ Visually or semantically separates content.
 {{#tab name="Leptos" }}
 
 ```toml,trunk
-package = "cardo-ui-book-primitives"
+package = "pith-ui-book-primitives"
 features = ["separator"]
 files = ["src/separator.rs"]
 ```
@@ -35,12 +35,12 @@ Install the component from your command line.
 {{#tab name="Leptos" }}
 
 ```shell
-cargo add cardo-ui-separator
+cargo add pith-ui-separator
 ```
 
--   [View on crates.io](https://crates.io/crates/cardo-ui-separator)
--   [View on docs.rs](https://docs.rs/cardo-ui-separator/latest/cardo_ui_separator/)
--   [View source](https://github.com/cardo-ui/cardo-ui/tree/main/packages/primitives/leptos/separator)
+-   [View on crates.io](https://crates.io/crates/pith-ui-separator)
+-   [View on docs.rs](https://docs.rs/pith-ui-separator/latest/pith_ui_separator/)
+-   [View source](https://github.com/pith-ui/pith-ui/tree/main/packages/primitives/leptos/separator)
 
 {{#endtab }}
 {{#tab name="Yew" }}
@@ -51,7 +51,7 @@ cargo add radix-yew-separator
 
 -   [View on crates.io](https://crates.io/crates/radix-yew-separator)
 -   [View on docs.rs](https://docs.rs/radix-yew-separator/latest/radix_yew_separator/)
--   [View source](https://github.com/cardo-ui/cardo-ui/tree/main/packages/primitives/yew/separator)
+-   [View source](https://github.com/pith-ui/pith-ui/tree/main/packages/primitives/yew/separator)
 
 {{#endtab }}
 {{#endtabs }}
@@ -65,7 +65,7 @@ Import the component.
 
 ```rust,ignore
 use leptos::*;
-use cardo_ui_separator::*;
+use pith_ui_separator::*;
 
 #[component]
 fn Anatomy() -> impl IntoView {

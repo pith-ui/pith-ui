@@ -1,29 +1,29 @@
 use leptos::prelude::*;
-use cardo_ui::accordion::*;
-use cardo_ui::alert_dialog::*;
-use cardo_ui::checkbox::*;
-use cardo_ui::collapsible::*;
-use cardo_ui::context_menu::*;
-use cardo_ui::dialog::*;
-use cardo_ui::dropdown_menu::*;
-use cardo_ui::hover_card::*;
-use cardo_ui::label::*;
-use cardo_ui::menubar::*;
-use cardo_ui::navigation_menu::*;
-use cardo_ui::popover::*;
-use cardo_ui::progress::*;
-use cardo_ui::radio_group::*;
-use cardo_ui::scroll_area::{
+use pith_ui::accordion::*;
+use pith_ui::alert_dialog::*;
+use pith_ui::checkbox::*;
+use pith_ui::collapsible::*;
+use pith_ui::context_menu::*;
+use pith_ui::dialog::*;
+use pith_ui::dropdown_menu::*;
+use pith_ui::hover_card::*;
+use pith_ui::label::*;
+use pith_ui::menubar::*;
+use pith_ui::navigation_menu::*;
+use pith_ui::popover::*;
+use pith_ui::progress::*;
+use pith_ui::radio_group::*;
+use pith_ui::scroll_area::{
     self, ScrollArea, ScrollAreaScrollbar, ScrollAreaThumb, ScrollAreaViewport,
 };
-use cardo_ui::select::*;
-use cardo_ui::separator::*;
-use cardo_ui::slider::*;
-use cardo_ui::switch::*;
-use cardo_ui::tabs::*;
-use cardo_ui::toggle::*;
-use cardo_ui::toolbar::*;
-use cardo_ui::tooltip::*;
+use pith_ui::select::*;
+use pith_ui::separator::*;
+use pith_ui::slider::*;
+use pith_ui::switch::*;
+use pith_ui::tabs::*;
+use pith_ui::toggle::*;
+use pith_ui::toolbar::*;
+use pith_ui::tooltip::*;
 
 #[component]
 pub fn AttrForwardingPage() -> impl IntoView {

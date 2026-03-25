@@ -1,5 +1,5 @@
 use leptos::*;
-use cardo_ui::avatar::*;
+use pith_ui::avatar::*;
 
 #[component]
 pub fn AvatarDemo() -> impl IntoView {

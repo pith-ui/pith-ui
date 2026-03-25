@@ -1,5 +1,5 @@
 use leptos::prelude::*;
-use cardo_ui::context_menu::*;
+use pith_ui::context_menu::*;
 
 #[component]
 pub fn ContextMenuPage() -> impl IntoView {

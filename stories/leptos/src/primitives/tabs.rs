@@ -1,6 +1,6 @@
 use leptos::prelude::*;
-use cardo_ui::direction::DirectionProvider;
-use cardo_ui::tabs::*;
+use pith_ui::direction::DirectionProvider;
+use pith_ui::tabs::*;
 
 stylance::import_crate_style!(classes, "src/primitives/tabs.stories.module.css");
 
@@ -210,7 +210,7 @@ pub fn Chromatic() -> impl IntoView {
 
         <h1>"Direction"</h1>
         <h2>"Prop"</h2>
-        <Tabs default_value="tab3".to_string() dir=cardo_ui::direction::Direction::Rtl attr:class=classes::root>
+        <Tabs default_value="tab3".to_string() dir=pith_ui::direction::Direction::Rtl attr:class=classes::root>
             <TabsList attr:aria-label="tabs example" attr:class=classes::list>
                 <TabsTrigger value="tab1".to_string() attr:class=classes::trigger>
                     "Tab 1"
@@ -234,7 +234,7 @@ pub fn Chromatic() -> impl IntoView {
         </Tabs>
 
         <h2>"Inherited"</h2>
-        <DirectionProvider direction=Signal::derive(|| cardo_ui::direction::Direction::Rtl)>
+        <DirectionProvider direction=Signal::derive(|| pith_ui::direction::Direction::Rtl)>
             <Tabs default_value="tab3".to_string() attr:class=classes::root>
                 <TabsList attr:aria-label="tabs example" attr:class=classes::list>
                     <TabsTrigger value="tab1".to_string() attr:class=classes::trigger>

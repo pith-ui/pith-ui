@@ -1,5 +1,5 @@
 [package]
-name = "cardo-ui-reference-app"
+name = "pith-ui-reference-app"
 description = "Leptos reference app for Radix E2E testing."
 publish = false
 
@@ -17,5 +17,5 @@ leptos = { workspace = true, features = ["csr"] }
 leptos-node-ref.workspace = true
 leptos_router.workspace = true
 log.workspace = true
-cardo-ui = { workspace = true, features = ["all", "internals"] }
+pith-ui = { workspace = true, features = ["all", "internals"] }
 web-sys.workspace = true

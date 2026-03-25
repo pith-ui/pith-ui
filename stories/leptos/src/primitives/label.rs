@@ -1,5 +1,5 @@
 use leptos::prelude::*;
-use cardo_ui::label::*;
+use pith_ui::label::*;
 
 stylance::import_crate_style!(label_classes, "src/primitives/label.stories.module.css");
 

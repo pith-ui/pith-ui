@@ -12,7 +12,7 @@ This component is not yet updated to Leptos 0.7+.
 </div>
 
 <!-- ```toml,trunk
-package = "cardo-ui-book-primitives"
+package = "pith-ui-book-primitives"
 features = ["toggle"]
 files = ["src/toggle.rs"]
 ``` -->
@@ -33,12 +33,12 @@ Install the component from your command line.
 {{#tab name="Leptos" }}
 
 ```shell
-cargo add cardo-ui-toggle
+cargo add pith-ui-toggle
 ```
 
--   [View on crates.io](https://crates.io/crates/cardo-ui-toggle)
--   [View on docs.rs](https://docs.rs/cardo-ui-toggle/latest/cardo_ui_toggle/)
--   [View source](https://github.com/cardo-ui/cardo-ui/tree/main/packages/primitives/leptos/toggle)
+-   [View on crates.io](https://crates.io/crates/pith-ui-toggle)
+-   [View on docs.rs](https://docs.rs/pith-ui-toggle/latest/pith_ui_toggle/)
+-   [View source](https://github.com/pith-ui/pith-ui/tree/main/packages/primitives/leptos/toggle)
 
 {{#endtab }}
 {{#endtabs }}
@@ -52,7 +52,7 @@ Import the component.
 
 ```rust,ignore
 use leptos::*;
-use cardo_ui_toggle::*;
+use pith_ui_toggle::*;
 
 #[component]
 fn Anatomy() -> impl IntoView {

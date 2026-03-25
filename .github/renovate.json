@@ -1,4 +1,4 @@
 {
     "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-    "extends": ["github>cardo-ui/.github:renovate-config"]
+    "extends": ["github>pith-ui/.github:renovate-config"]
 }

@@ -1,5 +1,5 @@
 use leptos::prelude::*;
-use cardo_ui::label::*;
+use pith_ui::label::*;
 
 #[component]
 pub fn LabelPage() -> impl IntoView {

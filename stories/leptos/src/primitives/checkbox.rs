@@ -1,6 +1,6 @@
 use leptos::{ev::Event, prelude::*};
-use cardo_ui::checkbox::*;
-use cardo_ui::label::*;
+use pith_ui::checkbox::*;
+use pith_ui::label::*;
 
 stylance::import_crate_style!(classes, "src/primitives/checkbox.stories.module.css");
 

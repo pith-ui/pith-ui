@@ -1,13 +1,13 @@
 <p align="center">
     <a href="../../logo.svg">
-        <img src="../../logo.svg" width="300" height="200" alt="Cardo UI Logo">
+        <img src="../../logo.svg" width="300" height="200" alt="Pith UI Logo">
     </a>
 </p>
 
-<h1 align="center">cardo-ui-colors</h1>
+<h1 align="center">pith-ui-colors</h1>
 
 A gorgeous, accessible color system.
 
-## Cardo UI
+## Pith UI
 
-[Cardo UI](https://github.com/cardo-ui/cardo-ui) is a Rust port of [Radix](https://www.radix-ui.com/colors).
+[Pith UI](https://github.com/pith-ui/pith-ui) is a Rust port of [Radix](https://www.radix-ui.com/colors).
