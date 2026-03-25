@@ -1,9 +1,0 @@
-[package]
-name = "pith-ui-colors"
-description = "Rust port of Radix Colors."
-
-authors.workspace = true
-edition.workspace = true
-license.workspace = true
-repository.workspace = true
-version.workspace = true
