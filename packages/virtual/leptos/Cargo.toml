@@ -12,6 +12,7 @@ version.workspace = true
 pith-virtual-core.workspace = true
 js-sys = "0.3"
 leptos.workspace = true
+leptos-node-ref.workspace = true
 send_wrapper.workspace = true
 wasm-bindgen = "0.2"
 web-sys = { workspace = true, features = [
@@ -19,6 +20,7 @@ web-sys = { workspace = true, features = [
     "Document",
     "Element",
     "HtmlElement",
+    "NodeList",
     "Performance",
     "ResizeObserver",
     "ResizeObserverBoxOptions",

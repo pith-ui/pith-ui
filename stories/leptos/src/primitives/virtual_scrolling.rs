@@ -5,22 +5,14 @@ use leptos_node_ref::AnyNodeRef;
 use pith_virtual_leptos::{
     ScrollAlignment, ScrollBehavior, ScrollToOptions, UseVirtualizerOptions, use_virtualizer,
 };
-use web_sys::wasm_bindgen::JsCast;
 
 stylance::import_crate_style!(
     classes,
     "src/primitives/virtual_scrolling.stories.module.css"
 );
 
-fn scroll_element_signal(node_ref: AnyNodeRef) -> Signal<Option<web_sys::Element>> {
-    Signal::derive(move || {
-        node_ref
-            .get()
-            .and_then(|n| n.dyn_into::<web_sys::Element>().ok())
-    })
-}
-
 /// Helper: render a standard vertical virtual list with default row rendering.
+/// Demonstrates the simplest fixed-size usage pattern.
 #[component]
 fn VirtualList(
     virtualizer: pith_virtual_leptos::VirtualizerHandle,
@@ -76,10 +68,10 @@ pub fn FixedSize() -> impl IntoView {
     let scroll_ref = AnyNodeRef::new();
     let virtualizer = use_virtualizer(UseVirtualizerOptions {
         count: Signal::from(10_000),
-        get_scroll_element: scroll_element_signal(scroll_ref),
+        scroll_ref,
         estimate_size: Rc::new(|_| 35.0),
         overscan: Some(5),
-        ..default_options()
+        ..Default::default()
     });
 
     let v_stats1 = virtualizer.clone();
@@ -101,7 +93,7 @@ pub fn FixedSize() -> impl IntoView {
 }
 
 // ---------------------------------------------------------------------------
-// Variable Size — rows with different heights
+// Variable Size — rows with different heights (auto-measured)
 // ---------------------------------------------------------------------------
 
 const SENTENCES: [&str; 6] = [
@@ -127,51 +119,15 @@ fn sentence_text(index: usize, n: usize) -> String {
 #[component]
 pub fn VariableSize() -> impl IntoView {
     let scroll_ref = AnyNodeRef::new();
-    let list_ref = AnyNodeRef::new();
 
+    // No manual measurement code needed — the virtualizer auto-measures
+    // children of container_ref() that have `data-index` set.
     let virtualizer = use_virtualizer(UseVirtualizerOptions {
         count: Signal::from(5_000),
-        get_scroll_element: scroll_element_signal(scroll_ref),
+        scroll_ref,
         estimate_size: Rc::new(|_| 60.0),
         overscan: Some(5),
-        ..default_options()
-    });
-
-    // After each render, scan the list container for item elements and
-    // measure them. The version counter triggers re-runs.
-    let v_measure = virtualizer.clone();
-    Effect::new(move |_| {
-        // Subscribe to version changes so this re-runs after scroll/resize.
-        v_measure.track();
-
-        let Some(list_node) = list_ref.get() else {
-            return;
-        };
-        let Ok(list_el) = list_node.dyn_into::<web_sys::HtmlElement>() else {
-            return;
-        };
-
-        let vh = v_measure.clone();
-        let closure: wasm_bindgen::closure::Closure<dyn FnMut()> =
-            wasm_bindgen::closure::Closure::once(move || {
-                let children = list_el.children();
-                for i in 0..children.length() {
-                    if let Some(wrapper) = children.item(i) {
-                        if let Some(item_el) = wrapper.first_element_child() {
-                            if let Ok(html_el) = item_el.dyn_into::<web_sys::HtmlElement>() {
-                                vh.measure_element(Some(&html_el));
-                            }
-                        }
-                    }
-                }
-            });
-
-        if let Some(window) = web_sys::window() {
-            window
-                .request_animation_frame(closure.as_ref().unchecked_ref())
-                .ok();
-        }
-        closure.forget();
+        ..Default::default()
     });
 
     let v1 = virtualizer.clone();
@@ -181,7 +137,7 @@ pub fn VariableSize() -> impl IntoView {
         <div class=classes::storySection>
             <p class=classes::storyTitle>"Variable Size List (Measured)"</p>
             <p class=classes::storyDescription>
-                "5,000 rows with varying content. Each item is measured via ResizeObserver for accurate positioning."
+                "5,000 rows with varying content. Items are auto-measured via container_ref()."
             </p>
 
             <div node_ref=scroll_ref class=classes::container>
@@ -189,7 +145,7 @@ pub fn VariableSize() -> impl IntoView {
                     class=classes::totalSizer
                     style:height=move || format!("{}px", v1.get_total_size())
                 >
-                    <div node_ref=list_ref class=classes::itemList>
+                    <div node_ref=virtualizer.container_ref() class=classes::itemList>
                         {move || {
                             v2.get_virtual_items()
                                 .into_iter()
@@ -197,11 +153,14 @@ pub fn VariableSize() -> impl IntoView {
                                     let count = sentence_count(item.index);
                                     let text = sentence_text(item.index, count);
                                     view! {
-                                        <div style=format!(
-                                            "position: absolute; top: 0; left: 0; width: 100%; transform: translateY({}px);",
-                                            item.start
-                                        )>
-                                            <div class=classes::dynamicItem data-index=item.index>
+                                        <div
+                                            data-index=item.index
+                                            style=format!(
+                                                "position: absolute; top: 0; left: 0; width: 100%; transform: translateY({}px);",
+                                                item.start
+                                            )
+                                        >
+                                            <div class=classes::dynamicItem>
                                                 <div class=classes::dynamicTitle>
                                                     {format!("Item #{}", item.index)}
                                                     " "
@@ -232,11 +191,11 @@ pub fn Horizontal() -> impl IntoView {
     let scroll_ref = AnyNodeRef::new();
     let virtualizer = use_virtualizer(UseVirtualizerOptions {
         count: Signal::from(10_000),
-        get_scroll_element: scroll_element_signal(scroll_ref),
+        scroll_ref,
         estimate_size: Rc::new(|_| 120.0),
         overscan: Some(5),
         horizontal: Some(true),
-        ..default_options()
+        ..Default::default()
     });
 
     let v1 = virtualizer.clone();
@@ -295,11 +254,11 @@ fn GridDemo() -> impl IntoView {
     let cols = 4;
     let virtualizer = use_virtualizer(UseVirtualizerOptions {
         count: Signal::from(10_000),
-        get_scroll_element: scroll_element_signal(scroll_ref),
+        scroll_ref,
         estimate_size: Rc::new(|_| 80.0),
         overscan: Some(5),
         lanes: Some(cols),
-        ..default_options()
+        ..Default::default()
     });
 
     let v1 = virtualizer.clone();
@@ -359,10 +318,10 @@ pub fn ScrollTo() -> impl IntoView {
 
     let virtualizer = use_virtualizer(UseVirtualizerOptions {
         count: Signal::from(10_000),
-        get_scroll_element: scroll_element_signal(scroll_ref),
+        scroll_ref,
         estimate_size: Rc::new(|_| 35.0),
         overscan: Some(5),
-        ..default_options()
+        ..Default::default()
     });
 
     let v_s1 = virtualizer.clone();
@@ -389,19 +348,19 @@ pub fn ScrollTo() -> impl IntoView {
                 />
                 <button class=classes::button on:click=move |_| {
                     let i = target_index.get_untracked().parse::<usize>().unwrap_or(500);
-                    v_s1.scroll_to_index(i, ScrollToOptions { align: ScrollAlignment::Start, behavior: ScrollBehavior::Auto });
+                    v_s1.scroll_to_index(i, ScrollToOptions { align: ScrollAlignment::Start, ..Default::default() });
                 }>"Start"</button>
                 <button class=classes::button on:click=move |_| {
                     let i = target_index.get_untracked().parse::<usize>().unwrap_or(500);
-                    v_s2.scroll_to_index(i, ScrollToOptions { align: ScrollAlignment::Center, behavior: ScrollBehavior::Auto });
+                    v_s2.scroll_to_index(i, ScrollToOptions { align: ScrollAlignment::Center, ..Default::default() });
                 }>"Center"</button>
                 <button class=classes::button on:click=move |_| {
                     let i = target_index.get_untracked().parse::<usize>().unwrap_or(500);
-                    v_s3.scroll_to_index(i, ScrollToOptions { align: ScrollAlignment::End, behavior: ScrollBehavior::Auto });
+                    v_s3.scroll_to_index(i, ScrollToOptions { align: ScrollAlignment::End, ..Default::default() });
                 }>"End"</button>
                 <button class=classes::button on:click=move |_| {
                     let i = target_index.get_untracked().parse::<usize>().unwrap_or(500);
-                    v_s4.scroll_to_index(i, ScrollToOptions { align: ScrollAlignment::Start, behavior: ScrollBehavior::Smooth });
+                    v_s4.scroll_to_index(i, ScrollToOptions { behavior: ScrollBehavior::Smooth, ..Default::default() });
                 }>"Smooth"</button>
             </div>
 
@@ -459,13 +418,13 @@ fn PaddingAndGapDemo() -> impl IntoView {
     let scroll_ref = AnyNodeRef::new();
     let virtualizer = use_virtualizer(UseVirtualizerOptions {
         count: Signal::from(1_000),
-        get_scroll_element: scroll_element_signal(scroll_ref),
+        scroll_ref,
         estimate_size: Rc::new(|_| 40.0),
         overscan: Some(5),
         padding_start: Some(20.0),
         padding_end: Some(20.0),
         gap: Some(8.0),
-        ..default_options()
+        ..Default::default()
     });
 
     let v1 = virtualizer.clone();
@@ -520,10 +479,10 @@ fn DynamicCountDemo() -> impl IntoView {
 
     let virtualizer = use_virtualizer(UseVirtualizerOptions {
         count: count.into(),
-        get_scroll_element: scroll_element_signal(scroll_ref),
+        scroll_ref,
         estimate_size: Rc::new(|_| 35.0),
         overscan: Some(5),
-        ..default_options()
+        ..Default::default()
     });
 
     view! {
@@ -559,37 +518,5 @@ pub fn Showcase() -> impl IntoView {
         <ScrollTo />
         <PaddingAndGapDemo />
         <DynamicCountDemo />
-    }
-}
-
-// ---------------------------------------------------------------------------
-// Helpers
-// ---------------------------------------------------------------------------
-
-fn default_options() -> UseVirtualizerOptions {
-    UseVirtualizerOptions {
-        count: Signal::from(0),
-        get_scroll_element: Signal::derive(|| None),
-        estimate_size: Rc::new(|_| 50.0),
-        overscan: None,
-        horizontal: None,
-        padding_start: None,
-        padding_end: None,
-        scroll_padding_start: None,
-        scroll_padding_end: None,
-        initial_offset: None,
-        initial_rect: None,
-        get_item_key: None,
-        range_extractor: None,
-        scroll_margin: None,
-        gap: None,
-        index_attribute: None,
-        initial_measurements_cache: None,
-        lanes: None,
-        is_scrolling_reset_delay: None,
-        enabled: None,
-        is_rtl: None,
-        use_scrollend_event: None,
-        debug: None,
     }
 }

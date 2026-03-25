@@ -2,6 +2,7 @@ use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
 
 use leptos::prelude::*;
+use leptos_node_ref::AnyNodeRef;
 use pith_virtual_core::{
     ScrollCommand, ScrollDirection, ScrollToOptions, VirtualItem, Virtualizer,
 };
@@ -16,12 +17,14 @@ use crate::scroll_fns::{element_max_scroll_offset, element_scroll};
 
 /// Handle returned by [`use_virtualizer`].
 ///
-/// Unlike the previous signal-based design, this handle follows the React
-/// adapter pattern: the view reads from the core **imperatively** via
-/// `get_virtual_items()` / `get_total_size()`, and a lightweight version
-/// counter signal triggers re-renders when state changes. This avoids the
-/// batching/lifecycle issues that arise when `Vec<VirtualItem>` is stored
-/// in a signal.
+/// Follows the React adapter pattern: the view reads from the core
+/// **imperatively** via `get_virtual_items()` / `get_total_size()`, and a
+/// lightweight version counter signal triggers re-renders when state changes.
+///
+/// If `measure` mode is enabled (the default), the handle automatically
+/// measures item elements that have the `data-index` attribute set. Place
+/// `node_ref=virtualizer.container_ref()` on the element that directly
+/// contains your virtual items.
 #[derive(Clone)]
 pub struct VirtualizerHandle {
     pub(crate) core: Arc<Mutex<SendWrapper<Virtualizer>>>,
@@ -30,36 +33,38 @@ pub struct VirtualizerHandle {
     pub(crate) elements_cache: Arc<Mutex<SendWrapper<HashMap<usize, HtmlElement>>>>,
     pub(crate) horizontal: bool,
 
-    /// Monotonic version counter. Bumped on every state change (scroll,
-    /// resize, measurement). Reactive closures that call `track()` will
-    /// re-run when this changes.
+    /// Version counter — bumped on every state change to trigger reactive
+    /// re-renders in closures that call `track()` or any `get_*` method.
     pub(crate) version: RwSignal<u64>,
+
+    /// NodeRef for the item container element. When set, the handle
+    /// automatically measures children with `data-index` attributes
+    /// after each render cycle via `requestAnimationFrame`.
+    pub(crate) container_ref: AnyNodeRef,
 }
 
 impl VirtualizerHandle {
-    /// Subscribe to changes and get the current virtual items.
-    ///
-    /// Call this inside a reactive closure (e.g. inside `view!` or
-    /// `move || { ... }`). It subscribes to the version counter so the
-    /// closure re-runs when the virtualizer state changes.
+    // -- Reactive output methods --
+
+    /// Get the current virtual items (subscribes to changes).
     pub fn get_virtual_items(&self) -> Vec<VirtualItem> {
         self.track();
         self.core.lock().unwrap().get_virtual_items()
     }
 
-    /// Subscribe to changes and get the total scrollable content size.
+    /// Get the total scrollable content size in pixels (subscribes to changes).
     pub fn get_total_size(&self) -> f64 {
         self.track();
         self.core.lock().unwrap().get_total_size()
     }
 
-    /// Subscribe to changes and get the scrolling state.
+    /// Whether the virtualizer is currently scrolling (subscribes to changes).
     pub fn is_scrolling(&self) -> bool {
         self.track();
         self.core.lock().unwrap().is_scrolling()
     }
 
-    /// Subscribe to changes and get the scroll direction.
+    /// Current scroll direction (subscribes to changes).
     pub fn scroll_direction(&self) -> Option<ScrollDirection> {
         self.track();
         self.core.lock().unwrap().scroll_direction()
@@ -71,14 +76,26 @@ impl VirtualizerHandle {
         self.version.track();
     }
 
-    /// The `data-index` attribute name.
-    pub fn index_attribute(&self) -> String {
-        self.core.lock().unwrap().options().index_attribute.clone()
+    // -- Container ref for automatic measurement --
+
+    /// Returns a `NodeRef` to place on the element that directly contains
+    /// your virtual items. The virtualizer will automatically measure
+    /// children that have the `data-index` attribute.
+    ///
+    /// ```rust,ignore
+    /// <div node_ref=virtualizer.container_ref()>
+    ///     {move || virtualizer.get_virtual_items().into_iter().map(|item| {
+    ///         view! { <div data-index=item.index>...</div> }
+    ///     }).collect_view()}
+    /// </div>
+    /// ```
+    pub fn container_ref(&self) -> AnyNodeRef {
+        self.container_ref
     }
 
     // -- Imperative scroll methods --
 
-    /// Scroll to a specific item index.
+    /// Scroll to a specific item index with default alignment and behavior.
     pub fn scroll_to_index(&self, index: usize, opts: ScrollToOptions) {
         let max = self.get_max_scroll_offset();
         let now = self.now();
@@ -125,10 +142,8 @@ impl VirtualizerHandle {
 
     /// Register a DOM element for size measurement.
     ///
-    /// Each rendered virtual item should call this with its DOM element.
-    /// The element **must** have the `data-index` attribute set.
-    ///
-    /// Pass `None` to trigger cleanup of disconnected elements.
+    /// Most consumers should use `container_ref()` for automatic measurement
+    /// instead of calling this directly.
     pub fn measure_element(&self, node: Option<&HtmlElement>) {
         let Some(node) = node else {
             let mut cache = self.elements_cache.lock().unwrap();
@@ -189,6 +204,32 @@ impl VirtualizerHandle {
     /// Bump the version counter to trigger reactive re-renders.
     pub(crate) fn notify(&self) {
         self.version.update(|v| *v = v.wrapping_add(1));
+    }
+
+    /// Scan the container for elements with `data-index` and measure them.
+    /// Called from a `requestAnimationFrame` callback.
+    pub(crate) fn measure_container_children(&self) {
+        let Some(container_node) = self.container_ref.get_untracked() else {
+            return;
+        };
+        let Ok(container_el) = container_node.dyn_into::<Element>() else {
+            return;
+        };
+
+        let index_attr = self.core.lock().unwrap().options().index_attribute.clone();
+        let selector = format!("[{index_attr}]");
+
+        let Ok(nodes) = container_el.query_selector_all(&selector) else {
+            return;
+        };
+
+        for i in 0..nodes.length() {
+            if let Some(node) = nodes.item(i)
+                && let Ok(html_el) = node.dyn_into::<HtmlElement>()
+            {
+                self.measure_element(Some(&html_el));
+            }
+        }
     }
 
     pub(crate) fn execute_scroll_command(&self, cmd: &ScrollCommand) {

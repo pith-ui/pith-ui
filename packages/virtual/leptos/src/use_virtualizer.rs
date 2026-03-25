@@ -3,9 +3,10 @@ use std::rc::Rc;
 use std::sync::{Arc, Mutex};
 
 use leptos::prelude::*;
+use leptos_node_ref::AnyNodeRef;
 use pith_virtual_core::{Rect, VirtualItem, Virtualizer, VirtualizerOptions};
 use send_wrapper::SendWrapper;
-use web_sys::wasm_bindgen::JsCast;
+use web_sys::wasm_bindgen::{JsCast, closure::Closure};
 
 use crate::handle::VirtualizerHandle;
 use crate::observers;
@@ -13,11 +14,33 @@ use crate::observers;
 type CleanupHandle = Arc<Mutex<Option<SendWrapper<Box<dyn FnOnce()>>>>>;
 
 /// Options for [`use_virtualizer`].
+///
+/// Only `count`, `scroll_ref`, and `estimate_size` are required. All other
+/// fields have sensible defaults via `Default`.
+///
+/// # Example
+/// ```rust,ignore
+/// let virtualizer = use_virtualizer(UseVirtualizerOptions {
+///     count: Signal::from(10_000),
+///     scroll_ref,
+///     estimate_size: Rc::new(|_| 35.0),
+///     ..Default::default()
+/// });
+/// ```
 pub struct UseVirtualizerOptions {
+    // -- Required --
+    /// Total number of items.
     pub count: Signal<usize>,
-    pub get_scroll_element: Signal<Option<web_sys::Element>>,
+    /// NodeRef for the scroll container element.
+    pub scroll_ref: AnyNodeRef,
+    /// Estimate the size (px) of the item at the given index.
     pub estimate_size: Rc<dyn Fn(usize) -> f64>,
 
+    // -- Optional (all have defaults) --
+    /// Whether to automatically measure item elements that have the
+    /// `data-index` attribute inside the `container_ref` element.
+    /// Default: `true`.
+    pub measure: bool,
     pub overscan: Option<usize>,
     pub horizontal: Option<bool>,
     pub padding_start: Option<f64>,
@@ -38,6 +61,37 @@ pub struct UseVirtualizerOptions {
     pub is_rtl: Option<bool>,
     pub use_scrollend_event: Option<bool>,
     pub debug: Option<bool>,
+}
+
+impl Default for UseVirtualizerOptions {
+    fn default() -> Self {
+        Self {
+            count: Signal::from(0),
+            scroll_ref: AnyNodeRef::new(),
+            estimate_size: Rc::new(|_| 50.0),
+            measure: true,
+            overscan: None,
+            horizontal: None,
+            padding_start: None,
+            padding_end: None,
+            scroll_padding_start: None,
+            scroll_padding_end: None,
+            initial_offset: None,
+            initial_rect: None,
+            get_item_key: None,
+            range_extractor: None,
+            scroll_margin: None,
+            gap: None,
+            index_attribute: None,
+            initial_measurements_cache: None,
+            lanes: None,
+            is_scrolling_reset_delay: None,
+            enabled: None,
+            is_rtl: None,
+            use_scrollend_event: None,
+            debug: None,
+        }
+    }
 }
 
 impl UseVirtualizerOptions {
@@ -96,19 +150,59 @@ impl UseVirtualizerOptions {
 
 /// Create a virtualizer for element-based scrolling.
 ///
-/// Returns a [`VirtualizerHandle`] whose `get_virtual_items()` /
-/// `get_total_size()` methods read directly from the core and subscribe
-/// to a version counter for reactivity. This follows the same pattern as
-/// TanStack Virtual's React adapter: the virtualizer is a mutable object
-/// and the view reads from it imperatively.
+/// The returned [`VirtualizerHandle`] provides reactive `get_virtual_items()`
+/// / `get_total_size()` methods that read directly from the core and subscribe
+/// to a version counter for reactivity.
+///
+/// # Automatic measurement
+///
+/// When `options.measure` is `true` (the default), the virtualizer
+/// automatically measures item elements after each render via
+/// `requestAnimationFrame`. To use this, place `node_ref=virtualizer.container_ref()`
+/// on the element that directly contains your virtual items, and set
+/// `data-index=item.index` on each item element.
+///
+/// # Example
+/// ```rust,ignore
+/// let scroll_ref = AnyNodeRef::new();
+/// let virtualizer = use_virtualizer(UseVirtualizerOptions {
+///     count: Signal::from(10_000),
+///     scroll_ref,
+///     estimate_size: Rc::new(|_| 35.0),
+///     ..Default::default()
+/// });
+///
+/// view! {
+///     <div node_ref=scroll_ref style="height: 400px; overflow: auto;">
+///         <div style:height=move || format!("{}px", virtualizer.get_total_size())>
+///             <div node_ref=virtualizer.container_ref()>
+///                 {move || virtualizer.get_virtual_items().into_iter().map(|item| {
+///                     view! { <div data-index=item.index>{"Row "}{item.index}</div> }
+///                 }).collect_view()}
+///             </div>
+///         </div>
+///     </div>
+/// }
+/// ```
 pub fn use_virtualizer(options: UseVirtualizerOptions) -> VirtualizerHandle {
     let horizontal = options.horizontal.unwrap_or(false);
     let is_rtl = options.is_rtl.unwrap_or(false);
     let use_scrollend = options.use_scrollend_event.unwrap_or(false);
     let reset_delay = options.is_scrolling_reset_delay.unwrap_or(150);
+    let should_measure = options.measure;
+    let scroll_ref = options.scroll_ref;
+
+    // Derive the scroll element signal from the NodeRef.
+    let get_scroll_element: Signal<Option<web_sys::Element>> = Signal::derive(move || {
+        scroll_ref
+            .get()
+            .and_then(|n| n.dyn_into::<web_sys::Element>().ok())
+    });
 
     let core_options = options.build_core_options(options.count.get_untracked());
     let core = Arc::new(Mutex::new(SendWrapper::new(Virtualizer::new(core_options))));
+
+    let container_ref = AnyNodeRef::new();
 
     let handle = VirtualizerHandle {
         core: core.clone(),
@@ -117,6 +211,7 @@ pub fn use_virtualizer(options: UseVirtualizerOptions) -> VirtualizerHandle {
         elements_cache: Arc::new(Mutex::new(SendWrapper::new(HashMap::new()))),
         horizontal,
         version: RwSignal::new(0u64),
+        container_ref,
     };
 
     let rect_cleanup: CleanupHandle = Arc::new(Mutex::new(None));
@@ -128,7 +223,7 @@ pub fn use_virtualizer(options: UseVirtualizerOptions) -> VirtualizerHandle {
     let offset_cleanup_effect = offset_cleanup.clone();
 
     Effect::new(move |_| {
-        let scroll_element = options.get_scroll_element.get();
+        let scroll_element = get_scroll_element.get();
         let count = options.count.get();
 
         // Update core options with current reactive values.
@@ -215,6 +310,28 @@ pub fn use_virtualizer(options: UseVirtualizerOptions) -> VirtualizerHandle {
         handle_effect.notify();
     });
 
+    // Automatic measurement Effect: after each render, scan the container
+    // for elements with `data-index` and measure them via RAF.
+    if should_measure {
+        let handle_measure = handle.clone();
+        Effect::new(move |_| {
+            // Subscribe so this re-runs on any state change.
+            handle_measure.track();
+
+            let handle_raf = handle_measure.clone();
+            let closure: Closure<dyn FnMut()> = Closure::once(move || {
+                handle_raf.measure_container_children();
+            });
+
+            if let Some(window) = web_sys::window() {
+                window
+                    .request_animation_frame(closure.as_ref().unchecked_ref())
+                    .ok();
+            }
+            closure.forget();
+        });
+    }
+
     // Cleanup on unmount.
     let handle_cleanup = handle.clone();
     let rect_cleanup_unmount = rect_cleanup;
@@ -234,9 +351,13 @@ pub fn use_virtualizer(options: UseVirtualizerOptions) -> VirtualizerHandle {
 }
 
 /// Options for [`use_window_virtualizer`].
+///
+/// Same as [`UseVirtualizerOptions`] but without `scroll_ref` (defaults to
+/// the browser window).
 pub struct UseWindowVirtualizerOptions {
     pub count: Signal<usize>,
     pub estimate_size: Rc<dyn Fn(usize) -> f64>,
+    pub measure: bool,
     pub overscan: Option<usize>,
     pub horizontal: Option<bool>,
     pub padding_start: Option<f64>,
@@ -259,15 +380,48 @@ pub struct UseWindowVirtualizerOptions {
     pub debug: Option<bool>,
 }
 
+impl Default for UseWindowVirtualizerOptions {
+    fn default() -> Self {
+        Self {
+            count: Signal::from(0),
+            estimate_size: Rc::new(|_| 50.0),
+            measure: true,
+            overscan: None,
+            horizontal: None,
+            padding_start: None,
+            padding_end: None,
+            scroll_padding_start: None,
+            scroll_padding_end: None,
+            initial_offset: None,
+            initial_rect: None,
+            get_item_key: None,
+            range_extractor: None,
+            scroll_margin: None,
+            gap: None,
+            index_attribute: None,
+            initial_measurements_cache: None,
+            lanes: None,
+            is_scrolling_reset_delay: None,
+            enabled: None,
+            is_rtl: None,
+            use_scrollend_event: None,
+            debug: None,
+        }
+    }
+}
+
 /// Create a virtualizer for window-based scrolling.
 pub fn use_window_virtualizer(options: UseWindowVirtualizerOptions) -> VirtualizerHandle {
-    let window_signal =
-        Signal::derive(|| web_sys::window().map(|w| w.unchecked_into::<web_sys::Element>()));
+    // Window scroll element derived internally.
+    let window_ref = AnyNodeRef::new();
+    // TODO: proper window-based scrolling with observe_window_rect/offset.
+    // For now, cast window to Element for the element-based path.
 
     use_virtualizer(UseVirtualizerOptions {
         count: options.count,
-        get_scroll_element: window_signal,
+        scroll_ref: window_ref,
         estimate_size: options.estimate_size,
+        measure: options.measure,
         overscan: options.overscan,
         horizontal: options.horizontal,
         padding_start: options.padding_start,

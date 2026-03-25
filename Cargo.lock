@@ -1456,6 +1456,7 @@ version = "0.0.2"
 dependencies = [
  "js-sys",
  "leptos",
+ "leptos-node-ref",
  "pith-virtual-core",
  "send_wrapper",
  "wasm-bindgen",
