@@ -7,3 +7,6 @@
 [submodule "reference/shadcn-ui"]
 	path = reference/shadcn-ui
 	url = https://github.com/shadcn-ui/ui.git
+[submodule "reference/tanstack-virtual"]
+	path = reference/tanstack-virtual
+	url = https://github.com/TanStack/virtual.git
