@@ -1438,9 +1438,26 @@ dependencies = [
  "leptos_router",
  "log",
  "pith-ui",
+ "pith-virtual-leptos",
  "send_wrapper",
  "stylance",
  "tailwind_fuse",
+ "wasm-bindgen",
+ "web-sys",
+]
+
+[[package]]
+name = "pith-virtual-core"
+version = "0.0.2"
+
+[[package]]
+name = "pith-virtual-leptos"
+version = "0.0.2"
+dependencies = [
+ "js-sys",
+ "leptos",
+ "pith-virtual-core",
+ "send_wrapper",
  "wasm-bindgen",
  "web-sys",
 ]

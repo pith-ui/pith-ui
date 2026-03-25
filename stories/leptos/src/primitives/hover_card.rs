@@ -1,7 +1,5 @@
 use leptos::prelude::*;
-use pith_ui::dialog::{
-    Dialog, DialogClose, DialogContent, DialogTitle, DialogTrigger,
-};
+use pith_ui::dialog::{Dialog, DialogClose, DialogContent, DialogTitle, DialogTrigger};
 use pith_ui::hover_card::*;
 use web_sys::wasm_bindgen::JsCast;
 

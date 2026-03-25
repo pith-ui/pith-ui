@@ -1,0 +1,31 @@
+[package]
+name = "pith-virtual-leptos"
+description = "Leptos adapter for pith-virtual-core (Rust port of @tanstack/react-virtual)."
+
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+version.workspace = true
+
+[dependencies]
+pith-virtual-core.workspace = true
+js-sys = "0.3"
+leptos.workspace = true
+send_wrapper.workspace = true
+wasm-bindgen = "0.2"
+web-sys = { workspace = true, features = [
+    "AddEventListenerOptions",
+    "Document",
+    "Element",
+    "HtmlElement",
+    "Performance",
+    "ResizeObserver",
+    "ResizeObserverBoxOptions",
+    "ResizeObserverEntry",
+    "ResizeObserverOptions",
+    "ResizeObserverSize",
+    "ScrollBehavior",
+    "ScrollToOptions",
+    "Window",
+] }

@@ -1,6 +1,8 @@
 [workspace]
 members = [
     "packages/primitives/leptos",
+    "packages/virtual/core",
+    "packages/virtual/leptos",
     "reference_app/leptos",
     "reference_experiments/leptos",
     "stories/leptos",
@@ -31,3 +33,5 @@ serde = "1.0.198"
 serde_json = "1.0.116"
 tailwind_fuse = { version = "0.3.0", features = ["variant"] }
 web-sys = "0.3.72"
+pith-virtual-core = { path = "./packages/virtual/core", version = "0.0.2" }
+pith-virtual-leptos = { path = "./packages/virtual/leptos", version = "0.0.2" }

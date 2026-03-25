@@ -43,8 +43,7 @@ fn ToolbarExample(
     #[prop(optional)] orientation: Option<pith_ui::roving_focus::Orientation>,
     #[prop(into, optional)] dir: MaybeProp<pith_ui::direction::Direction>,
 ) -> impl IntoView {
-    let orientation =
-        orientation.unwrap_or(pith_ui::roving_focus::Orientation::Horizontal);
+    let orientation = orientation.unwrap_or(pith_ui::roving_focus::Orientation::Horizontal);
 
     let title = StoredValue::new(title);
     let aria_label = StoredValue::new(format!("{} toolbar", title.get_value()));

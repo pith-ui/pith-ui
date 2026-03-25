@@ -1,8 +1,6 @@
 use leptos::prelude::*;
 use pith_ui::direction::DirectionProvider;
-use pith_ui::slider::{
-    Orientation, Slider as SliderRoot, SliderRange, SliderThumb, SliderTrack,
-};
+use pith_ui::slider::{Orientation, Slider as SliderRoot, SliderRange, SliderThumb, SliderTrack};
 use web_sys::wasm_bindgen::JsCast;
 
 stylance::import_crate_style!(classes, "src/primitives/slider.stories.module.css");

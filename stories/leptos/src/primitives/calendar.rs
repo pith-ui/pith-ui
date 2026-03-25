@@ -30,9 +30,8 @@ pub fn Styled() -> impl IntoView {
 pub fn Controlled() -> impl IntoView {
     let today = chrono::Local::now().date_naive();
     let (value, set_value) = signal(Some(today));
-    let (month, set_month) = signal(
-        NaiveDate::from_ymd_opt(today.year(), today.month(), 1).unwrap(),
-    );
+    let (month, set_month) =
+        signal(NaiveDate::from_ymd_opt(today.year(), today.month(), 1).unwrap());
 
     view! {
         <p>

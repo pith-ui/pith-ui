@@ -19,6 +19,7 @@ leptos-node-ref.workspace = true
 leptos_router.workspace = true
 log.workspace = true
 pith-ui = { workspace = true, features = ["all", "internals"] }
+pith-virtual-leptos.workspace = true
 send_wrapper.workspace = true
 tailwind_fuse.workspace = true
 wasm-bindgen = "0.2"
