@@ -65,11 +65,6 @@ serve_leptos_storybook: kill_trunk
 serve_react_storybook:
     pnpm install && pnpm --filter @repo/storybook dev
 
-# Start up the Base UI Combobox comparison storybook on :3001
-[working-directory('stories/base-ui-combobox')]
-serve_baseui_combobox:
-    pnpm dev
-
 # ── Start server + test (single command) ─────────────────
 
 # Path to post-processing script (relative to repo root)

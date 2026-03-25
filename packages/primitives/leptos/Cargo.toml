@@ -19,14 +19,12 @@ all = [
     "calendar",
     "checkbox",
     "collapsible",
-    "colors",
     "combobox",
     "context-menu",
     "dialog",
     "dropdown-menu",
     "form",
     "hover-card",
-    "icons",
     "label",
     "menu",
     "menubar",
@@ -59,8 +57,6 @@ menubar = ["menu"]
 toolbar = ["separator", "toggle-group"]
 
 # Non-component features
-colors = []
-icons = []
 internals = []
 
 # Leaf features (no component deps)

@@ -1,12 +1,8 @@
 [workspace]
 members = [
-    "book-examples/*/*",
-    "pith_themed_app",
     "packages/primitives/leptos",
-    "packages/themes/leptos",
     "reference_app/leptos",
     "reference_experiments/leptos",
-    "scripts",
     "stories/leptos",
 ]
 resolver = "2"

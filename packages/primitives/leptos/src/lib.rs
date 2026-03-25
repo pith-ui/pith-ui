@@ -40,12 +40,6 @@ mod components;
 mod internal;
 mod support;
 
-#[cfg(feature = "colors")]
-pub mod colors;
-
-#[cfg(feature = "icons")]
-pub mod icons;
-
 // ── Re-export public support modules at crate level ──
 pub use support::arrow;
 pub use support::class;
