@@ -204,6 +204,7 @@ fn EmbedApp() -> impl IntoView {
                     <Route path=path!("/combobox/disabled") view=combobox::Disabled />
                     <Route path=path!("/combobox/with-empty") view=combobox::WithEmpty />
                     <Route path=path!("/combobox/with-clear") view=combobox::WithClear />
+                    <Route path=path!("/combobox/auto-highlight") view=combobox::AutoHighlight />
 
                     <Route path=path!("/context-menu/styled") view=context_menu::Styled />
                     <Route path=path!("/context-menu/modality") view=context_menu::Modality />
@@ -549,6 +550,7 @@ fn ShellApp() -> impl IntoView {
                             ("/combobox/disabled", "Disabled"),
                             ("/combobox/with-empty", "With Empty"),
                             ("/combobox/with-clear", "With Clear"),
+                            ("/combobox/auto-highlight", "Auto Highlight"),
                         ] />
                         <NavSection title="Context Menu" stories=vec![
                             ("/context-menu/styled", "Styled"),

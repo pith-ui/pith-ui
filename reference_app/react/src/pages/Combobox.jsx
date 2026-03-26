@@ -140,6 +140,11 @@ export default function ComboboxPage() {
 
             {/* ── Default value (uncontrolled) ── */}
             <DefaultValueCombobox />
+
+            <hr />
+
+            {/* ── Auto-highlight ── */}
+            <AutoHighlightCombobox />
         </>
     );
 }
@@ -271,6 +276,69 @@ function DefaultValueCombobox() {
                     </Combobox.Positioner>
                 </Combobox.Portal>
             </Combobox.Root>
+        </>
+    );
+}
+
+function AutoHighlightCombobox() {
+    const [value, setValue] = useState(null);
+    const [inputValue, setInputValue] = useState('');
+
+    const filteredItems = useMemo(() => filterItems(fruits, inputValue), [inputValue]);
+
+    return (
+        <>
+            <h3>Auto Highlight</h3>
+            <Combobox.Root
+                autoHighlight
+                value={value}
+                onValueChange={(val) => {
+                    setValue(val);
+                    setInputValue(val ?? '');
+                }}
+                inputValue={inputValue}
+                onInputValueChange={setInputValue}
+                items={filteredItems}
+            >
+                <div className="combobox-anchor" data-testid="autohighlight-anchor">
+                    <Combobox.Input
+                        className="combobox-input"
+                        data-testid="autohighlight-input"
+                        placeholder="Search..."
+                    />
+                    <Combobox.Trigger className="combobox-trigger" data-testid="autohighlight-trigger" aria-label="Toggle">
+                        ▼
+                    </Combobox.Trigger>
+                </div>
+
+                <Combobox.Portal>
+                    <Combobox.Positioner sideOffset={4}>
+                        <Combobox.Popup className="combobox-content" data-testid="autohighlight-content">
+                            <Combobox.Empty className="combobox-empty" data-testid="autohighlight-empty">
+                                No results found
+                            </Combobox.Empty>
+                            <Combobox.List className="combobox-viewport" data-testid="autohighlight-viewport">
+                                {filteredItems.map((item) => (
+                                    <Combobox.Item
+                                        key={item}
+                                        value={item}
+                                        className="combobox-item"
+                                    >
+                                        <Combobox.ItemIndicator className="combobox-indicator">
+                                            ✓
+                                        </Combobox.ItemIndicator>
+                                        {item}
+                                    </Combobox.Item>
+                                ))}
+                            </Combobox.List>
+                        </Combobox.Popup>
+                    </Combobox.Positioner>
+                </Combobox.Portal>
+            </Combobox.Root>
+
+            <br />
+
+            <span data-testid="autohighlight-value">{value || '(none)'}</span>
         </>
     );
 }

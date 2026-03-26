@@ -44,6 +44,7 @@
 //!
 //! - Controlled and uncontrolled value/open/input state
 //! - Single-select and multi-select modes
+//! - Auto-highlight first matching item while filtering (`auto_highlight`)
 //! - Consumer-managed filtering via `on_input_value_change`
 //! - Keyboard navigation with `aria-activedescendant`
 //! - Multi-select chip display
@@ -158,6 +159,8 @@ struct ComboboxContextValue {
     /// `None` means no chip is highlighted (focus is on the input).
     highlighted_chip_index: RwSignal<Option<usize>>,
     multiple: bool,
+    /// Whether the first matching item is highlighted automatically while filtering.
+    auto_highlight: bool,
 }
 
 impl ComboboxContextValue {

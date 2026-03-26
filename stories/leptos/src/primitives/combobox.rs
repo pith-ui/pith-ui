@@ -394,6 +394,59 @@ pub fn WithEmpty() -> impl IntoView {
 }
 
 /* -------------------------------------------------------------------------------------------------
+ * AutoHighlight — Auto-highlight first match while typing
+ * -----------------------------------------------------------------------------------------------*/
+
+#[component]
+pub fn AutoHighlight() -> impl IntoView {
+    let (value, set_value) = signal(Option::<String>::None);
+    let (input_value, set_input_value) = signal(String::new());
+
+    let filtered = Memo::new(move |_| filter(FRUITS, &input_value.get()));
+
+    view! {
+        <div class=classes::root>
+            <h2>"Auto Highlight"</h2>
+            <p>"The first matching item is highlighted automatically as you type."</p>
+            <Combobox
+                auto_highlight=true
+                value=Signal::derive(move || value.get())
+                on_value_change=Callback::new(move |v: String| {
+                    set_value.set(Some(v.clone()));
+                    set_input_value.set(v);
+                })
+                input_value=Signal::derive(move || input_value.get())
+                on_input_value_change=Callback::new(move |v: String| set_input_value.set(v))
+            >
+                <ComboboxAnchor attr:class=classes::anchor>
+                    <ComboboxInput attr:class=classes::input placeholder="Type to search..." />
+                    <ComboboxClear attr:class=classes::clear attr:aria-label="Clear">"✕"</ComboboxClear>
+                    <ComboboxTrigger attr:class=classes::trigger attr:aria-label="Toggle">
+                        <ComboboxIcon />
+                    </ComboboxTrigger>
+                </ComboboxAnchor>
+                <ComboboxPortal>
+                    <ComboboxContent attr:class=classes::content side_offset=4.0>
+                        <ComboboxViewport attr:class=classes::viewport>
+                            {move || {
+                                let items = filtered.get();
+                                if items.is_empty() {
+                                    return leptos::either::Either::Left(view! {
+                                        <ComboboxEmpty attr:class=classes::empty>"No results found"</ComboboxEmpty>
+                                    });
+                                }
+                                leptos::either::Either::Right(render_items(items, None))
+                            }}
+                        </ComboboxViewport>
+                    </ComboboxContent>
+                </ComboboxPortal>
+            </Combobox>
+            <p>"Selected: " {move || value.get().unwrap_or("(none)".into())}</p>
+        </div>
+    }
+}
+
+/* -------------------------------------------------------------------------------------------------
  * WithClear — Clear button demo
  * -----------------------------------------------------------------------------------------------*/
 

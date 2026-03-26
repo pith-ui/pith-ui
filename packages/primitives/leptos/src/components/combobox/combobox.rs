@@ -23,6 +23,8 @@ pub fn Combobox(
     #[prop(into, optional)] required: MaybeProp<bool>,
     #[prop(into, optional)] name: MaybeProp<String>,
     #[prop(into, optional)] form: MaybeProp<String>,
+    /// Whether the first matching item is highlighted automatically while filtering.
+    #[prop(optional)] auto_highlight: bool,
     #[prop(into, optional)] dir: MaybeProp<Direction>,
     children: ChildrenFn,
 ) -> impl IntoView {
@@ -136,6 +138,7 @@ pub fn Combobox(
         active_descendant_id,
         highlighted_chip_index,
         multiple,
+        auto_highlight,
     };
 
     // Native input for form integration
@@ -255,12 +258,40 @@ pub fn ComboboxInput(
                     }
                     if !event.default_prevented() {
                         let target: web_sys::HtmlInputElement = event.target().unwrap().unchecked_into();
+                        let input_empty = target.value().is_empty();
                         context.on_input_value_change.run(target.value());
                         // Clear chip highlight when typing
                         context.highlighted_chip_index.set(None);
                         // Open popup when typing
                         if !context.open.get_untracked() {
                             context.on_open_change.run(true);
+                        }
+                        // Auto-highlight first matching item while filtering
+                        if context.auto_highlight {
+                            if input_empty {
+                                context.active_descendant_id.set(None);
+                            } else {
+                                // Defer so consumer filtering and DOM updates complete first
+                                let cb = wasm_bindgen::closure::Closure::once_into_js(move || {
+                                    let _ = get_items.try_with_value(|get_items| {
+                                        let items = get_items();
+                                        let first_enabled = items.iter().find(|item| !item.data.disabled);
+                                        if let Some(item) = first_enabled {
+                                            if let Some(el) = item.r#ref.get_untracked() {
+                                                let el: &web_sys::Element = (*el).unchecked_ref();
+                                                context.active_descendant_id.set(Some(el.id()));
+                                                scroll_item_into_view(el);
+                                            }
+                                        } else {
+                                            context.active_descendant_id.set(None);
+                                        }
+                                    });
+                                });
+                                web_sys::window()
+                                    .expect("Window should exist.")
+                                    .set_timeout_with_callback(cb.unchecked_ref())
+                                    .expect("setTimeout should succeed.");
+                            }
                         }
                     }
                 }

@@ -171,6 +171,11 @@ pub fn ComboboxPage() -> impl IntoView {
 
         // ── Default value (uncontrolled) ──
         <DefaultValueCombobox />
+
+        <hr />
+
+        // ── Auto-highlight ──
+        <AutoHighlightCombobox />
     }
 }
 
@@ -278,6 +283,86 @@ fn MultiSelectCombobox() -> impl IntoView {
                 "(none)".to_string()
             } else {
                 vals.join(", ")
+            }
+        }}</span>
+    }
+}
+
+#[component]
+fn AutoHighlightCombobox() -> impl IntoView {
+    let (value, set_value) = signal(Option::<String>::None);
+    let (input_value, set_input_value) = signal(String::new());
+
+    let filtered_items = Memo::new(move |_| filter_items(FRUITS, &input_value.get()));
+
+    view! {
+        <h3>"Auto Highlight"</h3>
+        <Combobox
+            auto_highlight=true
+            value=Signal::derive(move || value.get())
+            on_value_change=Callback::new(move |v: String| {
+                set_value.set(Some(v.clone()));
+                set_input_value.set(v);
+            })
+            input_value=Signal::derive(move || input_value.get())
+            on_input_value_change=Callback::new(move |v: String| {
+                set_input_value.set(v);
+            })
+        >
+            <ComboboxAnchor class:combobox-anchor=true attr:data-testid="autohighlight-anchor">
+                <ComboboxInput
+                    class:combobox-input=true
+                    attr:data-testid="autohighlight-input"
+                    placeholder="Search..."
+                />
+                <ComboboxTrigger
+                    class:combobox-trigger=true
+                    attr:data-testid="autohighlight-trigger"
+                    attr:aria-label="Toggle"
+                >
+                    "▼"
+                </ComboboxTrigger>
+            </ComboboxAnchor>
+
+            <ComboboxPortal>
+                <ComboboxContent
+                    class:combobox-content=true
+                    attr:data-testid="autohighlight-content"
+                    side_offset=4.0
+                >
+                    <ComboboxViewport class:combobox-viewport=true attr:data-testid="autohighlight-viewport">
+                        {move || {
+                            let items = filtered_items.get();
+                            if items.is_empty() {
+                                return Either::Left(view! {
+                                    <ComboboxEmpty class:combobox-empty=true attr:data-testid="autohighlight-empty">
+                                        "No results found"
+                                    </ComboboxEmpty>
+                                });
+                            }
+                            Either::Right(items.into_iter().map(|item| {
+                                let text = item.clone();
+                                let label = item.clone();
+                                let label = StoredValue::new(label);
+                                view! {
+                                    <ComboboxItem attr:class="combobox-item" value=item text_value=text>
+                                        <ComboboxItemIndicator attr:class="combobox-indicator">"✓"</ComboboxItemIndicator>
+                                        {move || label.get_value()}
+                                    </ComboboxItem>
+                                }
+                            }).collect_view())
+                        }}
+                    </ComboboxViewport>
+                </ComboboxContent>
+            </ComboboxPortal>
+        </Combobox>
+
+        <br />
+
+        <span data-testid="autohighlight-value">{move || {
+            match value.get() {
+                Some(v) if !v.is_empty() => v,
+                _ => "(none)".to_string(),
             }
         }}</span>
     }

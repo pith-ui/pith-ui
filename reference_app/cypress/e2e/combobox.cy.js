@@ -573,4 +573,116 @@ describe('Combobox', () => {
             getMultiValue().should('contain.text', 'Apple');
         });
     });
+
+    // ── 8. Auto-Highlight ──────────────────────────────────
+
+    describe('auto-highlight', () => {
+        function getAutoInput() {
+            return cy.get('[data-testid="autohighlight-input"]');
+        }
+
+        function getAutoTrigger() {
+            return cy.get('[data-testid="autohighlight-trigger"]');
+        }
+
+        function autoShouldBeOpen() {
+            getAutoInput().should('have.attr', 'aria-expanded', 'true');
+        }
+
+        function autoShouldBeClosed() {
+            getAutoInput().should('have.attr', 'aria-expanded', 'false');
+        }
+
+        function getAutoValue() {
+            return cy.get('[data-testid="autohighlight-value"]');
+        }
+
+        it('Typing highlights the first matching item', () => {
+            getAutoInput().focus();
+            cy.realType('a');
+            autoShouldBeOpen();
+            // First matching item should be highlighted
+            cy.findAllByRole('option')
+                .filter('[data-highlighted]')
+                .should('have.length', 1)
+                .first()
+                .should('contain.text', 'Apple');
+        });
+
+        it('Typing a different query updates the highlight to new first match', () => {
+            getAutoInput().focus();
+            cy.realType('ban');
+            autoShouldBeOpen();
+            cy.findAllByRole('option')
+                .filter('[data-highlighted]')
+                .should('have.length', 1)
+                .first()
+                .should('contain.text', 'Banana');
+        });
+
+        it('Clearing the input removes the highlight', () => {
+            getAutoInput().focus();
+            cy.realType('a');
+            autoShouldBeOpen();
+            cy.findAllByRole('option')
+                .filter('[data-highlighted]')
+                .should('have.length', 1);
+            // Clear by selecting all and deleting
+            getAutoInput().clear();
+            // Highlight should be gone
+            getAutoInput().should('have.value', '');
+        });
+
+        it('Enter selects the auto-highlighted item', () => {
+            getAutoValue().should('have.text', '(none)');
+            getAutoInput().focus();
+            cy.realType('man');
+            autoShouldBeOpen();
+            // Mango should be highlighted
+            cy.findAllByRole('option')
+                .filter('[data-highlighted]')
+                .should('have.length', 1)
+                .first()
+                .should('contain.text', 'Mango');
+            cy.realPress('Enter');
+            autoShouldBeClosed();
+            getAutoValue().should('have.text', 'Mango');
+        });
+
+        it('Keyboard navigation overrides auto-highlight', () => {
+            getAutoInput().focus();
+            cy.realType('a');
+            autoShouldBeOpen();
+            // Auto-highlight is on first item (Apple)
+            cy.findAllByRole('option')
+                .filter('[data-highlighted]')
+                .should('have.length', 1)
+                .first()
+                .should('contain.text', 'Apple');
+            // ArrowDown should move to next item
+            cy.realPress('ArrowDown');
+            cy.findAllByRole('option')
+                .filter('[data-highlighted]')
+                .should('have.length', 1)
+                .first()
+                .should('contain.text', 'Avocado');
+        });
+
+        it('No items highlighted when query matches nothing', () => {
+            getAutoInput().focus();
+            cy.realType('zzzzz');
+            autoShouldBeOpen();
+            cy.findAllByRole('option').should('have.length', 0);
+        });
+
+        it('Without auto_highlight, typing does not highlight first item', () => {
+            // Use the regular combobox (which does NOT have auto_highlight)
+            getInput().focus();
+            cy.realType('a');
+            shouldBeOpen();
+            cy.findAllByRole('option')
+                .filter('[data-highlighted]')
+                .should('have.length', 0);
+        });
+    });
 });
