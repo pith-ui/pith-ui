@@ -4,7 +4,7 @@ use std::sync::{Arc, Mutex};
 use leptos::prelude::*;
 use leptos_node_ref::AnyNodeRef;
 use pith_virtual_core::{
-    ScrollCommand, ScrollDirection, ScrollToOptions, VirtualItem, Virtualizer,
+    ScrollBehavior, ScrollCommand, ScrollDirection, ScrollToOptions, VirtualItem, Virtualizer,
 };
 use send_wrapper::SendWrapper;
 use web_sys::{
@@ -95,7 +95,7 @@ impl VirtualizerHandle {
 
     // -- Imperative scroll methods --
 
-    /// Scroll to a specific item index with default alignment and behavior.
+    /// Scroll to a specific item index with full options control.
     pub fn scroll_to_index(&self, index: usize, opts: ScrollToOptions) {
         let max = self.get_max_scroll_offset();
         let now = self.now();
@@ -111,7 +111,24 @@ impl VirtualizerHandle {
         self.notify();
     }
 
-    /// Scroll to a specific pixel offset.
+    /// Scroll to a specific item index with default options (auto align,
+    /// auto behavior). Equivalent to TanStack's `scrollToIndex(index)`.
+    pub fn scroll_to(&self, index: usize) {
+        self.scroll_to_index(index, ScrollToOptions::default());
+    }
+
+    /// Scroll to a specific item index with smooth animation.
+    pub fn scroll_to_smooth(&self, index: usize) {
+        self.scroll_to_index(
+            index,
+            ScrollToOptions {
+                behavior: ScrollBehavior::Smooth,
+                ..Default::default()
+            },
+        );
+    }
+
+    /// Scroll to a specific pixel offset with full options control.
     pub fn scroll_to_offset(&self, offset: f64, opts: ScrollToOptions) {
         let max = self.get_max_scroll_offset();
         let now = self.now();

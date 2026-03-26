@@ -1,9 +1,7 @@
-use std::rc::Rc;
-
 use leptos::prelude::*;
 use leptos_node_ref::AnyNodeRef;
 use pith_virtual_leptos::{
-    ScrollAlignment, ScrollBehavior, ScrollToOptions, UseVirtualizerOptions, use_virtualizer,
+    ScrollAlignment, ScrollToOptions, UseVirtualizerOptions, use_virtualizer,
 };
 
 stylance::import_crate_style!(
@@ -12,7 +10,6 @@ stylance::import_crate_style!(
 );
 
 /// Helper: render a standard vertical virtual list with default row rendering.
-/// Demonstrates the simplest fixed-size usage pattern.
 #[component]
 fn VirtualList(
     virtualizer: pith_virtual_leptos::VirtualizerHandle,
@@ -66,13 +63,8 @@ fn VirtualList(
 #[component]
 pub fn FixedSize() -> impl IntoView {
     let scroll_ref = AnyNodeRef::new();
-    let virtualizer = use_virtualizer(UseVirtualizerOptions {
-        count: Signal::from(10_000),
-        scroll_ref,
-        estimate_size: Rc::new(|_| 35.0),
-        overscan: Some(5),
-        ..Default::default()
-    });
+    let virtualizer =
+        use_virtualizer(UseVirtualizerOptions::new(10_000, scroll_ref, |_| 35.0).overscan(5));
 
     let v_stats1 = virtualizer.clone();
     let v_stats2 = virtualizer.clone();
@@ -119,16 +111,8 @@ fn sentence_text(index: usize, n: usize) -> String {
 #[component]
 pub fn VariableSize() -> impl IntoView {
     let scroll_ref = AnyNodeRef::new();
-
-    // No manual measurement code needed — the virtualizer auto-measures
-    // children of container_ref() that have `data-index` set.
-    let virtualizer = use_virtualizer(UseVirtualizerOptions {
-        count: Signal::from(5_000),
-        scroll_ref,
-        estimate_size: Rc::new(|_| 60.0),
-        overscan: Some(5),
-        ..Default::default()
-    });
+    let virtualizer =
+        use_virtualizer(UseVirtualizerOptions::new(5_000, scroll_ref, |_| 60.0).overscan(5));
 
     let v1 = virtualizer.clone();
     let v2 = virtualizer.clone();
@@ -189,14 +173,11 @@ pub fn VariableSize() -> impl IntoView {
 #[component]
 pub fn Horizontal() -> impl IntoView {
     let scroll_ref = AnyNodeRef::new();
-    let virtualizer = use_virtualizer(UseVirtualizerOptions {
-        count: Signal::from(10_000),
-        scroll_ref,
-        estimate_size: Rc::new(|_| 120.0),
-        overscan: Some(5),
-        horizontal: Some(true),
-        ..Default::default()
-    });
+    let virtualizer = use_virtualizer(
+        UseVirtualizerOptions::new(10_000, scroll_ref, |_| 120.0)
+            .overscan(5)
+            .horizontal(true),
+    );
 
     let v1 = virtualizer.clone();
     let v2 = virtualizer.clone();
@@ -252,14 +233,11 @@ pub fn Horizontal() -> impl IntoView {
 fn GridDemo() -> impl IntoView {
     let scroll_ref = AnyNodeRef::new();
     let cols = 4;
-    let virtualizer = use_virtualizer(UseVirtualizerOptions {
-        count: Signal::from(10_000),
-        scroll_ref,
-        estimate_size: Rc::new(|_| 80.0),
-        overscan: Some(5),
-        lanes: Some(cols),
-        ..Default::default()
-    });
+    let virtualizer = use_virtualizer(
+        UseVirtualizerOptions::new(10_000, scroll_ref, |_| 80.0)
+            .overscan(5)
+            .lanes(cols),
+    );
 
     let v1 = virtualizer.clone();
     let v2 = virtualizer.clone();
@@ -316,13 +294,8 @@ pub fn ScrollTo() -> impl IntoView {
     let scroll_ref = AnyNodeRef::new();
     let (target_index, set_target_index) = signal(String::from("500"));
 
-    let virtualizer = use_virtualizer(UseVirtualizerOptions {
-        count: Signal::from(10_000),
-        scroll_ref,
-        estimate_size: Rc::new(|_| 35.0),
-        overscan: Some(5),
-        ..Default::default()
-    });
+    let virtualizer =
+        use_virtualizer(UseVirtualizerOptions::new(10_000, scroll_ref, |_| 35.0).overscan(5));
 
     let v_s1 = virtualizer.clone();
     let v_s2 = virtualizer.clone();
@@ -360,7 +333,7 @@ pub fn ScrollTo() -> impl IntoView {
                 }>"End"</button>
                 <button class=classes::button on:click=move |_| {
                     let i = target_index.get_untracked().parse::<usize>().unwrap_or(500);
-                    v_s4.scroll_to_index(i, ScrollToOptions { behavior: ScrollBehavior::Smooth, ..Default::default() });
+                    v_s4.scroll_to_smooth(i);
                 }>"Smooth"</button>
             </div>
 
@@ -416,16 +389,13 @@ pub fn ScrollTo() -> impl IntoView {
 #[component]
 fn PaddingAndGapDemo() -> impl IntoView {
     let scroll_ref = AnyNodeRef::new();
-    let virtualizer = use_virtualizer(UseVirtualizerOptions {
-        count: Signal::from(1_000),
-        scroll_ref,
-        estimate_size: Rc::new(|_| 40.0),
-        overscan: Some(5),
-        padding_start: Some(20.0),
-        padding_end: Some(20.0),
-        gap: Some(8.0),
-        ..Default::default()
-    });
+    let virtualizer = use_virtualizer(
+        UseVirtualizerOptions::new(1_000, scroll_ref, |_| 40.0)
+            .overscan(5)
+            .padding_start(20.0)
+            .padding_end(20.0)
+            .gap(8.0),
+    );
 
     let v1 = virtualizer.clone();
     let v2 = virtualizer.clone();
@@ -477,13 +447,8 @@ fn DynamicCountDemo() -> impl IntoView {
     let scroll_ref = AnyNodeRef::new();
     let (count, set_count) = signal(100_usize);
 
-    let virtualizer = use_virtualizer(UseVirtualizerOptions {
-        count: count.into(),
-        scroll_ref,
-        estimate_size: Rc::new(|_| 35.0),
-        overscan: Some(5),
-        ..Default::default()
-    });
+    let virtualizer =
+        use_virtualizer(UseVirtualizerOptions::new(count, scroll_ref, |_| 35.0).overscan(5));
 
     view! {
         <div class=classes::storySection>
