@@ -1,6 +1,6 @@
 use leptos::prelude::*;
 use leptos_router::{
-    components::{A, Route, Router, Routes, ToHref},
+    components::{A, Outlet, ParentRoute, Route, Router, Routes, ToHref},
     hooks::use_location,
     path,
 };
@@ -10,8 +10,8 @@ use crate::primitives::{
     collapsible, collection, combobox, context_menu, dialog, dismissable_layer, dropdown_menu,
     focus_scope, form, hover_card, label, menu, menubar, navigation_menu, one_time_password_field,
     password_toggle_field, popover, popper, portal, presence, progress, radio_group, roving_focus,
-    scroll_area, select, separator, slider, switch, tabs, toast, toggle, toggle_group, toolbar,
-    tooltip, virtual_scrolling, visually_hidden,
+    scroll_area, select, separator, slider, switch, tabs, time_field, toast, toggle, toggle_group,
+    toolbar, tooltip, virtual_scrolling, visually_hidden,
 };
 
 #[component]
@@ -197,14 +197,17 @@ fn EmbedApp() -> impl IntoView {
                     <Route path=path!("/collapsible/animated-horizontal") view=collapsible::AnimatedHorizontal />
                     <Route path=path!("/collapsible/chromatic") view=collapsible::Chromatic />
 
-                    <Route path=path!("/combobox/styled") view=combobox::Styled />
-                    <Route path=path!("/combobox/with-groups") view=combobox::WithGroups />
-                    <Route path=path!("/combobox/multi-select") view=combobox::MultiSelect />
-                    <Route path=path!("/combobox/controlled") view=combobox::Controlled />
-                    <Route path=path!("/combobox/disabled") view=combobox::Disabled />
-                    <Route path=path!("/combobox/with-empty") view=combobox::WithEmpty />
-                    <Route path=path!("/combobox/with-clear") view=combobox::WithClear />
-                    <Route path=path!("/combobox/auto-highlight") view=combobox::AutoHighlight />
+                    <ParentRoute path=path!("/combobox") view=Outlet>
+                        <Route path=path!("/styled") view=combobox::Styled />
+                        <Route path=path!("/with-groups") view=combobox::WithGroups />
+                        <Route path=path!("/multi-select") view=combobox::MultiSelect />
+                        <Route path=path!("/controlled") view=combobox::Controlled />
+                        <Route path=path!("/disabled") view=combobox::Disabled />
+                        <Route path=path!("/with-empty") view=combobox::WithEmpty />
+                        <Route path=path!("/with-clear") view=combobox::WithClear />
+                        <Route path=path!("/auto-highlight") view=combobox::AutoHighlight />
+                        <Route path=path!("/virtualized") view=combobox::Virtualized />
+                    </ParentRoute>
 
                     <Route path=path!("/context-menu/styled") view=context_menu::Styled />
                     <Route path=path!("/context-menu/modality") view=context_menu::Modality />
@@ -418,6 +421,13 @@ fn EmbedApp() -> impl IntoView {
                     <Route path=path!("/tabs/animated") view=tabs::Animated />
                     <Route path=path!("/tabs/chromatic") view=tabs::Chromatic />
 
+                    <Route path=path!("/time-field/styled") view=time_field::Styled />
+                    <Route path=path!("/time-field/twenty-four-hour") view=time_field::TwentyFourHour />
+                    <Route path=path!("/time-field/with-default") view=time_field::WithDefault />
+                    <Route path=path!("/time-field/disabled") view=time_field::Disabled />
+                    <Route path=path!("/time-field/read-only") view=time_field::ReadOnly />
+                    <Route path=path!("/time-field/chromatic") view=time_field::Chromatic />
+
                     <Route path=path!("/toast/styled") view=toast::Styled />
                     <Route path=path!("/toast/controlled") view=toast::Controlled />
                     <Route path=path!("/toast/from-dialog") view=toast::FromDialog />
@@ -551,6 +561,7 @@ fn ShellApp() -> impl IntoView {
                             ("/combobox/with-empty", "With Empty"),
                             ("/combobox/with-clear", "With Clear"),
                             ("/combobox/auto-highlight", "Auto Highlight"),
+                            ("/combobox/virtualized", "Virtualized"),
                         ] />
                         <NavSection title="Context Menu" stories=vec![
                             ("/context-menu/styled", "Styled"),
@@ -720,6 +731,14 @@ fn ShellApp() -> impl IntoView {
                             ("/tabs/styled", "Styled"),
                             ("/tabs/animated", "Animated"),
                             ("/tabs/chromatic", "Chromatic"),
+                        ] />
+                        <NavSection title="TimeField" tested=false stories=vec![
+                            ("/time-field/styled", "Styled"),
+                            ("/time-field/twenty-four-hour", "24-Hour"),
+                            ("/time-field/with-default", "With Default"),
+                            ("/time-field/disabled", "Disabled"),
+                            ("/time-field/read-only", "Read-Only"),
+                            ("/time-field/chromatic", "Chromatic"),
                         ] />
                         <NavSection title="Toast" stories=vec![
                             ("/toast/styled", "Styled"),

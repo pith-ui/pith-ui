@@ -1,3 +1,5 @@
+use std::sync::Arc;
+
 use leptos::prelude::*;
 use pith_ui::combobox::*;
 
@@ -485,6 +487,99 @@ pub fn WithClear() -> impl IntoView {
                 </ComboboxPortal>
             </Combobox>
             <p>"Selected: " {move || value.get().unwrap_or("(none)".into())}</p>
+        </div>
+    }
+}
+
+/* -------------------------------------------------------------------------------------------------
+ * Virtualized — Virtual scrolling with 10,000 items
+ * -----------------------------------------------------------------------------------------------*/
+
+fn generate_items(count: usize) -> Vec<String> {
+    (0..count).map(|i| format!("Item {}", i + 1)).collect()
+}
+
+#[component]
+pub fn Virtualized() -> impl IntoView {
+    let all_items = StoredValue::new(generate_items(10_000));
+    let (value, set_value) = signal(Option::<String>::None);
+    let (input_value, set_input_value) = signal(String::new());
+
+    let filtered = Memo::new(move |_| {
+        all_items.try_with_value(|items| {
+            let q = input_value.get();
+            if q.is_empty() {
+                items.clone()
+            } else {
+                let q = q.to_lowercase();
+                items.iter().filter(|i| i.to_lowercase().contains(&q)).cloned().collect()
+            }
+        }).unwrap_or_default()
+    });
+
+    let render_item = StoredValue::new(Arc::new(move |vi: VirtualItem| {
+        let items = filtered.get();
+        let Some(item) = items.get(vi.index).cloned() else {
+            return ().into_any();
+        };
+        let text = item.clone();
+        let label = StoredValue::new(item.clone());
+        view! {
+            <ComboboxItem attr:class=classes::item value=item text_value=text>
+                <ComboboxItemIndicator attr:class=classes::indicator><TickIcon /></ComboboxItemIndicator>
+                {move || label.get_value()}
+            </ComboboxItem>
+        }.into_any()
+    }) as Arc<dyn Fn(VirtualItem) -> AnyView + Send + Sync>);
+
+    view! {
+        <div class=classes::root>
+            <h2>"Virtualized"</h2>
+            <p>"10,000 items with virtual scrolling. Only visible items are rendered."</p>
+            <Combobox
+                virtualized=true
+                auto_highlight=true
+                value=Signal::derive(move || value.get())
+                on_value_change=Callback::new(move |v: String| {
+                    set_value.set(Some(v.clone()));
+                    set_input_value.set(v);
+                })
+                input_value=Signal::derive(move || input_value.get())
+                on_input_value_change=Callback::new(move |v: String| set_input_value.set(v))
+            >
+                <ComboboxAnchor attr:class=classes::anchor>
+                    <ComboboxInput attr:class=classes::input placeholder="Search 10,000 items..." />
+                    <ComboboxClear attr:class=classes::clear attr:aria-label="Clear">"✕"</ComboboxClear>
+                    <ComboboxTrigger attr:class=classes::trigger attr:aria-label="Toggle">
+                        <ComboboxIcon />
+                    </ComboboxTrigger>
+                </ComboboxAnchor>
+                <ComboboxPortal>
+                    <ComboboxContent attr:class=classes::content side_offset=4.0>
+                        <ComboboxViewport attr:class=classes::viewport>
+                            {move || {
+                                let count = filtered.get().len();
+                                if count == 0 {
+                                    return leptos::either::Either::Left(view! {
+                                        <ComboboxEmpty attr:class=classes::empty>"No results found"</ComboboxEmpty>
+                                    });
+                                }
+                                leptos::either::Either::Right(view! {
+                                    <ComboboxVirtualItems
+                                        count=Signal::derive(move || filtered.get().len())
+                                        estimate_size=32.0
+                                        render_item=render_item.get_value()
+                                    />
+                                })
+                            }}
+                        </ComboboxViewport>
+                    </ComboboxContent>
+                </ComboboxPortal>
+            </Combobox>
+            <p>"Selected: " {move || value.get().unwrap_or("(none)".into())}</p>
+            <p style="color: gray; font-size: 12px;">
+                {move || format!("Showing {} filtered items", filtered.get().len())}
+            </p>
         </div>
     }
 }

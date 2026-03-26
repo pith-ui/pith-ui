@@ -66,7 +66,7 @@ aspect-ratio = []
 avatar = []
 checkbox = []
 collapsible = []
-combobox = []
+combobox = ["pith-virtual-leptos"]
 dialog = []
 hover-card = []
 label = []
@@ -91,6 +91,7 @@ tooltip = []
 [dependencies]
 chrono = { version = "0.4", features = ["wasmbind"], optional = true }
 floating-ui-leptos = "0.6.0"
+pith-virtual-leptos = { workspace = true, optional = true }
 getrandom = { version = "0.2", features = ["js"] }
 js-sys = "0.3"
 leptos.workspace = true

@@ -45,6 +45,21 @@ pub fn ComboboxItem(
             .is_some_and(|id| id == item_id.get())
     });
 
+    // In virtual mode: bridge highlighted_virtual_index → active_descendant_id.
+    // When the virtualizer scrolls this item into view and its virtual index
+    // matches the highlighted index, set the aria-activedescendant to this
+    // element's DOM id.
+    if context.virtualized {
+        let virtual_index = use_context::<ComboboxVirtualItemIndex>();
+        if let Some(ComboboxVirtualItemIndex(vi)) = virtual_index {
+            Effect::new(move |_| {
+                if context.highlighted_virtual_index.get() == Some(vi) {
+                    context.active_descendant_id.set(Some(item_id.get()));
+                }
+            });
+        }
+    }
+
     let handle_select = move || {
         if !disabled.get_untracked()
             && let Some(val) = value.try_get_value()

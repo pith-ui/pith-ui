@@ -99,6 +99,7 @@ use leptos::{
     attribute_interceptor::AttributeInterceptor, context::Provider, ev, html, prelude::*,
 };
 use leptos_node_ref::AnyNodeRef;
+use pith_virtual_leptos::VirtualizerHandle;
 use send_wrapper::SendWrapper;
 use wasm_bindgen::JsCast;
 
@@ -108,6 +109,7 @@ mod combobox_content;
 mod combobox_item;
 mod combobox_portal;
 mod combobox_separator;
+mod combobox_virtual;
 
 pub use crate::support::popper::{Align, Padding, Side, Sticky};
 pub use combobox::*;
@@ -116,6 +118,8 @@ pub use combobox_content::*;
 pub use combobox_item::*;
 pub use combobox_portal::*;
 pub use combobox_separator::*;
+pub use combobox_virtual::*;
+pub use pith_virtual_leptos::VirtualItem;
 
 /* -------------------------------------------------------------------------------------------------
  * Collection ItemData
@@ -161,6 +165,14 @@ struct ComboboxContextValue {
     multiple: bool,
     /// Whether the first matching item is highlighted automatically while filtering.
     auto_highlight: bool,
+    /// Whether virtual scrolling is enabled.
+    virtualized: bool,
+    /// In virtual mode: the highlighted item's virtual index.
+    highlighted_virtual_index: RwSignal<Option<usize>>,
+    /// In virtual mode: total item count (set by ComboboxVirtualItems).
+    virtual_item_count: RwSignal<usize>,
+    /// In virtual mode: the virtualizer handle (set by ComboboxVirtualItems).
+    virtualizer: StoredValue<Option<VirtualizerHandle>>,
 }
 
 impl ComboboxContextValue {
@@ -176,6 +188,9 @@ impl ComboboxContextValue {
     fn dismiss(&self) {
         self.on_open_change.run(false);
         self.active_descendant_id.set(None);
+        if self.virtualized {
+            self.highlighted_virtual_index.set(None);
+        }
     }
 }
 
@@ -203,6 +218,11 @@ struct ComboboxItemContextValue {
 struct ComboboxGroupContextValue {
     id: ReadSignal<String>,
 }
+
+/// Provided by `ComboboxVirtualItems` around each rendered item so
+/// `ComboboxItem` can discover its virtual index without an explicit prop.
+#[derive(Clone, Copy)]
+struct ComboboxVirtualItemIndex(usize);
 
 /* -------------------------------------------------------------------------------------------------
  * Utilities

@@ -25,6 +25,8 @@ pub fn Combobox(
     #[prop(into, optional)] form: MaybeProp<String>,
     /// Whether the first matching item is highlighted automatically while filtering.
     #[prop(optional)] auto_highlight: bool,
+    /// Whether virtual scrolling is enabled. Use with `ComboboxVirtualItems`.
+    #[prop(optional)] virtualized: bool,
     #[prop(into, optional)] dir: MaybeProp<Direction>,
     children: ChildrenFn,
 ) -> impl IntoView {
@@ -98,6 +100,9 @@ pub fn Combobox(
     let required_state = prop_or_default(required);
     let active_descendant_id: RwSignal<Option<String>> = RwSignal::new(None);
     let highlighted_chip_index: RwSignal<Option<usize>> = RwSignal::new(None);
+    let highlighted_virtual_index: RwSignal<Option<usize>> = RwSignal::new(None);
+    let virtual_item_count: RwSignal<usize> = RwSignal::new(0);
+    let virtualizer_handle: StoredValue<Option<VirtualizerHandle>> = StoredValue::new(None);
 
     let on_value_change_cb = Callback::new(move |val: String| {
         if multiple {
@@ -139,6 +144,10 @@ pub fn Combobox(
         highlighted_chip_index,
         multiple,
         auto_highlight,
+        virtualized,
+        highlighted_virtual_index,
+        virtual_item_count,
+        virtualizer: virtualizer_handle,
     };
 
     // Native input for form integration
@@ -270,6 +279,23 @@ pub fn ComboboxInput(
                         if context.auto_highlight {
                             if input_empty {
                                 context.active_descendant_id.set(None);
+                                if context.virtualized {
+                                    context.highlighted_virtual_index.set(None);
+                                }
+                            } else if context.virtualized {
+                                // In virtual mode, highlight index 0 and scroll there.
+                                let count = context.virtual_item_count.get_untracked();
+                                if count > 0 {
+                                    context.highlighted_virtual_index.set(Some(0));
+                                    let _ = context.virtualizer.try_with_value(|v| {
+                                        if let Some(v) = v {
+                                            v.scroll_to(0);
+                                        }
+                                    });
+                                } else {
+                                    context.highlighted_virtual_index.set(None);
+                                    context.active_descendant_id.set(None);
+                                }
                             } else {
                                 // Defer so consumer filtering and DOM updates complete first
                                 let cb = wasm_bindgen::closure::Closure::once_into_js(move || {
@@ -552,6 +578,8 @@ fn handle_input_keydown(
                 context.on_open_change.run(true);
             } else if !context.open.get_untracked() {
                 context.on_open_change.run(true);
+            } else if context.virtualized {
+                navigate_virtual(context, true);
             } else {
                 let _ = get_items.try_with_value(|get_items| {
                     let items = get_items();
@@ -566,11 +594,15 @@ fn handle_input_keydown(
                 context.highlighted_chip_index.set(None);
                 context.on_open_change.run(true);
             } else if context.open.get_untracked() {
-                let _ = get_items.try_with_value(|get_items| {
-                    let items = get_items();
-                    let all_items: Vec<_> = items.iter().collect();
-                    navigate_items(&all_items, &context.active_descendant_id, false);
-                });
+                if context.virtualized {
+                    navigate_virtual(context, false);
+                } else {
+                    let _ = get_items.try_with_value(|get_items| {
+                        let items = get_items();
+                        let all_items: Vec<_> = items.iter().collect();
+                        navigate_items(&all_items, &context.active_descendant_id, false);
+                    });
+                }
             }
         }
         "Enter" => {
@@ -611,13 +643,21 @@ fn handle_input_keydown(
         "Home" => {
             if context.open.get_untracked() {
                 event.prevent_default();
-                navigate_to_edge(context, get_items, true);
+                if context.virtualized {
+                    navigate_virtual_to_edge(context, true);
+                } else {
+                    navigate_to_edge(context, get_items, true);
+                }
             }
         }
         "End" => {
             if context.open.get_untracked() {
                 event.prevent_default();
-                navigate_to_edge(context, get_items, false);
+                if context.virtualized {
+                    navigate_virtual_to_edge(context, false);
+                } else {
+                    navigate_to_edge(context, get_items, false);
+                }
             }
         }
         _ => {}
@@ -779,4 +819,55 @@ fn scroll_item_into_view(el: &web_sys::Element) {
     options.set_block(web_sys::ScrollLogicalPosition::Nearest);
     let el: &web_sys::HtmlElement = el.unchecked_ref();
     el.scroll_into_view_with_scroll_into_view_options(&options);
+}
+
+/* -------------------------------------------------------------------------------------------------
+ * Virtual navigation utilities
+ * -----------------------------------------------------------------------------------------------*/
+
+/// Navigate to the next or previous item by virtual index.
+fn navigate_virtual(context: &ComboboxContextValue, forward: bool) {
+    let count = context.virtual_item_count.get_untracked();
+    if count == 0 {
+        return;
+    }
+
+    let current = context.highlighted_virtual_index.get_untracked();
+    let next = match current {
+        Some(idx) => {
+            if forward {
+                if idx + 1 >= count { 0 } else { idx + 1 }
+            } else if idx == 0 {
+                count - 1
+            } else {
+                idx - 1
+            }
+        }
+        None => {
+            if forward { 0 } else { count - 1 }
+        }
+    };
+
+    context.highlighted_virtual_index.set(Some(next));
+    let _ = context.virtualizer.try_with_value(|v| {
+        if let Some(v) = v {
+            v.scroll_to(next);
+        }
+    });
+}
+
+/// Navigate to the first or last item by virtual index (Home / End).
+fn navigate_virtual_to_edge(context: &ComboboxContextValue, first: bool) {
+    let count = context.virtual_item_count.get_untracked();
+    if count == 0 {
+        return;
+    }
+
+    let target = if first { 0 } else { count - 1 };
+    context.highlighted_virtual_index.set(Some(target));
+    let _ = context.virtualizer.try_with_value(|v| {
+        if let Some(v) = v {
+            v.scroll_to(target);
+        }
+    });
 }
