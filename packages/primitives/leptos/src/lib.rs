@@ -48,6 +48,10 @@ pub use support::portal;
 pub use support::primitive;
 pub use support::visually_hidden;
 
+// ── Re-export chrono utilities (available when calendar or time-field is enabled) ──
+#[cfg(feature = "chrono")]
+pub use support::local_offset;
+
 // ── Re-export internal support modules behind `internals` feature ──
 // These are building blocks used by components internally. Not part of the
 // public consumer API, but exposed for stories, testing, and power users.
@@ -145,6 +149,8 @@ pub use components::slider;
 pub use components::switch;
 #[cfg(feature = "tabs")]
 pub use components::tabs;
+#[cfg(feature = "time-field")]
+pub use components::time_field;
 #[cfg(feature = "toast")]
 pub use components::toast;
 #[cfg(feature = "toggle")]

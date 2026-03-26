@@ -16,6 +16,12 @@ license = "MIT"
 repository = "https://github.com/pith-ui/primitives"
 version = "0.0.2"
 
+# Use opt-level 1 in dev builds to shrink the WASM binary enough for
+# rust-lld to link without hitting the macOS aarch64 SIGBUS (address
+# space exhaustion) limit.
+[profile.dev]
+opt-level = 1
+
 [workspace.dependencies]
 console_error_panic_hook = "0.1.7"
 console_log = "1.0.0"

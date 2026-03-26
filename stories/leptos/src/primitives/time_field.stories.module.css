@@ -1,0 +1,58 @@
+.field {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid var(--gray-7, #d0d5dd);
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 14px;
+    background: var(--gray-1, #fcfcfd);
+}
+
+.field:focus-within {
+    border-color: var(--blue-8, #3b82f6);
+    box-shadow: 0 0 0 1px var(--blue-8, #3b82f6);
+}
+
+.field [role='spinbutton'] {
+    padding: 1px 2px;
+    min-width: 1.8ch;
+    text-align: center;
+    border-radius: 3px;
+    outline: none;
+    cursor: default;
+    user-select: none;
+}
+
+.field [role='spinbutton']:focus {
+    background: var(--blue-9, #3b82f6);
+    color: white;
+}
+
+.field [data-placeholder] {
+    color: var(--gray-8, #9ca3af);
+}
+
+.field [data-disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.field [data-type='literal'] {
+    padding: 0 1px;
+    color: var(--gray-9, #6b7280);
+}
+
+.label {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 4px;
+    display: block;
+}
+
+.readout {
+    margin-top: 12px;
+    font-size: 13px;
+    color: var(--gray-11, #344054);
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}

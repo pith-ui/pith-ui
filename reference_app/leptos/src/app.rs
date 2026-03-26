@@ -52,6 +52,7 @@ pub fn App() -> impl IntoView {
                     <Route path=path!("/slider") view=pages::slider::SliderPage />
                     <Route path=path!("/switch") view=pages::switch::SwitchPage />
                     <Route path=path!("/tabs") view=pages::tabs::TabsPage />
+                    <Route path=path!("/time-field") view=pages::time_field::TimeFieldPage />
                     <Route path=path!("/toast") view=pages::toast::ToastPage />
                     <Route path=path!("/toggle") view=pages::toggle::TogglePage />
                     <Route path=path!("/toggle-group") view=pages::toggle_group::ToggleGroupPage />

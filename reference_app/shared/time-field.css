@@ -1,0 +1,46 @@
+/* TimeField test fixture — minimal styling */
+
+.time-field-root {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.time-field-input {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 4px 8px;
+    font-family: monospace;
+    font-size: 16px;
+}
+
+.time-field-input [role='spinbutton'] {
+    padding: 2px;
+    min-width: 1.5ch;
+    text-align: center;
+    border-radius: 2px;
+    outline: none;
+    cursor: default;
+    user-select: none;
+}
+
+.time-field-input [role='spinbutton']:focus {
+    background: #3b82f6;
+    color: white;
+}
+
+.time-field-input [data-placeholder] {
+    color: #9ca3af;
+}
+
+.time-field-input [data-disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.time-field-input [data-type='literal'] {
+    padding: 0 1px;
+    color: #6b7280;
+}

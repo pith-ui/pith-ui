@@ -56,6 +56,8 @@ pub mod slider;
 pub mod switch;
 #[cfg(feature = "tabs")]
 pub mod tabs;
+#[cfg(feature = "time-field")]
+pub mod time_field;
 #[cfg(feature = "toast")]
 pub mod toast;
 #[cfg(feature = "toggle")]

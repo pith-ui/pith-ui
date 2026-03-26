@@ -21,4 +21,6 @@ pub mod use_escape_keydown;
 pub mod use_previous;
 pub mod use_rect;
 pub mod use_size;
+#[cfg(feature = "chrono")]
+pub mod local_offset;
 pub mod visually_hidden;
