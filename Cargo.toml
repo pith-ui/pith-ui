@@ -1,8 +1,10 @@
 [workspace]
 members = [
     "packages/primitives/leptos",
+    "packages/themes/leptos",
     "packages/virtual/core",
     "packages/virtual/leptos",
+    "pith_themed_app",
     "reference_app/leptos",
     "reference_experiments/leptos",
     "stories/leptos",
@@ -13,7 +15,7 @@ resolver = "2"
 authors = ["Pith UI Contributors"]
 edition = "2024"
 license = "MIT"
-repository = "https://github.com/pith-ui/primitives"
+repository = "https://github.com/pith-ui/pith-ui"
 version = "0.0.2"
 
 # Use opt-level 1 in dev builds to shrink the WASM binary enough for
@@ -38,6 +40,7 @@ send_wrapper = "0.6.0"
 serde = "1.0.198"
 serde_json = "1.0.116"
 tailwind_fuse = { version = "0.3.0", features = ["variant"] }
-web-sys = "0.3.72"
+pith-ui-themes = { path = "./packages/themes/leptos", version = "0.0.2" }
 pith-virtual-core = { path = "./packages/virtual/core", version = "0.0.2" }
 pith-virtual-leptos = { path = "./packages/virtual/leptos", version = "0.0.2" }
+web-sys = "0.3.72"
