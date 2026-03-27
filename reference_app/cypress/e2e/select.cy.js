@@ -739,4 +739,17 @@ describe('Select', () => {
             cy.get('[data-testid="controlled-trigger-a"]').should('contain.text', 'Spain');
         });
     });
+
+    // ── Axe Accessibility Audit ─────────────────────────────
+
+    describe('axe audit', () => {
+        it('no violations in closed state', () => {
+            cy.checkComponentA11y();
+        });
+
+        it('no violations when open', () => {
+            openSelect();
+            cy.checkComponentA11y();
+        });
+    });
 });

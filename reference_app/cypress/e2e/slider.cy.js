@@ -325,4 +325,12 @@ describe('Slider', () => {
             getUncontrolledThumb().should('have.attr', 'data-orientation', 'horizontal');
         });
     });
+
+    // ── Axe Accessibility Audit ─────────────────────────────
+
+    describe('axe audit', () => {
+        it('no violations in default state', () => {
+            cy.checkComponentA11y();
+        });
+    });
 });

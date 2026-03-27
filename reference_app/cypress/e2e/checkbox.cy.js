@@ -217,4 +217,18 @@ describe('Checkbox', () => {
             cy.findByRole('checkbox', {name: 'accept terms'}).find('span').should('have.attr', 'data-disabled');
         });
     });
+
+    // ── Axe Accessibility Audit ─────────────────────────────
+
+    describe('axe audit', () => {
+        it('no violations in unchecked state', () => {
+            cy.checkComponentA11y();
+        });
+
+        it('no violations in checked state', () => {
+            cy.findByRole('checkbox', {name: 'accept terms'}).click();
+            shouldBeChecked();
+            cy.checkComponentA11y();
+        });
+    });
 });

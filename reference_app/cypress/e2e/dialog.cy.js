@@ -461,4 +461,18 @@ describe('Dialog', () => {
             );
         });
     });
+
+    // ── Axe Accessibility Audit ─────────────────────────────
+
+    describe('axe audit', () => {
+        it('no violations in default (closed) state', () => {
+            cy.checkComponentA11y();
+        });
+
+        it('no violations when dialog is open', () => {
+            cy.findByText('open').click();
+            shouldBeOpen();
+            cy.checkComponentA11y();
+        });
+    });
 });

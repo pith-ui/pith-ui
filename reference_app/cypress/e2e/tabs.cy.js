@@ -456,4 +456,18 @@ describe('Tabs', () => {
                 .and('have.attr', 'role', 'tabpanel');
         });
     });
+
+    // ── Axe Accessibility Audit ─────────────────────────────
+
+    describe('axe audit', () => {
+        it('no violations with default tab selected', () => {
+            cy.checkComponentA11y();
+        });
+
+        it('no violations after switching tabs', () => {
+            cy.findByRole('tab', {name: 'Tab 3'}).click();
+            tab3ShouldBeActive();
+            cy.checkComponentA11y();
+        });
+    });
 });

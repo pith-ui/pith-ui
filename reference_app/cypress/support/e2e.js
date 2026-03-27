@@ -1,5 +1,6 @@
 import '@testing-library/cypress/add-commands';
 import 'cypress-real-events/support';
+import 'cypress-axe';
 
 // ── Framework Detection ─────────────────────────────────────────────────────
 //
@@ -90,4 +91,72 @@ Cypress.Commands.add('assertNoReactiveWarnings', () => {
 
 afterEach(() => {
     cy.assertNoReactiveWarnings();
+});
+
+// ── Accessibility (axe-core via cypress-axe) ────────────────────────────────
+//
+// Inject axe-core once per page load. cy.checkA11y() is provided by
+// cypress-axe and runs the axe accessibility audit against the current DOM.
+//
+// Usage in tests:
+//
+//   describe('accessibility', () => {
+//       it('has no axe violations in default state', () => {
+//           cy.checkComponentA11y();
+//       });
+//
+//       it('has no axe violations when open', () => {
+//           cy.findByRole('button', {name: 'open'}).click();
+//           cy.checkComponentA11y();
+//       });
+//   });
+//
+// cy.checkComponentA11y() is a thin wrapper that injects axe-core, runs the
+// audit, and logs individual violations for easier debugging. It handles
+// injection automatically so tests don't need to call cy.injectAxe() — this
+// is important because cy.visit() wipes the injected script.
+//
+// Pass an optional CSS selector to scope the check, or an axe options object.
+
+/**
+ * Run an axe accessibility audit with detailed violation logging.
+ * Automatically injects axe-core into the current page before running.
+ *
+ * @param {string} [context] - Optional CSS selector to scope the audit
+ * @param {object} [options] - Optional axe-core run options (rules, runOnly, etc.)
+ */
+Cypress.Commands.add('checkComponentA11y', (context, options) => {
+    cy.injectAxe();
+
+    const opts = {
+        runOnly: {type: 'tag', values: ['wcag2a', 'wcag2aa', 'best-practice']},
+        rules: {
+            // Page-level structure rules — these flag the test harness, not the
+            // primitives under test. The reference_app pages are minimal fixtures
+            // that intentionally omit full page scaffolding (h1, landmarks, etc.).
+            'page-has-heading-one': {enabled: false},
+            'landmark-one-main': {enabled: false},
+            'region': {enabled: false},
+        },
+        ...options,
+    };
+
+    cy.checkA11y(
+        context || null,
+        opts,
+        (violations) => {
+            const summary = violations
+                .map((v) => {
+                    const nodes = v.nodes.map((n) => `    ${n.html}`).join('\n');
+                    return `[${v.impact}] ${v.id}: ${v.help}\n${nodes}`;
+                })
+                .join('\n\n');
+            Cypress.log({
+                name: 'a11y',
+                message: `${violations.length} violation(s)`,
+                consoleProps: () => ({violations}),
+            });
+            throw new Error(`${violations.length} accessibility violation(s):\n\n${summary}`);
+        },
+    );
 });

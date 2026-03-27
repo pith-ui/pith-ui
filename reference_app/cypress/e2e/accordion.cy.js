@@ -423,4 +423,18 @@ describe('Accordion', () => {
                 .and('have.attr', 'data-custom', 'accordion-content-custom');
         });
     });
+
+    // ── Axe Accessibility Audit ─────────────────────────────
+
+    describe('axe audit', () => {
+        it('no violations in default (collapsed) state', () => {
+            cy.checkComponentA11y();
+        });
+
+        it('no violations when item is expanded', () => {
+            cy.findByRole('button', {name: 'Item 1'}).click();
+            shouldBeOpen('Item 1');
+            cy.checkComponentA11y();
+        });
+    });
 });
