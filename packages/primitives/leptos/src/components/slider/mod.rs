@@ -52,7 +52,7 @@
 //!
 //! | Property | Description |
 //! |----------|-------------|
-//! | `--radix-slider-thumb-transform` | Transform applied to thumb for centering |
+//! | `--slider-thumb-transform` | Transform applied to thumb for centering |
 
 use std::marker::PhantomData;
 

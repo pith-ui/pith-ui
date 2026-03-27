@@ -24,7 +24,7 @@
 //! - Keyboard navigation between triggers (arrow keys, Home, End)
 //! - Horizontal and vertical orientation
 //! - RTL support
-//! - CSS animation support via `--radix-collapsible-content-height` / `--radix-collapsible-content-width`
+//! - CSS animation support via `--collapsible-content-height` / `--collapsible-content-width`
 //!
 //! # Keyboard Interactions
 //!

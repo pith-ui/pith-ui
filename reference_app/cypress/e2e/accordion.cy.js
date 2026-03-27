@@ -288,10 +288,10 @@ describe('Accordion', () => {
         it('internal CSS variables are set for animation support', () => {
             cy.findByTestId('styled-content').then(($el) => {
                 const heightVar = getComputedStyle($el[0]).getPropertyValue(
-                    '--radix-accordion-content-height'
+                    cssVar('accordion-content-height')
                 );
                 const widthVar = getComputedStyle($el[0]).getPropertyValue(
-                    '--radix-accordion-content-width'
+                    cssVar('accordion-content-width')
                 );
                 expect(heightVar.trim()).to.match(/^\d+(\.\d+)?px$/);
                 expect(widthVar.trim()).to.match(/^\d+(\.\d+)?px$/);
@@ -310,13 +310,13 @@ describe('Accordion', () => {
             cy.findByTestId('styled-content').then(($el) => {
                 const style = getComputedStyle($el[0]);
 
-                // User set style:--radix-accordion-content-height="999px" which
+                // User set the accordion-content-height CSS var to "999px" which
                 // overrides the internal alias (matching React's overridable pattern)
-                const heightVar = style.getPropertyValue('--radix-accordion-content-height');
+                const heightVar = style.getPropertyValue(cssVar('accordion-content-height'));
                 expect(heightVar.trim()).to.equal('999px');
 
                 // Width was NOT overridden by the user, so the internal alias resolves
-                const widthVar = style.getPropertyValue('--radix-accordion-content-width');
+                const widthVar = style.getPropertyValue(cssVar('accordion-content-width'));
                 expect(widthVar.trim()).to.match(/^\d+(\.\d+)?px$/);
             });
         });

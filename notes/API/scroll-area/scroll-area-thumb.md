@@ -47,7 +47,7 @@ pub fn ScrollAreaThumb(
 
 ### Implicit behavior
 
-- The thumb's size is set via CSS custom properties: `width: var(--radix-scroll-area-thumb-width)` and `height: var(--radix-scroll-area-thumb-height)`. These properties are calculated and set by the parent scrollbar component based on the viewport-to-content size ratio. The minimum thumb size is 18px (matching macOS behavior).
+- The thumb's size is set via CSS custom properties: `width: var(--scroll-area-thumb-width)` and `height: var(--scroll-area-thumb-height)`. These properties are calculated and set by the parent scrollbar component based on the viewport-to-content size ratio. The minimum thumb size is 18px (matching macOS behavior).
 - The thumb's position is updated via `transform: translate3d(...)` applied directly to the element's style. This avoids scroll-linked effects by using `requestAnimationFrame` to track scroll position changes.
 - Listens for `scroll` events on the viewport and runs a `requestAnimationFrame` loop during active scrolling to update the thumb position smoothly.
 - Handles `pointerdown` on the thumb to begin drag tracking: records the pointer offset within the thumb so dragging feels anchored to the initial click position.

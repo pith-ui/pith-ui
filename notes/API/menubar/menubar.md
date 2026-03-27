@@ -413,8 +413,8 @@ These properties are set on `MenubarContent` and `MenubarSubContent` and alias t
 
 | Property | Source | Description |
 |---|---|---|
-| `--radix-menubar-content-transform-origin` | `var(--radix-popper-transform-origin)` | The transform origin computed by the popper for entry/exit animations. |
-| `--radix-menubar-content-available-width` | `var(--radix-popper-available-width)` | The available width between the trigger and the viewport edge. |
-| `--radix-menubar-content-available-height` | `var(--radix-popper-available-height)` | The available height between the trigger and the viewport edge. |
-| `--radix-menubar-trigger-width` | `var(--radix-popper-anchor-width)` | The width of the trigger (anchor) element. |
-| `--radix-menubar-trigger-height` | `var(--radix-popper-anchor-height)` | The height of the trigger (anchor) element. |
+| `--menubar-content-transform-origin` | `var(--popper-transform-origin)` | The transform origin computed by the popper for entry/exit animations. |
+| `--menubar-content-available-width` | `var(--popper-available-width)` | The available width between the trigger and the viewport edge. |
+| `--menubar-content-available-height` | `var(--popper-available-height)` | The available height between the trigger and the viewport edge. |
+| `--menubar-trigger-width` | `var(--popper-anchor-width)` | The width of the trigger (anchor) element. |
+| `--menubar-trigger-height` | `var(--popper-anchor-height)` | The height of the trigger (anchor) element. |

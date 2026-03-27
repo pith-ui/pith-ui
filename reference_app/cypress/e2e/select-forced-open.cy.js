@@ -171,8 +171,8 @@ describe('Select (forced open)', () => {
         it('SelectContent (popper) internal CSS variables are set alongside user styles', () => {
             cy.get('[data-testid="forced-content"]').then(($el) => {
                 const style = getComputedStyle($el[0]);
-                const availW = style.getPropertyValue('--radix-select-content-available-width');
-                const availH = style.getPropertyValue('--radix-select-content-available-height');
+                const availW = style.getPropertyValue(cssVar('select-content-available-width'));
+                const availH = style.getPropertyValue(cssVar('select-content-available-height'));
                 expect(availW.trim()).to.not.be.empty;
                 expect(availH.trim()).to.not.be.empty;
             });

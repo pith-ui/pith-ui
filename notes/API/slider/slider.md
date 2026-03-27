@@ -121,7 +121,7 @@ pub fn Slider(
 - A `SliderContextValue` is provided to all descendants, carrying `name`, `disabled`, `min`, `max`, `values`, `orientation`, `form`, `thumbs`, and `value_index_to_change`.
 - An orientation sub-context (`SliderOrientationContextValue`) is provided with `start_edge`, `end_edge`, `size`, and `direction` — computed based on `orientation`, `dir`, and `inverted`.
 - The root handles all pointer and keyboard events. Pointer capture is used for drag tracking.
-- The CSS custom property `--radix-slider-thumb-transform` is set on the root to `translateX(-50%)` (horizontal) or `translateY(50%)` (vertical).
+- The CSS custom property `--slider-thumb-transform` is set on the root to `translateX(-50%)` (horizontal) or `translateY(50%)` (vertical).
 - When a value changes, the corresponding thumb is automatically focused.
 
 ## Usage Examples
@@ -363,4 +363,4 @@ All keyboard interactions prevent default browser scrolling behavior.
 
 | Property | Source | Description |
 |---|---|---|
-| `--radix-slider-thumb-transform` | Set on the root element | `translateX(-50%)` for horizontal, `translateY(50%)` for vertical. Applied to each thumb's wrapper to center it on its position. |
+| `--slider-thumb-transform` | Set on the root element | `translateX(-50%)` for horizontal, `translateY(50%)` for vertical. Applied to each thumb's wrapper to center it on its position. |

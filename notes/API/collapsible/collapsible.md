@@ -175,7 +175,7 @@ let (open, set_open) = signal(false);
 
 ### Animated content (CSS keyframes)
 
-Use the `--radix-collapsible-content-height` and `--radix-collapsible-content-width` CSS custom properties to animate open/close transitions:
+Use the `--collapsible-content-height` and `--collapsible-content-width` CSS custom properties to animate open/close transitions:
 
 ```css
 .content {
@@ -192,16 +192,16 @@ Use the `--radix-collapsible-content-height` and `--radix-collapsible-content-wi
 
 @keyframes slideDown {
   from { height: 0; }
-  to   { height: var(--radix-collapsible-content-height); }
+  to   { height: var(--collapsible-content-height); }
 }
 
 @keyframes slideUp {
-  from { height: var(--radix-collapsible-content-height); }
+  from { height: var(--collapsible-content-height); }
   to   { height: 0; }
 }
 ```
 
-Horizontal animation works the same way with `--radix-collapsible-content-width`:
+Horizontal animation works the same way with `--collapsible-content-width`:
 
 ```css
 .content[data-state='open'] {
@@ -214,11 +214,11 @@ Horizontal animation works the same way with `--radix-collapsible-content-width`
 
 @keyframes openRight {
   from { width: 0; }
-  to   { width: var(--radix-collapsible-content-width); }
+  to   { width: var(--collapsible-content-width); }
 }
 
 @keyframes closeRight {
-  from { width: var(--radix-collapsible-content-width); }
+  from { width: var(--collapsible-content-width); }
   to   { width: 0; }
 }
 ```
@@ -255,7 +255,7 @@ These properties are set directly on the `CollapsibleContent` element's inline s
 
 | Property | Source | Description |
 |---|---|---|
-| `--radix-collapsible-content-height` | Measured via `getBoundingClientRect().height` | The measured height (in `px`) of the content when fully expanded. |
-| `--radix-collapsible-content-width` | Measured via `getBoundingClientRect().width` | The measured width (in `px`) of the content when fully expanded. |
+| `--collapsible-content-height` | Measured via `getBoundingClientRect().height` | The measured height (in `px`) of the content when fully expanded. |
+| `--collapsible-content-width` | Measured via `getBoundingClientRect().width` | The measured width (in `px`) of the content when fully expanded. |
 
 These properties update dynamically when the content's dimensions change (e.g., from dynamic content being added). On initial mount, animations are suppressed to prevent a flash; subsequent open/close transitions run normally.

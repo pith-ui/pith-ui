@@ -16,7 +16,7 @@
 //!
 //! - Controlled and uncontrolled open state
 //! - CSS animation support with dimension measurement
-//! - Exposes `--radix-collapsible-content-height` and `--radix-collapsible-content-width` CSS custom properties
+//! - Exposes `--collapsible-content-height` and `--collapsible-content-width` CSS custom properties
 //!
 //! # Keyboard Interactions
 //!
@@ -156,7 +156,7 @@ pub fn CollapsibleTrigger(
 /// Content panel that is shown or hidden based on the collapsible state.
 ///
 /// Renders as a `<div>`. Measures dimensions for CSS animation and exposes
-/// `--radix-collapsible-content-height` / `--radix-collapsible-content-width`
+/// `--collapsible-content-height` / `--collapsible-content-width`
 /// custom properties. Must be a descendant of [`Collapsible`].
 #[component]
 pub fn CollapsibleContent(
@@ -286,12 +286,12 @@ fn CollapsibleContentImpl(
             // Set CSS custom properties directly on the node
             if height > 0.0 {
                 style
-                    .set_property("--radix-collapsible-content-height", &format!("{height}px"))
+                    .set_property("--collapsible-content-height", &format!("{height}px"))
                     .expect("Style should be set.");
             }
             if width > 0.0 {
                 style
-                    .set_property("--radix-collapsible-content-width", &format!("{width}px"))
+                    .set_property("--collapsible-content-width", &format!("{width}px"))
                     .expect("Style should be set.");
             }
 

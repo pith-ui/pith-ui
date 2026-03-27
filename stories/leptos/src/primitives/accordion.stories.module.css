@@ -137,13 +137,13 @@
   }
 
   to {
-    height: var(--radix-accordion-content-height);
+    height: var(--accordion-content-height);
   }
 }
 
 @keyframes accordion-slideUp {
   from {
-    height: var(--radix-accordion-content-height);
+    height: var(--accordion-content-height);
   }
 
   to {
@@ -158,15 +158,15 @@
   }
 
   to {
-    width: var(--radix-accordion-content-width);
-    height: var(--radix-accordion-content-height);
+    width: var(--accordion-content-width);
+    height: var(--accordion-content-height);
   }
 }
 
 @keyframes accordion-close2D {
   from {
-    width: var(--radix-accordion-content-width);
-    height: var(--radix-accordion-content-height);
+    width: var(--accordion-content-width);
+    height: var(--accordion-content-height);
   }
 
   to {

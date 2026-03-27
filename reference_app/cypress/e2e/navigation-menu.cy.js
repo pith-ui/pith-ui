@@ -320,8 +320,8 @@ describe('Navigation Menu', () => {
             shouldBeOpen('Products');
             cy.findByTestId('nav-viewport').should(($viewport) => {
                 const style = $viewport[0].style;
-                const width = style.getPropertyValue('--radix-navigation-menu-viewport-width');
-                const height = style.getPropertyValue('--radix-navigation-menu-viewport-height');
+                const width = style.getPropertyValue(cssVar('navigation-menu-viewport-width'));
+                const height = style.getPropertyValue(cssVar('navigation-menu-viewport-height'));
                 expect(width).to.match(/^\d+(\.\d+)?px$/);
                 expect(height).to.match(/^\d+(\.\d+)?px$/);
             });
@@ -331,12 +331,12 @@ describe('Navigation Menu', () => {
             cy.findByRole('button', {name: 'Products'}).click();
             shouldBeOpen('Products');
             cy.findByTestId('nav-viewport')
-                .invoke('css', '--radix-navigation-menu-viewport-width')
+                .invoke('css', cssVar('navigation-menu-viewport-width'))
                 .then((productsWidth) => {
                     cy.findByRole('button', {name: 'Resources'}).click();
                     shouldBeOpen('Resources');
                     cy.findByTestId('nav-viewport').should(($vp) => {
-                        const resourcesWidth = $vp[0].style.getPropertyValue('--radix-navigation-menu-viewport-width');
+                        const resourcesWidth = $vp[0].style.getPropertyValue(cssVar('navigation-menu-viewport-width'));
                         expect(resourcesWidth).to.not.equal(productsWidth);
                     });
                 });
@@ -346,13 +346,13 @@ describe('Navigation Menu', () => {
             cy.findByRole('button', {name: 'Products'}).click();
             shouldBeOpen('Products');
             cy.findByTestId('nav-viewport')
-                .invoke('css', '--radix-navigation-menu-viewport-height')
+                .invoke('css', cssVar('navigation-menu-viewport-height'))
                 .then((productsHeight) => {
                     cy.findByRole('button', {name: 'Resources'}).click();
                     shouldBeOpen('Resources');
                     cy.findByTestId('nav-viewport').should(($vp) => {
                         const resourcesHeight = $vp[0].style.getPropertyValue(
-                            '--radix-navigation-menu-viewport-height',
+                            cssVar('navigation-menu-viewport-height'),
                         );
                         expect(resourcesHeight).to.not.equal(productsHeight);
                     });

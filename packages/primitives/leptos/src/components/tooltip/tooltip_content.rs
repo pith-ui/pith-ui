@@ -577,24 +577,24 @@ fn TooltipContentImpl(
             let el: web_sys::HtmlElement = el.unchecked_into();
             let style = el.style();
             let _ = style.set_property(
-                "--radix-tooltip-content-transform-origin",
-                "var(--radix-popper-transform-origin)",
+                "--tooltip-content-transform-origin",
+                "var(--popper-transform-origin)",
             );
             let _ = style.set_property(
-                "--radix-tooltip-content-available-width",
-                "var(--radix-popper-available-width)",
+                "--tooltip-content-available-width",
+                "var(--popper-available-width)",
             );
             let _ = style.set_property(
-                "--radix-tooltip-content-available-height",
-                "var(--radix-popper-available-height)",
+                "--tooltip-content-available-height",
+                "var(--popper-available-height)",
             );
             let _ = style.set_property(
-                "--radix-tooltip-trigger-width",
-                "var(--radix-popper-anchor-width)",
+                "--tooltip-trigger-width",
+                "var(--popper-anchor-width)",
             );
             let _ = style.set_property(
-                "--radix-tooltip-trigger-height",
-                "var(--radix-popper-anchor-height)",
+                "--tooltip-trigger-height",
+                "var(--popper-anchor-height)",
             );
         }
     });

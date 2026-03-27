@@ -308,8 +308,8 @@ These properties are set on `TooltipContent` and alias the underlying Popper val
 
 | Property | Source | Description |
 |---|---|---|
-| `--radix-tooltip-content-transform-origin` | `var(--radix-popper-transform-origin)` | The CSS transform origin computed by the positioning engine. Useful for scale animations that originate from the anchor point. |
-| `--radix-tooltip-content-available-width` | `var(--radix-popper-available-width)` | The available width between the trigger and the viewport edge. |
-| `--radix-tooltip-content-available-height` | `var(--radix-popper-available-height)` | The available height between the trigger and the viewport edge. |
-| `--radix-tooltip-trigger-width` | `var(--radix-popper-anchor-width)` | The width of the trigger element. |
-| `--radix-tooltip-trigger-height` | `var(--radix-popper-anchor-height)` | The height of the trigger element. |
+| `--tooltip-content-transform-origin` | `var(--popper-transform-origin)` | The CSS transform origin computed by the positioning engine. Useful for scale animations that originate from the anchor point. |
+| `--tooltip-content-available-width` | `var(--popper-available-width)` | The available width between the trigger and the viewport edge. |
+| `--tooltip-content-available-height` | `var(--popper-available-height)` | The available height between the trigger and the viewport edge. |
+| `--tooltip-trigger-width` | `var(--popper-anchor-width)` | The width of the trigger element. |
+| `--tooltip-trigger-height` | `var(--popper-anchor-height)` | The height of the trigger element. |

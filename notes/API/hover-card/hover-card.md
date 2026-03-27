@@ -224,7 +224,7 @@ let (open, set_open) = signal(false);
 
 ### Animated content (CSS keyframes)
 
-Use the `--radix-hover-card-content-transform-origin` CSS custom property to animate from the content's transform origin, and `data-state` / `data-side` attributes for directional animations:
+Use the `--hover-card-content-transform-origin` CSS custom property to animate from the content's transform origin, and `data-state` / `data-side` attributes for directional animations:
 
 ```css
 .content[data-state='open'] {
@@ -319,8 +319,8 @@ These properties are set on `HoverCardContent` and alias the underlying `Popper`
 
 | Property | Source | Description |
 |---|---|---|
-| `--radix-hover-card-content-transform-origin` | `var(--radix-popper-transform-origin)` | The CSS transform origin computed from the content's placement relative to the trigger. Useful for scale/rotate animations that originate from the arrow direction. |
-| `--radix-hover-card-content-available-width` | `var(--radix-popper-available-width)` | The available width between the trigger and the viewport edge on the content's side. |
-| `--radix-hover-card-content-available-height` | `var(--radix-popper-available-height)` | The available height between the trigger and the viewport edge on the content's side. |
-| `--radix-hover-card-trigger-width` | `var(--radix-popper-anchor-width)` | The width of the trigger element. Useful for matching content width to trigger width. |
-| `--radix-hover-card-trigger-height` | `var(--radix-popper-anchor-height)` | The height of the trigger element. |
+| `--hover-card-content-transform-origin` | `var(--popper-transform-origin)` | The CSS transform origin computed from the content's placement relative to the trigger. Useful for scale/rotate animations that originate from the arrow direction. |
+| `--hover-card-content-available-width` | `var(--popper-available-width)` | The available width between the trigger and the viewport edge on the content's side. |
+| `--hover-card-content-available-height` | `var(--popper-available-height)` | The available height between the trigger and the viewport edge on the content's side. |
+| `--hover-card-trigger-width` | `var(--popper-anchor-width)` | The width of the trigger element. Useful for matching content width to trigger width. |
+| `--hover-card-trigger-height` | `var(--popper-anchor-height)` | The height of the trigger element. |

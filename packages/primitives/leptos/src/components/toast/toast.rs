@@ -295,8 +295,8 @@ pub fn Toast(
                                                 if let Some(ref ct) = current_target {
                                                     let _ = ct.set_attribute("data-swipe", "move");
                                                     let style = ct.style();
-                                                    let _ = style.set_property("--radix-toast-swipe-move-x", &format!("{}px", delta.0));
-                                                    let _ = style.set_property("--radix-toast-swipe-move-y", &format!("{}px", delta.1));
+                                                    let _ = style.set_property("--toast-swipe-move-x", &format!("{}px", delta.0));
+                                                    let _ = style.set_property("--toast-swipe-move-y", &format!("{}px", delta.1));
                                                 }
                                                 if let Some(cb) = on_swipe_move_composed {
                                                     cb.run(SwipeEvent { current_target, delta });
@@ -335,10 +335,10 @@ pub fn Toast(
                                                     if let Some(ref ct) = current_target {
                                                         let _ = ct.set_attribute("data-swipe", "end");
                                                         let style = ct.style();
-                                                        let _ = style.remove_property("--radix-toast-swipe-move-x");
-                                                        let _ = style.remove_property("--radix-toast-swipe-move-y");
-                                                        let _ = style.set_property("--radix-toast-swipe-end-x", &format!("{}px", delta.0));
-                                                        let _ = style.set_property("--radix-toast-swipe-end-y", &format!("{}px", delta.1));
+                                                        let _ = style.remove_property("--toast-swipe-move-x");
+                                                        let _ = style.remove_property("--toast-swipe-move-y");
+                                                        let _ = style.set_property("--toast-swipe-end-x", &format!("{}px", delta.0));
+                                                        let _ = style.set_property("--toast-swipe-end-y", &format!("{}px", delta.1));
                                                     }
                                                     if let Some(cb) = on_swipe_end_composed {
                                                         cb.run(SwipeEvent { current_target, delta });
@@ -348,10 +348,10 @@ pub fn Toast(
                                                     if let Some(ref ct) = current_target {
                                                         let _ = ct.set_attribute("data-swipe", "cancel");
                                                         let style = ct.style();
-                                                        let _ = style.remove_property("--radix-toast-swipe-move-x");
-                                                        let _ = style.remove_property("--radix-toast-swipe-move-y");
-                                                        let _ = style.remove_property("--radix-toast-swipe-end-x");
-                                                        let _ = style.remove_property("--radix-toast-swipe-end-y");
+                                                        let _ = style.remove_property("--toast-swipe-move-x");
+                                                        let _ = style.remove_property("--toast-swipe-move-y");
+                                                        let _ = style.remove_property("--toast-swipe-end-x");
+                                                        let _ = style.remove_property("--toast-swipe-end-y");
                                                     }
                                                     if let Some(cb) = on_swipe_cancel_composed {
                                                         cb.run(SwipeEvent { current_target, delta });

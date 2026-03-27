@@ -274,7 +274,7 @@ fn SliderThumbImpl(
                 attr:data-orientation=move || context.orientation.get().to_string()
                 attr:data-disabled=data_attr(context.disabled)
                 attr:tabindex=move || if context.disabled.get() { None } else { Some("0") }
-                style:transform="var(--radix-slider-thumb-transform)"
+                style:transform="var(--slider-thumb-transform)"
                 style:position="absolute"
                 style:left=move || (orientation.get().start_edge == "left").then(|| format!("calc({}% + {}px)", percent.get(), thumb_in_bounds_offset.get()))
                 style:right=move || (orientation.get().start_edge == "right").then(|| format!("calc({}% + {}px)", percent.get(), thumb_in_bounds_offset.get()))

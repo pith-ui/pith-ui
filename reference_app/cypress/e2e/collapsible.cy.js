@@ -143,23 +143,23 @@ describe('Collapsible', () => {
     // ── 6. Internal Styles (CSS custom properties) ──────────
 
     describe('internal styles', () => {
-        it('--radix-collapsible-content-height matches actual height', () => {
+        it('collapsible-content-height CSS var matches actual height', () => {
             cy.findByTestId('styled-collapsible-content').then(($el) => {
                 const height = $el[0].getBoundingClientRect().height;
-                const cssVar = getComputedStyle($el[0]).getPropertyValue(
-                    '--radix-collapsible-content-height'
+                const varValue = getComputedStyle($el[0]).getPropertyValue(
+                    cssVar('collapsible-content-height')
                 );
-                expect(cssVar.trim()).to.equal(`${height}px`);
+                expect(varValue.trim()).to.equal(`${height}px`);
             });
         });
 
-        it('--radix-collapsible-content-width matches actual width', () => {
+        it('collapsible-content-width CSS var matches actual width', () => {
             cy.findByTestId('styled-collapsible-content').then(($el) => {
                 const width = $el[0].getBoundingClientRect().width;
-                const cssVar = getComputedStyle($el[0]).getPropertyValue(
-                    '--radix-collapsible-content-width'
+                const varValue = getComputedStyle($el[0]).getPropertyValue(
+                    cssVar('collapsible-content-width')
                 );
-                expect(cssVar.trim()).to.equal(`${width}px`);
+                expect(varValue.trim()).to.equal(`${width}px`);
             });
         });
 

@@ -281,8 +281,8 @@ These properties are set on `PopoverContent` and alias the underlying Popper val
 
 | Property | Source | Description |
 |---|---|---|
-| `--radix-popover-content-transform-origin` | `var(--radix-popper-transform-origin)` | The CSS transform origin computed from the content's position relative to the trigger. Useful for scale animations. |
-| `--radix-popover-content-available-width` | `var(--radix-popper-available-width)` | The remaining width between the trigger and the viewport edge. |
-| `--radix-popover-content-available-height` | `var(--radix-popper-available-height)` | The remaining height between the trigger and the viewport edge. |
-| `--radix-popover-trigger-width` | `var(--radix-popper-anchor-width)` | The width of the trigger (or custom anchor). |
-| `--radix-popover-trigger-height` | `var(--radix-popper-anchor-height)` | The height of the trigger (or custom anchor). |
+| `--popover-content-transform-origin` | `var(--popper-transform-origin)` | The CSS transform origin computed from the content's position relative to the trigger. Useful for scale animations. |
+| `--popover-content-available-width` | `var(--popper-available-width)` | The remaining width between the trigger and the viewport edge. |
+| `--popover-content-available-height` | `var(--popper-available-height)` | The remaining height between the trigger and the viewport edge. |
+| `--popover-trigger-width` | `var(--popper-anchor-width)` | The width of the trigger (or custom anchor). |
+| `--popover-trigger-height` | `var(--popper-anchor-height)` | The height of the trigger (or custom anchor). |

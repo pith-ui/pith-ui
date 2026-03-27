@@ -190,11 +190,11 @@ fn ComboboxContentImpl(
                     style:flex-direction="column"
                     style:outline="none"
                     style:box-sizing="border-box"
-                    style:--radix-combobox-content-transform-origin="var(--radix-popper-transform-origin)"
-                    style:--radix-combobox-content-available-width="var(--radix-popper-available-width)"
-                    style:--radix-combobox-content-available-height="var(--radix-popper-available-height)"
-                    style:--radix-combobox-trigger-width="var(--radix-popper-anchor-width)"
-                    style:--radix-combobox-trigger-height="var(--radix-popper-anchor-height)"
+                    style:--combobox-content-transform-origin="var(--popper-transform-origin)"
+                    style:--combobox-content-available-width="var(--popper-available-width)"
+                    style:--combobox-content-available-height="var(--popper-available-height)"
+                    style:--combobox-trigger-width="var(--popper-anchor-width)"
+                    style:--combobox-trigger-height="var(--popper-anchor-height)"
                     on_placed=Some(Callback::new(move |_: ()| {
                         set_is_positioned.set(true);
                     }))

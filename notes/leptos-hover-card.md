@@ -141,7 +141,7 @@ pub fn HoverCardArrow(
 
 ### CSS custom property re-namespacing
 
-- `PopperContent` exposes `--radix-popper-*` custom properties. The `HoverCardContentImpl` re-maps them to `--radix-hover-card-*` via inline styles (same approach as React).
+- `PopperContent` exposes `--popper-*` custom properties. The `HoverCardContentImpl` re-maps them to `--hover-card-*` via inline styles (same approach as React).
 
 ### Context re-provision through portals (scope composition substitute)
 

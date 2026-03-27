@@ -81,7 +81,7 @@ pub fn Popover(
 - Custom anchor support: Can use `PopoverAnchor` instead of trigger for positioning.
 - External dependencies: `react-remove-scroll`, `aria-hidden`.
 - `PopoverContentModal` vs `PopoverContentNonModal` split with different focus/dismiss behavior.
-- CSS custom properties re-namespaced from `--radix-popper-*` to `--radix-popover-*`.
+- CSS custom properties re-namespaced from `--popper-*` to `--popover-*`.
 - `createSlot('PopoverContent.RemoveScroll')` used for RemoveScroll composition in modal mode.
 
 ## Leptos Implementation Notes

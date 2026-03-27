@@ -378,16 +378,16 @@ These properties are set dynamically on the `Toast` element during swipe gesture
 
 | Property | Source | Description |
 |---|---|---|
-| `--radix-toast-swipe-move-x` | Set during `data-swipe="move"` | The horizontal displacement (in px) of an in-progress swipe. Removed when the swipe ends or is cancelled. |
-| `--radix-toast-swipe-move-y` | Set during `data-swipe="move"` | The vertical displacement (in px) of an in-progress swipe. Removed when the swipe ends or is cancelled. |
-| `--radix-toast-swipe-end-x` | Set during `data-swipe="end"` | The final horizontal displacement (in px) when a swipe exceeds the threshold and the toast is dismissed. |
-| `--radix-toast-swipe-end-y` | Set during `data-swipe="end"` | The final vertical displacement (in px) when a swipe exceeds the threshold and the toast is dismissed. |
+| `--toast-swipe-move-x` | Set during `data-swipe="move"` | The horizontal displacement (in px) of an in-progress swipe. Removed when the swipe ends or is cancelled. |
+| `--toast-swipe-move-y` | Set during `data-swipe="move"` | The vertical displacement (in px) of an in-progress swipe. Removed when the swipe ends or is cancelled. |
+| `--toast-swipe-end-x` | Set during `data-swipe="end"` | The final horizontal displacement (in px) when a swipe exceeds the threshold and the toast is dismissed. |
+| `--toast-swipe-end-y` | Set during `data-swipe="end"` | The final vertical displacement (in px) when a swipe exceeds the threshold and the toast is dismissed. |
 
 ### Example: swipe-to-dismiss animation
 
 ```css
 .toast[data-swipe="move"] {
-  transform: translateX(var(--radix-toast-swipe-move-x));
+  transform: translateX(var(--toast-swipe-move-x));
 }
 
 .toast[data-swipe="cancel"] {
@@ -400,7 +400,7 @@ These properties are set dynamically on the `Toast` element during swipe gesture
 }
 
 @keyframes slideOut {
-  from { transform: translateX(var(--radix-toast-swipe-end-x)); }
+  from { transform: translateX(var(--toast-swipe-end-x)); }
   to   { transform: translateX(calc(100% + 16px)); }
 }
 ```

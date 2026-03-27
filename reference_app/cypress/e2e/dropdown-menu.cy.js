@@ -579,8 +579,8 @@ describe('Dropdown Menu', () => {
             openMenu();
             cy.findByRole('menu').then(($el) => {
                 const style = getComputedStyle($el[0]);
-                const availW = style.getPropertyValue('--radix-dropdown-menu-content-available-width');
-                const availH = style.getPropertyValue('--radix-dropdown-menu-content-available-height');
+                const availW = style.getPropertyValue(cssVar('dropdown-menu-content-available-width'));
+                const availH = style.getPropertyValue(cssVar('dropdown-menu-content-available-height'));
                 expect(availW.trim()).to.not.be.empty;
                 expect(availH.trim()).to.not.be.empty;
             });
@@ -595,13 +595,13 @@ describe('Dropdown Menu', () => {
                 const style = getComputedStyle($el[0]);
 
                 const transformOrigin = style.getPropertyValue(
-                    '--radix-dropdown-menu-content-transform-origin'
+                    cssVar('dropdown-menu-content-transform-origin')
                 );
                 expect(transformOrigin.trim()).to.equal('0px 0px');
 
                 // Non-overridden internal vars still resolve
                 const availW = style.getPropertyValue(
-                    '--radix-dropdown-menu-content-available-width'
+                    cssVar('dropdown-menu-content-available-width')
                 );
                 expect(availW.trim()).to.not.be.empty;
             });

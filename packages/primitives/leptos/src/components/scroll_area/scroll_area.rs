@@ -49,8 +49,8 @@ pub fn ScrollArea(
                     node_ref=composed_ref
                     attr:dir=move || direction.get().to_string()
                     style:position="relative"
-                    style:--radix-scroll-area-corner-width=move || format!("{}px", corner_width.get())
-                    style:--radix-scroll-area-corner-height=move || format!("{}px", corner_height.get())
+                    style:--scroll-area-corner-width=move || format!("{}px", corner_width.get())
+                    style:--scroll-area-corner-height=move || format!("{}px", corner_height.get())
                     {..attrs}
                 >
                     {children.with_value(|children| children())}

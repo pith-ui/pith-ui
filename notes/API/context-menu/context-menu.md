@@ -378,8 +378,8 @@ These properties are set on `ContextMenuContent` and `ContextMenuSubContent`, al
 
 | Property | Source | Description |
 |---|---|---|
-| `--radix-context-menu-content-transform-origin` | `var(--radix-popper-transform-origin)` | The CSS transform origin computed by the positioning engine. Useful for scale/rotate animations anchored to the menu's attachment point. |
-| `--radix-context-menu-content-available-width` | `var(--radix-popper-available-width)` | The available width between the virtual anchor and the viewport edge. |
-| `--radix-context-menu-content-available-height` | `var(--radix-popper-available-height)` | The available height between the virtual anchor and the viewport edge. |
-| `--radix-context-menu-trigger-width` | `var(--radix-popper-anchor-width)` | The width of the virtual anchor (always `0` for context menus since the anchor is a point). |
-| `--radix-context-menu-trigger-height` | `var(--radix-popper-anchor-height)` | The height of the virtual anchor (always `0` for context menus since the anchor is a point). |
+| `--context-menu-content-transform-origin` | `var(--popper-transform-origin)` | The CSS transform origin computed by the positioning engine. Useful for scale/rotate animations anchored to the menu's attachment point. |
+| `--context-menu-content-available-width` | `var(--popper-available-width)` | The available width between the virtual anchor and the viewport edge. |
+| `--context-menu-content-available-height` | `var(--popper-available-height)` | The available height between the virtual anchor and the viewport edge. |
+| `--context-menu-trigger-width` | `var(--popper-anchor-width)` | The width of the virtual anchor (always `0` for context menus since the anchor is a point). |
+| `--context-menu-trigger-height` | `var(--popper-anchor-height)` | The height of the virtual anchor (always `0` for context menus since the anchor is a point). |

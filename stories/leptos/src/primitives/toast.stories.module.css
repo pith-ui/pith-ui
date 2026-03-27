@@ -43,7 +43,7 @@
     animation: toast-fadeOut 200ms ease-out;
   }
   &[data-swipe='move'] {
-    transform: translate(var(--radix-toast-swipe-move-x), var(--radix-toast-swipe-move-y));
+    transform: translate(var(--toast-swipe-move-x), var(--toast-swipe-move-y));
   }
   &[data-swipe='cancel'] {
     transform: translate(0, 0);
@@ -136,7 +136,7 @@
 
 @keyframes toast-slideRight {
   from {
-    transform: translateX(var(--radix-toast-swipe-end-x));
+    transform: translateX(var(--toast-swipe-end-x));
   }
   to {
     transform: translateX(calc(100% + var(--_viewport-padding)));
@@ -145,7 +145,7 @@
 
 @keyframes toast-slideLeft {
   from {
-    transform: translateX(var(--radix-toast-swipe-end-x));
+    transform: translateX(var(--toast-swipe-end-x));
   }
   to {
     transform: translateX(calc(-100% - var(--_viewport-padding)));
@@ -154,7 +154,7 @@
 
 @keyframes toast-slideUp {
   from {
-    transform: translateY(var(--radix-toast-swipe-end-y));
+    transform: translateY(var(--toast-swipe-end-y));
   }
   to {
     transform: translateY(calc(-100% - var(--_viewport-padding)));
@@ -163,7 +163,7 @@
 
 @keyframes toast-slideDown {
   from {
-    transform: translateY(var(--radix-toast-swipe-end-y));
+    transform: translateY(var(--toast-swipe-end-y));
   }
   to {
     transform: translateY(calc(100% + var(--_viewport-padding)));

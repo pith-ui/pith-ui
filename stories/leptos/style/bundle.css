@@ -137,13 +137,13 @@
   }
 
   to {
-    height: var(--radix-accordion-content-height);
+    height: var(--accordion-content-height);
   }
 }
 
 @keyframes accordion-slideUp {
   from {
-    height: var(--radix-accordion-content-height);
+    height: var(--accordion-content-height);
   }
 
   to {
@@ -158,15 +158,15 @@
   }
 
   to {
-    width: var(--radix-accordion-content-width);
-    height: var(--radix-accordion-content-height);
+    width: var(--accordion-content-width);
+    height: var(--accordion-content-height);
   }
 }
 
 @keyframes accordion-close2D {
   from {
-    width: var(--radix-accordion-content-width);
-    height: var(--radix-accordion-content-height);
+    width: var(--accordion-content-width);
+    height: var(--accordion-content-height);
   }
 
   to {
@@ -556,13 +556,13 @@
     height: 0;
   }
   to {
-    height: var(--radix-collapsible-content-height);
+    height: var(--collapsible-content-height);
   }
 }
 
 @keyframes collapsible-slideUp {
   from {
-    height: var(--radix-collapsible-content-height);
+    height: var(--collapsible-content-height);
   }
   to {
     height: 0;
@@ -574,13 +574,13 @@
     width: 0;
   }
   to {
-    width: var(--radix-collapsible-content-width);
+    width: var(--collapsible-content-width);
   }
 }
 
 @keyframes collapsible-closeRight {
   from {
-    width: var(--radix-collapsible-content-width);
+    width: var(--collapsible-content-width);
   }
   to {
     width: 0;
@@ -855,7 +855,7 @@
 }
 
 .animatedContent-165 {
-  transform-origin: var(--radix-context-menu-content-transform-origin);
+  transform-origin: var(--context-menu-content-transform-origin);
   &[data-state='open'] {
     animation: contextMenu-scaleIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   }
@@ -1250,7 +1250,7 @@
 
 
 .content-f4c {
-  transform-origin: var(--radix-hover-card-content-transform-origin);
+  transform-origin: var(--hover-card-content-transform-origin);
   /* ----- */
   background-color: var(--color-gray300);
   padding: 20px;
@@ -1811,8 +1811,8 @@
     width,
     height,
     300ms ease;
-  width: var(--radix-navigation-menu-viewport-width);
-  height: var(--radix-navigation-menu-viewport-height);
+  width: var(--navigation-menu-viewport-width);
+  height: var(--navigation-menu-viewport-height);
   transform-origin: top center;
   overflow: hidden;
   margin-top: 15px;
@@ -1876,7 +1876,7 @@
   transform-origin: top center;
   width: 100vw;
   background-color: white;
-  height: var(--radix-navigation-menu-viewport-height);
+  height: var(--navigation-menu-viewport-height);
   transition: height 300ms ease;
   overflow: hidden;
   box-shadow:
@@ -2132,7 +2132,7 @@
 }
 
 .content-47c {
-  transform-origin: var(--radix-popover-content-transform-origin);
+  transform-origin: var(--popover-content-transform-origin);
   background-color: var(--color-gray300);
   padding: 20px;
   border-radius: 5px;
@@ -2223,7 +2223,7 @@
 
 
 .content-1ad {
-  transform-origin: var(--radix-popper-transform-origin);
+  transform-origin: var(--popper-transform-origin);
   background-color: var(--color-gray100);
   padding: 10px;
   border-radius: 10px;
@@ -2637,8 +2637,8 @@
   &:focus-within {
     border-color: var(--color-black);
   }
-  min-width: var(--radix-select-trigger-width);
-  max-height: var(--radix-select-content-available-height);
+  min-width: var(--select-trigger-width);
+  max-height: var(--select-content-available-height);
 }
 
 .contentWithPadding-d61 {
@@ -3186,7 +3186,7 @@
     animation: toast-fadeOut 200ms ease-out;
   }
   &[data-swipe='move'] {
-    transform: translate(var(--radix-toast-swipe-move-x), var(--radix-toast-swipe-move-y));
+    transform: translate(var(--toast-swipe-move-x), var(--toast-swipe-move-y));
   }
   &[data-swipe='cancel'] {
     transform: translate(0, 0);
@@ -3279,7 +3279,7 @@
 
 @keyframes toast-slideRight {
   from {
-    transform: translateX(var(--radix-toast-swipe-end-x));
+    transform: translateX(var(--toast-swipe-end-x));
   }
   to {
     transform: translateX(calc(100% + var(--_viewport-padding)));
@@ -3288,7 +3288,7 @@
 
 @keyframes toast-slideLeft {
   from {
-    transform: translateX(var(--radix-toast-swipe-end-x));
+    transform: translateX(var(--toast-swipe-end-x));
   }
   to {
     transform: translateX(calc(-100% - var(--_viewport-padding)));
@@ -3297,7 +3297,7 @@
 
 @keyframes toast-slideUp {
   from {
-    transform: translateY(var(--radix-toast-swipe-end-y));
+    transform: translateY(var(--toast-swipe-end-y));
   }
   to {
     transform: translateY(calc(-100% - var(--_viewport-padding)));
@@ -3306,7 +3306,7 @@
 
 @keyframes toast-slideDown {
   from {
-    transform: translateY(var(--radix-toast-swipe-end-y));
+    transform: translateY(var(--toast-swipe-end-y));
   }
   to {
     transform: translateY(calc(100% + var(--_viewport-padding)));
@@ -3628,7 +3628,7 @@
 }
 
 .content-d83 {
-  transform-origin: var(--radix-tooltip-content-transform-origin);
+  transform-origin: var(--tooltip-content-transform-origin);
   /* ensures content isn't selectable */
   /* this is a detterent to people putting interactive content inside a `Tooltip.Root` */
   user-select: none;

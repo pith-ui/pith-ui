@@ -490,7 +490,7 @@ describe('Toast', () => {
                 .should('have.attr', 'data-swipe');
         });
 
-        it('CSS variable --radix-toast-swipe-move-x is set during swipe', () => {
+        it('CSS variable toast-swipe-move-x is set during swipe', () => {
             addToast();
             shouldBeVisible();
             cy.findByText('Toast title')
@@ -534,7 +534,7 @@ describe('Toast', () => {
                         }),
                     );
 
-                    const swipeMoveX = $el[0].style.getPropertyValue('--radix-toast-swipe-move-x');
+                    const swipeMoveX = $el[0].style.getPropertyValue(cssVar('toast-swipe-move-x'));
                     expect(swipeMoveX).to.match(/\d+px/);
                 });
         });

@@ -8,7 +8,7 @@
 }
 
 .content {
-  transform-origin: var(--radix-tooltip-content-transform-origin);
+  transform-origin: var(--tooltip-content-transform-origin);
   /* ensures content isn't selectable */
   /* this is a detterent to people putting interactive content inside a `Tooltip.Root` */
   user-select: none;

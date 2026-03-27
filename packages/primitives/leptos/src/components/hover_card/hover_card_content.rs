@@ -333,11 +333,11 @@ fn HoverCardContentImpl(
                 update_position_strategy=update_position_strategy
                 as_child=as_child
                 node_ref=composed_refs
-                style:--radix-hover-card-content-transform-origin="var(--radix-popper-transform-origin)"
-                style:--radix-hover-card-content-available-width="var(--radix-popper-available-width)"
-                style:--radix-hover-card-content-available-height="var(--radix-popper-available-height)"
-                style:--radix-hover-card-trigger-width="var(--radix-popper-anchor-width)"
-                style:--radix-hover-card-trigger-height="var(--radix-popper-anchor-height)"
+                style:--hover-card-content-transform-origin="var(--popper-transform-origin)"
+                style:--hover-card-content-available-width="var(--popper-available-width)"
+                style:--hover-card-content-available-height="var(--popper-available-height)"
+                style:--hover-card-trigger-width="var(--popper-anchor-width)"
+                style:--hover-card-trigger-height="var(--popper-anchor-height)"
                 style:user-select=contain_selection_style
                 style:-webkit-user-select=contain_selection_style
                 attr:data-state=move || open_closed_state(context.open.get())

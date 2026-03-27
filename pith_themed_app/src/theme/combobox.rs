@@ -12,7 +12,7 @@ const INPUT_CLASS: &str =
 
 const TRIGGER_CLASS: &str = "flex items-center justify-center px-2 text-muted-foreground";
 
-const CONTENT_CLASS: &str = "z-50 w-[var(--radix-popper-anchor-width)] overflow-hidden rounded-md border bg-popover text-popover-foreground shadow-md";
+const CONTENT_CLASS: &str = "z-50 w-[var(--popper-anchor-width)] overflow-hidden rounded-md border bg-popover text-popover-foreground shadow-md";
 
 const VIEWPORT_CLASS: &str = "p-1 max-h-60 overflow-y-auto";
 

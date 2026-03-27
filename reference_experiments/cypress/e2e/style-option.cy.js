@@ -166,8 +166,8 @@ describe('style: Directives with Option Values', () => {
 
         it('style: CSS var alias is on inner', () => {
             cy.get('[data-testid="menu-content-inner"]').then(($el) => {
-                const val = $el[0].style.getPropertyValue('--radix-menu-transform-origin');
-                expect(val.trim()).to.equal('var(--radix-popper-transform-origin)');
+                const val = $el[0].style.getPropertyValue('--menu-transform-origin');
+                expect(val.trim()).to.equal('var(--popper-transform-origin)');
             });
         });
 

@@ -54,6 +54,6 @@ pub fn CollapsibleContent(
 
 - The element's `id` is automatically set to the `content_id` from the parent `Collapsible` context. This ID is referenced by `CollapsibleTrigger`'s `aria-controls`.
 - The `hidden` attribute is set when the content is not open and not animating out (`!isOpen`). During exit animations, `hidden` is removed so the animation can complete visually, and children are unmounted only after the animation finishes.
-- CSS custom properties `--radix-collapsible-content-height` and `--radix-collapsible-content-width` are set as inline styles, containing the measured pixel dimensions of the content when fully expanded. These update whenever `open` or `present` changes.
+- CSS custom properties `--collapsible-content-height` and `--collapsible-content-width` are set as inline styles, containing the measured pixel dimensions of the content when fully expanded. These update whenever `open` or `present` changes.
 - On initial mount, animations and transitions are temporarily suppressed (transition-duration set to `0s`, animation-name set to `none`) to measure the full dimensions without visual artifacts. After the first animation frame, normal animation behavior is restored.
 - The `isOpen` derived state (`context.open || isPresent`) ensures the content is visible during both opening (immediately) and closing (until the exit animation completes).

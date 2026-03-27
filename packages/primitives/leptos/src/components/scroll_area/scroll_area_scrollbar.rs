@@ -613,9 +613,9 @@ fn ScrollAreaScrollbarX(
                     on_drag_scroll=on_drag_scroll_impl
                     on_resize=on_resize
                     style:bottom="0"
-                    style:left=move || if dir.get() == Direction::Rtl { "var(--radix-scroll-area-corner-width)" } else { "0" }
-                    style:right=move || if dir.get() == Direction::Ltr { "var(--radix-scroll-area-corner-width)" } else { "0" }
-                    style:--radix-scroll-area-thumb-width=move || format!("{}px", get_thumb_size(&sizes.get()))
+                    style:left=move || if dir.get() == Direction::Rtl { "var(--scroll-area-corner-width)" } else { "0" }
+                    style:right=move || if dir.get() == Direction::Ltr { "var(--scroll-area-corner-width)" } else { "0" }
+                    style:--scroll-area-thumb-width=move || format!("{}px", get_thumb_size(&sizes.get()))
                     as_child=as_child
                     node_ref=composed_ref
                 >
@@ -731,8 +731,8 @@ fn ScrollAreaScrollbarY(
                     style:top="0"
                     style:right=move || (dir.get() == Direction::Ltr).then_some("0")
                     style:left=move || (dir.get() == Direction::Rtl).then_some("0")
-                    style:bottom="var(--radix-scroll-area-corner-height)"
-                    style:--radix-scroll-area-thumb-height=move || format!("{}px", get_thumb_size(&sizes.get()))
+                    style:bottom="var(--scroll-area-corner-height)"
+                    style:--scroll-area-thumb-height=move || format!("{}px", get_thumb_size(&sizes.get()))
                     as_child=as_child
                     node_ref=composed_ref
                 >

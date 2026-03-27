@@ -509,11 +509,11 @@ fn PopoverContentImpl(
                     update_position_strategy=update_position_strategy
                     as_child=as_child
                     node_ref=node_ref
-                    style:--radix-popover-content-transform-origin="var(--radix-popper-transform-origin)"
-                    style:--radix-popover-content-available-width="var(--radix-popper-available-width)"
-                    style:--radix-popover-content-available-height="var(--radix-popper-available-height)"
-                    style:--radix-popover-trigger-width="var(--radix-popper-anchor-width)"
-                    style:--radix-popover-trigger-height="var(--radix-popper-anchor-height)"
+                    style:--popover-content-transform-origin="var(--popper-transform-origin)"
+                    style:--popover-content-available-width="var(--popper-available-width)"
+                    style:--popover-content-available-height="var(--popper-available-height)"
+                    style:--popover-trigger-width="var(--popper-anchor-width)"
+                    style:--popover-trigger-height="var(--popper-anchor-height)"
                     attr:data-state=move || open_closed_state(context.open.get())
                     attr:role="dialog"
                     attr:id=move || context.content_id.get()

@@ -449,8 +449,8 @@ These properties are exposed when `position="popper"` is used. They alias the un
 
 | Property | Source | Description |
 |---|---|---|
-| `--radix-select-content-transform-origin` | `var(--radix-popper-transform-origin)` | The CSS transform origin for animations, based on the content's placement. |
-| `--radix-select-content-available-width` | `var(--radix-popper-available-width)` | The available width between the content and the viewport edge. |
-| `--radix-select-content-available-height` | `var(--radix-popper-available-height)` | The available height between the content and the viewport edge. |
-| `--radix-select-trigger-width` | `var(--radix-popper-anchor-width)` | The width of the trigger element. Useful for matching content width to trigger width. |
-| `--radix-select-trigger-height` | `var(--radix-popper-anchor-height)` | The height of the trigger element. |
+| `--select-content-transform-origin` | `var(--popper-transform-origin)` | The CSS transform origin for animations, based on the content's placement. |
+| `--select-content-available-width` | `var(--popper-available-width)` | The available width between the content and the viewport edge. |
+| `--select-content-available-height` | `var(--popper-available-height)` | The available height between the content and the viewport edge. |
+| `--select-trigger-width` | `var(--popper-anchor-width)` | The width of the trigger element. Useful for matching content width to trigger width. |
+| `--select-trigger-height` | `var(--popper-anchor-height)` | The height of the trigger element. |

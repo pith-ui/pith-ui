@@ -362,5 +362,5 @@ Implements a navigation pattern based on the [WAI-ARIA Disclosure Navigation Men
 
 | Property | Source | Description |
 |---|---|---|
-| `--radix-navigation-menu-viewport-width` | Set on `NavigationMenuViewport` | The measured width (in px) of the currently active content inside the viewport. Use for width animations/transitions. |
-| `--radix-navigation-menu-viewport-height` | Set on `NavigationMenuViewport` | The measured height (in px) of the currently active content inside the viewport. Use for height animations/transitions. |
+| `--navigation-menu-viewport-width` | Set on `NavigationMenuViewport` | The measured width (in px) of the currently active content inside the viewport. Use for width animations/transitions. |
+| `--navigation-menu-viewport-height` | Set on `NavigationMenuViewport` | The measured height (in px) of the currently active content inside the viewport. Use for height animations/transitions. |

@@ -319,8 +319,8 @@ describe('Popover', () => {
             shouldBeOpen();
             cy.findByRole('dialog').then(($el) => {
                 const style = getComputedStyle($el[0]);
-                const availW = style.getPropertyValue('--radix-popover-content-available-width');
-                const availH = style.getPropertyValue('--radix-popover-content-available-height');
+                const availW = style.getPropertyValue(cssVar('popover-content-available-width'));
+                const availH = style.getPropertyValue(cssVar('popover-content-available-height'));
                 expect(availW.trim()).to.not.be.empty;
                 expect(availH.trim()).to.not.be.empty;
             });

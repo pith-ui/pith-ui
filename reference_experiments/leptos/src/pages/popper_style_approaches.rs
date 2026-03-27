@@ -54,13 +54,13 @@ fn PopperLikeA(
 #[component]
 fn ApproachAConsumer() -> impl IntoView {
     let inner_styles = "\
-        --radix-dropdown-menu-content-transform-origin: var(--radix-popper-transform-origin); \
-        --radix-dropdown-menu-content-available-width: var(--radix-popper-available-width);";
+        --dropdown-menu-content-transform-origin: var(--popper-transform-origin); \
+        --dropdown-menu-content-available-width: var(--popper-available-width);";
 
     view! {
         <PopperLikeA
             inner_style=inner_styles
-            attr:style="--radix-dropdown-menu-content-transform-origin: user-override"
+            attr:style="--dropdown-menu-content-transform-origin: user-override"
             attr:data-custom="test"
         >
             "Approach A: inner_style prop"
@@ -112,12 +112,12 @@ fn ApproachBConsumer() -> impl IntoView {
     let ctx = InnerStyleContext {
         styles: vec![
             (
-                "--radix-dropdown-menu-content-transform-origin".into(),
-                "var(--radix-popper-transform-origin)".into(),
+                "--dropdown-menu-content-transform-origin".into(),
+                "var(--popper-transform-origin)".into(),
             ),
             (
-                "--radix-dropdown-menu-content-available-width".into(),
-                "var(--radix-popper-available-width)".into(),
+                "--dropdown-menu-content-available-width".into(),
+                "var(--popper-available-width)".into(),
             ),
         ],
     };
@@ -125,7 +125,7 @@ fn ApproachBConsumer() -> impl IntoView {
     view! {
         <Provider value=ctx>
             <PopperLikeB
-                attr:style="--radix-dropdown-menu-content-transform-origin: user-override"
+                attr:style="--dropdown-menu-content-transform-origin: user-override"
                 attr:data-custom="test"
             >
                 "Approach B: context-based styles"
@@ -162,7 +162,7 @@ fn PopperLikeC(
 fn ApproachCConsumer() -> impl IntoView {
     view! {
         <PopperLikeC
-            attr:style="--radix-dropdown-menu-content-transform-origin: var(--radix-popper-transform-origin)"
+            attr:style="--dropdown-menu-content-transform-origin: var(--popper-transform-origin)"
             attr:data-custom="test"
         >
             "Approach C: attr:style on wrapper (no transfer)"

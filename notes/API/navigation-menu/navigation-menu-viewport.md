@@ -54,7 +54,7 @@ pub fn NavigationMenuViewport(
 - **Content lifecycle:** The viewport renders all registered content items, each wrapped in `Presence`. Only the active content (or force-mounted content) is present. The last active content value is persisted so content remains mounted during close animations.
 - **Pointer events:** When closed and inside a root menu, `pointer-events: none` is applied to prevent interaction during close animations. Also handles `pointerenter` (cancels close timer) and `pointerleave` (starts close timer, mouse only).
 - **Size tracking:** Uses `ResizeObserver` on the active content element to measure its dimensions and sets CSS custom properties on the viewport element:
-  - `--radix-navigation-menu-viewport-width` -- the width of the active content in pixels.
-  - `--radix-navigation-menu-viewport-height` -- the height of the active content in pixels.
+  - `--navigation-menu-viewport-width` -- the width of the active content in pixels.
+  - `--navigation-menu-viewport-height` -- the height of the active content in pixels.
 - These CSS custom properties enable smooth width/height transitions when switching between content panels of different sizes.
 - Signals its existence synchronously during construction (via `has_viewport_component` signal), so content components know to use viewport rendering before any menu interaction occurs. This prevents a flash where content renders inline before the viewport effect fires.

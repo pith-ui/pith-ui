@@ -751,11 +751,11 @@ fn SelectContentImpl(
                                     style:flex-direction="column"
                                     style:outline="none"
                                     style:box-sizing="border-box"
-                                    style:--radix-select-content-transform-origin="var(--radix-popper-transform-origin)"
-                                    style:--radix-select-content-available-width="var(--radix-popper-available-width)"
-                                    style:--radix-select-content-available-height="var(--radix-popper-available-height)"
-                                    style:--radix-select-trigger-width="var(--radix-popper-anchor-width)"
-                                    style:--radix-select-trigger-height="var(--radix-popper-anchor-height)"
+                                    style:--select-content-transform-origin="var(--popper-transform-origin)"
+                                    style:--select-content-available-width="var(--popper-available-width)"
+                                    style:--select-content-available-height="var(--popper-available-height)"
+                                    style:--select-trigger-width="var(--popper-anchor-width)"
+                                    style:--select-trigger-height="var(--popper-anchor-height)"
                                     on_placed=Some(Callback::new(move |_: ()| {
                                         set_is_positioned.set(true);
                                     }))

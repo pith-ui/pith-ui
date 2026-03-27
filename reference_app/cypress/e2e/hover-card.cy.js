@@ -205,8 +205,8 @@ describe('Hover Card', () => {
             shouldBeOpen();
             cy.findByTestId('hover-card-content').then(($el) => {
                 const style = getComputedStyle($el[0]);
-                const availW = style.getPropertyValue('--radix-hover-card-content-available-width');
-                const availH = style.getPropertyValue('--radix-hover-card-content-available-height');
+                const availW = style.getPropertyValue(cssVar('hover-card-content-available-width'));
+                const availH = style.getPropertyValue(cssVar('hover-card-content-available-height'));
                 expect(availW.trim()).to.not.be.empty;
                 expect(availH.trim()).to.not.be.empty;
             });

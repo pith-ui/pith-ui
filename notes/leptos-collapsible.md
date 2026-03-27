@@ -63,7 +63,7 @@ pub fn CollapsibleContent(
 
 - ~247 lines.
 - Uses `Presence` component for conditional rendering (animation-friendly).
-- Tracks content dimensions via `getBoundingClientRect()` and exposes as CSS variables: `--radix-collapsible-content-height`, `--radix-collapsible-content-width`.
+- Tracks content dimensions via `getBoundingClientRect()` and exposes as CSS variables: `--collapsible-content-height`, `--collapsible-content-width`.
 - Blocks animations temporarily while measuring to get full dimensions.
 - Manages animation state with `isMountAnimationPreventedRef` via `requestAnimationFrame`.
 - `data-state`: `open` | `closed`. `data-disabled` when disabled.
@@ -77,7 +77,7 @@ pub fn CollapsibleContent(
 
 3. **`useLayoutEffect` replaced with `Effect::new`**: In Leptos CSR, effects run after render. Animation blocking during measurement (setting `transition-duration: 0s` and `animation-name: none` before reading `getBoundingClientRect`) prevents visual flash, matching the React behavior.
 
-4. **CSS variables via inline style manipulation**: React merges CSS variables into the style object; Leptos sets the `style` attribute with the CSS variable declarations (`--radix-collapsible-content-height`, `--radix-collapsible-content-width`).
+4. **CSS variables via inline style manipulation**: React merges CSS variables into the style object; Leptos sets the `style` attribute with the CSS variable declarations (`--collapsible-content-height`, `--collapsible-content-width`).
 
 5. **`AttributeInterceptor` pattern**: Used on `Collapsible`, `CollapsibleTrigger`, and `CollapsibleContentImpl` to forward user-supplied attributes (e.g., `attr:class`) through to the underlying `Primitive`. For `CollapsibleContent`, the `.add_any_attr(attrs)` pattern (from scroll-area) forwards attributes across the `Presence` boundary.
 

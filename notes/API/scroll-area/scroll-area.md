@@ -258,7 +258,7 @@ These properties are set on the `ScrollArea` root element. They reflect the meas
 
 | Property | Source | Description |
 |---|---|---|
-| `--radix-scroll-area-corner-width` | Measured from `ScrollAreaCorner` | The width of the corner element in pixels. Used by the vertical scrollbar to set its `bottom` offset and by the horizontal scrollbar to set its `right`/`left` offset, so the scrollbars do not overlap the corner. |
-| `--radix-scroll-area-corner-height` | Measured from `ScrollAreaCorner` | The height of the corner element in pixels. Used by the vertical scrollbar to set its `bottom` offset. |
-| `--radix-scroll-area-thumb-width` | Calculated from viewport/content ratio | The computed width of the horizontal scrollbar thumb in pixels. Set on the horizontal scrollbar element. Use in CSS to size the thumb. |
-| `--radix-scroll-area-thumb-height` | Calculated from viewport/content ratio | The computed height of the vertical scrollbar thumb in pixels. Set on the vertical scrollbar element. Use in CSS to size the thumb. |
+| `--scroll-area-corner-width` | Measured from `ScrollAreaCorner` | The width of the corner element in pixels. Used by the vertical scrollbar to set its `bottom` offset and by the horizontal scrollbar to set its `right`/`left` offset, so the scrollbars do not overlap the corner. |
+| `--scroll-area-corner-height` | Measured from `ScrollAreaCorner` | The height of the corner element in pixels. Used by the vertical scrollbar to set its `bottom` offset. |
+| `--scroll-area-thumb-width` | Calculated from viewport/content ratio | The computed width of the horizontal scrollbar thumb in pixels. Set on the horizontal scrollbar element. Use in CSS to size the thumb. |
+| `--scroll-area-thumb-height` | Calculated from viewport/content ratio | The computed height of the vertical scrollbar thumb in pixels. Set on the vertical scrollbar element. Use in CSS to size the thumb. |

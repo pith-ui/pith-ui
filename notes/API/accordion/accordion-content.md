@@ -44,8 +44,8 @@ pub fn AccordionContent(
 
 - Renders with `role="region"` and `aria-labelledby` pointing to the sibling `AccordionTrigger`'s auto-generated `id`.
 - Exposes CSS custom properties for animation sizing:
-  - `--radix-accordion-content-height` (aliased from `--radix-collapsible-content-height`)
-  - `--radix-accordion-content-width` (aliased from `--radix-collapsible-content-width`)
+  - `--accordion-content-height` (aliased from `--collapsible-content-height`)
+  - `--accordion-content-width` (aliased from `--collapsible-content-width`)
 
 ### Data attributes (rendered on DOM)
 

@@ -46,7 +46,7 @@ Also defines `Align`, `Sticky`, `UpdatePositionStrategy` enums and re-exports `P
 
 - Uses `@floating-ui/react-dom` with `useFloating` hook.
 - Middleware stack: `offset` → `shift` (with optional `limitShift`) → `flip` → `size` → `arrow` → custom `transformOrigin` → `hide`.
-- `size` middleware sets CSS custom properties: `--radix-popper-available-width/height`, `--radix-popper-anchor-width/height`.
+- `size` middleware sets CSS custom properties: `--popper-available-width/height`, `--popper-anchor-width/height`.
 - Custom `transformOrigin` middleware computes CSS transform-origin based on placement and arrow position.
 - `PopperAnchor` supports `virtualRef` for non-element anchors (e.g., pointer position).
 - Uses `createContextScope` for scoped context.

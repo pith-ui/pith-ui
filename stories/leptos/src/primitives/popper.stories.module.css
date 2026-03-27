@@ -1,5 +1,5 @@
 .content {
-  transform-origin: var(--radix-popper-transform-origin);
+  transform-origin: var(--popper-transform-origin);
   background-color: var(--color-gray100);
   padding: 10px;
   border-radius: 10px;

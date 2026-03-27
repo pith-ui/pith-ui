@@ -18,12 +18,12 @@ describe('PopperContent Style Approaches', () => {
 
     describe('A: inner_style prop', () => {
         it('CSS var alias is set on inner element', () => {
-            getCssVar('approach-a-inner', '--radix-dropdown-menu-content-available-width').then((val) => {
+            getCssVar('approach-a-inner', '--dropdown-menu-content-available-width').then((val) => {
                 // This is a var() reference — may resolve to empty if the source var isn't set,
                 // but the PROPERTY should exist on the element
                 cy.findByTestId('approach-a-inner').then(($el) => {
                     const style = $el[0].style;
-                    const raw = style.getPropertyValue('--radix-dropdown-menu-content-available-width');
+                    const raw = style.getPropertyValue('--dropdown-menu-content-available-width');
                     expect(raw.trim()).to.not.be.empty;
                 });
             });
@@ -32,9 +32,9 @@ describe('PopperContent Style Approaches', () => {
         it('user attr:style on wrapper does NOT override inner CSS var', () => {
             cy.findByTestId('approach-a-inner').then(($el) => {
                 const style = $el[0].style;
-                const val = style.getPropertyValue('--radix-dropdown-menu-content-transform-origin');
+                const val = style.getPropertyValue('--dropdown-menu-content-transform-origin');
                 // Should be the internal alias, not the user's override
-                expect(val.trim()).to.equal('var(--radix-popper-transform-origin)');
+                expect(val.trim()).to.equal('var(--popper-transform-origin)');
             });
         });
 
@@ -50,7 +50,7 @@ describe('PopperContent Style Approaches', () => {
         it('CSS var alias is set on inner element', () => {
             cy.findByTestId('approach-b-inner').then(($el) => {
                 const style = $el[0].style;
-                const raw = style.getPropertyValue('--radix-dropdown-menu-content-available-width');
+                const raw = style.getPropertyValue('--dropdown-menu-content-available-width');
                 expect(raw.trim()).to.not.be.empty;
             });
         });
@@ -58,8 +58,8 @@ describe('PopperContent Style Approaches', () => {
         it('user attr:style on wrapper does NOT override inner CSS var', () => {
             cy.findByTestId('approach-b-inner').then(($el) => {
                 const style = $el[0].style;
-                const val = style.getPropertyValue('--radix-dropdown-menu-content-transform-origin');
-                expect(val.trim()).to.equal('var(--radix-popper-transform-origin)');
+                const val = style.getPropertyValue('--dropdown-menu-content-transform-origin');
+                expect(val.trim()).to.equal('var(--popper-transform-origin)');
             });
         });
 
@@ -74,7 +74,7 @@ describe('PopperContent Style Approaches', () => {
         it('user attr:style stays on wrapper, inner has no styles', () => {
             cy.findByTestId('approach-c-inner').then(($el) => {
                 const style = $el[0].style;
-                const val = style.getPropertyValue('--radix-dropdown-menu-content-transform-origin');
+                const val = style.getPropertyValue('--dropdown-menu-content-transform-origin');
                 expect(val.trim()).to.be.empty;
             });
         });

@@ -312,7 +312,7 @@ let (value, set_value) = signal(vec!["one".into(), "two".into()]);
 
 ### Animated content (CSS keyframes)
 
-Use the `--radix-accordion-content-height` and `--radix-accordion-content-width` CSS custom properties to animate open/close transitions:
+Use the `--accordion-content-height` and `--accordion-content-width` CSS custom properties to animate open/close transitions:
 
 ```css
 .content {
@@ -329,11 +329,11 @@ Use the `--radix-accordion-content-height` and `--radix-accordion-content-width`
 
 @keyframes slideDown {
   from { height: 0; }
-  to   { height: var(--radix-accordion-content-height); }
+  to   { height: var(--accordion-content-height); }
 }
 
 @keyframes slideUp {
-  from { height: var(--radix-accordion-content-height); }
+  from { height: var(--accordion-content-height); }
   to   { height: 0; }
 }
 ```
@@ -377,7 +377,7 @@ These properties are set on `AccordionContent` and alias the underlying `Collaps
 
 | Property                           | Source                                            | Description                                             |
 | ---------------------------------- | ------------------------------------------------- | ------------------------------------------------------- |
-| `--radix-accordion-content-height` | Aliased from `--radix-collapsible-content-height` | The measured height of the content when fully expanded. |
-| `--radix-accordion-content-width`  | Aliased from `--radix-collapsible-content-width`  | The measured width of the content when fully expanded.  |
+| `--accordion-content-height` | Aliased from `--collapsible-content-height` | The measured height of the content when fully expanded. |
+| `--accordion-content-width`  | Aliased from `--collapsible-content-width`  | The measured width of the content when fully expanded.  |
 
 These properties update dynamically if the content size changes (e.g., from dynamic content being added). See the "Animated content" usage example above for a complete CSS keyframe pattern.

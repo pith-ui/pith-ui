@@ -171,8 +171,8 @@ fn ScrollAreaThumbImpl(
                 element=html::div
                 as_child=as_child
                 node_ref=composed_ref
-                style:width="var(--radix-scroll-area-thumb-width)"
-                style:height="var(--radix-scroll-area-thumb-height)"
+                style:width="var(--scroll-area-thumb-width)"
+                style:height="var(--scroll-area-thumb-height)"
                 attr:data-state=move || if has_thumb.get() { "visible" } else { "hidden" }
                 on:pointerdown=move |event: ev::PointerEvent| {
                     if let Some(target) = event.target() {

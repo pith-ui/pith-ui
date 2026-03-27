@@ -85,11 +85,11 @@ pub fn MenubarContent(
             r#loop=r#loop
             side=side
             side_offset=side_offset
-            style:--radix-menubar-content-transform-origin="var(--radix-popper-transform-origin)"
-            style:--radix-menubar-content-available-width="var(--radix-popper-available-width)"
-            style:--radix-menubar-content-available-height="var(--radix-popper-available-height)"
-            style:--radix-menubar-trigger-width="var(--radix-popper-anchor-width)"
-            style:--radix-menubar-trigger-height="var(--radix-popper-anchor-height)"
+            style:--menubar-content-transform-origin="var(--popper-transform-origin)"
+            style:--menubar-content-available-width="var(--popper-available-width)"
+            style:--menubar-content-available-height="var(--popper-available-height)"
+            style:--menubar-trigger-width="var(--popper-anchor-width)"
+            style:--menubar-trigger-height="var(--popper-anchor-height)"
             on_close_auto_focus=compose_callbacks(
                 on_close_auto_focus,
                 Some(Callback::new({

@@ -15,7 +15,7 @@ const CONTENT_CLASS: &str = "absolute top-0 left-0 w-full sm:w-auto";
 
 const LINK_CLASS: &str = "block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground menu-item-focus";
 
-const VIEWPORT_CLASS: &str = "relative mt-1.5 h-[var(--radix-navigation-menu-viewport-height)] w-full overflow-hidden rounded-md border bg-popover text-popover-foreground shadow-md md:w-[var(--radix-navigation-menu-viewport-width)]";
+const VIEWPORT_CLASS: &str = "relative mt-1.5 h-[var(--navigation-menu-viewport-height)] w-full overflow-hidden rounded-md border bg-popover text-popover-foreground shadow-md md:w-[var(--navigation-menu-viewport-width)]";
 
 const INDICATOR_CLASS: &str = "top-full z-[1] flex h-1.5 items-end justify-center overflow-hidden";
 

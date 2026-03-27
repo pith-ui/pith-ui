@@ -128,8 +128,8 @@
     border-radius: 6px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     background: white;
-    width: var(--radix-navigation-menu-viewport-width);
-    height: var(--radix-navigation-menu-viewport-height);
+    width: var(--navigation-menu-viewport-width, var(--radix-navigation-menu-viewport-width));
+    height: var(--navigation-menu-viewport-height, var(--radix-navigation-menu-viewport-height));
 }
 
 .nav-viewport[data-state='closed'] {

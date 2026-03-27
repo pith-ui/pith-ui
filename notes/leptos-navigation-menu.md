@@ -36,7 +36,7 @@ NavigationMenu is a collection of links for navigating websites. It provides acc
 - **`NavigationMenuLink`** — `<a>` link. Props: `active`, `onSelect`. Sets `data-active`, dispatches `LINK_SELECT` custom event.
 - **`NavigationMenuContent`** — Content panel. Props: `forceMount`, `onPointerEnter`, `onPointerLeave`, `onEscapeKeyDown`, `onFocusOutside`, `onPointerDownOutside`, `onInteractOutside`. Sets `data-state`, `data-motion`, `data-orientation`.
 - **`NavigationMenuIndicator`** — Animated position indicator. Props: `forceMount`.
-- **`NavigationMenuViewport`** — Shared viewport for rendering content. Props: `forceMount`. Sets CSS custom properties `--radix-navigation-menu-viewport-width/height`.
+- **`NavigationMenuViewport`** — Shared viewport for rendering content. Props: `forceMount`. Sets CSS custom properties `--navigation-menu-viewport-width/height`.
 
 ### Internal components
 

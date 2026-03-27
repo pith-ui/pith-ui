@@ -27,8 +27,8 @@
   &:focus-within {
     border-color: var(--color-black);
   }
-  min-width: var(--radix-select-trigger-width);
-  max-height: var(--radix-select-content-available-height);
+  min-width: var(--select-trigger-width);
+  max-height: var(--select-content-available-height);
 }
 
 .contentWithPadding {

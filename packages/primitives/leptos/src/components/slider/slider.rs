@@ -467,7 +467,7 @@ fn SliderImpl(
             attr:data-disabled=data_attr(disabled)
             attr:data-orientation=data_orientation
             attr:dir=move || dir.get().map(|d| d.to_string())
-            style:--radix-slider-thumb-transform=thumb_transform
+            style:--slider-thumb-transform=thumb_transform
             on:keydown=move |event: ev::KeyboardEvent| {
                 let key = event.key();
                 if key == "Home" {

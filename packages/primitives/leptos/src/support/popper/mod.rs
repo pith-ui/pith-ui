@@ -295,25 +295,25 @@ pub fn PopperContent(
 
                             content_style
                                 .set_property(
-                                    "--radix-popper-available-width",
+                                    "--popper-available-width",
                                     &format!("{available_width}px"),
                                 )
                                 .expect("Style should be updated.");
                             content_style
                                 .set_property(
-                                    "--radix-popper-available-height",
+                                    "--popper-available-height",
                                     &format!("{available_height}px"),
                                 )
                                 .expect("Style should be updated.");
                             content_style
                                 .set_property(
-                                    "--radix-popper-anchor-width",
+                                    "--popper-anchor-width",
                                     &format!("{}px", rects.reference.width),
                                 )
                                 .expect("Style should be updated.");
                             content_style
                                 .set_property(
-                                    "--radix-popper-anchor-height",
+                                    "--popper-anchor-height",
                                     &format!("{}px", rects.reference.height),
                                 )
                                 .expect("Style should be updated.");
@@ -504,7 +504,7 @@ pub fn PopperContent(
                     | "visibility"
                     | "pointer-events"
                     | "animation"
-            ) || prop.starts_with("--radix-popper-");
+            ) || prop.starts_with("--popper-");
             if !is_positioning && let Ok(value) = wrapper_style.get_property_value(&prop) {
                 caller_props.push((prop, value));
             }
@@ -550,7 +550,7 @@ pub fn PopperContent(
                     false => Some("translate(0, -200%)".into())
                 }
                 style:z-index=content_z_index
-                style=("--radix-popper-transform-origin", transform_origin)
+                style=("--popper-transform-origin", transform_origin)
 
                 // Hide the content if using the hide middleware and should be hidden set visibility to hidden
                 // and disable pointer events so the UI behaves as if the PopperContent isn't there at all.

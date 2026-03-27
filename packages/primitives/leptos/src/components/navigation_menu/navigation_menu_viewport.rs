@@ -98,9 +98,9 @@ fn NavigationMenuViewportImpl(
             let style = vp.style();
             if let Some((w, h)) = size.get() {
                 let _ =
-                    style.set_property("--radix-navigation-menu-viewport-width", &format!("{w}px"));
+                    style.set_property("--navigation-menu-viewport-width", &format!("{w}px"));
                 let _ = style
-                    .set_property("--radix-navigation-menu-viewport-height", &format!("{h}px"));
+                    .set_property("--navigation-menu-viewport-height", &format!("{h}px"));
             }
             if !open.get() && context.is_root_menu {
                 let _ = style.set_property("pointer-events", "none");

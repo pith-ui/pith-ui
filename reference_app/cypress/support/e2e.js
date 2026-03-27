@@ -32,6 +32,17 @@ it.skipForFramework = (framework, reason) => {
     return it;
 };
 
+/**
+ * Returns a CSS custom property name, adjusting prefix based on framework.
+ * React Radix uses `--radix-<name>`, Leptos drops the brand prefix: `--<name>`.
+ *
+ * Usage:
+ *   getComputedStyle(el).getPropertyValue(cssVar('accordion-content-height'))
+ */
+globalThis.cssVar = (name) => {
+    return Cypress.env('FRAMEWORK') === 'react' ? `--radix-${name}` : `--${name}`;
+};
+
 // ── Reactive Tracking Warning Detection ─────────────────────────────────────
 //
 // Intercepts console.warn to catch Leptos "outside a reactive tracking context"

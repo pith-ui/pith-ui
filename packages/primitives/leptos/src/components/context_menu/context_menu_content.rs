@@ -68,11 +68,11 @@ pub fn ContextMenuContent(
             sticky=sticky
             hide_when_detached=hide_when_detached
             r#loop=r#loop
-            style:--radix-context-menu-content-transform-origin="var(--radix-popper-transform-origin)"
-            style:--radix-context-menu-content-available-width="var(--radix-popper-available-width)"
-            style:--radix-context-menu-content-available-height="var(--radix-popper-available-height)"
-            style:--radix-context-menu-trigger-width="var(--radix-popper-anchor-width)"
-            style:--radix-context-menu-trigger-height="var(--radix-popper-anchor-height)"
+            style:--context-menu-content-transform-origin="var(--popper-transform-origin)"
+            style:--context-menu-content-available-width="var(--popper-available-width)"
+            style:--context-menu-content-available-height="var(--popper-available-height)"
+            style:--context-menu-trigger-width="var(--popper-anchor-width)"
+            style:--context-menu-trigger-height="var(--popper-anchor-height)"
             on_close_auto_focus=compose_callbacks(
                 on_close_auto_focus,
                 Some(Callback::new(move |event: ev::Event| {
@@ -412,11 +412,11 @@ pub fn ContextMenuSubContent(
             r#loop=r#loop
             as_child=as_child
             node_ref=node_ref
-            style:--radix-context-menu-content-transform-origin="var(--radix-popper-transform-origin)"
-            style:--radix-context-menu-content-available-width="var(--radix-popper-available-width)"
-            style:--radix-context-menu-content-available-height="var(--radix-popper-available-height)"
-            style:--radix-context-menu-trigger-width="var(--radix-popper-anchor-width)"
-            style:--radix-context-menu-trigger-height="var(--radix-popper-anchor-height)"
+            style:--context-menu-content-transform-origin="var(--popper-transform-origin)"
+            style:--context-menu-content-available-width="var(--popper-available-width)"
+            style:--context-menu-content-available-height="var(--popper-available-height)"
+            style:--context-menu-trigger-width="var(--popper-anchor-width)"
+            style:--context-menu-trigger-height="var(--popper-anchor-height)"
             on_escape_key_down=on_escape_key_down
             on_pointer_down_outside=on_pointer_down_outside
             on_focus_outside=on_focus_outside

@@ -2,7 +2,7 @@
 }
 
 .content {
-  transform-origin: var(--radix-popover-content-transform-origin);
+  transform-origin: var(--popover-content-transform-origin);
   background-color: var(--color-gray300);
   padding: 20px;
   border-radius: 5px;

@@ -149,8 +149,8 @@ fn AccordionLikeComponent() -> impl IntoView {
             {forwarded.set(attrs)}
             <div
                 data-testid="accordion-like-target"
-                style:--radix-accordion-content-height="var(--radix-collapsible-content-height)"
-                style:--radix-collapsible-content-height="42px"
+                style:--accordion-content-height="var(--collapsible-content-height)"
+                style:--collapsible-content-height="42px"
                 {..forwarded.spread()}
             >
                 "Accordion-like CSS var alias pattern"
@@ -168,7 +168,7 @@ fn AccordionLikeFixture() -> impl IntoView {
         </div>
         <div data-testid="fixture-5b">
             <h3>"User overrides height"</h3>
-            <AccordionLikeComponent attr:style="--radix-accordion-content-height: 999px" />
+            <AccordionLikeComponent attr:style="--accordion-content-height: 999px" />
         </div>
     }
 }

@@ -101,7 +101,7 @@ fn AccordionContent(
 - Uses `Collection` pattern to track trigger elements for keyboard navigation.
 - Comprehensive keyboard navigation: Home/End jump to first/last, ArrowDown/Up for vertical, ArrowLeft/Right for horizontal (respects RTL).
 - Context tree: `AccordionValueProvider` (state) + `AccordionCollapsibleProvider` (collapsibility config) + `AccordionImplProvider` (shared config).
-- Exposes CSS variables through Collapsible: `--radix-accordion-content-height`, `--radix-accordion-content-width`.
+- Exposes CSS variables through Collapsible: `--accordion-content-height`, `--accordion-content-width`.
 - Direction-aware via `useDirection(dir)`.
 
 ## Leptos Implementation Notes
@@ -110,7 +110,7 @@ fn AccordionContent(
 - React's `AccordionImplSingle`/`AccordionImplMultiple` are replaced by these helper functions called directly inside `Accordion`, avoiding the need for intermediate wrapper components and the associated `Option<Callback>` prop issues.
 - **Context tree**: `AccordionValueContextValue` (value, on_item_open, on_item_close), `AccordionCollapsibleContextValue` (collapsible), `AccordionImplContextValue` (disabled, orientation).
 - **Keyboard navigation**: `AccordionImpl` handles `on:keydown` using `use_collection` to get trigger items in DOM order, filters disabled buttons, navigates Home/End/Arrow keys respecting orientation + RTL direction.
-- **AccordionContent** maps CSS variables: `--radix-accordion-content-height: var(--radix-collapsible-content-height)` (same for width).
+- **AccordionContent** maps CSS variables: `--accordion-content-height: var(--collapsible-content-height)` (same for width).
 - **AccordionItem** wraps `Collapsible`, manages open state via the value context.
 - **AccordionTrigger** wraps `CollectionItemSlot` > `CollapsibleTrigger`, adds `data-orientation` and `aria-disabled` attributes.
 - **AccordionHeader** renders `Primitive::h3` with `data-orientation` and `data-state`.

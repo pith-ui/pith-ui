@@ -1,5 +1,5 @@
 .content {
-  transform-origin: var(--radix-hover-card-content-transform-origin);
+  transform-origin: var(--hover-card-content-transform-origin);
   /* ----- */
   background-color: var(--color-gray300);
   padding: 20px;

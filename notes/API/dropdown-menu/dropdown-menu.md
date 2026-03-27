@@ -366,8 +366,8 @@ These properties are set on `DropdownMenuContent` and `DropdownMenuSubContent` a
 
 | Property | Source | Description |
 |---|---|---|
-| `--radix-dropdown-menu-content-transform-origin` | `var(--radix-popper-transform-origin)` | The CSS transform origin computed from the content's position relative to the trigger. Useful for scale/rotate animations. |
-| `--radix-dropdown-menu-content-available-width` | `var(--radix-popper-available-width)` | The available width between the trigger and the viewport edge. |
-| `--radix-dropdown-menu-content-available-height` | `var(--radix-popper-available-height)` | The available height between the trigger and the viewport edge. |
-| `--radix-dropdown-menu-trigger-width` | `var(--radix-popper-anchor-width)` | The width of the trigger element. Useful for matching content width to trigger width. |
-| `--radix-dropdown-menu-trigger-height` | `var(--radix-popper-anchor-height)` | The height of the trigger element. |
+| `--dropdown-menu-content-transform-origin` | `var(--popper-transform-origin)` | The CSS transform origin computed from the content's position relative to the trigger. Useful for scale/rotate animations. |
+| `--dropdown-menu-content-available-width` | `var(--popper-available-width)` | The available width between the trigger and the viewport edge. |
+| `--dropdown-menu-content-available-height` | `var(--popper-available-height)` | The available height between the trigger and the viewport edge. |
+| `--dropdown-menu-trigger-width` | `var(--popper-anchor-width)` | The width of the trigger element. Useful for matching content width to trigger width. |
+| `--dropdown-menu-trigger-height` | `var(--popper-anchor-height)` | The height of the trigger element. |

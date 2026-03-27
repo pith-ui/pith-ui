@@ -75,23 +75,23 @@ describe('Style Override Order', () => {
     describe('accordion-like CSS var alias', () => {
         it('without user override: accordion var resolves through alias', () => {
             cy.get('[data-testid="fixture-5a"] [data-testid="accordion-like-target"]').then(($el) => {
-                const val = getComputedStyle($el[0]).getPropertyValue('--radix-accordion-content-height').trim();
+                const val = getComputedStyle($el[0]).getPropertyValue('--accordion-content-height').trim();
                 expect(val).to.equal('42px');
             });
         });
 
         it('with user override: user value wins', () => {
             cy.get('[data-testid="fixture-5b"] [data-testid="accordion-like-target"]').then(($el) => {
-                const val = getComputedStyle($el[0]).getPropertyValue('--radix-accordion-content-height').trim();
+                const val = getComputedStyle($el[0]).getPropertyValue('--accordion-content-height').trim();
                 expect(val).to.equal('999px');
             });
         });
 
-        // SKIP: Same attr:style clobbering issue. The user's attr:style="--radix-accordion-content-height: 999px"
-        // replaces the entire inline style, wiping out style:--radix-collapsible-content-height="42px".
+        // SKIP: Same attr:style clobbering issue. The user's attr:style="--accordion-content-height: 999px"
+        // replaces the entire inline style, wiping out style:--collapsible-content-height="42px".
         it.skip('FAILS: collapsible var clobbered by user attr:style — setAttribute replaces all style: values', () => {
             cy.get('[data-testid="fixture-5b"] [data-testid="accordion-like-target"]').then(($el) => {
-                const val = getComputedStyle($el[0]).getPropertyValue('--radix-collapsible-content-height').trim();
+                const val = getComputedStyle($el[0]).getPropertyValue('--collapsible-content-height').trim();
                 expect(val).to.equal('42px');
             });
         });

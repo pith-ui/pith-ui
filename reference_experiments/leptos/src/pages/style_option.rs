@@ -218,7 +218,7 @@ fn Fixture6() -> impl IntoView {
             <MenuContentLike
                 class:menu-content=true
                 class:menu-animated=animated
-                style:--radix-menu-transform-origin="var(--radix-popper-transform-origin)"
+                style:--menu-transform-origin="var(--popper-transform-origin)"
                 attr:data-state="open"
                 attr:role="menu"
             />

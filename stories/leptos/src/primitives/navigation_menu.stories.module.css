@@ -217,8 +217,8 @@
     width,
     height,
     300ms ease;
-  width: var(--radix-navigation-menu-viewport-width);
-  height: var(--radix-navigation-menu-viewport-height);
+  width: var(--navigation-menu-viewport-width);
+  height: var(--navigation-menu-viewport-height);
   transform-origin: top center;
   overflow: hidden;
   margin-top: 15px;
@@ -282,7 +282,7 @@
   transform-origin: top center;
   width: 100vw;
   background-color: white;
-  height: var(--radix-navigation-menu-viewport-height);
+  height: var(--navigation-menu-viewport-height);
   transition: height 300ms ease;
   overflow: hidden;
   box-shadow:

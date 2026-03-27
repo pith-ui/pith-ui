@@ -149,8 +149,8 @@ pub fn AccordionContent(
                 as_child=as_child
                 node_ref=node_ref
                 // Internal CSS var aliases (overridable — user style: directives win)
-                style:--radix-accordion-content-height="var(--radix-collapsible-content-height)"
-                style:--radix-accordion-content-width="var(--radix-collapsible-content-width)"
+                style:--accordion-content-height="var(--collapsible-content-height)"
+                style:--accordion-content-width="var(--collapsible-content-width)"
                 attr:role="region"
                 attr:aria-labelledby=move || item_context.trigger_id.get()
                 attr:data-orientation=move || accordion_context.orientation.get().to_string()
