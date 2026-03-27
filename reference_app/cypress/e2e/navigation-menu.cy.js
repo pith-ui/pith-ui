@@ -553,4 +553,18 @@ describe('Navigation Menu', () => {
             });
         });
     });
+
+    // ── Axe Accessibility Audit ─────────────────────────────
+
+    describe('axe audit', () => {
+        it('no violations in closed state', () => {
+            cy.checkComponentA11y();
+        });
+
+        it('no violations when submenu is open', () => {
+            cy.findByRole('button', {name: 'Products'}).click();
+            shouldBeOpen('Products');
+            cy.checkComponentA11y();
+        });
+    });
 });

@@ -228,4 +228,12 @@ describe('Progress', () => {
                 .and('have.attr', 'data-custom', 'progress-indicator-custom');
         });
     });
+
+    // ── Axe Accessibility Audit ─────────────────────────────
+
+    describe('axe audit', () => {
+        it('no violations in default state', () => {
+            cy.checkComponentA11y();
+        });
+    });
 });

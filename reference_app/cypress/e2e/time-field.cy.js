@@ -513,4 +513,12 @@ describe('TimeField', () => {
             cy.get('input[type="hidden"][name="meeting_time"]').should('have.value', '09:30:00');
         });
     });
+
+    // ── Axe Accessibility Audit ─────────────────────────────
+
+    describe('axe audit', () => {
+        test('no violations in default state', () => {
+            cy.checkComponentA11y();
+        });
+    });
 });

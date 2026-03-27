@@ -228,4 +228,12 @@ describe('PasswordToggleField', () => {
             cy.findByLabelText('visible').should('not.be.checked');
         });
     });
+
+    // ── Axe Accessibility Audit ─────────────────────────────
+
+    describe('axe audit', () => {
+        it('no violations in default state', () => {
+            cy.checkComponentA11y();
+        });
+    });
 });

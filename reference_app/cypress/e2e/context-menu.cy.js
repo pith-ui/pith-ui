@@ -372,4 +372,17 @@ describe('Context Menu', () => {
             );
         });
     });
+
+    // ── Axe Accessibility Audit ─────────────────────────────
+
+    describe('axe audit', () => {
+        it('no violations in closed state', () => {
+            cy.checkComponentA11y();
+        });
+
+        it('no violations when open', () => {
+            openMenu();
+            cy.checkComponentA11y();
+        });
+    });
 });

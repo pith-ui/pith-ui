@@ -685,4 +685,18 @@ describe('Combobox', () => {
                 .should('have.length', 0);
         });
     });
+
+    // ── Axe Accessibility Audit ─────────────────────────────
+
+    describe('axe audit', () => {
+        it('no violations in closed state', () => {
+            cy.checkComponentA11y();
+        });
+
+        it('no violations when open', () => {
+            getInput().click();
+            shouldBeOpen();
+            cy.checkComponentA11y();
+        });
+    });
 });

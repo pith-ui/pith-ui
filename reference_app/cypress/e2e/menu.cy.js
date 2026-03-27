@@ -628,4 +628,12 @@ describe('Menu', () => {
                 .and('have.css', 'outline-color', 'rgb(255, 0, 0)');
         });
     });
+
+    // ── Axe Accessibility Audit ─────────────────────────────
+
+    describe('axe audit', () => {
+        it('no violations with menu open', () => {
+            cy.checkComponentA11y();
+        });
+    });
 });

@@ -222,4 +222,18 @@ describe('Hover Card', () => {
             );
         });
     });
+
+    // ── Axe Accessibility Audit ─────────────────────────────
+
+    describe('axe audit', () => {
+        it('no violations in closed state', () => {
+            cy.checkComponentA11y();
+        });
+
+        it('no violations when open', () => {
+            cy.findByTestId('hover-card-trigger').realHover();
+            shouldBeOpen();
+            cy.checkComponentA11y();
+        });
+    });
 });

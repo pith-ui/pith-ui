@@ -195,4 +195,18 @@ describe('Collapsible', () => {
             cy.findByLabelText('open').should('not.be.checked');
         });
     });
+
+    // ── Axe Accessibility Audit ─────────────────────────────
+
+    describe('axe audit', () => {
+        it('no violations in collapsed state', () => {
+            cy.checkComponentA11y();
+        });
+
+        it('no violations when expanded', () => {
+            cy.findByRole('button', {name: 'toggle'}).click();
+            shouldBeOpen();
+            cy.checkComponentA11y();
+        });
+    });
 });

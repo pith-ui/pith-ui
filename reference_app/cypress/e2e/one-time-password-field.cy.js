@@ -445,7 +445,7 @@ describe('OneTimePasswordField', () => {
         });
     });
 
-    // ── 15. AutoSubmit ────────────────────────────────────
+    // ── 15. AutoSubmit ─────────────────────────────────────
 
     describe('autoSubmit', () => {
         function getAutoSubmitInputs() {
@@ -540,6 +540,14 @@ describe('OneTimePasswordField', () => {
             getInputs().eq(1).should('be.focused');
             cy.realPress('ArrowLeft');
             getInputs().eq(1).should('be.focused');
+        });
+    });
+
+    // ── Axe Accessibility Audit ─────────────────────────────
+
+    describe('axe audit', () => {
+        it('no violations in default state', () => {
+            cy.checkComponentA11y();
         });
     });
 });

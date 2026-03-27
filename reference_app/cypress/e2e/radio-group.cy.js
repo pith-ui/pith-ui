@@ -279,4 +279,18 @@ describe('Radio Group', () => {
                 .and('have.class', 'radio-group-indicator');
         });
     });
+
+    // ── Axe Accessibility Audit ─────────────────────────────
+
+    describe('axe audit', () => {
+        it('no violations in default state', () => {
+            cy.checkComponentA11y();
+        });
+
+        it('no violations after selecting an option', () => {
+            cy.findByRole('radio', {name: 'Cat'}).click();
+            shouldBeChecked('Cat');
+            cy.checkComponentA11y();
+        });
+    });
 });

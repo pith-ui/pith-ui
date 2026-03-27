@@ -186,4 +186,18 @@ describe('Switch', () => {
                 .and('have.class', 'switch-thumb');
         });
     });
+
+    // ── Axe Accessibility Audit ─────────────────────────────
+
+    describe('axe audit', () => {
+        it('no violations in unchecked state', () => {
+            cy.checkComponentA11y();
+        });
+
+        it('no violations in checked state', () => {
+            cy.findByRole('switch', {name: 'airplane mode'}).click();
+            shouldBeChecked();
+            cy.checkComponentA11y();
+        });
+    });
 });

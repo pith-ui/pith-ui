@@ -153,4 +153,12 @@ describe('AspectRatio', () => {
             getInner('with-conflicting-style').should('have.css', 'background-color', 'rgb(100, 149, 237)');
         });
     });
+
+    // ── Axe Accessibility Audit ─────────────────────────────
+
+    describe('axe audit', () => {
+        it('no violations in default state', () => {
+            cy.checkComponentA11y();
+        });
+    });
 });

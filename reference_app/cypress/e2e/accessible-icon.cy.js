@@ -69,4 +69,12 @@ describe('AccessibleIcon', () => {
             cy.contains('Settings').should('exist');
         });
     });
+
+    // ── Axe Accessibility Audit ─────────────────────────────
+
+    describe('axe audit', () => {
+        it('no violations in default state', () => {
+            cy.checkComponentA11y();
+        });
+    });
 });

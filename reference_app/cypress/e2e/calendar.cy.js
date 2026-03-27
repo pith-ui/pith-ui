@@ -482,4 +482,12 @@ describe('Calendar', () => {
             monthShouldBe('2024-07-01');
         });
     });
+
+    // ── Axe Accessibility Audit ─────────────────────────────
+
+    describe('axe audit', () => {
+        skipReact('no violations in default state', () => {
+            cy.checkComponentA11y();
+        });
+    });
 });

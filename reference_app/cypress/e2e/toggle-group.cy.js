@@ -389,4 +389,18 @@ describe('Toggle Group', () => {
             getItem('Item 3').should('be.disabled');
         });
     });
+
+    // ── Axe Accessibility Audit ─────────────────────────────
+
+    describe('axe audit', () => {
+        it('no violations in default state', () => {
+            cy.checkComponentA11y();
+        });
+
+        it('no violations with item selected', () => {
+            getItem('Item 1').click();
+            shouldBeOn('Item 1');
+            cy.checkComponentA11y();
+        });
+    });
 });

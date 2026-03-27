@@ -156,4 +156,18 @@ describe('Toggle', () => {
             cy.findByLabelText('pressed').should('not.be.checked');
         });
     });
+
+    // ── Axe Accessibility Audit ─────────────────────────────
+
+    describe('axe audit', () => {
+        it('no violations in off state', () => {
+            cy.checkComponentA11y();
+        });
+
+        it('no violations in on state', () => {
+            cy.findByRole('button', {name: 'toggle'}).click();
+            shouldBeOn();
+            cy.checkComponentA11y();
+        });
+    });
 });

@@ -208,4 +208,18 @@ describe('Tooltip', () => {
             cy.findByLabelText('open controlled').should('be.checked');
         });
     });
+
+    // ── Axe Accessibility Audit ─────────────────────────────
+
+    describe('axe audit', () => {
+        it('no violations in closed state', () => {
+            cy.checkComponentA11y();
+        });
+
+        it('no violations when open', () => {
+            trigger(1).realHover();
+            shouldBeOpen(1);
+            cy.checkComponentA11y();
+        });
+    });
 });

@@ -712,4 +712,18 @@ describe('Toast', () => {
             cy.focused().should('have.attr', 'data-testid', 'after-viewport');
         });
     });
+
+    // ── Axe Accessibility Audit ─────────────────────────────
+
+    describe('axe audit', () => {
+        it('no violations in default state', () => {
+            cy.checkComponentA11y();
+        });
+
+        it('no violations when toast is visible', () => {
+            addToast();
+            shouldBeVisible();
+            cy.checkComponentA11y();
+        });
+    });
 });

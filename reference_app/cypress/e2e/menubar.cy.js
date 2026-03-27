@@ -517,4 +517,17 @@ describe('Menubar', () => {
             cy.findByTestId('last-action').should('have.text', '');
         });
     });
+
+    // ── Axe Accessibility Audit ─────────────────────────────
+
+    describe('axe audit', () => {
+        it('no violations in closed state', () => {
+            cy.checkComponentA11y();
+        });
+
+        it('no violations when menu is open', () => {
+            openMenu('File');
+            cy.checkComponentA11y();
+        });
+    });
 });

@@ -301,4 +301,18 @@ describe('AlertDialog', () => {
             cy.findByTestId('controlled-checkbox').should('not.be.checked');
         });
     });
+
+    // ── Axe Accessibility Audit ─────────────────────────────
+
+    describe('axe audit', () => {
+        it('no violations in closed state', () => {
+            cy.checkComponentA11y();
+        });
+
+        it('no violations when open', () => {
+            cy.findByText('delete').click();
+            shouldBeOpen();
+            cy.checkComponentA11y();
+        });
+    });
 });
