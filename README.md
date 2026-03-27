@@ -1,12 +1,10 @@
 <p align="center">
     <a href="./logo.svg">
-        <img src="./logo.svg" width="300" height="200" alt="Pith UI Logo">
+        <img src="./logo.svg" alt="Pith UI Logo">
     </a>
 </p>
 
-<h1 align="center">Pith-UI</h1>
-
-Unstyled, accessible UI components for [Leptos](https://leptos.dev), based on [Radix Primitives](https://www.radix-ui.com/primitives).
+Unstyled, accessible UI components for [Leptos](https://leptos.dev), inspired by [Radix Primitives](https://www.radix-ui.com/primitives) and [Base-UI](https://github.com/mui/base-ui).
 
 ## Features
 
@@ -14,7 +12,8 @@ Unstyled, accessible UI components for [Leptos](https://leptos.dev), based on [R
 - **Accessible** — WAI-ARIA compliant with full keyboard navigation and focus management.
 - **Composable** — Small, focused components that compose via familiar Root/Trigger/Content patterns.
 - **Controlled & Uncontrolled** — All stateful components support both modes.
-- **API-faithful** — Same component names, prop names (in snake_case), and structure as React Radix.
+- **Feels like React Radix** — Same component names, prop names (in snake_case), and structure as React Radix where applicable.
+- **New Components** — Virtualized Lists, Combobox, Calendar, TimeField, and more to come.
 
 ## Quick Start
 
@@ -78,8 +77,6 @@ See [CLAUDE.md](.claude/CLAUDE.md) for architecture documentation and contributi
 ## Credits
 
 Originally derived from [RustForWeb/radix](https://github.com/RustForWeb/radix) by [Daniëlle Huisman](https://github.com/DanielleHuisman) and contributors.
-
-The logo combines the [Radix logo](https://github.com/radix-ui/website/blob/main/components/RadixLogo.tsx) and [Ferris the Rustacean](https://rustacean.net/).
 
 ## License
 
