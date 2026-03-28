@@ -7,7 +7,7 @@ export default function NavigationMenuPage() {
 
     return (
         <>
-            <NavigationMenu.Root className="nav-root" data-testid="nav-root" delayDuration={0} skipDelayDuration={0}>
+            <NavigationMenu.Root className="nav-root" data-testid="nav-root" aria-label="Main" delayDuration={0} skipDelayDuration={0}>
                 <NavigationMenu.List className="nav-list">
                     <NavigationMenu.Item className="nav-item" value="products">
                         <NavigationMenu.Trigger className="nav-trigger">Products</NavigationMenu.Trigger>
@@ -92,6 +92,7 @@ export default function NavigationMenuPage() {
             <NavigationMenu.Root
                 className="nav-root"
                 data-testid="controlled-nav-root"
+                aria-label="Controlled"
                 value={controlledValue}
                 onValueChange={setControlledValue}
                 delayDuration={0}

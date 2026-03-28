@@ -11,7 +11,7 @@ export default function SelectPage() {
         <>
             {/* ── Main select (controlled, with groups) ── */}
             <Select.Root value={value} onValueChange={setValue} disabled={disabled}>
-                <Select.Trigger className="select-trigger" data-testid="select-trigger">
+                <Select.Trigger className="select-trigger" data-testid="select-trigger" aria-label="Select a fruit">
                     <Select.Value placeholder="Select a fruit..." />
                     <Select.Icon className="select-icon">▼</Select.Icon>
                 </Select.Trigger>
@@ -82,7 +82,7 @@ export default function SelectPage() {
             {/* ── Default value select ── */}
             <h3>Default Value</h3>
             <Select.Root defaultValue="banana">
-                <Select.Trigger className="select-trigger" data-testid="default-trigger">
+                <Select.Trigger className="select-trigger" data-testid="default-trigger" aria-label="Select a fruit">
                     <Select.Value />
                     <Select.Icon className="select-icon">▼</Select.Icon>
                 </Select.Trigger>
@@ -180,7 +180,7 @@ export default function SelectPage() {
             {/* ── Item-aligned positioning (default) ── */}
             <h3>Item Aligned</h3>
             <Select.Root defaultValue="banana">
-                <Select.Trigger className="select-trigger" data-testid="aligned-trigger">
+                <Select.Trigger className="select-trigger" data-testid="aligned-trigger" aria-label="Select a fruit">
                     <Select.Value />
                     <Select.Icon className="select-icon">▼</Select.Icon>
                 </Select.Trigger>

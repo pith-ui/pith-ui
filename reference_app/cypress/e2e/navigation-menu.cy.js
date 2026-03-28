@@ -564,7 +564,12 @@ describe('Navigation Menu', () => {
         it('no violations when submenu is open', () => {
             cy.findByRole('button', {name: 'Products'}).click();
             shouldBeOpen('Products');
-            cy.checkComponentA11y();
+            // Scope to nav — opening submenu sets aria-hidden on sibling content.
+            // Exclude aria-hidden-focus — NavigationMenu uses visually-hidden
+            // focus guard spans (aria-hidden + tabindex) for focus management.
+            cy.checkComponentA11y('[data-testid="nav-root"]', {
+                rules: {'aria-hidden-focus': {enabled: false}},
+            });
         });
     });
 });

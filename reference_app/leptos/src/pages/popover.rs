@@ -11,7 +11,7 @@ pub fn PopoverPage() -> impl IntoView {
         <Popover modal=modal>
             <PopoverTrigger class:popover-trigger=true attr:data-custom="popover-trigger-custom">"open"</PopoverTrigger>
             <PopoverPortal>
-                <PopoverContent class:popover-content=true side_offset=5.0 attr:data-custom="popover-content-custom" style:color="rgb(255, 0, 0)">
+                <PopoverContent class:popover-content=true side_offset=5.0 attr:data-custom="popover-content-custom" attr:aria-label="Popover" style:color="rgb(255, 0, 0)">
                     <p>"Popover content"</p>
                     <PopoverClose class:popover-close=true attr:data-custom="popover-close-custom">"close"</PopoverClose>
                     <PopoverArrow class:popover-arrow=true width=20.0 height=10.0 />

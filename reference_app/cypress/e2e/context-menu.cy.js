@@ -382,7 +382,8 @@ describe('Context Menu', () => {
 
         it('no violations when open', () => {
             openMenu();
-            cy.checkComponentA11y();
+            // Scope to menu content — modal overlays set aria-hidden on <main>.
+            cy.checkComponentA11y('[role="menu"]');
         });
     });
 });

@@ -18,7 +18,7 @@ pub fn SelectPage() -> impl IntoView {
             on_value_change=Callback::new(move |v: String| set_value.set(v))
             disabled=disabled
         >
-            <SelectTrigger class:select-trigger=true attr:data-testid="select-trigger">
+            <SelectTrigger class:select-trigger=true attr:data-testid="select-trigger" attr:aria-label="Select a fruit">
                 <SelectValue placeholder="Select a fruit..." />
                 <SelectIcon class:select-icon=true>"▼"</SelectIcon>
             </SelectTrigger>
@@ -99,7 +99,7 @@ pub fn SelectPage() -> impl IntoView {
         // ── Default value select ──
         <h3>"Default Value"</h3>
         <Select default_value="banana">
-            <SelectTrigger class:select-trigger=true attr:data-testid="default-trigger">
+            <SelectTrigger class:select-trigger=true attr:data-testid="default-trigger" attr:aria-label="Select a fruit">
                 <SelectValue />
                 <SelectIcon class:select-icon=true>"▼"</SelectIcon>
             </SelectTrigger>
@@ -203,7 +203,7 @@ pub fn SelectPage() -> impl IntoView {
         // ── Item-aligned positioning (default) ──
         <h3>"Item Aligned"</h3>
         <Select default_value="banana">
-            <SelectTrigger class:select-trigger=true attr:data-testid="aligned-trigger">
+            <SelectTrigger class:select-trigger=true attr:data-testid="aligned-trigger" attr:aria-label="Select a fruit">
                 <SelectValue />
                 <SelectIcon class:select-icon=true>"▼"</SelectIcon>
             </SelectTrigger>

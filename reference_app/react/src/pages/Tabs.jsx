@@ -96,7 +96,7 @@ export default function TabsPage() {
             <hr />
 
             {/* Force-mounted tabs for hidden attribute test */}
-            <div data-testid="force-mount-tabs-section" aria-hidden="true">
+            <div data-testid="force-mount-tabs-section" aria-hidden="true"
                 <Tabs.Root defaultValue="fm1" className="tabs-root">
                     <Tabs.List aria-label="force mount tabs" className="tabs-list">
                         <Tabs.Trigger value="fm1" className="tabs-trigger" data-testid="fm-trigger-1">FM 1</Tabs.Trigger>
@@ -109,7 +109,7 @@ export default function TabsPage() {
 
             <hr />
 
-            <div data-testid="controlled-tabs-section" aria-hidden="true">
+            <div data-testid="controlled-tabs-section" aria-hidden="true"
                 <h3>Controlled Tabs</h3>
                 <fieldset>
                     <legend>External Tab Control</legend>

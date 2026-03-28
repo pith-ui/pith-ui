@@ -617,7 +617,9 @@ describe('Dropdown Menu', () => {
 
         it('no violations when open', () => {
             openMenu();
-            cy.checkComponentA11y();
+            // Scope to menu content — modal overlays set aria-hidden on <main>,
+            // which axe flags as aria-hidden-focus (expected modal behavior).
+            cy.checkComponentA11y('[role="menu"]');
         });
     });
 });

@@ -106,6 +106,7 @@ pub fn ComboboxViewport(
                     as_child=as_child
                     attr:data-radix-combobox-viewport=""
                     attr:role="presentation"
+                    attr:tabindex="-1"
                     {..attrs}
                     node_ref=composed_ref
                     style:position="relative"

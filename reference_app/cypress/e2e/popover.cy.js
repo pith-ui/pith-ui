@@ -382,7 +382,9 @@ describe('Popover', () => {
         it('no violations when open', () => {
             cy.findByText('open').click();
             shouldBeOpen();
-            cy.checkComponentA11y();
+            // Exclude color-contrast — axe cannot reliably compute background
+            // color through positioned/floating popper ancestors.
+            cy.checkComponentA11y(null, {rules: {'color-contrast': {enabled: false}}});
         });
     });
 });

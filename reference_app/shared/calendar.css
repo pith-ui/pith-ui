@@ -39,7 +39,7 @@
 }
 
 .calendar-nav-button[data-disabled] {
-    color: #a0a0a0;
+    color: #767676;
     cursor: not-allowed;
 }
 
@@ -52,7 +52,7 @@
 .calendar-grid-head th {
     font-size: 12px;
     font-weight: 500;
-    color: #888;
+    color: #595959;
     padding: 4px 0;
     text-align: center;
 }
@@ -94,11 +94,11 @@
 }
 
 .calendar-grid-body button[data-outside-month] {
-    color: #c0c0c0;
+    color: #767676;
 }
 
 .calendar-grid-body button[data-disabled] {
-    color: #d0d0d0;
+    color: #767676;
     cursor: not-allowed;
 }
 

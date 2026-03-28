@@ -6,7 +6,7 @@ pub fn NavigationMenuPage() -> impl IntoView {
     let (controlled_value, set_controlled_value) = signal(String::new());
 
     view! {
-        <NavigationMenu class:nav-root=true attr:data-testid="nav-root" delay_duration=0.0 skip_delay_duration=0.0>
+        <NavigationMenu class:nav-root=true attr:data-testid="nav-root" attr:aria-label="Main" delay_duration=0.0 skip_delay_duration=0.0>
             <NavigationMenuList class:nav-list=true>
                 <NavigationMenuItem class:nav-item=true value="products".to_string()>
                     <NavigationMenuTrigger class:nav-trigger=true>
@@ -109,6 +109,7 @@ pub fn NavigationMenuPage() -> impl IntoView {
         <NavigationMenu
             class:nav-root=true
             attr:data-testid="controlled-nav-root"
+            attr:aria-label="Controlled"
             value=Signal::derive(move || controlled_value.get())
             on_value_change=Callback::new(move |v: String| set_controlled_value.set(v))
             delay_duration=0.0

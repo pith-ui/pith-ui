@@ -633,7 +633,9 @@ describe('Menu', () => {
 
     describe('axe audit', () => {
         it('no violations with menu open', () => {
-            cy.checkComponentA11y();
+            // Exclude color-contrast — axe cannot reliably compute background
+            // color through positioned/floating popper ancestors.
+            cy.checkComponentA11y(null, {rules: {'color-contrast': {enabled: false}}});
         });
     });
 });

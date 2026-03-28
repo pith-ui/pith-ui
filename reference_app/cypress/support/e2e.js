@@ -128,17 +128,20 @@ afterEach(() => {
 Cypress.Commands.add('checkComponentA11y', (context, options) => {
     cy.injectAxe();
 
+    const defaultRules = {
+        // Page-level structure rules — these flag the test harness, not the
+        // primitives under test. The reference_app pages are minimal fixtures
+        // that intentionally omit full page scaffolding (h1, landmarks, etc.).
+        'page-has-heading-one': {enabled: false},
+        'landmark-one-main': {enabled: false},
+        'region': {enabled: false},
+    };
+
+    const {rules: extraRules, ...restOptions} = options || {};
     const opts = {
         runOnly: {type: 'tag', values: ['wcag2a', 'wcag2aa', 'best-practice']},
-        rules: {
-            // Page-level structure rules — these flag the test harness, not the
-            // primitives under test. The reference_app pages are minimal fixtures
-            // that intentionally omit full page scaffolding (h1, landmarks, etc.).
-            'page-has-heading-one': {enabled: false},
-            'landmark-one-main': {enabled: false},
-            'region': {enabled: false},
-        },
-        ...options,
+        rules: {...defaultRules, ...extraRules},
+        ...restOptions,
     };
 
     cy.checkA11y(
