@@ -168,3 +168,6 @@ tailwind.output.css
 
 # E2E test result history
 .results/
+
+# pnpm content-addressable store
+.pnpm-store/

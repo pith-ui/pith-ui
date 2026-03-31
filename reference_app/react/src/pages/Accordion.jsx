@@ -5,6 +5,7 @@ import '../../../shared/accordion.css';
 export default function AccordionPage() {
     const [type, setType] = useState('single');
     const [collapsible, setCollapsible] = useState(false);
+    const [animated, setAnimated] = useState(false);
 
     return (
         <>
@@ -15,11 +16,11 @@ export default function AccordionPage() {
                     className="accordion-root"
                     data-testid="accordion-root"
                 >
-                    <AccordionItems />
+                    <AccordionItems animated={animated} />
                 </Accordion.Root>
             ) : (
                 <Accordion.Root type="multiple" className="accordion-root" data-testid="accordion-root">
-                    <AccordionItems />
+                    <AccordionItems animated={animated} />
                 </Accordion.Root>
             )}
 
@@ -60,6 +61,17 @@ export default function AccordionPage() {
                     onChange={(event) => setCollapsible(event.target.checked)}
                 />{' '}
                 collapsible
+            </label>
+
+            <br />
+
+            <label>
+                <input
+                    type="checkbox"
+                    checked={animated}
+                    onChange={(event) => setAnimated(event.target.checked)}
+                />{' '}
+                animated
             </label>
 
             <br />
@@ -104,33 +116,34 @@ function ControlledAccordion() {
     );
 }
 
-function AccordionItems() {
+function AccordionItems({animated}) {
+    const contentClass = animated ? 'accordion-content accordion-content-animated' : 'accordion-content';
     return (
         <>
             <Accordion.Item value="item-1" className="accordion-item" data-testid="item-1" data-custom="accordion-item-custom">
                 <Accordion.Header className="accordion-header" data-custom="accordion-header-custom">
                     <Accordion.Trigger className="accordion-trigger" data-custom="accordion-trigger-custom">Item 1</Accordion.Trigger>
                 </Accordion.Header>
-                <Accordion.Content className="accordion-content" data-custom="accordion-content-custom">Content 1</Accordion.Content>
+                <Accordion.Content className={contentClass} data-custom="accordion-content-custom">Content 1</Accordion.Content>
             </Accordion.Item>
             <Accordion.Item value="item-2" className="accordion-item" data-testid="item-2" disabled>
                 <Accordion.Header className="accordion-header">
                     <Accordion.Trigger className="accordion-trigger">Item 2</Accordion.Trigger>
                 </Accordion.Header>
-                <Accordion.Content className="accordion-content">Content 2</Accordion.Content>
+                <Accordion.Content className={contentClass}>Content 2</Accordion.Content>
             </Accordion.Item>
             <Accordion.Item value="item-3" className="accordion-item" data-testid="item-3">
                 <Accordion.Header className="accordion-header">
                     <Accordion.Trigger className="accordion-trigger">Item 3</Accordion.Trigger>
                 </Accordion.Header>
-                <Accordion.Content className="accordion-content">Content 3</Accordion.Content>
+                <Accordion.Content className={contentClass}>Content 3</Accordion.Content>
             </Accordion.Item>
             <Accordion.Item value="item-styled" className="accordion-item" data-testid="item-styled">
                 <Accordion.Header className="accordion-header">
                     <Accordion.Trigger className="accordion-trigger">Styled Item</Accordion.Trigger>
                 </Accordion.Header>
                 <Accordion.Content
-                    className="accordion-content"
+                    className={contentClass}
                     data-testid="styled-content"
                     style={{background: 'tomato', '--radix-accordion-content-height': '999px'}}
                 >

@@ -2,7 +2,7 @@ use leptos::prelude::*;
 use pith_ui::accordion::*;
 
 #[component]
-fn AccordionItems() -> impl IntoView {
+fn AccordionItems(animated: Signal<bool>) -> impl IntoView {
     view! {
         <AccordionItem
             value="item-1".to_string()
@@ -13,7 +13,7 @@ fn AccordionItems() -> impl IntoView {
             <AccordionHeader class:accordion-header=true attr:data-custom="accordion-header-custom">
                 <AccordionTrigger class:accordion-trigger=true attr:data-custom="accordion-trigger-custom">"Item 1"</AccordionTrigger>
             </AccordionHeader>
-            <AccordionContent class:accordion-content=true attr:data-custom="accordion-content-custom">"Content 1"</AccordionContent>
+            <AccordionContent class:accordion-content=true class:accordion-content-animated=move || animated.get() attr:data-custom="accordion-content-custom">"Content 1"</AccordionContent>
         </AccordionItem>
         <AccordionItem
             value="item-2".to_string()
@@ -24,7 +24,7 @@ fn AccordionItems() -> impl IntoView {
             <AccordionHeader class:accordion-header=true>
                 <AccordionTrigger class:accordion-trigger=true>"Item 2"</AccordionTrigger>
             </AccordionHeader>
-            <AccordionContent class:accordion-content=true>"Content 2"</AccordionContent>
+            <AccordionContent class:accordion-content=true class:accordion-content-animated=move || animated.get()>"Content 2"</AccordionContent>
         </AccordionItem>
         <AccordionItem
             value="item-3".to_string()
@@ -34,7 +34,7 @@ fn AccordionItems() -> impl IntoView {
             <AccordionHeader class:accordion-header=true>
                 <AccordionTrigger class:accordion-trigger=true>"Item 3"</AccordionTrigger>
             </AccordionHeader>
-            <AccordionContent class:accordion-content=true>"Content 3"</AccordionContent>
+            <AccordionContent class:accordion-content=true class:accordion-content-animated=move || animated.get()>"Content 3"</AccordionContent>
         </AccordionItem>
         <AccordionItem
             value="item-styled".to_string()
@@ -46,6 +46,7 @@ fn AccordionItems() -> impl IntoView {
             </AccordionHeader>
             <AccordionContent
                 class:accordion-content=true
+                class:accordion-content-animated=move || animated.get()
                 attr:data-testid="styled-content"
                 style:background="tomato"
                 style:--accordion-content-height="999px"
@@ -60,6 +61,7 @@ fn AccordionItems() -> impl IntoView {
 pub fn AccordionPage() -> impl IntoView {
     let (is_multiple, set_is_multiple) = signal(false);
     let (collapsible, set_collapsible) = signal(false);
+    let (animated, set_animated) = signal(false);
 
     view! {
         {move || {
@@ -69,7 +71,7 @@ pub fn AccordionPage() -> impl IntoView {
                         class:accordion-root=true
                         attr:data-testid="accordion-root"
                     >
-                        <AccordionItems />
+                        <AccordionItems animated=Signal::from(animated) />
                     </AccordionMultiple>
                 }.into_any()
             } else {
@@ -79,7 +81,7 @@ pub fn AccordionPage() -> impl IntoView {
                         class:accordion-root=true
                         attr:data-testid="accordion-root"
                     >
-                        <AccordionItems />
+                        <AccordionItems animated=Signal::from(animated) />
                     </AccordionSingle>
                 }.into_any()
             }
@@ -126,6 +128,21 @@ pub fn AccordionPage() -> impl IntoView {
                 }
             />
             " collapsible"
+        </label>
+
+        <br />
+
+        <label>
+            <input
+                type="checkbox"
+                prop:checked=move || animated.get()
+                on:change=move |ev| {
+                    use web_sys::wasm_bindgen::JsCast;
+                    let target: web_sys::HtmlInputElement = ev.target().unwrap().unchecked_into();
+                    set_animated.set(target.checked());
+                }
+            />
+            " animated"
         </label>
 
         <br />

@@ -38,3 +38,26 @@
     padding: 10px 16px;
     font-size: 14px;
 }
+
+/* Animated variant — CSS keyframe animations for testing animation stability */
+@keyframes accordion-slideDown {
+    from { height: 0; }
+    to { height: var(--radix-accordion-content-height, var(--accordion-content-height)); }
+}
+
+@keyframes accordion-slideUp {
+    from { height: var(--radix-accordion-content-height, var(--accordion-content-height)); }
+    to { height: 0; }
+}
+
+.accordion-content-animated {
+    overflow: hidden;
+}
+
+.accordion-content-animated[data-state='open'] {
+    animation: accordion-slideDown 300ms ease-out;
+}
+
+.accordion-content-animated[data-state='closed'] {
+    animation: accordion-slideUp 300ms ease-out;
+}

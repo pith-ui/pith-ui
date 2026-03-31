@@ -79,7 +79,7 @@ pub fn Collapsible(
         default_prop: default_open,
         on_change: adapt_callback(on_open_change),
     });
-    let open = Signal::derive(move || open_signal.get().unwrap_or(false));
+    let open = Memo::new(move |_| open_signal.get().unwrap_or(false)).into();
 
     let content_id = use_id(None);
 

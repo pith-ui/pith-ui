@@ -424,6 +424,60 @@ describe('Accordion', () => {
         });
     });
 
+    // ── Animation Stability ──────────────────────────────────
+
+    describe('animation stability (multiple type)', () => {
+        beforeEach(() => {
+            cy.findByLabelText('multiple').click();
+            cy.findByLabelText('animated').click();
+        });
+
+        it('opening a sibling does not replay animation on already-open items', () => {
+            // Open item 1
+            cy.findByRole('button', {name: 'Item 1'}).click();
+            shouldBeOpen('Item 1');
+
+            // Wait for item 1's open animation to complete
+            cy.findByRole('button', {name: 'Item 1'})
+                .invoke('attr', 'aria-controls')
+                .then((contentId) => {
+                    cy.get(`#${contentId}`).should(($el) => {
+                        expect($el[0].getAnimations()).to.have.length(0);
+                    });
+
+                    // Register animationstart listener AFTER item 1's animation finishes
+                    cy.get(`#${contentId}`).then(($el) => {
+                        $el[0].__animationReplayed = false;
+                        $el[0].addEventListener('animationstart', () => {
+                            $el[0].__animationReplayed = true;
+                        });
+                    });
+                });
+
+            // Open item 3 — this should NOT replay item 1's animation
+            cy.findByRole('button', {name: 'Item 3'}).click();
+            shouldBeOpen('Item 3');
+
+            // Wait for item 3's animation to complete so any replay would have started
+            cy.findByRole('button', {name: 'Item 3'})
+                .invoke('attr', 'aria-controls')
+                .then((contentId) => {
+                    cy.get(`#${contentId}`).should(($el) => {
+                        expect($el[0].getAnimations()).to.have.length(0);
+                    });
+                });
+
+            // Assert item 1's animation was NOT replayed
+            cy.findByRole('button', {name: 'Item 1'})
+                .invoke('attr', 'aria-controls')
+                .then((contentId) => {
+                    cy.get(`#${contentId}`).then(($el) => {
+                        expect($el[0].__animationReplayed).to.equal(false);
+                    });
+                });
+        });
+    });
+
     // ── Axe Accessibility Audit ─────────────────────────────
 
     describe('axe audit', () => {
